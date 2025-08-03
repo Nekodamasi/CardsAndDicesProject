@@ -16,7 +16,7 @@
 ### 1. 対象ファイル
 
 - 対象ディレクトリ直下の`*.md`と`*.cs`ファイルすべて
-- 対象ディレクトリ: `D:\Users\ponki\CardsAndDices\Assets\CardsAndDices`
+- 対象ディレクトリ: `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices`
 
 ### 2. フォーマット
 
@@ -34,7 +34,7 @@
 1. 以下のディレクトリ内の*.mdと*.csファイルをすべてリストアップし、ファイル名、短い解説、フルパスのフォーマットでMarkdownテーブルとして出力してください
     対象ディレクトリ:
     ```
-     D:\Users\ponki\CardsAndDices\Assets\CardsAndDices
+     D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices
 2. 出力したMarkdownテーブルを `guide_project_files.md` の内容と置き換えます。
 3. 必要に応じて、各ファイルの「解説」をより詳細に記述します
 4. チェックリストに従って`guide_project_files.md` の内容が適切かチェックします
@@ -45,7 +45,7 @@
 
 ファイル一覧を更新する際は、以下の点を確認してください。
 
-- [ ] 対象ディレクトリ (`D:\Users\ponki\CardsAndDices\Assets\CardsAndDices`) 配下のすべての`.md`ファイルと`.cs`ファイルがリストに含まれているか。
+- [ ] 対象ディレクトリ (`D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices`) 配下のすべての`.md`ファイルと`.cs`ファイルがリストに含まれているか。
 - [ ] 各ファイルの「解説」が適切で、そのファイルの役割を簡潔に表しているか。
 - [ ] 「格納場所」が正しいフルパスになっているか。
 - [ ] Markdownテーブルのフォーマットが崩れていないか。

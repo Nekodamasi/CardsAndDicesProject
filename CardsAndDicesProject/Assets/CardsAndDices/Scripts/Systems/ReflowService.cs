@@ -248,16 +248,6 @@ namespace CardsAndDice
                 }
             }
 
-            // draggedCardIdの移動がmovementsに含まれていない場合、その現在配置への移動を追加
-            if (draggedCardId != null && !cardMovements.ContainsKey(draggedCardId))
-            {
-                CardSlotData currentDraggedCardSlot = _repository.GetSlotDataByReflowPlacedCardId(draggedCardId);
-                if (currentDraggedCardSlot != null)
-                {
-                    cardMovements[draggedCardId] = currentDraggedCardSlot.Position;
-                }
-            }
-
             _repository.LogSlotDifferences();
             return cardMovements;
         }

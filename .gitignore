@@ -1,22 +1,22 @@
 # すべてのファイルをデフォルトで無視する
 *
 
-# CardsAndDices/Assets/CardsAndDices/Docs/ 配下の .md ファイルを追跡
-!/CardsAndDices/Assets/CardsAndDices/Docs/**/*.md
-!/CardsAndDices/Assets/CardsAndDices/Docs/component/*.md
-!/CardsAndDices/Assets/CardsAndDices/Docs/gdd/*.md
-!/CardsAndDices/Assets/CardsAndDices/Docs/guide/*.md
-!/CardsAndDices/Assets/CardsAndDices/Docs/sys/*.md
-!/CardsAndDices/Assets/CardsAndDices/Docs/ui/*.md
+# CardsAndDicesProject/Assets/CardsAndDices/Docs/ 配下の .md ファイルを追跡
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/**/*.md
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/component/*.md
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/gdd/*.md
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/guide/*.md
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/sys/*.md
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/ui/*.md
 
-# CardsAndDices/Assets/CardsAndDices/Scripts/ 配下の .cs ファイルを追跡
-!/CardsAndDices/Assets/CardsAndDices/Scripts/**/*.cs
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Commands/*.cs
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Data/*.cs
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Installers/*.cs
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Shared/*.cs
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Systems/*.cs
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Tester/*.cs
+# CardsAndDicesProject/Assets/CardsAndDices/Scripts/ 配下の .cs ファイルを追跡
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/**/*.cs
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Commands/*.cs
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Data/*.cs
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Installers/*.cs
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Shared/*.cs
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Systems/*.cs
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Tester/*.cs
 
 # .gitignore ファイル自体は管理対象にする
 !/.gitignore
@@ -26,17 +26,17 @@
 # 必要なパスを明示的に解除する
 !/CardsAndDices/
 !/CardsAndDices/Assets/
-!/CardsAndDices/Assets/CardsAndDices/
-!/CardsAndDices/Assets/CardsAndDices/Docs/
-!/CardsAndDices/Assets/CardsAndDices/Docs/component/
-!/CardsAndDices/Assets/CardsAndDices/Docs/gdd/
-!/CardsAndDices/Assets/CardsAndDices/Docs/guide/
-!/CardsAndDices/Assets/CardsAndDices/Docs/sys/
-!/CardsAndDices/Assets/CardsAndDices/Docs/ui/
-!/CardsAndDices/Assets/CardsAndDices/Scripts/
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Commands/
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Data/
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Installers/
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Shared/
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Systems/
-!/CardsAndDices/Assets/CardsAndDices/Scripts/Tester/
+!/CardsAndDicesProject/Assets/CardsAndDices/
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/component/
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/gdd/
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/guide/
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/sys/
+!/CardsAndDicesProject/Assets/CardsAndDices/Docs/ui/
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Commands/
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Data/
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Installers/
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Shared/
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Systems/
+!/CardsAndDicesProject/Assets/CardsAndDices/Scripts/Tester/

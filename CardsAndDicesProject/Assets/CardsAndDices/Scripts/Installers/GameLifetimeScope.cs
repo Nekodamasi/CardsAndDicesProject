@@ -23,6 +23,8 @@ namespace CardsAndDice
         [SerializeField] private CardInteractionStrategy _cardInteractionStrategy;
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
 
+        [SerializeField] private SystemReflowController _systemReflowController;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // DOTweenの初期化とTween容量の設定
@@ -41,6 +43,7 @@ namespace CardsAndDice
             builder.RegisterInstance(_uiInteractionOrchestrator).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_cardInteractionStrategy).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_uiActivationPolicy).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_systemReflowController).AsSelf().AsImplementedInterfaces();
 
             _uiStateMachine.Initialize();
             _spriteCommandBus.Initialize();
@@ -54,6 +57,7 @@ namespace CardsAndDice
             _reflowService.Initialize(_cardSlotStateRepository);
             _cardInteractionStrategy.Initialize();
             _uiActivationPolicy.Initialize();
+            _systemReflowController.Initialize(_spriteCommandBus, _uiInteractionOrchestrator);
 
             // ViewコンポーネントのDI登録
             builder.RegisterComponentInHierarchy<CreatureCardView>();

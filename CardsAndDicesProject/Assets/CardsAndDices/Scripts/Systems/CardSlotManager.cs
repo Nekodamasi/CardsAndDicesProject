@@ -38,6 +38,7 @@ namespace CardsAndDice
 
         public void PlaceCardAsSystem(CompositeObjectId cardId, CompositeObjectId slotId, bool triggerReflow = true)
         {
+            Debug.Log("<color=Yellow>PlaceCardAsSystem</color>");
             _placementService.UnplaceCard(cardId);
             _placementService.PlaceCard(cardId, slotId);
             if (triggerReflow)

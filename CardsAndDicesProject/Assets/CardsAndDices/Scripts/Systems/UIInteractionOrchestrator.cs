@@ -85,6 +85,7 @@ namespace CardsAndDice
         /// </summary>
         public void RegisterView(BaseSpriteView view)
         {
+            Debug.Log("とうろくーーー！" + view.GetObjectId());
             _viewRegistry.Register(view);
         }
 
@@ -302,6 +303,14 @@ namespace CardsAndDice
 
             // 「UI操作制限モード」ON
             _commandBus.Emit(new DisableUIInteractionCommand());
+
+            // リフロー対象なし
+            if (command.CardMovements.Count == 0)
+            {
+                Debug.Log("リフロー対象なし");
+                _commandBus.Emit(new ReflowOperationCompletedCommand());
+            }
+
 
             foreach (var movement in command.CardMovements)
             {
