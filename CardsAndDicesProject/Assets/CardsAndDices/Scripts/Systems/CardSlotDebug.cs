@@ -25,11 +25,13 @@ namespace CardsAndDice
     public class CardSlotDebug : ScriptableObject
     {
         [SerializeField] private CardSlotStateRepository _repository;
+        private ViewRegistry _viewRegistry;
 
         [Inject]
-        public void InInitialize(CardSlotStateRepository repository)
+        public void InInitialize(CardSlotStateRepository repository, ViewRegistry viewRegistry)
         {
             _repository = repository;
+            _viewRegistry = viewRegistry;
         }
 
         public List<SlotDebugInfo> GetDebugSlotData()
@@ -80,7 +82,68 @@ namespace CardsAndDice
                     Debug.Log("<Color=red>スロットが配置されている</Color>" + slotData.Line + "_" + slotData.Location + " CID:" + slotData.ReflowPlacedCardId);
                 }
             }
-            GetDebugSlotData();
+            LogSlotDifferences();
+        }
+
+        /// <summary>
+        /// PlacedCardIdとReflowPlacedCardIdの整合性をチェックし、ログ出力します。
+        /// </summary>
+        public void LogSlotDifferences()
+        {
+            var allCreatureCardIds = _viewRegistry.GetAllCreatureCardViews()
+                                                .Select(v => v.GetObjectId())
+                                                .Where(id => id != null)
+                                                .ToList();
+
+            var placedCardIds = _repository.GetAllSlots()
+                                         .Where(s => s.PlacedCardId != null)
+                                         .Select(s => s.PlacedCardId)
+                                         .ToList();
+
+            var reflowPlacedCardIds = _repository.GetAllSlots()
+                                               .Where(s => s.ReflowPlacedCardId != null)
+                                               .Select(s => s.ReflowPlacedCardId)
+                                               .ToList();
+
+            // PlacedCardIdのチェック
+            CheckCardIdConsistency(allCreatureCardIds, placedCardIds, "PlacedCardId");
+
+            // ReflowPlacedCardIdのチェック
+            CheckCardIdConsistency(allCreatureCardIds, reflowPlacedCardIds, "ReflowPlacedCardId");
+
+            // 詳細なスロット情報ログ
+            Debug.LogWarning($"[CardSlotDebug] Current Slot State:");
+            foreach (var slot in _repository.GetAllSlots())
+            {
+                Debug.LogWarning($"  Slot: {slot.SlotId?.ToString() ?? "NULL"}, Line: {slot.Line}, Location: {slot.Location}, PlacedCardId: {slot.PlacedCardId?.ToString() ?? "NULL"}, ReflowPlacedCardId: {slot.ReflowPlacedCardId?.ToString() ?? "NULL"}");
+            }
+        }
+
+        private void CheckCardIdConsistency(List<CompositeObjectId> expectedIds, List<CompositeObjectId> actualIds, string idType)
+        {
+            // 期待されるIDがすべて存在するかチェック
+            foreach (var expectedId in expectedIds)
+            {
+                if (!actualIds.Contains(expectedId))
+                {
+                    Debug.LogWarning($"[CardSlotDebug] Consistency Error: Expected {idType} {expectedId} not found in any slot.");
+                }
+            }
+
+            // 余分なIDが存在しないかチェック
+            foreach (var actualId in actualIds)
+            {
+                if (!expectedIds.Contains(actualId))
+                {
+                    Debug.LogWarning($"[CardSlotDebug] Consistency Error: Unexpected {idType} {actualId} found in a slot.");
+                }
+            }
+
+            // カウントの不一致をチェック
+            if (expectedIds.Count != actualIds.Count)
+            {
+                Debug.LogWarning($"[CardSlotDebug] Mismatch in {idType} counts. Expected: {expectedIds.Count}, Actual: {actualIds.Count}");
+            }
         }
     }
 }

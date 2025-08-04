@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 
@@ -14,15 +15,17 @@ namespace CardsAndDice
     public class ReflowService : ScriptableObject
     {
         [SerializeField] private CardSlotStateRepository _repository;
+        [SerializeField] private CardSlotDebug _cardSlotDebug;
 
         /// <summary>
         /// VContainerによるコンストラクタインジェクション。
         /// </summary>
         /// <param name="repository">カードスロットの状態リポジトリ。</param>
         [Inject]
-        public void Initialize(CardSlotStateRepository repository)
+        public void Initialize(CardSlotStateRepository repository, CardSlotDebug cardSlotDebug)
         {
             _repository = repository;
+            _cardSlotDebug = cardSlotDebug;
         }
 
         /// <summary>
@@ -62,13 +65,11 @@ namespace CardsAndDice
                             // Vanguardも空いている場合、RearのカードをVanguardへ移動
                             if (vanguard != null && !vanguard.IsOccupied)
                             {
-                                Debug.Log("rear - > vanguard");
                                 MoveCard(rear, vanguard, movements);
                             }
                             // Vanguardが空いていない場合、RearのカードをCenterへ移動
                             else
                             {
-                                Debug.Log("rear - > center");
                                 MoveCard(rear, center, movements);
                             }
                         }
@@ -104,7 +105,7 @@ namespace CardsAndDice
                     }
                 }
             }
-
+/*
             // draggedCardIdの移動がmovementsに含まれていない場合、その現在配置への移動を追加
             if (draggedCardId != null && !movements.ContainsKey(draggedCardId))
             {
@@ -115,7 +116,7 @@ namespace CardsAndDice
                 }
             }
             Debug.Log("movementsはいくつー？＞" + movements.Count);
-
+*/
             return movements;
         }
 
@@ -128,6 +129,8 @@ namespace CardsAndDice
         /// <param name="movements">移動情報を記録する辞書。</param>
         private void MoveCard(CardSlotData from, CardSlotData to, Dictionary<CompositeObjectId, Vector3> movements)
         {
+            Debug.Log(from.Line + "_" + from.Location + " -> " + to.Line + "_" + to.Location);
+
             // 移動元スロットのカードIDと移動先スロットのワールド座標を記録
             movements[from.PlacedCardId] = to.Position;
             // 移動先スロットに移動元のカードを設定
@@ -242,23 +245,16 @@ namespace CardsAndDice
                     {
                         // 後続のスロットに前のスロットのカードを設定
                         Slots[i].ReflowPlacedCardId = ids[i - 1];
-                        // 移動情報を記録
-                        cardMovements[ids[i - 1]] = Slots[i].Position;
+                        if (ids[i - 1] != null)
+                        {
+                            // 移動情報を記録
+                            cardMovements[ids[i - 1]] = Slots[i].Position;
+                        }
                     }
                 }
             }
 
-            // draggedCardIdの移動がmovementsに含まれていない場合、その現在配置への移動を追加
-            if (draggedCardId != null && !cardMovements.ContainsKey(draggedCardId))
-            {
-                CardSlotData currentDraggedCardSlot = _repository.GetSlotDataByReflowPlacedCardId(draggedCardId);
-                if (currentDraggedCardSlot != null)
-                {
-                    cardMovements[draggedCardId] = currentDraggedCardSlot.Position;
-                }
-            }
-
-            _repository.LogSlotDifferences();
+            
             return cardMovements;
         }
 

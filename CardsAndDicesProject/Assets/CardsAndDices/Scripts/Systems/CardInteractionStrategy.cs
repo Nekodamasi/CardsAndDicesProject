@@ -2,6 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks; // UniTaskを使用するために追加
 using System;
 using VContainer;
+using Unity.VisualScripting;
 
 namespace CardsAndDice
 {
@@ -10,11 +11,69 @@ namespace CardsAndDice
     /// ドラッグ、ホバー、ドロップなどのカード固有のUI操作ロジックをカプセル化します。
     /// </summary>
     [CreateAssetMenu(fileName = "CardInteractionStrategy", menuName = "CardsAndDice/InteractionStrategies/CardInteractionStrategy")]
-    public class CardInteractionStrategy : ScriptableObject, IInteractionStrategy
+    public class CardInteractionStrategy : ScriptableObject
     {
         [Inject]
         public void Initialize()
         {
+        }
+
+        /// <summary>
+        /// スロットホバーの条件を満たしているかチェックする
+        /// </summary>
+        /// <param name="command">ドラッグ開始コマンド。</param>
+        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
+        public bool ChkCardSlotHover(SpriteHoverCommand command, UIInteractionOrchestrator orchestrator)
+        {
+            // UIがカードドラッグ中の場合
+            if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.DraggingCard)
+            {
+                // ホバーされたスロットのViewを取得
+                var cardSlotView = orchestrator.ViewRegistry.GetView<CardSlotView>(command.TargetObjectId);
+                if (cardSlotView != null)
+                {
+                    // スロットのデータとリフロー配置カードIDを確認
+                    var slotData = orchestrator.CardSlotManager.GetSlotData(command.TargetObjectId);
+                    Debug.Log("<color=green>ホバーされたカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
+                    if (slotData.ReflowPlacedCardId == orchestrator.DraggedId) return false; // 同じカードが既にリフロー配置されている場合は何もしない
+                    Debug.Log("<color=green>リフローに進んだカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// カードホバーの条件を満たしているかチェック
+        /// </summary>
+        /// <param name="command">ホバーコマンド。</param>
+        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
+        public bool ChkCardHover(SpriteHoverCommand command, UIInteractionOrchestrator orchestrator)
+        {
+            Debug.Log("ChkCardHover");
+
+            // UIがアイドル状態の場合
+            if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
+            {
+                // ホバーされたカードのViewを取得し、ホバー状態に遷移
+                var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                if (cardView != null) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// カードのドラッグ開始条件を満たしているかチェックします
+        /// </summary>
+        /// <param name="command">ドラッグ開始コマンド。</param>
+        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
+        public bool ChkCardBeginDrag(SpriteBeginDragCommand command, UIInteractionOrchestrator orchestrator)
+        {
+            // UIがアイドルの場合
+            if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.Idle) return false;
+            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+            if (draggedCardView == null) return false;
+            return true;
         }
 
         /// <summary>
@@ -30,7 +89,7 @@ namespace CardsAndDice
             orchestrator.UIStateMachine.SetState(UIStateMachine.UIState.DraggingCard);
 
             // ドラッグ中のカードのViewを取得
-//            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+            //            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
 
             // ドラッグ開始状態に遷移
             draggedCardView.EnterDraggingState();
@@ -60,7 +119,6 @@ namespace CardsAndDice
                     Debug.Log("<color=green>リフローに進んだカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
 
                     // ホバーリフローを実行
-                    orchestrator.UIStateMachine.SetState(UIStateMachine.UIState.Reflow);
                     orchestrator.CardSlotManager.OnCardHoveredOnSlot(orchestrator.DraggedId, command.TargetObjectId);
                 }
             }
@@ -74,21 +132,58 @@ namespace CardsAndDice
         }
 
         /// <summary>
-        /// カードのホバーが解除されたときに呼び出されます。
+        /// カードがアンホバーされる条件を満たしているかチェックします
         /// </summary>
         /// <param name="command">アンホバーコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public void OnUnhover(SpriteUnhoverCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardUnhover(SpriteUnhoverCommand command, UIInteractionOrchestrator orchestrator)
         {
-            Debug.Log("Card_OnUnhover");
+            Debug.Log("ChkCardUnhover");
 
             // UIがアイドル状態の場合
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
                 // アンホバーされたカードのViewを取得し、通常状態に遷移
                 var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
-                if (cardView != null) cardView.EnterNormalState();
+                if (cardView != null) return true;
             }
+            return false;
+        }
+
+        /// <summary>
+        /// カードがスロットにドロップか判定します
+        /// </summary>
+        /// <param name="command">ドロップコマンド。</param>
+        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
+        public bool ChkCardDrop(SpriteDropCommand command, UIInteractionOrchestrator orchestrator)
+        {
+            // UIがカードドラッグ中の場合のみ処理
+            if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return false;
+            return true;
+        }
+
+        /// <summary>
+        /// カードがドラッグ中か判定します
+        /// </summary>
+        /// <param name="command">ドラッグコマンド。</param>
+        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
+        public bool ChkCardDrag(SpriteDragCommand command, UIInteractionOrchestrator orchestrator)
+        {
+            if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return false;
+            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
+            if (draggedCardView == null) return false;
+            return true;
+        }
+
+        /// <summary>
+        /// カードのドラッグが終了したときに呼び出されます。
+        /// </summary>
+        /// <param name="command">ドラッグ終了コマンド。</param>
+        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
+        public bool ChkCardEndDrag(SpriteEndDragCommand command, UIInteractionOrchestrator orchestrator)
+        {
+            if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return false;
+            return true;
         }
 
         /// <summary>
@@ -120,7 +215,7 @@ namespace CardsAndDice
         public void OnDrag(SpriteDragCommand command, UIInteractionOrchestrator orchestrator)
         {
             var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
-            Debug.Log("<color=blue>Card_OnDrag：</color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
+//            Debug.Log("<color=blue>Card_OnDrag：</color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
 
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return;
 
@@ -128,7 +223,7 @@ namespace CardsAndDice
 //            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
             if (draggedCardView != null)
             {
-                Debug.Log("カード：" + draggedCardView._cardName + "->" + command.NewPosition);
+//                Debug.Log("カード：" + draggedCardView._cardName + "->" + command.NewPosition);
                 // ドラッグ中状態に遷移し、カードを新しい位置へ移動
                 draggedCardView.EnterDraggingInProgressState();
                 draggedCardView.MoveTo(command.NewPosition);

@@ -72,24 +72,6 @@ namespace CardsAndDice
             return _slotDataMap.Values.Count(s => s.Line != LinePosition.Hand && s.IsOccupied) >= 6;
         }
 
-        /// <summary>
-        /// ReflowPlacedCardIdとPlacedCardIdで配置されているカードの数が異なる場合に、
-        /// 全てのスロットの中身をログ出力します。
-        /// デバッグ用途のメソッドです。
-        /// </summary>
-        public void LogSlotDifferences()
-        {
-            int reflowPlacedCount = _slotDataMap.Values.Count(s => s.ReflowPlacedCardId != null);
-            int placedCount = _slotDataMap.Values.Count(s => s.PlacedCardId != null);
-
-            if (reflowPlacedCount != placedCount)
-            {
-                Debug.LogWarning($"[CardSlotStateRepository] Mismatch in card counts. ReflowPlaced: {reflowPlacedCount}, Placed: {placedCount}");
-                foreach (var slot in _slotDataMap.Values)
-                {
-                    Debug.LogWarning($"  Slot: {slot.SlotId?.ToString() ?? "NULL"}, Line: {slot.Line}, Location: {slot.Location}, PlacedCardId: {slot.PlacedCardId?.ToString() ?? "NULL"}, ReflowPlacedCardId: {slot.ReflowPlacedCardId?.ToString() ?? "NULL"}");
-                }
-            }
-        }
+        
     }
 }

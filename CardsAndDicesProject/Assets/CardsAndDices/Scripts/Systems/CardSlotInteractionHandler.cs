@@ -73,7 +73,7 @@ namespace CardsAndDice
                     cardMovements.Add(slotData.PlacedCardId, slotData.Position);
                 }
             }
-            _commandBus.Emit(new ReflowCompletedCommand(cardMovements));
+            _commandBus.Emit(new SystemReflowCommand(cardMovements, null));
         }
         private void ReflowCardsCurrentValue()
         {
@@ -94,11 +94,7 @@ namespace CardsAndDice
             CardSlotData targetSlotData = _repository.GetSlotData(droppedSlotId);
             
             Dictionary<CompositeObjectId, Vector3> cardMovements = _reflowService.CalculateReflowMovements(draggedSlotData, targetSlotData, droppedCardId);
-
-            if (cardMovements.Count > 0)
-            {
-                _commandBus.Emit(new ReflowCompletedCommand(cardMovements));
-            }
+            _commandBus.Emit(new ReflowCompletedCommand(cardMovements));
         }
 
         private void CheckAndNotifyPlayerZoneState()

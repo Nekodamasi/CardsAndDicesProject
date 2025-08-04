@@ -23,6 +23,8 @@ namespace CardsAndDice
         [SerializeField] private CardInteractionStrategy _cardInteractionStrategy;
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
 
+        [SerializeField] private SystemReflowController _systemReflowController;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // DOTweenの初期化とTween容量の設定
@@ -41,6 +43,7 @@ namespace CardsAndDice
             builder.RegisterInstance(_uiInteractionOrchestrator).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_cardInteractionStrategy).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_uiActivationPolicy).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_systemReflowController).AsSelf().AsImplementedInterfaces();
 
             _uiStateMachine.Initialize();
             _spriteCommandBus.Initialize();
@@ -48,12 +51,13 @@ namespace CardsAndDice
             _cardSlotStateRepository.Initialize();
             _cardPlacementService.Initialize(_cardSlotStateRepository);
             _cardSlotInteractionHandler.InInitialize(_spriteCommandBus, _cardSlotStateRepository, _reflowService, _cardPlacementService);
-            _cardSlotDebug.InInitialize(_cardSlotStateRepository);
+            _cardSlotDebug.InInitialize(_cardSlotStateRepository, _uiInteractionOrchestrator.ViewRegistry);
             _compositeObjectIdManager.Initialize();
             _uiInteractionOrchestrator.Initialize(_uiStateMachine, _cardSlotManager, _spriteCommandBus, _reflowService, _uiActivationPolicy, _cardInteractionStrategy);
-            _reflowService.Initialize(_cardSlotStateRepository);
+            _reflowService.Initialize(_cardSlotStateRepository, _cardSlotDebug);
             _cardInteractionStrategy.Initialize();
             _uiActivationPolicy.Initialize();
+            _systemReflowController.Initialize(_spriteCommandBus, _uiInteractionOrchestrator);
 
             // ViewコンポーネントのDI登録
             builder.RegisterComponentInHierarchy<CreatureCardView>();
