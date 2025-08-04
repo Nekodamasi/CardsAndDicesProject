@@ -1,6 +1,7 @@
 using UnityEngine;
 using VContainer;
 using DG.Tweening;
+using System;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -91,15 +92,17 @@ namespace CardsAndDice
 
         private void OnBeginDrag(SpriteBeginDragCommand command)
         {
-            if (UIStateMachine.CurrentState != UIStateMachine.UIState.Idle) return;
-            _draggedId = command.TargetObjectId;
-            if (command.TargetObjectId.ObjectType == "Card")
+            if (_cardInteractionStrategy.ChkCardBeginDrag(command, this))
             {
-                _activeStrategy = _cardInteractionStrategy;
+                UIStateMachine.SetState(UIStateMachine.UIState.DraggingCard);
+                _draggedId = command.TargetObjectId;
+
+                var draggedCardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                Debug.Log("<color=red>Card_OnBeginDrag-></color>" + draggedCardView._cardName + "->" + UIStateMachine.CurrentState + " Flg:" + IsDroppedSuccessfully);
+                draggedCardView.EnterDraggingState();
+                _uiActivationPolicy.DraggingCardToCardActivations(this);
+                _uiActivationPolicy.DraggingCardToCardSlotActivations(this);
             }
-            _activeStrategy?.OnBeginDrag(command, this);
-            _uiActivationPolicy.DraggingCardToCardActivations(this);
-            _uiActivationPolicy.DraggingCardToCardSlotActivations(this);
         }
 
         private void OnHover(SpriteHoverCommand command)
@@ -115,9 +118,12 @@ namespace CardsAndDice
                 Debug.Log("<color=Green>OnHover:</color>" + _currentReflowState);
                 ExecuteHover(command);
             }
-            else if (UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
+
+            if (_cardInteractionStrategy.ChkCardHover(command, this))
             {
-                _cardInteractionStrategy?.OnHover(command, this);
+                // ホバーされたカードのViewを取得し、ホバー状態に遷移
+                var cardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                cardView.EnterHoveringState();
             }
         }
 
@@ -132,31 +138,75 @@ namespace CardsAndDice
 
         private void OnUnhover(SpriteUnhoverCommand command)
         {
-            if (command.TargetObjectId.ObjectType == "Card")
+            if (_cardInteractionStrategy.ChkCardUnhover(command, this))
             {
-                _cardInteractionStrategy?.OnUnhover(command, this);
+                // アンホバーされたカードのViewを取得し、通常状態に遷移
+                var cardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                cardView.EnterNormalState();
             }
         }
 
         private void OnDrop(SpriteDropCommand command)
         {
-            if (UIStateMachine.CurrentState == UIStateMachine.UIState.Idle) return;
-            _commandBus.Emit(new DisableUIInteractionCommand());
-            _activeStrategy?.OnDrop(command, this);
+            if (_cardInteractionStrategy.ChkCardDrop(command, this))
+            {
+                var draggedCardView = ViewRegistry.GetView<CreatureCardView>(DraggedId);
+                Debug.Log("<color=red>Card_OnDrop-></color>" + draggedCardView._cardName + "->" + UIStateMachine.CurrentState + " Flg:" + IsDroppedSuccessfully);
+
+                _commandBus.Emit(new DisableUIInteractionCommand());
+                UIStateMachine.SetState(UIStateMachine.UIState.DropedCard);
+
+                // カードスロットマネージャーにドロップ処理を依頼
+                CardSlotManager.OnCardDroppedOnSlot(command.DroppedObjectId, command.TargetSlotObjectId);
+                // ドロップが成功したことを示すフラグを設定
+                IsDroppedSuccessfully = true;
+            }
         }
 
         private void OnDrag(SpriteDragCommand command)
         {
-            if (UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return;
-            _activeStrategy?.OnDrag(command, this);
+            if (_cardInteractionStrategy.ChkCardDrag(command, this))
+            {
+                // アンホバーされたカードのViewを取得し、通常状態に遷移
+                var draggedCardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                // ドラッグ中状態に遷移し、カードを新しい位置へ移動
+                draggedCardView.EnterDraggingInProgressState();
+                draggedCardView.MoveTo(command.NewPosition);
+            }
         }
 
         private void OnEndDrag(SpriteEndDragCommand command)
         {
-            if (UIStateMachine.CurrentState == UIStateMachine.UIState.Idle) return;
-            _commandBus.Emit(new DisableUIInteractionCommand());
-            _activeStrategy?.OnEndDrag(command, this);
-            _activeStrategy = null;
+            if (_cardInteractionStrategy.ChkCardEndDrag(command, this))
+            {
+                _commandBus.Emit(new DisableUIInteractionCommand());
+                CardEndDrag(command);
+            }
+        }
+
+        /// <summary>
+        /// カードのドラッグが終了したときに呼び出されます。
+        /// </summary>
+        /// <param name="command">ドラッグ終了コマンド。</param>
+        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
+        public async void CardEndDrag(SpriteEndDragCommand command)
+        {
+            Debug.Log("<color=red>Card_OnEndDrag-></color>" + UIStateMachine.CurrentState + " Flg:" + IsDroppedSuccessfully);
+
+            // UIステートをドロップ済みカードに設定
+            UIStateMachine.SetState(UIStateMachine.UIState.DropedCard);
+
+            // 遅延処理でドロップの成否を判定
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+
+            // ドロップが成功しなかった場合、リフローを元に戻す
+            Debug.Log("Card_OnEndDrag->01秒後に実行するやつ:" + IsDroppedSuccessfully);
+            if (!IsDroppedSuccessfully)
+            {
+                CardSlotManager.OnDropFailed();
+            }
+            // ドロップ成功フラグをリセット
+            IsDroppedSuccessfully = false;
         }
 
         private void OnReflowOperationCompleted(ReflowOperationCompletedCommand command)
