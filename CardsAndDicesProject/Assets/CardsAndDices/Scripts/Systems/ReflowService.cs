@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 
@@ -62,13 +63,11 @@ namespace CardsAndDice
                             // Vanguardも空いている場合、RearのカードをVanguardへ移動
                             if (vanguard != null && !vanguard.IsOccupied)
                             {
-                                Debug.Log("rear - > vanguard");
                                 MoveCard(rear, vanguard, movements);
                             }
                             // Vanguardが空いていない場合、RearのカードをCenterへ移動
                             else
                             {
-                                Debug.Log("rear - > center");
                                 MoveCard(rear, center, movements);
                             }
                         }
@@ -104,7 +103,7 @@ namespace CardsAndDice
                     }
                 }
             }
-
+/*
             // draggedCardIdの移動がmovementsに含まれていない場合、その現在配置への移動を追加
             if (draggedCardId != null && !movements.ContainsKey(draggedCardId))
             {
@@ -115,7 +114,7 @@ namespace CardsAndDice
                 }
             }
             Debug.Log("movementsはいくつー？＞" + movements.Count);
-
+*/
             return movements;
         }
 
@@ -128,6 +127,8 @@ namespace CardsAndDice
         /// <param name="movements">移動情報を記録する辞書。</param>
         private void MoveCard(CardSlotData from, CardSlotData to, Dictionary<CompositeObjectId, Vector3> movements)
         {
+            Debug.Log(from.Line + "_" + from.Location + " -> " + to.Line + "_" + to.Location);
+
             // 移動元スロットのカードIDと移動先スロットのワールド座標を記録
             movements[from.PlacedCardId] = to.Position;
             // 移動先スロットに移動元のカードを設定

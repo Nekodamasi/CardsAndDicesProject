@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace CardsAndDice
 {
@@ -78,10 +79,9 @@ namespace CardsAndDice
         /// CardSlotViewは通常アニメーションで移動しないため、空の実装。
         /// </summary>
         /// <param name="targetPosition">移動先のワールド座標。</param>
-        public override void MoveToAnimated(Vector3 targetPosition, ICommand commandToEmitOnComplete = null)
+        public override UniTask MoveToAnimated(Vector3 targetPosition)
         {
-            // CardSlotViewは通常アニメーションで移動しないため、空の実装
-            // 必要であれば、ここにスロット固有のアニメーションロジックを記述
+            return UniTask.CompletedTask;
         }
 
         /// <summary>

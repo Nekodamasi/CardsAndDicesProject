@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using VContainer;
@@ -120,7 +121,7 @@ namespace CardsAndDice
         /// Viewを指定された位置へアニメーションで移動させます。
         /// </summary>
         /// <param name="targetPosition">移動先のワールド座標。</param>
-        public abstract void MoveToAnimated(Vector3 targetPosition, ICommand commandToEmitOnComplete = null);
+        public abstract UniTask MoveToAnimated(Vector3 targetPosition);
 
         // --- Helper Methods ---
         public CompositeObjectId GetObjectId() => _identifiableGameObject.ObjectId;

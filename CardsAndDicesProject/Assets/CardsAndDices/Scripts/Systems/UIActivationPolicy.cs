@@ -36,6 +36,7 @@ namespace CardsAndDice
                 }
                 else
                 {
+                    Debug.Log("ちゃんと動いてる？");
                     slotView.EnterAcceptableState();
                 }
             }

@@ -1,6 +1,8 @@
 using UnityEngine;
 using VContainer;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CardsAndDice
 {
@@ -25,6 +27,7 @@ namespace CardsAndDice
         private CompositeObjectId _draggedId;
         private ViewRegistry _viewRegistry;
         private bool _isDroppedSuccessfully;
+        public bool IsReflow;
 
         public UIStateMachine UIStateMachine => _uiStateMachine;
         public CardSlotManager CardSlotManager => _cardSlotManager;
@@ -45,6 +48,7 @@ namespace CardsAndDice
             _viewRegistry = new ViewRegistry();
             _draggedId = null;
             _activeStrategy = null;
+            IsReflow = false;
 
             _commandBus.On<SpriteBeginDragCommand>(OnBeginDrag);
             _commandBus.On<SpriteHoverCommand>(OnHover);
@@ -85,7 +89,6 @@ namespace CardsAndDice
         /// </summary>
         public void RegisterView(BaseSpriteView view)
         {
-            Debug.Log("とうろくーーー！" + view.GetObjectId());
             _viewRegistry.Register(view);
         }
 
@@ -132,7 +135,7 @@ namespace CardsAndDice
             {
                 _cardInteractionStrategy?.OnHover(command, this);
             }
-            if (command.TargetObjectId.ObjectType == "CardSlot")
+            if (command.TargetObjectId.ObjectType == "CardSlot" && !IsReflow)
             {
                 _cardInteractionStrategy?.OnHover(command, this);
             }
@@ -194,10 +197,7 @@ namespace CardsAndDice
         {
 //            var cardView = _viewRegistry.GetView<CreatureCardView>(_draggedId);
             Debug.Log($"<color=red>リフローオペレーション完了</color>:" + UIStateMachine.CurrentState);
-            UIStateMachine.SetState(UIStateMachine.UIState.DraggingCard);
-
-            // 「UI操作制限モード」OFF
-            _commandBus.Emit(new EnableUIInteractionCommand());
+            IsReflow = false;
         }
 
         /// <summary>
@@ -224,105 +224,70 @@ namespace CardsAndDice
         /// <summary>
         /// ドラッグリフロー完了
         /// </summary>
-        private void OnDragReflowCompleted(DragReflowCompletedCommand command)
+        private async void OnDragReflowCompleted(DragReflowCompletedCommand command)
         {
-            Debug.Log("ドラッグリフロー完了");
+            var draggedcardView = _viewRegistry.GetView<CreatureCardView>(_draggedId);
+            Debug.Log($"<color=red>ドラッグリフロー完了</color>:" + draggedcardView._cardName + "->" + UIStateMachine.CurrentState);
             UIStateMachine.SetState(UIStateMachine.UIState.DropedCardMove);
+            var animationTasks = new List<UniTask>();
+
             foreach (var movement in command.CardMovements)
             {
-                var cardId = movement.Key;
-                var targetPosition = movement.Value;
-
-                var cardView = _viewRegistry.GetView<CreatureCardView>(cardId);
+                var cardView = _viewRegistry.GetView<CreatureCardView>(movement.Key);
                 if (cardView != null)
                 {
-                    if (_draggedId is null)
-                    {
-
-                        Debug.Log("入れ替え----------------------------------------------");
-                        _draggedId = cardId;
-                    }
-
-                    // ドラッグしたカードだけExecuteFrontLoadCommandを呼ぶ
-                    if (_draggedId == cardId)
-                    {
-                        cardView.MoveToAnimated(targetPosition, new ExecuteFrontLoadCommand());
-                    }
-                    else
-                    {
-                        cardView.MoveToAnimated(targetPosition, null);
-                    }
-//                        cardView.MoveToAnimated2(targetPosition, new SpriteDragOperationCompletedCommand(_draggedId, _isDroppedSuccessfully));
+                    animationTasks.Add(cardView.MoveToAnimated(movement.Value));
                 }
             }
+
+            await UniTask.WhenAll(animationTasks);
+            _commandBus.Emit(new ExecuteFrontLoadCommand());
         }
 
         /// <summary>
         /// 前詰め処理開始
         /// </summary>
-        private void OnExecuteFrontLoad(ExecuteFrontLoadCommand command)
+        private async void OnExecuteFrontLoad(ExecuteFrontLoadCommand command)
         {
-            Debug.Log("前詰め処理開始");
+            var draggedcardView = _viewRegistry.GetView<CreatureCardView>(_draggedId);
             var frontLoadMovements = _reflowService.CalculateFrontLoadMovements(_draggedId);
+            Debug.Log($"<color=red>前詰め処理開始</color>:" + draggedcardView._cardName + "->" + UIStateMachine.CurrentState);
             if (frontLoadMovements.Count > 0)
             {
+                var animationTasks = new List<UniTask>();
                 foreach (var movement in frontLoadMovements)
                 {
-                    var cardId = movement.Key;
-                    var targetPosition = movement.Value;
-
-                    var cardView = _viewRegistry.GetView<CreatureCardView>(cardId);
+                    var cardView = _viewRegistry.GetView<CreatureCardView>(movement.Key);
                     if (cardView != null)
                     {
-                        // ドラッグカードだけSpriteDragOperationCompletedCommandを呼ぶ
-                        if (_draggedId == cardId)
-                        {
-                            cardView.MoveToAnimated(targetPosition, new SpriteDragOperationCompletedCommand());
-                        }
-                        else
-                        {
-                            cardView.MoveToAnimated(targetPosition, null);
-                        }
+                        animationTasks.Add(cardView.MoveToAnimated(movement.Value));
                     }
                 }
+                await UniTask.WhenAll(animationTasks);
             }
-            else
-            {
-                Debug.Log("前詰め処理０件");
-                _commandBus.Emit(new SpriteDragOperationCompletedCommand());
-            }
-
+            _commandBus.Emit(new SpriteDragOperationCompletedCommand());
         }
 
         /// <summary>
         /// リフロー完了
         /// </summary>
-        private void OnReflowCompleted(ReflowCompletedCommand command)
+        private async void OnReflowCompleted(ReflowCompletedCommand command)
         {
-            Debug.Log("リフロー完了");
-
-            // 「UI操作制限モード」ON
-            _commandBus.Emit(new DisableUIInteractionCommand());
-
-            // リフロー対象なし
-            if (command.CardMovements.Count == 0)
+            if (command.CardMovements.Count > 0)
             {
-                Debug.Log("リフロー対象なし");
-                _commandBus.Emit(new ReflowOperationCompletedCommand());
-            }
-
-
-            foreach (var movement in command.CardMovements)
-            {
-                var cardId = movement.Key;
-                var targetPosition = movement.Value;
-
-                var cardView = _viewRegistry.GetView<CreatureCardView>(cardId);
-                if (cardView != null)
+                var animationTasks = new List<UniTask>();
+                foreach (var movement in command.CardMovements)
                 {
-                    cardView.MoveToAnimated(targetPosition, new ReflowOperationCompletedCommand());
+                    var cardView = _viewRegistry.GetView<CreatureCardView>(movement.Key);
+                    if (cardView != null)
+                    {
+                        animationTasks.Add(cardView.MoveToAnimated(movement.Value));
+                    }
                 }
+                await UniTask.WhenAll(animationTasks);
             }
+            
+            _commandBus.Emit(new ReflowOperationCompletedCommand());
         }
     }
 }

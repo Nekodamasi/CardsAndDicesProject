@@ -60,7 +60,7 @@ namespace CardsAndDice
                     Debug.Log("<color=green>リフローに進んだカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
 
                     // ホバーリフローを実行
-                    orchestrator.UIStateMachine.SetState(UIStateMachine.UIState.Reflow);
+                    orchestrator.IsReflow = true;
                     orchestrator.CardSlotManager.OnCardHoveredOnSlot(orchestrator.DraggedId, command.TargetObjectId);
                 }
             }
