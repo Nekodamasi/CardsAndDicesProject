@@ -24,7 +24,6 @@ namespace CardsAndDice
         [Header("Strategies")]
         [SerializeField] private CardInteractionStrategy _cardInteractionStrategy;
 
-        private IInteractionStrategy _activeStrategy;
         private CompositeObjectId _draggedId;
         private ViewRegistry _viewRegistry;
         private bool _isDroppedSuccessfully;
@@ -47,7 +46,6 @@ namespace CardsAndDice
 
             _viewRegistry = new ViewRegistry();
             _draggedId = null;
-            _activeStrategy = null;
             _currentReflowState = ReflowState.Idle;
             _nextHoverCommand = null;
 

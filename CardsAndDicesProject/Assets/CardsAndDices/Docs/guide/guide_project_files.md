@@ -88,6 +88,7 @@
 | SpriteEndDragCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteEndDragCommand.cs |
 | SpriteHoverCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteHoverCommand.cs |
 | SpriteUnhoverCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteUnhoverCommand.cs |
+| SystemReflowCommand.cs | システム起因のカードリフローを実行するコマンド。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SystemReflowCommand.cs |
 
 ### Scripts/Data
 
@@ -132,8 +133,8 @@
 | CardSlotInteractionHandler.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotInteractionHandler.cs |
 | CardSlotManager.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotManager.cs |
 | CardSlotStateRepository.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotStateRepository.cs |
-| IInteractionStrategy.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\IInteractionStrategy.cs |
 | ReflowService.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\ReflowService.cs |
+| SystemReflowController.cs | システム起因のリフロー処理を実行するコントローラー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\SystemReflowController.cs |
 | UIActivationPolicy.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIActivationPolicy.cs |
 | UIInteractionOrchestrator.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIInteractionOrchestrator.cs |
 | UIStateMachine.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIStateMachine.cs |

@@ -6,18 +6,18 @@
 
 このドキュメントは、UI全体のインタラクションを一元的に管理・指揮する `UIInteractionOrchestrator` クラスの設計を定義します。
 
-本クラスは、UIインタラクションの複雑化に対応するため、**Strategyパターン**と**Policyパターン**を導入し、責務の分離と拡張性の向上を図りました。
+本クラスは、UIイベントのハブとして機能し、インタラクションの条件チェックと、それに応じたロジックの実行という2つの大きな責務を持ちます。
 
---- 
+---
 
 ## 2. 役割と責務
 
-`UIInteractionOrchestrator` は、UIイベントのハブとして機能し、現在のUI状態とゲームの論理状態に基づいて、適切なインタラクション戦略と活性化ポリシーを適用する**コンテキスト**としての役割を担います。
+`UIInteractionOrchestrator` は、UIイベントの購読、インタラクション条件の検証、および具体的な処理の実行を統括します。
 
 - **UIイベントの一元的な購読:** `SpriteCommandBus` を流れる全てのUI関連コマンド（`SpriteBeginDragCommand`, `SpriteHoverCommand`など）を購読します。
-- **インタラクション戦略の選択と委譲:** ドラッグされたオブジェクトの種類（カード、ダイスなど）に応じて、適切な `IInteractionStrategy` 実装を選択し、具体的なインタラクションロジックの実行を委譲します。
-- **UI活性化ポリシーの適用:** `UIActivationPolicy` を利用して、現在のゲーム状態に基づき、UI要素の活性/非活性状態を更新します。
-- **Viewへの具体的な指示:** `ViewRegistry` を通じて各Viewの公開メソッドを呼び出し、視覚的な更新を指示します。
+- **インタラクション条件の検証:** `CardInteractionStrategy` を利用して、受け取ったイベントを現在のゲーム状況で処理すべきかどうかの条件をチェックします。
+- **具体的な処理の実行:** 条件が満たされた場合、`UIStateMachine` の状態変更、`CardSlotManager` への処理依頼、`View` への視覚的更新指示など、イベントに応じた具体的なロジックを実行します。
+- **リフロー中のホバーイベント制御:** 高速な連続ホバー操作による過剰なリフローを防ぐため、デバウンスとキューイングを組み合わせた制御を行います。
 
 ---
 
@@ -28,10 +28,9 @@
 - **`CardSlotManager`**: スロットの論理的な状態を参照し、リフロー処理を依頼するためのマネージャー。
 - **`ReflowService`**: リフロー計算ロジックを提供するサービス。
 - **`ViewRegistry`**: `CompositeObjectId` をキーとして、シーン上に存在する `BaseSpriteView` のインスタンスを検索・取得するためのレジストリクラス。
-- **`IInteractionStrategy` (インターフェース)**: インタラクションの具体的な振る舞いを定義する戦略インターフェース。
-    - **`CardInteractionStrategy`**: `IInteractionStrategy` の実装の一つで、カードに関するインタラクションロジックをカプセル化します。
-    - (将来的に `DiceInteractionStrategy` などが追加される可能性があります。)
+- **`CardInteractionStrategy`**: インタラクションを実行するための**条件**をチェックする責務を持つクラス。具体的な処理ロジックは持たず、「いつ（When）イベントを処理すべきか」の判断のみを行います。
 - **`UIActivationPolicy`**: UI要素の活性/非活性ルールを管理するクラス。
+- **`SystemReflowController`**: システム起因のカード移動アニメーションを管理するクラス。
 
 ---
 
@@ -40,28 +39,23 @@
 ### 例1：カードのドラッグ開始時 (`OnBeginDrag`)
 
 1.  `SpriteBeginDragCommand` を受け取ります。
-2.  ドラッグされたオブジェクトの `ObjectType` を判断し、対応する `IInteractionStrategy` （例: `CardInteractionStrategy`）をアクティブな戦略として設定します。
-3.  アクティブな戦略の `OnBeginDrag` メソッドを呼び出し、具体的なドラッグ開始処理を委譲します。
-4.  `UIActivationPolicy` の `UpdateActivations` メソッドを呼び出し、現在の状態に基づいてUI要素の活性/非活性を更新します。
+2.  `_cardInteractionStrategy.ChkCardBeginDrag()` を呼び出し、ドラッグを開始できる状況か検証します。
+3.  `true` が返された場合、`UIStateMachine` の状態を `DraggingCard` に変更し、関連するViewの更新やUIの活性化状態の変更など、具体的なドラッグ開始処理を実行します。
 
-### 例2：スロットへのホバー時 (`OnHover`)
+### 例2：リフロー中のホバーイベント (`OnHover`)
 
 1.  `SpriteHoverCommand` を受け取ります。
-2.  アクティブな戦略の `OnHover` メソッドを呼び出し、具体的なホバー処理を委譲します。
-    -   戦略内部では、`UIStateMachine` の状態や `CardSlotManager` の情報に基づいて、リフロープレビューの要求などを行います。
-
-### 例3：ドロップ完了時 (`OnDrop`)
-
-1.  `SpriteDropCommand` を受け取ります。
-2.  アクティブな戦略の `OnDrop` メソッドを呼び出し、具体的なドロップ処理を委譲します。
-    -   戦略内部では、`CardSlotManager` にカード配置を依頼し、ドロップ成功フラグを更新します。
-3.  `UIActivationPolicy` の `UpdateActivations` メソッドを呼び出し、UI要素の活性/非活性を更新します。
+2.  `_currentReflowState` が `InProgress`（リフロー処理中）かチェックします。
+3.  **リフロー中の場合:** 受け取ったコマンドを `_nextHoverCommand` 変数に保存（キューイング）し、処理を中断します。新しいホバーイベントが来た場合は、常にこの変数を上書きします。
+4.  **アイドル状態の場合:** `ExecuteHover()` を呼び出し、通常のリフロー処理を開始します。
+5.  リフローアニメーション完了後、`OnReflowOperationCompleted` が呼び出されます。
+6.  `OnReflowOperationCompleted` 内で `_nextHoverCommand` をチェックし、キューにコマンドが存在すれば、それを実行してデバウンス処理を実現します。キューが空であれば、UI操作を有効化して一連の処理を完了します。
 
 ---
 
 ## 5. 各Viewに要求されるインターフェース
 
-`UIInteractionOrchestrator` およびその戦略クラスが正しく動作するために、`BaseSpriteView` およびその派生クラスは、以下のような状態遷移メソッドを `public` で公開する必要があります。
+`UIInteractionOrchestrator` が正しく動作するために、`BaseSpriteView` およびその派生クラスは、以下のような状態遷移メソッドを `public` で公開する必要があります。
 
 - `EnterNormalState()`
 - `EnterHoveringState()`
@@ -70,10 +64,8 @@
 - `EnterAcceptableState()`
 - `EnterInactiveState()`
 - `MoveTo(Vector3 position)`
-- `MoveToAnimated(Vector3 targetPosition, ICommand commandToEmitOnComplete = null)`
+- `MoveToAnimated(Vector3 targetPosition)`: **戻り値が `UniTask` に変更されました。**
 - `SetColliderEnabled(bool enable)`
-
-これにより、各Viewは自身の状態を判断することなく、Orchestratorからの指示に従って振る舞うことができます。
 
 ---
 
@@ -95,18 +87,14 @@
 ## 関連ファイル
 
 - [gdd_sprite_ui_design.md](../gdd/gdd_sprite_ui_design.md)
-- [ui_card_slot_interaction.md](../ui/ui_card_slot_interaction.md)
-- [ui_creature_card_interaction.md](../ui/ui_creature_card_interaction.md)
-- `Assets/CardsAndDices/Scripts/Systems/IInteractionStrategy.cs`
+- [sys_card-reflow.md](./sys_card-reflow.md)
 - `Assets/CardsAndDices/Scripts/Systems/CardInteractionStrategy.cs`
-- `Assets/CardsAndDices/Scripts/Systems/UIActivationPolicy.cs`
-- `Assets/CardsAndDices/Scripts/Commands/EnableUIInteractionCommand.cs`
-- `Assets/CardsAndDices/Scripts/Commands/DisableUIInteractionCommand.cs`
+- `Assets/CardsAndDices/Scripts/Systems/SystemReflowController.cs`
 
 ---
 
 ## 更新履歴
 
-- 2025-08-01: UI操作制限モードの導入を反映。 (Gemini)
-- 2025-08-01: `UIInteractionOrchestrator`のリファクタリング（Strategyパターン、Policyパターンの導入）を反映。 (Gemini)
-- 2025-07-26: 初版作成 (Gemini - Technical Writer for Game Development)
+- 2025-08-03: `IInteractionStrategy` の廃止と `CardInteractionStrategy` の責務変更を反映。リフロー中のホバーイベント制御（デバウンス）に関する設計を追記。
+- 2025-08-01: UI操作制限モードの導入を反映。
+- 2025-07-26: 初版作成

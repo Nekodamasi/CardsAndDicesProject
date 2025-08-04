@@ -25,6 +25,7 @@
 | SpriteEndDragCommand | ICommand | | SpriteUI要素のドラッグ操作が終了したことを通知するコマンド。 |
 | SpriteHoverCommand | ICommand | | マウスカーソルがSpriteUI要素上に入った時のコマンド。 |
 | SpriteUnhoverCommand | ICommand | | マウスカーソルがSpriteUI要素から離れた時のコマンド。 |
+| SystemReflowCommand | ICommand | | システム起因のカードリフローを実行するコマンド。 |
 
 ### 2. Data
 
@@ -63,14 +64,14 @@
 
 | クラス名 | 継承元 | 関連ドキュメント | 解説 |
 | :--- | :--- | :--- | :--- |
-| CardInteractionStrategy | ScriptableObject, IInteractionStrategy | | カードのUIインタラクション戦略を実装するクラス。 |
+| CardInteractionStrategy | ScriptableObject | | カードとスロットのインタラクションが可能かどうかの条件をチェックする責務を持つクラス。 |
 | CardPlacementService | ScriptableObject | | カードの配置ロジックを担当するサービスクラス。 |
 | CardSlotDebug | ScriptableObject | | スロット関連のデバッグ機能を提供するクラス。 |
 | CardSlotInteractionHandler | ScriptableObject | | UIからのスロット関連のインタラクションを処理するクラス。 |
 | CardSlotManager | ScriptableObject | | 全てのカードスロット関連の処理の窓口となるファサードクラス。 |
 | CardSlotStateRepository | ScriptableObject | | 全てのカードスロットの状態を管理するリポジトリクラス。 |
-| IInteractionStrategy | なし | | UIインタラクションの戦略を定義するインターフェース。 |
 | ReflowService | ScriptableObject | | カードのリフロー（再配置）および前詰め処理の計算ロジックを担当するサービスクラス。 |
+| SystemReflowController | ScriptableObject | | システム起因のリフロー処理を実行するコントローラー。 |
 | UIActivationPolicy | ScriptableObject | | UI要素のアクティブ/非アクティブ状態を管理するクラス。 |
 | UIInteractionOrchestrator | ScriptableObject | | UIインタラクション全体を統括し、適切な戦略に処理を委譲するクラス。 |
 | UIStateMachine | ScriptableObject | | UIの全体的なインタラクション状態を管理するステートマシン。 |
@@ -98,8 +99,3 @@
 ## 関連ファイル
 
 - [guide_sys_classes_creation.md](./guide_sys_classes_creation.md): このドキュメントの作成手順ガイド
----
-
-## 更新履歴
-
-- 2025-07-25: クラス一覧を格納フォルダごとに整理し、関連ドキュメントを修正 (Gemini - Technical Writer for Game Development)

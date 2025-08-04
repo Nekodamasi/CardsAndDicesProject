@@ -5,88 +5,74 @@
 ## 概要
 
 このドキュメントは、ゲームボード上でのカードの再配置（リフロー）システムについて詳述します。
-特に、`CardSlotManager` が論理的な配置を決定し、各カードのViewが視覚的な移動を行う際の連携フローに焦点を当てます。
+リフローには、ユーザーのドラッグ操作に起因するものと、システムが自動的に実行するものの2種類が存在し、それぞれ異なるコントローラーとコマンドによって管理されます。
 
 ---
 
 ## 1. 主要コンポーネント
 
--   **`CardSlotManager` (Controller):**
-    -   全てのカードスロットの論理的な状態（どのカードがどのスロットにあるか）を管理します。
-    -   リフローの必要性を判断し、カードの新しい論理的な配置を決定します。
-    -   リフロー完了後、関連するViewに通知するためのコマンドを発行します。
-
--   **`CreatureCardView` (View):**
-    -   クリーチャーカードの視覚的な表現を担当します。
-    -   `CardSlotManager` から発行されるリフローコマンドを購読し、自身の新しい位置への移動アニメーションを実行します。
-
--   **`SpriteCommandBus`:**
-    -   `CardSlotManager` から `CreatureCardView` へ、リフロー完了の通知を伝達するための中央ハブです。
-
--   **`ReflowCompletedCommand` (新規コマンド):**
-    -   リフローが完了し、カードが新しい位置へ移動する必要があることを通知するためのコマンドです。
-    -   移動が必要な各カードの `CompositeObjectId` と、そのカードが移動すべき最終的なワールド座標（または新しいスロットのID）のリストを含みます。
+-   **`CardSlotManager`**: 全てのカードスロットの論理的な状態を管理し、リフローの必要性を判断して、適切なコマンドを発行するファサードクラス。
+-   **`UIInteractionOrchestrator`**: ユーザー操作（ドラッグ中のホバーなど）に起因するリフローを管理する。
+-   **`SystemReflowController`**: システム（カード配置の初期化など）に起因するリフローを管理する。
+-   **`CreatureCardView`**: 自身の移動アニメーションを実行するViewコンポーネント。
+-   **`SpriteCommandBus`**: 各コンポーネント間の通知を伝達する中央ハブ。
+-   **`ReflowCompletedCommand`**: **ユーザー操作**によるリフロープレビューの実行を通知するコマンド。
+-   **`DragReflowCompletedCommand`**: **ユーザー操作**によるリフローが確定し、カードを移動させることを通知するコマンド。
+-   **`SystemReflowCommand`**: **システム**によるリフローの実行を通知するコマンド。
 
 ---
 
-## 2. リフローのフロー（本番）
+## 2. リフローのフロー
 
-カードの配置が確定した際のリフローは、以下のステップで進行します。
-
-1.  **リフローのトリガー:**
-    -   `CardSlotManager` 内の `OnCardDroppedOnSlot` メソッドが、カードがスロットにドロップされたことを受けて実行されます。
-
-2.  **`CardSlotManager` による論理的な配置の確定:**
-    -   `OnCardDroppedOnSlot` メソッド内で、`_slotDataMap` の `PlacedCardId` が直接更新されます。これにより、カードの新しい論理的な配置が**即座に確定**します。
-
-3.  **Viewへの通知コマンド発行:**
-    -   `OnCardDroppedOnSlot` は、続けて `ReflowCardsCurrentValue()` を呼び出します。
-    -   `ReflowCardsCurrentValue()` は、現在の確定済み配置 (`PlacedCardId`) を元に、移動が必要なカードのリスト（IDと最終座標）を生成します。
-    -   生成された移動情報を含む `ReflowCompletedCommand` を `SpriteCommandBus` を介して発行します。
-
-4.  **`CreatureCardView` による視覚的な移動:**
-    -   各 `CreatureCardView` は `ReflowCompletedCommand` を購読しています。
-    -   コマンドを受け取った `CreatureCardView` は、コマンドに自身のIDが含まれていれば、指定された新しい位置へ移動するアニメーションを実行します。
-
----
-
-## 3. リフローのフロー（プレビュー）
+### フローA：ユーザー操作によるリフロー（プレビュー）
 
 ドラッグ中にリフロー結果をプレビュー表示する際のフローです。
 
-1.  **プレビューのトリガー:**
-    -   ドラッグ中のカードがスロットにホバーした際、`CardSlotView` が `CardSlotManager.RequestReflowPreview()` を呼び出します。
+1.  **トリガー:** ドラッグ中のカードがスロットにホバーする。
+2.  **`UIInteractionOrchestrator`** が `SpriteHoverCommand` を受け取る。
+3.  `CardSlotManager.OnCardHoveredOnSlot()` を呼び出す。
+4.  `CardSlotManager` は `ReflowService` を使ってリフローを計算し、結果を `ReflowCompletedCommand` として発行する。
+5.  **`UIInteractionOrchestrator`** が `ReflowCompletedCommand` を受け取り、各 `CreatureCardView` に `MoveToAnimated()` を実行させてプレビューを表示する。
 
-2.  **`CardSlotManager` によるプレビュー計算:**
-    -   `RequestReflowPreview()` は、現在の配置にドラッグ中のカードを加味した場合のリフロー結果を**計算するだけ**で、`PlacedCardId` は変更しません。
-    -   計算結果（仮の移動先リスト）を `ReflowCompletedCommand` として発行します。
+### フローB：ユーザー操作によるリフロー（確定）
 
-3.  **`CreatureCardView` によるプレビュー移動:**
-    -   各 `CreatureCardView` はコマンドを受け取り、指定された位置へ移動アニメーションをします。これがリフローのプレビューとなります。
+カードがスロットにドロップされ、配置が確定した際のリフローです。
 
-4.  **プレビューのキャンセル:**
-    -   カードがスロットからアンホバーされると、`CardSlotManager.CancelReflowPreview()` が呼ばれます。
-    -   `CancelReflowPreview()` は、現在の確定済み配置 (`PlacedCardId`) に基づく `ReflowCompletedCommand` を発行し、プレビュー表示されていたカードを元の位置に戻します。
+1.  **トリガー:** カードがスロットにドロップされる。
+2.  **`UIInteractionOrchestrator`** が `SpriteDropCommand` を受け取る。
+3.  `CardSlotManager.OnCardDroppedOnSlot()` を呼び出す。
+4.  `CardSlotManager` は配置を確定し、`DragReflowCompletedCommand` を発行する。
+5.  **`UIInteractionOrchestrator`** が `DragReflowCompletedCommand` を受け取り、各 `CreatureCardView` に `MoveToAnimated()` を実行させてカードを最終的な位置へ移動させる。
+
+### フローC：システムによるリフロー
+
+テスト用の初期配置など、システムがリフローを強制的に実行する際のフローです。
+
+1.  **トリガー:** `PlacementCardTester` などが `CardSlotManager.PlaceCardAsSystem()` を呼び出す。
+2.  `CardSlotManager` は `SystemReflowCardsCurrentValue()` を呼び出す。
+3.  `CardSlotInteractionHandler` が、現在の確定済み配置に基づき `SystemReflowCommand` を発行する。
+4.  **`SystemReflowController`** が `SystemReflowCommand` を購読し、受け取る。
+5.  `SystemReflowController` は、コマンド内の情報に基づき、各 `CreatureCardView` の `MoveToAnimated()` を呼び出してカードを移動させる。
+6.  全てのアニメーション完了後、`SystemReflowCommand` に指定されていれば、後続のコマンド（例: `SpriteDragOperationCompletedCommand`）を発行する。
 
 ---
 
-## 4. 「再配置」ロジックの記述場所
+## 3. 「再配置」ロジックの記述場所
 
-「再配置」の具体的なアルゴリズム（例: 隣接スワップ、前押し出しなど）は、`CardSlotManager.CalculateReflowMovements()` メソッド内に実装されます。このメソッドは主にリフロープレビューの計算に使用されます。
+「再配置」の具体的なアルゴリズム（例: 隣接スワップ、前押し出しなど）は、`ReflowService.CalculateReflowMovements()` メソッド内に実装されます。このメソッドは状態を持たず、純粋な計算のみを行います。
 
 ---
 
 ## 関連ファイル
 
--   [guide_overview.md](../guide/guide_overview.md)
--   [guide_design-principles.md](../guide/guide_design-principles.md)
--   [sys_domain-model.md](./sys_domain-model.md)
--   [../Scripts/Systems/CardSlotManager.cs](../../Scripts/Systems/CardSlotManager.cs)
--   [../Scripts/UI/CreatureCardView.cs](../../Scripts/UI/CreatureCardView.cs)
--   [../Scripts/Commands/ReflowCompletedCommand.cs](../../Scripts/Commands/ReflowCompletedCommand.cs) (新規作成予定)
+-   [sys_ui_interaction_orchestrator.md](./sys_ui_interaction_orchestrator.md)
+-   [sys_card_slot_manager.md](./sys_card_slot_manager.md)
+-   `Assets/CardsAndDices/Scripts/Systems/SystemReflowController.cs`
+-   `Assets/CardsAndDices/Scripts/Commands/SystemReflowCommand.cs`
 
 ---
 
 ## 更新履歴
 
--   2025-07-21: 初版作成 (Gemini - Technical Writer for Game Development)
+-   2025-08-03: `SystemReflowController` の導入と、ユーザー操作/システム起因のリフローの分離を反映。
+-   2025-07-21: 初版作成
