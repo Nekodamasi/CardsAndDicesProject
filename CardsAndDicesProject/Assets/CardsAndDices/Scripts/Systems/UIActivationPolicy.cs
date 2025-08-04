@@ -36,7 +36,7 @@ namespace CardsAndDice
                 }
                 else
                 {
-                    Debug.Log("ちゃんと動いてる？");
+//                    Debug.Log("ちゃんと動いてる？");
                     slotView.EnterAcceptableState();
                 }
             }
@@ -83,7 +83,6 @@ namespace CardsAndDice
 
             foreach (var cardView in orchestrator.ViewRegistry.GetAllCreatureCardViews())
             {
-                Debug.Log("リセット：" + cardView._cardName);
                 cardView.EnterNormalState();
             }
         }

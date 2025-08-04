@@ -16,6 +16,25 @@ namespace CardsAndDice
         public void Initialize()
         {
         }
+        public bool ChkCardSlotHover(SpriteHoverCommand command, UIInteractionOrchestrator orchestrator)
+        {
+            // UIがカードドラッグ中の場合
+            if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.DraggingCard)
+            {
+                // ホバーされたスロットのViewを取得
+                var cardSlotView = orchestrator.ViewRegistry.GetView<CardSlotView>(command.TargetObjectId);
+                if (cardSlotView != null)
+                {
+                    // スロットのデータとリフロー配置カードIDを確認
+                    var slotData = orchestrator.CardSlotManager.GetSlotData(command.TargetObjectId);
+                    Debug.Log("<color=green>ホバーされたカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
+                    if (slotData.ReflowPlacedCardId == orchestrator.DraggedId) return false; // 同じカードが既にリフロー配置されている場合は何もしない
+                    Debug.Log("<color=green>リフローに進んだカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// カードのドラッグ開始時に呼び出されます。
@@ -60,7 +79,6 @@ namespace CardsAndDice
                     Debug.Log("<color=green>リフローに進んだカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
 
                     // ホバーリフローを実行
-                    orchestrator.IsReflow = true;
                     orchestrator.CardSlotManager.OnCardHoveredOnSlot(orchestrator.DraggedId, command.TargetObjectId);
                 }
             }
@@ -120,7 +138,7 @@ namespace CardsAndDice
         public void OnDrag(SpriteDragCommand command, UIInteractionOrchestrator orchestrator)
         {
             var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
-            Debug.Log("<color=blue>Card_OnDrag：</color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
+//            Debug.Log("<color=blue>Card_OnDrag：</color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
 
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return;
 
@@ -128,7 +146,7 @@ namespace CardsAndDice
 //            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
             if (draggedCardView != null)
             {
-                Debug.Log("カード：" + draggedCardView._cardName + "->" + command.NewPosition);
+//                Debug.Log("カード：" + draggedCardView._cardName + "->" + command.NewPosition);
                 // ドラッグ中状態に遷移し、カードを新しい位置へ移動
                 draggedCardView.EnterDraggingInProgressState();
                 draggedCardView.MoveTo(command.NewPosition);

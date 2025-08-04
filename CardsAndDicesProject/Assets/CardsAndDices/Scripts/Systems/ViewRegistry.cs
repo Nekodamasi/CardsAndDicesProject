@@ -20,7 +20,6 @@ namespace CardsAndDice
             if (view == null || view.GetObjectId() == null) return;
 
             _views[view.GetObjectId()] = view;
-            Debug.Log("ここがきーとうろく：" + view.GetObjectId());
             if (view is CardSlotView slotView)
             {
                 _slotViews.Add(slotView);
