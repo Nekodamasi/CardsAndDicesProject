@@ -7,17 +7,6 @@ namespace CardsAndDice
 {
     public abstract class BaseSpriteView : MonoBehaviour
     {
-        protected enum SpriteStatus
-        {
-            Normal,
-            Hover,
-            DraggingStarted, // ドラッグ開始時
-            DraggingInProgress, // ドラッグ中
-            Move,
-            Acceptable,
-            Inactive
-        }
-
         [Header("Components")]
         [SerializeField] protected MultiRendererVisualController _multiRendererVisualController;
         [SerializeField] protected SpriteLayerController _spriteLayerController;
@@ -40,6 +29,9 @@ namespace CardsAndDice
         protected bool _originalColliderEnabled; // コライダーの元の状態を記憶
         protected Sequence _currentAnimation;
         protected Sequence _currentMoveAnimation;
+        public SpriteStatus CurrentStatus { get { return _currentStatus; } }
+
+        public CompositeObjectId SlotId { get; private set; }
 
         [Header("Orchestrator Reference")]
         [SerializeField] private UIInteractionOrchestrator _uiInteractionOrchestrator; // Inspectorから設定
@@ -71,6 +63,7 @@ namespace CardsAndDice
         {
             _uiInteractionOrchestrator?.UnregisterView(this);
             KillCurrentAnimation();
+            KillCurrentMoveAnimation();
             DOTween.Kill(this);
 
             // コマンドの購読解除

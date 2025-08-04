@@ -18,6 +18,10 @@ namespace CardsAndDice
         private SpriteInputHandler _spriteInputHandler;
         public bool IsGrayscale { get; private set; }
 
+        private bool _animationSkipped = false;
+        private bool _playAnimation = false;
+        private SpriteStatus _pendingStatus;
+
         protected override void Awake()
         {
             base.Awake();
@@ -51,29 +55,27 @@ namespace CardsAndDice
         public override void EnterNormalState()
         {
             base.EnterNormalState();
-            KillCurrentAnimation();
-            _currentAnimation = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+            TryPlayStatusAnimation(CurrentStatus);
             SetColliderEnabled(true);
         }
 
         public override void EnterHoveringState()
         {
             base.EnterHoveringState();
-            KillCurrentAnimation();
-            _currentAnimation = _hoverAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+            TryPlayStatusAnimation(CurrentStatus);
         }
 
         public override void EnterInactiveState()
         {
             base.EnterInactiveState();
+            TryPlayStatusAnimation(CurrentStatus);
             SetColliderEnabled(false);
         }
 
         public override void EnterDraggingState()
         {
             base.EnterDraggingState();
-            KillCurrentAnimation();
-            _currentAnimation = _dragAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+            TryPlayStatusAnimation(CurrentStatus);
             SetColliderEnabled(false);
             Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             newPosition.z = transform.position.z;
@@ -82,6 +84,7 @@ namespace CardsAndDice
         public override void EnterDraggingInProgressState()
         {
             base.EnterDraggingInProgressState();
+//            TryPlayStatusAnimation(CurrentStatus);
         }
 
         public override void MoveTo(Vector3 targetPosition)
@@ -94,12 +97,76 @@ namespace CardsAndDice
             if (this.transform.position == targetPosition) return;
 
             Debug.Log("MoveToAnimated:" + _cardName + ":" + this.transform.position + "->" + targetPosition);
-//          KillCurrentMoveAnimation();
             _currentMoveAnimation = DOTween.Sequence();
             _currentMoveAnimation.Append(transform.DOMove(targetPosition, _animationDuration)
                                         .SetEase(Ease.OutQuad));
             
             await _currentMoveAnimation.AsyncWaitForCompletion();
+        }
+
+        private async void TryPlayStatusAnimation(SpriteStatus targetStatus)
+        {
+            if(_playAnimation)
+//            if (_currentAnimation != null && _currentAnimation.IsActive() && _currentAnimation.IsPlaying())
+            {
+                Debug.Log("<color=blue>カード：</color>" + _cardName + "->をスキップ:" + targetStatus + "->前：" + _currentStatus);
+                _animationSkipped = true;
+                _pendingStatus = targetStatus;
+                return;
+            }
+
+            Debug.Log("<color=blue>カード：</color>" + _cardName + "->正規ルートアニメーション:" + targetStatus + "->前：" + _currentStatus);
+            Sequence animationSequence = null;
+                _playAnimation = true;
+
+            switch (targetStatus)
+            {
+                case SpriteStatus.Normal:
+                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    break;
+                case SpriteStatus.Hover:
+                    animationSequence = _hoverAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    break;
+                case SpriteStatus.DraggingStarted:
+                    animationSequence = _dragAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    break;
+                case SpriteStatus.Inactive:
+                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    break;
+                case SpriteStatus.DraggingInProgress:
+                    // ドラッグ中のアニメーションはOrchestratorが直接transformを操作するため、ここではアニメーションは不要
+                    break;
+                case SpriteStatus.Acceptable:
+                    // Acceptable状態のアニメーションがあればここに追加
+                    break;
+                case SpriteStatus.Move:
+                    // Move状態のアニメーションがあればここに追加
+                    break;
+            }
+
+            if (animationSequence != null)
+            {
+                _currentAnimation = animationSequence;
+                await animationSequence.AsyncWaitForCompletion();
+            Debug.Log("<color=blue>カード：</color>" + _cardName + "->アニメーションえんど:" + targetStatus + "->前：" + _currentStatus);
+                HandleAnimationCompletion();
+            }
+            else
+            {
+                HandleAnimationCompletion();
+            }
+        }
+
+        private void HandleAnimationCompletion()
+        {
+            if (_animationSkipped)
+            {
+                _animationSkipped = false;
+                Debug.Log("<color=blue>カード：</color>" + _cardName + "->スキップアニメーション用State:" + _pendingStatus);
+                TryPlayStatusAnimation(_pendingStatus);
+            }
+            _playAnimation = false;
+
         }
 
         protected override void OnDestroy()
