@@ -94,7 +94,6 @@ namespace CardsAndDice
             CardSlotData targetSlotData = _repository.GetSlotData(droppedSlotId);
             
             Dictionary<CompositeObjectId, Vector3> cardMovements = _reflowService.CalculateReflowMovements(draggedSlotData, targetSlotData, droppedCardId);
-
             _commandBus.Emit(new ReflowCompletedCommand(cardMovements));
         }
 

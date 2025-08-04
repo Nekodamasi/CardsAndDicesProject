@@ -15,15 +15,17 @@ namespace CardsAndDice
     public class ReflowService : ScriptableObject
     {
         [SerializeField] private CardSlotStateRepository _repository;
+        [SerializeField] private CardSlotDebug _cardSlotDebug;
 
         /// <summary>
         /// VContainerによるコンストラクタインジェクション。
         /// </summary>
         /// <param name="repository">カードスロットの状態リポジトリ。</param>
         [Inject]
-        public void Initialize(CardSlotStateRepository repository)
+        public void Initialize(CardSlotStateRepository repository, CardSlotDebug cardSlotDebug)
         {
             _repository = repository;
+            _cardSlotDebug = cardSlotDebug;
         }
 
         /// <summary>
@@ -243,13 +245,16 @@ namespace CardsAndDice
                     {
                         // 後続のスロットに前のスロットのカードを設定
                         Slots[i].ReflowPlacedCardId = ids[i - 1];
-                        // 移動情報を記録
-                        cardMovements[ids[i - 1]] = Slots[i].Position;
+                        if (ids[i - 1] != null)
+                        {
+                            // 移動情報を記録
+                            cardMovements[ids[i - 1]] = Slots[i].Position;
+                        }
                     }
                 }
             }
 
-            _repository.LogSlotDifferences();
+            
             return cardMovements;
         }
 

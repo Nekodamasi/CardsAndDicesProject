@@ -212,17 +212,17 @@ namespace CardsAndDice
             Debug.Log("<color=Green>リフローオペレーション完了-></color>" + _currentReflowState);
             _currentReflowState = ReflowState.Idle;
 
-            if (_nextHoverCommand != null)
-            {
-                Debug.Log("<color=Green>次のホバーコマンドあり-></color>");
-                var commandToExecute = _nextHoverCommand;
-                _nextHoverCommand = null;
-                ExecuteHover(commandToExecute);
-            }
-            else
-            {
-                _commandBus.Emit(new EnableUIInteractionCommand());
-            }
+            if (_nextHoverCommand != null && UIStateMachine.CurrentState == UIStateMachine.UIState.DraggingCard)
+                {
+                    Debug.Log("<color=Green>次のホバーコマンドあり-></color>");
+                    var commandToExecute = _nextHoverCommand;
+                    _nextHoverCommand = null;
+                    ExecuteHover(commandToExecute);
+                }
+                else
+                {
+                    _nextHoverCommand = null;
+                }
         }
 
         private void OnSpriteDragOperationCompleted(SpriteDragOperationCompletedCommand command)
