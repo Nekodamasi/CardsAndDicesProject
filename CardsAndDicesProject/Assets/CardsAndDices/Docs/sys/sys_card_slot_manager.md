@@ -48,7 +48,7 @@
 
 *   **役割**: カード配置ロジック
 *   **責務**:
-    *   指定されたスロットにカードを配置する (`PlaceCard`)。
+    *   指定されたスロットにカードを配置する (`PlaceCard`)。この際、配置前に `UnplaceCard` を呼び出し、カードの重複配置を防ぐ。
     *   指定されたカードをスロットから取り除く (`UnplaceCard`)。
     *   処理の際には`CardSlotStateRepository`の状態を更新する。
 
@@ -57,6 +57,7 @@
 *   **役割**: リフロー計算ロジック
 *   **責務**:
     *   リフローの移動情報を計算する (`CalculateReflowMovements`)。
+    *   前詰め処理の移動情報を計算する (`CalculateFrontLoadMovements`)。
     *   隣接判定 (`IsAdjacent`) や、押し出し・循環ロジック (`GetNextSlotInCircularOrder`) など、計算に必要なヘルパーメソッドを提供する。
     *   **注意**: このクラスは状態を持たず、計算に必要なスロットデータは引数として受け取る。
 
@@ -65,9 +66,8 @@
 *   **役割**: UIイベントのオーケストレーション (Controller)
 *   **責務**:
     *   カードのドロップ (`OnCardDroppedOnSlot`)、ホバー (`OnCardHoveredOnSlot`)、ドロップ失敗 (`OnDropFailed`) といったUIイベントを処理する。
-    *   イベントに応じて`CardPlacementService`や`ReflowService`を適切な順序で呼び出す。
-    *   リフローの確定 (`ReflowConfirm`) や、結果のコマンドバスへの通知 (`ReflowCardsCurrentValue`, `ReflowCardsIfNeeded`) を行う。
-    *   PlayerZoneの状態変化を監視し、必要に応じてコマンドを発行する (`CheckAndNotifyPlayerZoneState`)。
+    *   イベントに応じて`ReflowService`を呼び出し、計算結果をコマンドとして発行する。
+    *   ドロップ成功時に、リフローのプレビュー状態を確定させる (`ReflowConfirm`)。
 
 ### 6. `CardSlotDebug`
 
@@ -81,41 +81,33 @@
 
 ## データフローの例：カードドロップ時
 
-1.  **`CardSlotView`** が `OnDrop` イベントを検知。
-2.  `UIInteractionOrchestrator` を経由して **`CardSlotManager`** の `OnCardDroppedOnSlot` が呼び出される。
-3.  **`CardSlotManager`** は **`CardSlotInteractionHandler`** の `OnCardDroppedOnSlot` を呼び出す。
-4.  **`CardSlotInteractionHandler`** が処理を開始：
-    a. **`CardPlacementService`** の `PlaceCard` を呼び出し、カードをスロットに配置するよう依頼。
-    b. **`CardSlotStateRepository`** のスロットデータが更新される。
-    c. `ReflowConfirm` を実行し、リフロー状態を確定させる。
-    d. `ReflowCardsCurrentValue` を実行し、確定した配置を `DragReflowCompletedCommand` としてコマンドバスに発行する。
-    e. `CheckAndNotifyPlayerZoneState` を実行し、必要であれば `PlayerZoneStateChangedCommand` を発行する。
+1.  `SpriteInputHandler` が `OnDrop` イベントを検知し、`SpriteDropCommand` を発行する。
+2.  `UIInteractionOrchestrator` がコマンドを受信し、`CardSlotManager.OnCardDroppedOnSlot` を呼び出す。
+3.  `CardSlotManager` は `CardSlotInteractionHandler.OnCardDroppedOnSlot` を呼び出す。
+4.  `CardSlotInteractionHandler` が処理を開始：
+    a. `ReflowConfirm` を実行。これにより、全てのスロットでプレビュー用の `ReflowPlacedCardId` の値が、確定用の `PlacedCardId` に上書きされ、配置が確定する。
+    b. `ReflowCardsCurrentValue` を実行。現在の確定配置 (`PlacedCardId`) に基づいて、各カードが最終的に表示されるべき位置を `Dictionary` にまとめ、`DragReflowCompletedCommand` としてコマンドバスに発行する。
 5.  `UIInteractionOrchestrator` が `DragReflowCompletedCommand` を受け取る。
-6.  `ReflowService` の `CalculateFrontLoadMovements` を呼び出し、前詰めの移動計算を行う。
-7.  移動がある場合、`ExecuteFrontLoadCommand` を発行する。ない場合は、`SpriteDragOperationCompletedCommand` を発行して終了。
-8.  `UIInteractionOrchestrator` が `ExecuteFrontLoadCommand` を受け取り、各Viewにアニメーション付きの移動を指示する。
-9.  アニメーション完了後、Viewから `SpriteDragOperationCompletedCommand` が発行され、一連の操作が完了する。
+6.  `UIInteractionOrchestrator` は、受け取った移動情報に基づき、影響を受ける全ての `CreatureCardView` にアニメーション付きの移動を指示する。
+7.  移動アニメーション完了後、`UIInteractionOrchestrator` は `ExecuteFrontLoadCommand` を発行し、前詰め処理のフローを開始する。
+8.  `UIInteractionOrchestrator` は `ExecuteFrontLoadCommand` を受け取り、`ReflowService.CalculateFrontLoadMovements` を呼び出して前詰めの移動計算を行う。
+9.  計算された移動情報に基づき、再度 `CreatureCardView` の移動アニメーションを実行する。
+10. 全てのアニメーション完了後、`UIInteractionOrchestrator` が `SpriteDragOperationCompletedCommand` を発行し、一連のドラッグ操作が完了する。
 
 ---
 
 ## 関連ファイル
 
-- **クラス定義**:
-    - `Assets/CardsAndDices/Scripts/Systems/CardSlotManager.cs`
-    - `Assets/CardsAndDices/Scripts/Systems/CardSlotStateRepository.cs`
-    - `Assets/CardsAndDices/Scripts/Systems/CardPlacementService.cs`
-    - `Assets/CardsAndDices/Scripts/Systems/ReflowService.cs`
-    - `Assets/CardsAndDices/Scripts/Systems/CardSlotInteractionHandler.cs`
-    - `Assets/CardsAndDices/Scripts/Systems/CardSlotDebug.cs`
-- **データクラス**:
-    - `Assets/CardsAndDices/Scripts/Data/CardSlotData.cs`
-- **関連ドキュメント**:
-    - [guide_project_files.md](../../guide/guide_project_files.md)
-    - [gdd_reflow_system.md](../gdd/gdd_reflow_system.md)
+- [guide_rules.md](../../guide/guide_rules.md)
+- [guide_files.md](../../guide/guide_files.md)
+- [guide_ui_interaction_design.md](../../guide/guide_ui_interaction_design.md)
+- [gdd_sprite_ui_design.md](../gdd/gdd_sprite_ui_design.md)
+- [gdd_reflow_system.md](../gdd/gdd_reflow_system.md)
 
 ---
 
 ## 更新履歴
 
+- 2025-08-04: データフローの例をソースコードのロジックと完全に一致するように修正し、関連ファイルを整理 (Gemini - Codebase Analyst)
 - 2025-08-01: `CardSlotManager`を複数のサービスクラスに分割するリファクタリングを反映。 (Gemini)
 - 2025-07-25: 初版作成 (Gemini - Technical Writer for Game Development)
