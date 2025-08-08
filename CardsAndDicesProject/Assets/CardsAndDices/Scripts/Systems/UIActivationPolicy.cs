@@ -14,7 +14,7 @@ namespace CardsAndDice
         /// <summary>
         /// カードスロットの状態変化（ドラッグ開始）
         /// </summary>
-        public void DraggingCardToCardSlotActivations(UIInteractionOrchestrator orchestrator)
+        public void DraggingCardToCardSlotActivations(CardInteractionOrchestrator orchestrator)
         {
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return;
 
@@ -45,7 +45,7 @@ namespace CardsAndDice
         /// <summary>
         /// カードスロットの状態変化（リセット）
         /// </summary>
-        public void ResetToCardSlotActivations(UIInteractionOrchestrator orchestrator)
+        public void ResetToCardSlotActivations(CardInteractionOrchestrator orchestrator)
         {
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DropedCardMove) return;
 
@@ -58,7 +58,7 @@ namespace CardsAndDice
         /// <summary>
         /// カードの状態変化（ドラッグ開始）
         /// </summary>
-        public void DraggingCardToCardActivations(UIInteractionOrchestrator orchestrator)
+        public void DraggingCardToCardActivations(CardInteractionOrchestrator orchestrator)
         {
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return;
 
@@ -74,7 +74,7 @@ namespace CardsAndDice
         /// <summary>
         /// カードの状態変化（リセット）
         /// </summary>
-        public void ResetToCardActivations(UIInteractionOrchestrator orchestrator)
+        public void ResetToCardActivations(CardInteractionOrchestrator orchestrator)
         {
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DropedCardMove) return;
             Debug.Log("ResetToCardActivations");

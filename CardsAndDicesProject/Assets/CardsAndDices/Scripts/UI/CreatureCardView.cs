@@ -2,6 +2,8 @@ using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 
+using VContainer;
+
 namespace CardsAndDice
 {
     /// <summary>
@@ -10,6 +12,13 @@ namespace CardsAndDice
     /// </summary>
     public class CreatureCardView : BaseSpriteView
     {
+        [Inject]
+        public void Construct(CardInteractionOrchestrator orchestrator)
+        {
+            this._orchestrator = orchestrator;
+            Debug.Log($"[CreatureCardView] {gameObject.name} - Construct called. Orchestrator is null: {_orchestrator == null}");
+        }
+
         [Header("Card Specific Settings")]
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hoverSound;
@@ -25,6 +34,8 @@ namespace CardsAndDice
         protected override void Awake()
         {
             base.Awake();
+            Debug.Log($"[CreatureCardView] {gameObject.name} (ID: {GetObjectId().UniqueId}) - Awake called. Orchestrator is null: {_orchestrator == null}");
+            // _orchestrator?.RegisterView(this); // BaseSpriteViewのAwakeで既に呼ばれているためコメントアウト
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
 
             if (_audioSource == null)

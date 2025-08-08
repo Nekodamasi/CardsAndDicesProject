@@ -1,10 +1,17 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using VContainer;
 
 namespace CardsAndDice
 {
     public class CardSlotView : BaseSpriteView
     {
+        [Inject]
+        public void Construct(CardInteractionOrchestrator orchestrator)
+        {
+            this._orchestrator = orchestrator;
+        }
+
         [Header("Components")]
         [SerializeField] private CardSlotManager _cardSlotManager;
 

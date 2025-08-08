@@ -13,7 +13,6 @@ namespace CardsAndDice
         [SerializeField] protected BoxCollider2D _boxCollider2D;
         [SerializeField] protected IdentifiableGameObject _identifiableGameObject;
         [SerializeField] protected SpriteCommandBus _commandBus;
-
         [Header("Animation Settings")]
         [SerializeField] protected float _animationDuration = 0.2f;
 
@@ -23,6 +22,8 @@ namespace CardsAndDice
         [SerializeField] protected BaseAnimationSO _dragAnimation;
 
         [SerializeField] protected SpriteStatus _currentStatus = SpriteStatus.Normal;
+        protected IUIInteractionOrchestrator _orchestrator;
+
         protected Vector3 _originalScale;
         protected Color _originalColor;
         protected bool isDisableUIInteraction = false;
@@ -32,16 +33,6 @@ namespace CardsAndDice
         public SpriteStatus CurrentStatus { get { return _currentStatus; } }
 
         public CompositeObjectId SlotId { get; private set; }
-
-        [Header("Orchestrator Reference")]
-        [SerializeField] private UIInteractionOrchestrator _uiInteractionOrchestrator; // Inspectorから設定
-
-        [Inject]
-        public void Construct()
-        {
-            Debug.Log("よばれてるんかな？");
-
-        }
 
         protected virtual void Awake()
         {
@@ -56,12 +47,12 @@ namespace CardsAndDice
             _originalColliderEnabled = _boxCollider2D.enabled; // 初期状態を記憶
 
             // OrchestratorのViewRegistryに自身を登録
-            _uiInteractionOrchestrator?.RegisterView(this);
+            _orchestrator?.RegisterView(this);
         }
 
         protected virtual void OnDestroy()
         {
-            _uiInteractionOrchestrator?.UnregisterView(this);
+            _orchestrator?.UnregisterView(this);
             KillCurrentAnimation();
             KillCurrentMoveAnimation();
             DOTween.Kill(this);

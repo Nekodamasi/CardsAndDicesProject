@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace CardsAndDice
 {
-    [CreateAssetMenu(fileName = "UIInteractionOrchestrator", menuName = "CardsAndDice/Systems/UIInteractionOrchestrator")]
-    public class UIInteractionOrchestrator : ScriptableObject
+    [CreateAssetMenu(fileName = "CardInteractionOrchestrator", menuName = "CardsAndDice/Systems/CardInteractionOrchestrator")]
+public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrchestrator
     {
         private enum ReflowState { Idle, InProgress }
         private ReflowState _currentReflowState = ReflowState.Idle;

@@ -11,55 +11,74 @@
 
 ## ドキュメント (`.md`)
 
+### Docs/Assistant
+
+| ファイル名 | 解説 | 格納場所 |
+| :--- | :--- | :--- |
+| assistant_meta_prompt copy.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt copy.md |
+| assistant_files.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_files.md |
+| dice_document.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\dice_document.md |
+| dice_prompt.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\dice_prompt.md |
+| inret_prompt.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\inret_prompt.md |
+| inlet.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\inlet.md |
+| aaa.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\aaa.md |
+| assistant_meta_prompt_document.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt_document.md |
+| assistant_meta_prompt.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt.md |
+| assistant_update_document.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_update_document.md |
+
 ### Docs/component
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| component_card_slot_prefab.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\component\component_card_slot_prefab.md |
-| component_creature_card_prefab.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\component\component_creature_card_prefab.md |
-| component_dice_inlet_prefab.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\component\component_dice_inlet_prefab.md |
+| component_card_slot_prefab.md | カードスロットプレハブの仕様 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\component\component_card_slot_prefab.md |
+| component_creature_card_prefab.md | クリーチャーカードプレハブの仕様 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\component\component_creature_card_prefab.md |
+| component_dice_inlet_prefab.md | ダイスインレットプレハブの仕様 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\component\component_dice_inlet_prefab.md |
 
 ### Docs/gdd
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| gdd_combat_system.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_combat_system.md |
-| gdd_composite_object_id.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_composite_object_id.md |
-| gdd_game_object_specs.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_game_object_specs.md |
-| gdd_main.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_main.md |
-| gdd_reflow_system.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_reflow_system.md |
-| gdd_sprite_ui_design.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_sprite_ui_design.md |
-| gdd_unity_specs.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_unity_specs.md |
+| gdd_combat_system.md | 戦闘システムのGDD | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_combat_system.md |
+| gdd_composite_object_id.md | CompositeObjectIdのGDD | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_composite_object_id.md |
+| gdd_game_object_specs.md | ゲームオブジェクトの仕様に関するGDD | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_game_object_specs.md |
+| gdd_main.md | GDDのメインドキュメント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_main.md |
+| gdd_reflow_system.md | リフローシステムのGDD | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_reflow_system.md |
+| gdd_sprite_ui_design.md | スプライトUIデザインのGDD | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_sprite_ui_design.md |
+| gdd_unity_specs.md | Unityの仕様に関するGDD | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_unity_specs.md |
 
 ### Docs/guide
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| guide_design-principles.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_design-principles.md |
-| guide_developer-cookbook.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_developer-cookbook.md |
+| guide_project_files.md | プロジェクトのファイル一覧 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.md |
+| guide_ui_interaction_design.md | UIインタラクションデザインのガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md |
+| guide_design-principles.md | 設計原則のガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_design-principles.md |
+| guide_developer-cookbook.md | 開発者向けのクックブック | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_developer-cookbook.md |
 | guide_file_management.md | ファイル一覧の管理方法を記述したドキュメント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_file_management.md |
 | guide_files.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_files.md |
-| guide_overview.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_overview.md |
-| guide_project_files.md | プロジェクトのファイル一覧 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.md |
-| guide_rules.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_rules.md |
-| guide_sys_classes_creation.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_sys_classes_creation.md |
-| guide_ui_interaction_design.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md |
-| guide_unity-cs.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md |
+| guide_overview.md | プロジェクトの概要 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_overview.md |
+| guide_rules.md | プロジェクトのルール | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_rules.md |
+| guide_sys_classes_creation.md | システムクラス作成のガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_sys_classes_creation.md |
+| guide_unity-cs.md | Unity C#のコーディング規約 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md |
 
 ### Docs/sys
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| sys_card_slot_manager.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md |
-| sys_classes.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_classes.md |
-| sys_domain-model.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
+| sys_dice_inlet_design.md | ダイスインレットの技術仕様書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_inlet_design.md |
+| sys_card_slot_manager.md | カードスロットマネージャーの技術仕様書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md |
+| sys_classes.md | システムクラスの概要 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_classes.md |
+| sys_domain-model.md | ドメインモデルの解説 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
 
 ### Docs/ui
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| ui_card_slot_interaction.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui\ui_card_slot_interaction.md |
-| ui_creature_card_interaction.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui\ui_creature_card_interaction.md |
+| ui_creature_card_interaction.md | クリーチャーカードのUIインタラクション設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui\ui_creature_card_interaction.md |
+| ui_card_slot_interaction.md | カードスロットのUIインタラクション設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui\ui_card_slot_interaction.md |
+| ui_dice_inlet_interaction.md | ダイスインレットのUIインタラクション設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui\ui_dice_inlet_interaction.md |
+| ui_dice_slot_interaction.md | ダイススロットのUIインタラクション設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui\ui_dice_slot_interaction.md |
+| ui_dice_interaction.md | ダイスのUIインタラクション設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui\ui_dice_interaction.md |
 
 ---
 
@@ -69,91 +88,95 @@
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| CardPlacedInSlotCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CardPlacedInSlotCommand.cs |
-| DisableUIInteractionCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\DisableUIInteractionCommand.cs |
-| DragReflowCompletedCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\DragReflowCompletedCommand.cs |
-| EnableUIInteractionCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\EnableUIInteractionCommand.cs |
-| ExecuteFrontLoadCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ExecuteFrontLoadCommand.cs |
-| ICommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ICommand.cs |
-| PlayerZoneStateChangedCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\PlayerZoneStateChangedCommand.cs |
-| ReflowCompletedCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ReflowCompletedCommand.cs |
-| ReflowOperationCompletedCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ReflowOperationCompletedCommand.cs |
-| SpriteBeginDragCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteBeginDragCommand.cs |
-| SpriteClickCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteClickCommand.cs |
-| SpriteDragCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteDragCommand.cs |
-| SpriteDragOperationCompletedCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteDragOperationCompletedCommand.cs |
-| SpriteDropCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteDropCommand.cs |
-| SpriteEndDragCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteEndDragCommand.cs |
-| SpriteHoverCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteHoverCommand.cs |
-| SpriteUnhoverCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteUnhoverCommand.cs |
 | SystemReflowCommand.cs | システム起因のカードリフローを実行するコマンド。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SystemReflowCommand.cs |
+| CardPlacedInSlotCommand.cs | カードがスロットに配置された時のコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CardPlacedInSlotCommand.cs |
+| DisableUIInteractionCommand.cs | UIインタラクションを無効化するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\DisableUIInteractionCommand.cs |
+| DragReflowCompletedCommand.cs | ドラッグによるリフローが完了した時のコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\DragReflowCompletedCommand.cs |
+| EnableUIInteractionCommand.cs | UIインタラクションを有効化するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\EnableUIInteractionCommand.cs |
+| ExecuteFrontLoadCommand.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ExecuteFrontLoadCommand.cs |
+| ICommand.cs | コマンドのインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ICommand.cs |
+| PlayerZoneStateChangedCommand.cs | プレイヤーゾーンの状態が変化した時のコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\PlayerZoneStateChangedCommand.cs |
+| ReflowCompletedCommand.cs | リフローが完了した時のコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ReflowCompletedCommand.cs |
+| ReflowOperationCompletedCommand.cs | リフロー操作が完了した時のコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ReflowOperationCompletedCommand.cs |
+| SpriteBeginDragCommand.cs | スプライトのドラッグ開始コマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteBeginDragCommand.cs |
+| SpriteClickCommand.cs | スプライトのクリックコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteClickCommand.cs |
+| SpriteDragCommand.cs | スプライトのドラッグ中コマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteDragCommand.cs |
+| SpriteDragOperationCompletedCommand.cs | スプライトのドラッグ操作完了コマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteDragOperationCompletedCommand.cs |
+| SpriteDropCommand.cs | スプライトのドロップコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteDropCommand.cs |
+| SpriteEndDragCommand.cs | スプライトのドラッグ終了コマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteEndDragCommand.cs |
+| SpriteHoverCommand.cs | スプライトのホバーコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteHoverCommand.cs |
+| SpriteUnhoverCommand.cs | スプライトのアンホバーコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteUnhoverCommand.cs |
 
 ### Scripts/Data
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| CardSlotData.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CardSlotData.cs |
+| CardSlotData.cs | カードスロットのデータ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CardSlotData.cs |
 
 ### Scripts/Installers
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| GameLifetimeScope.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Installers\GameLifetimeScope.cs |
+| GameLifetimeScope.cs | ゲームのライフタイムスコープ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Installers\GameLifetimeScope.cs |
 
 ### Scripts/Shared
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| BaseAnimationSO.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\BaseAnimationSO.cs |
-| CompositeObjectId.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\CompositeObjectId.cs |
-| CompositeObjectIdManager.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\CompositeObjectIdManager.cs |
-| DragAnimationSO.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\DragAnimationSO.cs |
-| DropWaitingAnimationSO.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\DropWaitingAnimationSO.cs |
-| HoverAnimationSO.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\HoverAnimationSO.cs |
-| IAnimationStrategy.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\IAnimationStrategy.cs |
-| IdentifiableGameObject.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\IdentifiableGameObject.cs |
-| InteractionProfile.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\InteractionProfile.cs |
-| LinePosition.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\LinePosition.cs |
-| MultiRendererVisualController.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\MultiRendererVisualController.cs |
-| NormalAnimationSO.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\NormalAnimationSO.cs |
-| ReturnToPositionAnimationSO.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\ReturnToPositionAnimationSO.cs |
-| SlotLocation.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\SlotLocation.cs |
-| SpriteLayerController.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\SpriteLayerController.cs |
-| Team.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\Team.cs |
+| BaseAnimationSO.cs | アニメーションの基底ScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\BaseAnimationSO.cs |
+| CompositeObjectId.cs | 複合オブジェクトID | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\CompositeObjectId.cs |
+| CompositeObjectIdManager.cs | 複合オブジェクトIDのマネージャー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\CompositeObjectIdManager.cs |
+| DragAnimationSO.cs | ドラッグアニメーションのScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\DragAnimationSO.cs |
+| DropWaitingAnimationSO.cs | ドロップ待ちアニメーションのScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\DropWaitingAnimationSO.cs |
+| HoverAnimationSO.cs | ホバーアニメーションのScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\HoverAnimationSO.cs |
+| IAnimationStrategy.cs | アニメーション戦略のインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\IAnimationStrategy.cs |
+| IdentifiableGameObject.cs | IDを持つゲームオブジェクト | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\IdentifiableGameObject.cs |
+| InteractionProfile.cs | インタラクションプロファイル | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\InteractionProfile.cs |
+| LinePosition.cs | ライン上の位置 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\LinePosition.cs |
+| MultiRendererVisualController.cs | 複数レンダラーの表示コントローラー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\MultiRendererVisualController.cs |
+| NormalAnimationSO.cs | 通常アニメーションのScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\NormalAnimationSO.cs |
+| ReturnToPositionAnimationSO.cs | 位置に戻るアニメーションのScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\ReturnToPositionAnimationSO.cs |
+| SlotLocation.cs | スロットの位置 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\SlotLocation.cs |
+| SpriteLayerController.cs | スプライトのレイヤーコントローラー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\SpriteLayerController.cs |
+| SpriteStatus.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\SpriteStatus.cs |
+| Team.cs | チーム | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Shared\Team.cs |
 
 ### Scripts/Systems
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| CardInteractionStrategy.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardInteractionStrategy.cs |
-| CardPlacementService.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardPlacementService.cs |
-| CardSlotDebug.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotDebug.cs |
-| CardSlotInteractionHandler.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotInteractionHandler.cs |
-| CardSlotManager.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotManager.cs |
-| CardSlotStateRepository.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotStateRepository.cs |
-| ReflowService.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\ReflowService.cs |
+| CardSlotInteractionHandler.cs | カードスロットのインタラクションハンドラ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotInteractionHandler.cs |
 | SystemReflowController.cs | システム起因のリフロー処理を実行するコントローラー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\SystemReflowController.cs |
-| UIActivationPolicy.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIActivationPolicy.cs |
-| UIInteractionOrchestrator.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIInteractionOrchestrator.cs |
-| UIStateMachine.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIStateMachine.cs |
-| ViewRegistry.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\ViewRegistry.cs |
+| CardInteractionStrategy.cs | カードのUIインタラクション戦略 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardInteractionStrategy.cs |
+| UIActivationPolicy.cs | UIのアクティベーションポリシー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIActivationPolicy.cs |
+| CardInteractionOrchestrator.cs | カードのUIインタラクションを統括する司令塔。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardInteractionOrchestrator.cs |
+| DiceInteractionOrchestrator.cs | ダイスのUIインタラクションを統括する司令塔。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceInteractionOrchestrator.cs |
+| DiceInteractionStrategy.cs | ダイスのUIインタラクション戦略を実装するクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceInteractionStrategy.cs |
+| IUIInteractionOrchestrator.cs | UIインタラクションオーケストレーターのインターフェース。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\IUIInteractionOrchestrator.cs |
+| CardPlacementService.cs | カード配置サービス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardPlacementService.cs |
+| CardSlotDebug.cs | カードスロットのデバッグ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotDebug.cs |
+| CardSlotManager.cs | カードスロットマネージャー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotManager.cs |
+| CardSlotStateRepository.cs | カードスロットの状態リポジトリ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotStateRepository.cs |
+| ReflowService.cs | リフローサービス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\ReflowService.cs |
+| UIStateMachine.cs | UIのステートマシン | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIStateMachine.cs |
+| ViewRegistry.cs | Viewの登録 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\ViewRegistry.cs |
 
 ### Scripts/Tester
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| DebugViewer.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Tester\DebugViewer.cs |
-| PlacementCardTester.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Tester\PlacementCardTester.cs |
+| DebugViewer.cs | デバッグビューワー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Tester\DebugViewer.cs |
+| PlacementCardTester.cs | カード配置テスター | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Tester\PlacementCardTester.cs |
 
 ### Scripts/UI
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| BaseSpriteView.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\BaseSpriteView.cs |
-| CardSlotView.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\CardSlotView.cs |
-| CreatureCardView.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\CreatureCardView.cs |
-| SpriteCommandBus.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteCommandBus.cs |
-| SpriteInputHandler.cs | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteInputHandler.cs |
+| CreatureCardView.cs | クリーチャーカードのView | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\CreatureCardView.cs |
+| CardSlotView.cs | カードスロットのView | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\CardSlotView.cs |
+| BaseSpriteView.cs | スプライトViewの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\BaseSpriteView.cs |
+| SpriteCommandBus.cs | スプライトのコマンドバス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteCommandBus.cs |
+| SpriteInputHandler.cs | スプライトの入力ハンドラ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteInputHandler.cs |
 
 ---
 
@@ -165,4 +188,5 @@
 
 ## 更新履歴
 
+- 2025-08-08: ファイルリストを最新化 (Gemini)
 - 2025-07-30: プロジェクトルールへの準拠 (Gemini - Technical Writer for Game Development)

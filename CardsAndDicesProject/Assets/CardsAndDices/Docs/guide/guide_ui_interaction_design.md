@@ -13,7 +13,7 @@
 
 本プロジェクトのUIインタラクションは、単一のコンポーネントがすべてのロジックを抱えるのではなく、複数のクラスが責務を分担するアーキテクチャを採用しています。設計書を作成する際は、必ず以下のクラス群との連携を前提としてください。
 
--   **`UIInteractionOrchestrator` (司令塔)**: UIインタラクション全体の司令塔です。UIイベント（コマンド）を受け取り、現在の状態を管理し、他のクラスに処理を委譲します。
+-   **`CardInteractionOrchestrator` / `DiceInteractionOrchestrator` (司令塔)**: UIインタラクション全体の司令塔です。UIイベント（コマンド）を受け取り、現在の状態を管理し、他のクラスに処理を委譲します。
 -   **`CardInteractionStrategy` (判断戦略)**: 「この状況で、この操作は可能か？」という判断ロジックをカプセル化します。`Orchestrator` は、具体的な処理を行う前に必ずこの `Strategy` に問い合わせます。
 -   **`UIActivationPolicy` (有効化ポリシー)**: `UIStateMachine` の状態に基づき、どのUI要素がインタラクション可能（Acceptable）で、どれが不可能（Inactive）かを決定するポリシーです。
 -   **`UIStateMachine` (状態機械)**: UI全体の現在の状態（例: `Idle`, `DraggingCard`）を保持します。
@@ -51,7 +51,7 @@ UIインタラクション設計書は、以下のセクションで構成され
 -   **トリガー**: `SpriteInputHandler` が `OnPointerEnter` を検知。
 -   **発行コマンド**: `SpriteHoverCommand`
 
-##### 5.1.1. **`UIInteractionOrchestrator` の処理**
+##### 5.1.1. **`CardInteractionOrchestrator` の処理**
 
 1.  `OnHover` メソッドで `SpriteHoverCommand` を受信します。
 2.  `CardInteractionStrategy.ChkCardHover` を呼び出し、現在の状況でホバー処理が可能か問い合わせます。

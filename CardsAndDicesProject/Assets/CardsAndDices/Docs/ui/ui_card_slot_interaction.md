@@ -23,7 +23,7 @@
 
 - **`CardSlotView.cs`**: カードスロットの視覚表現と、状態遷移メソッドの実行を担当するViewコンポーネント。
 - **`SpriteInputHandler.cs`**: スロットに対するマウスイベントを検知し、`SpriteHoverCommand` や `SpriteDropCommand` を発行します。
-- **`UIInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。`SpriteInputHandler` からのコマンドを受け取り、`UIActivationPolicy` に基づいて `CardSlotView` への指示を出します。
+- **`CardInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。`SpriteInputHandler` からのコマンドを受け取り、`UIActivationPolicy` に基づいて `CardSlotView` への指示を出します。
 - **`UIActivationPolicy.cs`**: UIの状態（`UIStateMachine.CurrentState`）に基づき、各スロットがどの状態（Acceptable, Inactive等）になるべきかを決定するポリシークラス。
 - **アニメーションScriptableObject一覧**:
     - `_normalAnimation`: 通常時や非アクティブ時のアニメーション。

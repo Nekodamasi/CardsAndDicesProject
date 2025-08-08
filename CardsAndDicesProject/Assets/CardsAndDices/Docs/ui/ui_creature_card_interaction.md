@@ -23,7 +23,7 @@
 
 - **`CreatureCardView.cs`**: クリーチャーカードの視覚表現と、状態遷移メソッドの実行を担当するViewコンポーネント。
 - **`SpriteInputHandler.cs`**: カードに対するマウスイベントを検知し、`SpriteHoverCommand` や `SpriteBeginDragCommand` などを発行します。
-- **`UIInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。UI関連コマンドを購読し、`Strategy` や `Policy` に基づいて `CreatureCardView` への指示を出します。
+- **`CardInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。UI関連コマンドを購読し、`Strategy` や `Policy` に基づいて `CreatureCardView` への指示を出します。
 - **`CardInteractionStrategy.cs`**: 「アイドル状態のカードはホバー可能か？」など、特定の状況でインタラクションが可能かを判断する戦略クラス。
 - **`UIActivationPolicy.cs`**: 「カードドラッグ開始時、ドラッグされていない他のカードを非アクティブにする」といった、UI要素の有効/無効ルールを定義するポリシークラス。
 - **アニメーションScriptableObject一覧**:

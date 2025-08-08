@@ -23,7 +23,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドラッグ開始コマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public bool ChkCardSlotHover(SpriteHoverCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardSlotHover(SpriteHoverCommand command, CardInteractionOrchestrator orchestrator)
         {
             // UIがカードドラッグ中の場合
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.DraggingCard)
@@ -48,7 +48,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ホバーコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public bool ChkCardHover(SpriteHoverCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardHover(SpriteHoverCommand command, CardInteractionOrchestrator orchestrator)
         {
             Debug.Log("ChkCardHover");
 
@@ -67,7 +67,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドラッグ開始コマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public bool ChkCardBeginDrag(SpriteBeginDragCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardBeginDrag(SpriteBeginDragCommand command, CardInteractionOrchestrator orchestrator)
         {
             // UIがアイドルの場合
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.Idle) return false;
@@ -81,7 +81,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドラッグ開始コマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public void OnBeginDrag(SpriteBeginDragCommand command, UIInteractionOrchestrator orchestrator)
+        public void OnBeginDrag(SpriteBeginDragCommand command, CardInteractionOrchestrator orchestrator)
         {
             var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
             Debug.Log("<color=red>Card_OnBeginDrag-></color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
@@ -101,7 +101,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ホバーコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public void OnHover(SpriteHoverCommand command, UIInteractionOrchestrator orchestrator)
+        public void OnHover(SpriteHoverCommand command, CardInteractionOrchestrator orchestrator)
         {
             Debug.Log("Card_OnHover");
 
@@ -136,7 +136,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">アンホバーコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public bool ChkCardUnhover(SpriteUnhoverCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardUnhover(SpriteUnhoverCommand command, CardInteractionOrchestrator orchestrator)
         {
             Debug.Log("ChkCardUnhover");
 
@@ -155,7 +155,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドロップコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public bool ChkCardDrop(SpriteDropCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardDrop(SpriteDropCommand command, CardInteractionOrchestrator orchestrator)
         {
             // UIがカードドラッグ中の場合のみ処理
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return false;
@@ -167,7 +167,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドラッグコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public bool ChkCardDrag(SpriteDragCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardDrag(SpriteDragCommand command, CardInteractionOrchestrator orchestrator)
         {
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return false;
             var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
@@ -180,7 +180,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドラッグ終了コマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public bool ChkCardEndDrag(SpriteEndDragCommand command, UIInteractionOrchestrator orchestrator)
+        public bool ChkCardEndDrag(SpriteEndDragCommand command, CardInteractionOrchestrator orchestrator)
         {
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingCard) return false;
             return true;
@@ -191,7 +191,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドロップコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public void OnDrop(SpriteDropCommand command, UIInteractionOrchestrator orchestrator)
+        public void OnDrop(SpriteDropCommand command, CardInteractionOrchestrator orchestrator)
         {
             var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
             Debug.Log("<color=red>Card_OnDrop-></color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
@@ -212,7 +212,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドラッグコマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public void OnDrag(SpriteDragCommand command, UIInteractionOrchestrator orchestrator)
+        public void OnDrag(SpriteDragCommand command, CardInteractionOrchestrator orchestrator)
         {
             var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(orchestrator.DraggedId);
 //            Debug.Log("<color=blue>Card_OnDrag：</color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
@@ -235,7 +235,7 @@ namespace CardsAndDice
         /// </summary>
         /// <param name="command">ドラッグ終了コマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public async void OnEndDrag(SpriteEndDragCommand command, UIInteractionOrchestrator orchestrator)
+        public async void OnEndDrag(SpriteEndDragCommand command, CardInteractionOrchestrator orchestrator)
         {
             Debug.Log("<color=red>Card_OnEndDrag-></color>" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
 
