@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// カードスロットの状態を保持するデータクラス（Model）。

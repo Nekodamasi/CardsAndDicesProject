@@ -2,7 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     public class CardSlotView : BaseSpriteView
     {

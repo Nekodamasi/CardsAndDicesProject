@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "DiceInteractionStrategy", menuName = "CardsAndDice/InteractionStrategies/DiceInteractionStrategy")]
     public class DiceInteractionStrategy : ScriptableObject

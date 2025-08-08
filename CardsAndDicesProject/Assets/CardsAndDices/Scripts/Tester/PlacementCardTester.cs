@@ -3,7 +3,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks; // UniTaskを使用するために追加
 using System;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// ゲームの初期状態をセットアップし、テスト用のカード配置を行うデバッグ用クラス。

@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "NormalAnimation", menuName = "CardsAndDice/Animations/Normal Animation")]
     public class NormalAnimationSO : BaseAnimationSO

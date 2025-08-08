@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
     public interface IUIInteractionOrchestrator
     {

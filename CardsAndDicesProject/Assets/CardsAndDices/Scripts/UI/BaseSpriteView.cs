@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     public abstract class BaseSpriteView : MonoBehaviour
     {

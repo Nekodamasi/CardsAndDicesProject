@@ -1,5 +1,5 @@
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// ライン内でのスロットの具体的な役割や位置を定義します。

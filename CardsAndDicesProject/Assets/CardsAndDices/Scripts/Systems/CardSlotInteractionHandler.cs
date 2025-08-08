@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// UIからのスロット関連のインタラクションを処理するクラス。

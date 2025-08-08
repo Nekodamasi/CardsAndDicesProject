@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VContainer; // VContainer.Inject を使用するために追加
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// SpriteUIに関連するイベントの登録、配信、解除を一元管理する中央ハブ。

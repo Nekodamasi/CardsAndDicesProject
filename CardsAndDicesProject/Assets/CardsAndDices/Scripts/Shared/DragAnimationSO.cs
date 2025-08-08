@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "DragAnimation", menuName = "CardsAndDice/Animations/Drag Animation")]
     public class DragAnimationSO : BaseAnimationSO

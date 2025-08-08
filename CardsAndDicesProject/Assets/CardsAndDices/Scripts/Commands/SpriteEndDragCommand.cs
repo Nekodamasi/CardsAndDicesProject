@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
 	/// <summary>
 	/// SpriteUI要素のドラッグ操作が終了したことを通知するコマンド。

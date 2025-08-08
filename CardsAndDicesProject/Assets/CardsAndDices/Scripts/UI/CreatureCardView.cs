@@ -1,10 +1,9 @@
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
-
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// クリーチャーカードの視覚的な表示を管理するコンポーネント。

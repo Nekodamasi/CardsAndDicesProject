@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// デバッグ用にスロットの情報を保持する構造体。

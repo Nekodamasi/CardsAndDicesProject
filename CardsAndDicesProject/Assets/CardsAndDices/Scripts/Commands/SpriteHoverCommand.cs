@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// マウスカーソルがSpriteUI要素上に入った時のコマンド。

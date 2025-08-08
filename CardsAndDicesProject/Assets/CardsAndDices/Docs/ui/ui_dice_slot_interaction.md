@@ -19,7 +19,7 @@
 ## 主要コンポーネントと関連クラス
 
 - **`DiceSlotView.cs`**: ダイススロットの視覚表現を担当するViewコンポーネント。
-- **`UIInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。
+- **`DiceInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。
 - **`UIActivationPolicy.cs`**: UI要素の有効/無効ルールを定義するポリシークラス。
 
 ---
@@ -32,14 +32,14 @@
 
 - **トリガー**: プレイヤーがダイスのドラッグを開始する。
 - **処理の流れ**:
-    1. `UIInteractionOrchestrator` は `UIActivationPolicy` を呼び出します。
+    1. `DiceInteractionOrchestrator` は `UIActivationPolicy` を呼び出します。
     2. `UIActivationPolicy` は、全ての `DiceSlotView` に対して `EnterInactiveState()` を呼び出し、非アクティブ状態（操作を受け付けない状態）にします。
 
 ### 2. ドラッグ終了時
 
 - **トリガー**: ダイスのドラッグ＆ドロップ操作が完了する。
 - **処理の流れ**:
-    1. `UIInteractionOrchestrator` は `UIActivationPolicy` を呼び出します。
+    1. `DiceInteractionOrchestrator` は `UIActivationPolicy` を呼び出します。
     2. `UIActivationPolicy` は、全ての `DiceSlotView` に対して `EnterNormalState()` を呼び出し、通常状態に戻します。
 
 ---

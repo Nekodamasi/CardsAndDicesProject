@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// ゲームオブジェクトのインタラクションの振る舞いを定義するScriptableObject。

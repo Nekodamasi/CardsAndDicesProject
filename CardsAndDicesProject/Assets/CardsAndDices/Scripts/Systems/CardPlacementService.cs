@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// カードの配置ロジックを担当するサービスクラス。

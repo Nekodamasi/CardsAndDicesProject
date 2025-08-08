@@ -4,7 +4,7 @@ using System;
 using VContainer;
 using Unity.VisualScripting;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// カードのUIインタラクション戦略を実装するクラスです。

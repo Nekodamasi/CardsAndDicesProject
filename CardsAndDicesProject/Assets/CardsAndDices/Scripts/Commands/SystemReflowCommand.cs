@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// システム起因のカードリフローを実行するコマンド。

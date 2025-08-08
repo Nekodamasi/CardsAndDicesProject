@@ -5,7 +5,7 @@
 ## 概要
 
 このドキュメントは、ダイス (`DiceView`) のUIインタラクションに関する仕様を定義します。
-ダイスのインタラクションは、`UIInteractionOrchestrator` を中心としたクラス群によって制御されます。
+ダイスのインタラクションは、`DiceInteractionOrchestrator` を中心としたクラス群によって制御されます。
 
 ---
 
@@ -20,7 +20,7 @@
 
 - **`DiceView.cs`**: ダイスの視覚表現と状態遷移を担当するViewコンポーネント。
 - **`SpriteInputHandler.cs`**: マウスイベントを検知し、コマンドを発行します。
-- **`UIInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。
+- **`DiceInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。
 - **`DiceInteractionStrategy.cs`**: ダイスのインタラクションが可能か判断する戦略クラス。
 - **`UIActivationPolicy.cs`**: UI要素の有効/無効ルールを定義するポリシークラス。
 - **アニメーションScriptableObject**: `_hoverAnimation`, `_dragAnimation` など。
@@ -34,7 +34,7 @@
 - **トリガー**: `UIStateMachine` が `Idle` の状態で、プレイヤーがダイス上にマウスポインターを乗せる。
 - **処理の流れ**:
     1. `SpriteInputHandler` が `SpriteHoverCommand` を発行します。
-    2. `UIInteractionOrchestrator` は `DiceInteractionStrategy.ChkDiceHover` でホバー可否を確認します。
+    2. `DiceInteractionOrchestrator` は `DiceInteractionStrategy.ChkDiceHover` でホバー可否を確認します。
     3. `Strategy` が許可した場合、`DiceView` の `EnterHoveringState()` を呼び出します。
     4. `DiceView` はホバーアニメーション (`_hoverAnimation`) を再生します。
 
@@ -43,7 +43,7 @@
 - **トリガー**: プレイヤーがダイスのドラッグを開始する。
 - **処理の流れ**:
     1. `SpriteInputHandler` が `SpriteBeginDragCommand` を発行します。
-    2. `UIInteractionOrchestrator` は `DiceInteractionStrategy.ChkDiceBeginDrag` でドラッグ開始が可能か確認します。
+    2. `DiceInteractionOrchestrator` は `DiceInteractionStrategy.ChkDiceBeginDrag` でドラッグ開始が可能か確認します。
     3. `Strategy` が許可した場合、`Orchestrator` は以下の処理を行います。
         a. `UIStateMachine` の状態を `DraggingDice` に設定します。
         b. ドラッグされた `DiceView` の `EnterDraggingState()` を呼び出します。
@@ -53,7 +53,7 @@
 
 - **トリガー**: ドラッグ＆ドロップ操作が完了する。
 - **処理の流れ**:
-    1. `UIInteractionOrchestrator` は `UIActivationPolicy` を通じて、全ての `DiceView` を通常状態に戻します。
+    1. `DiceInteractionOrchestrator` は `UIActivationPolicy` を通じて、全ての `DiceView` を通常状態に戻します。
 
 ---
 

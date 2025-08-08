@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
 	/// <summary>
 	/// SpriteUI要素がドラッグ中に移動したことを通知するコマンド。

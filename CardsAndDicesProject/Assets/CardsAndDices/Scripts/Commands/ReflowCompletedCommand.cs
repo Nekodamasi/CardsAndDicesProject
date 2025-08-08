@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// カードのリフローが完了し、カードが新しい位置へ移動する必要があることを通知するコマンド。

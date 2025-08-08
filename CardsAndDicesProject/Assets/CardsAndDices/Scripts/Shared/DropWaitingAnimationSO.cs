@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "DropWaitingAnimation", menuName = "CardsAndDice/Animations/Drop Waiting Animation")]
     public class DropWaitingAnimationSO : BaseAnimationSO

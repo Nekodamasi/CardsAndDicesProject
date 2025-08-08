@@ -5,7 +5,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "CardInteractionOrchestrator", menuName = "CardsAndDice/Systems/CardInteractionOrchestrator")]
 public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrchestrator

@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// カードスロットやカードが所属するチームを定義します。

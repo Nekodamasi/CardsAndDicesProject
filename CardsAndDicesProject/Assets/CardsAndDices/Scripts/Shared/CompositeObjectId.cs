@@ -1,6 +1,6 @@
 using System;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
 	/// <summary>
 	/// ゲームオブジェクトを一意に識別するための複合IDクラス。

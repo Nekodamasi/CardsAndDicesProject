@@ -4,7 +4,7 @@ using UnityEngine;
 using VContainer;
 using Cysharp.Threading.Tasks;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// システム起因のリフロー処理を実行するコントローラー。

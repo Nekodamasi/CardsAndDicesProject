@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "DiceInteractionOrchestrator", menuName = "CardsAndDice/Systems/DiceInteractionOrchestrator")]
     public class DiceInteractionOrchestrator : ScriptableObject, IUIInteractionOrchestrator

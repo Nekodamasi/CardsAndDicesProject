@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer; // VContainer.Inject を使用するために追加
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
 	/// <summary>
 	/// UIの全体的なインタラクション状態を管理するステートマシン。

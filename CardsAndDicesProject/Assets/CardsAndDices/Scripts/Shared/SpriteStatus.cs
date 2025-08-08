@@ -1,5 +1,5 @@
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// スロットが存在する大まかなライン（エリア）を定義します。

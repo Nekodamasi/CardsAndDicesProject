@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// 全てのカードスロットの状態を管理するリポジトリクラス。

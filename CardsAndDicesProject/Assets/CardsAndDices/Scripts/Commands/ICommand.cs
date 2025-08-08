@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// イベント駆動アーキテクチャにおけるイベントメッセージの基本契約を定義するインターフェース。

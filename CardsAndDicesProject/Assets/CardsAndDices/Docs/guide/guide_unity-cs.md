@@ -30,10 +30,10 @@
 
 ### 1. Namespace の指定
 
-- すべてのクラスは `CardsAndDice` 名前空間内に配置する。
+- すべてのクラスは `CardsAndDices` 名前空間内に配置する。
 - ファイル冒頭で必ず以下を記述する。
 ```csharp
-namespace CardsAndDice 
+namespace CardsAndDices
 {
     // クラス定義はここから
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "HoverAnimation", menuName = "CardsAndDice/Animations/Hover Animation")]
     public class HoverAnimationSO : BaseAnimationSO

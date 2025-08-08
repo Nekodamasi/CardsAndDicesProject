@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// 複数のSortingGroup、Canvas、および子階層のSpriteLayerControllerの描画順序（sortingOrder）を一括で制御するコンポーネントです。

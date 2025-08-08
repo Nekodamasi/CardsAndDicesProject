@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// リフロー操作が完全に終了したことを通知するコマンド。

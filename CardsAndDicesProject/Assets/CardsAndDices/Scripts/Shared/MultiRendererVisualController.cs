@@ -2,7 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// 複数のSpriteRendererとTextMeshProUGUIの視覚的プロパティ（透明度、色）を一括で制御するコンポーネント。

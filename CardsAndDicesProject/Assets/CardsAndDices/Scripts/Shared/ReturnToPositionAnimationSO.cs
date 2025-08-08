@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// オブジェクトを所定のターゲット位置に戻すアニメーション戦略。

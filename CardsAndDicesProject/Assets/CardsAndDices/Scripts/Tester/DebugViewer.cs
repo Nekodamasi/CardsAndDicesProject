@@ -1,8 +1,7 @@
-using CardsAndDice;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CardsAndDice.Tester
+namespace CardsAndDices
 {
     /// <summary>
     /// 実行中の各種データをインスペクターに表示するためのデバッグ用クラス。

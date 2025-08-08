@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// カードのリフロー（再配置）および前詰め処理の計算ロジックを担当するサービスクラスです。

@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// SpriteUI要素がスロットに正常に配置されたことを通知するコマンド。

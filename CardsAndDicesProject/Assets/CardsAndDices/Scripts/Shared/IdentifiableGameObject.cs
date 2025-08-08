@@ -1,7 +1,7 @@
 using UnityEngine;
 // using VContainer; // VContainer.Inject を使用しないため削除
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
 	/// <summary>
 	/// CompositeObjectIdを持つMonoBehaviourクラス。

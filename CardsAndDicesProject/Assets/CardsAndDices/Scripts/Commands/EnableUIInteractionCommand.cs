@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// UI操作制限モードを解除し、UI操作を有効にするコマンド。

@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "UIActivationPolicy", menuName = "CardsAndDice/Systems/UIActivationPolicy")]
     public class UIActivationPolicy : ScriptableObject

@@ -1,11 +1,10 @@
-using CardsAndDice;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using DG.Tweening;
 using System.Collections.Generic;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     public class GameLifetimeScope : LifetimeScope
     {
