@@ -63,6 +63,7 @@ namespace CardsAndDices
             Location = location;
             Team = team;
             PlacedCardId = null;
+            ReflowPlacedCardId = null;
         }
     }
 }

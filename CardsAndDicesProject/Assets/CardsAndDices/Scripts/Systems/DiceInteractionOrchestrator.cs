@@ -11,6 +11,7 @@ namespace CardsAndDices
         [SerializeField] private DiceInteractionStrategy _diceInteractionStrategy;
 
         private ViewRegistry _viewRegistry;
+        public ViewRegistry ViewRegistry => _viewRegistry;
 
         [Inject]
         public void Initialize(UIStateMachine uiStateMachine, SpriteCommandBus commandBus, DiceInteractionStrategy diceInteractionStrategy)
