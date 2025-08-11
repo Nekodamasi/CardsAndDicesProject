@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "CardInteractionOrchestrator", menuName = "CardsAndDice/Systems/CardInteractionOrchestrator")]
-public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrchestrator
+    public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrchestrator
     {
         private enum ReflowState { Idle, InProgress }
         private ReflowState _currentReflowState = ReflowState.Idle;
@@ -20,12 +20,12 @@ public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrche
         [SerializeField] private SpriteCommandBus _commandBus;
         [SerializeField] private ReflowService _reflowService;
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
+        [SerializeField] private ViewRegistry _viewRegistry;
 
         [Header("Strategies")]
         [SerializeField] private CardInteractionStrategy _cardInteractionStrategy;
 
         private CompositeObjectId _draggedId;
-        private ViewRegistry _viewRegistry;
         private bool _isDroppedSuccessfully;
 
         public UIStateMachine UIStateMachine => _uiStateMachine;
@@ -35,7 +35,7 @@ public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrche
         public bool IsDroppedSuccessfully { get => _isDroppedSuccessfully; set => _isDroppedSuccessfully = value; }
 
         [Inject]
-        public void Initialize(UIStateMachine uiStateMachine, CardSlotManager cardSlotManager, SpriteCommandBus commandBus, ReflowService reflowService, UIActivationPolicy uiActivationPolicy, CardInteractionStrategy cardInteractionStrategy)
+        public void Initialize(UIStateMachine uiStateMachine, CardSlotManager cardSlotManager, SpriteCommandBus commandBus, ReflowService reflowService, UIActivationPolicy uiActivationPolicy, CardInteractionStrategy cardInteractionStrategy, ViewRegistry viewRegistry)
         {
             _uiStateMachine = uiStateMachine;
             _cardSlotManager = cardSlotManager;
@@ -43,8 +43,8 @@ public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrche
             _reflowService = reflowService;
             _uiActivationPolicy = uiActivationPolicy;
             _cardInteractionStrategy = cardInteractionStrategy;
+            _viewRegistry = viewRegistry;
 
-            _viewRegistry = new ViewRegistry();
             _draggedId = null;
             _currentReflowState = ReflowState.Idle;
             _nextHoverCommand = null;
@@ -227,6 +227,7 @@ public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrche
 
         private void OnSpriteDragOperationCompleted(SpriteDragOperationCompletedCommand command)
         {
+            if (UIStateMachine.CurrentState != UIStateMachine.UIState.DropedCardMove) return;
             _uiActivationPolicy.ResetToCardActivations(this);
             _uiActivationPolicy.ResetToCardSlotActivations(this);
             _uiStateMachine.SetState(UIStateMachine.UIState.Idle);
@@ -236,9 +237,10 @@ public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrche
 
         private async void OnDragReflowCompleted(DragReflowCompletedCommand command)
         {
+            if (UIStateMachine.CurrentState != UIStateMachine.UIState.DropedCard) return;
             UIStateMachine.SetState(UIStateMachine.UIState.DropedCardMove);
             var animationTasks = new List<UniTask>();
-            foreach (var movement in command.CardMovements)
+            foreach (var movement in command.Movements)
             {
                 var cardView = _viewRegistry.GetView<CreatureCardView>(movement.Key);
                 if (cardView != null)
@@ -252,6 +254,7 @@ public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrche
 
         private async void OnExecuteFrontLoad(ExecuteFrontLoadCommand command)
         {
+            if (UIStateMachine.CurrentState != UIStateMachine.UIState.DropedCardMove) return;
             var frontLoadMovements = _reflowService.CalculateFrontLoadMovements(_draggedId);
             if (frontLoadMovements.Count > 0)
             {

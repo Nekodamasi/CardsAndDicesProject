@@ -1,16 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 namespace CardsAndDices
 {
     /// <summary>
     /// シーン上の全てのBaseSpriteViewインスタンスを管理し、IDによる検索機能を提供するレジストリ。
+    /// ScriptableObjectとして実装し、プロジェクト全体で単一のインスタンスを共有する。
     /// </summary>
-    public class ViewRegistry
+    [CreateAssetMenu(fileName = "ViewRegistry", menuName = "CardsAndDice/Systems/ViewRegistry")]
+    public class ViewRegistry : ScriptableObject
     {
         private readonly Dictionary<CompositeObjectId, BaseSpriteView> _views = new();
         private readonly List<CardSlotView> _slotViews = new();
-        private readonly List<CreatureCardView> _creatureCardViews = new(); // CreatureCardViewのリストを追加
+        private readonly List<CreatureCardView> _creatureCardViews = new();
+        private readonly List<DiceView> _diceViews = new();
+        private readonly List<DiceSlotView> _diceSlotViews = new();
+
+        [Inject]
+        public void Initialize()
+        {
+            _views.Clear();
+            _slotViews.Clear();
+            _creatureCardViews.Clear();
+            _diceViews.Clear();
+            _diceSlotViews.Clear();
+        }
 
         /// <summary>
         /// Viewをレジストリに登録します。
@@ -24,9 +39,17 @@ namespace CardsAndDices
             {
                 _slotViews.Add(slotView);
             }
-            else if (view is CreatureCardView creatureCardView) // CreatureCardViewの登録を追加
+            else if (view is CreatureCardView creatureCardView)
             {
                 _creatureCardViews.Add(creatureCardView);
+            }
+            else if (view is DiceView diceView)
+            {
+                _diceViews.Add(diceView);
+            }
+            else if (view is DiceSlotView diceSlotView)
+            {
+                _diceSlotViews.Add(diceSlotView);
             }
         }
 
@@ -42,7 +65,7 @@ namespace CardsAndDices
             {
                 _slotViews.Remove(slotView);
             }
-            else if (view is CreatureCardView creatureCardView) // CreatureCardViewの登録解除を追加
+            else if (view is CreatureCardView creatureCardView)
             {
                 _creatureCardViews.Remove(creatureCardView);
             }
@@ -68,7 +91,9 @@ namespace CardsAndDices
         /// <summary>
         /// 登録されている全てのCreatureCardViewを取得します。
         /// </summary>
-        public IReadOnlyList<CreatureCardView> GetAllCreatureCardViews() => _creatureCardViews; // 新しいメソッドを追加
+        public IReadOnlyList<CreatureCardView> GetAllCreatureCardViews() => _creatureCardViews;
+        public IReadOnlyList<DiceView> GetAllDiceViews() => _diceViews;
+        public IReadOnlyList<DiceSlotView> GetAllDiceSlotViews() => _diceSlotViews;
 
         public IReadOnlyDictionary<CompositeObjectId, BaseSpriteView> GetAllViews() => _views;
     }

@@ -72,6 +72,22 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// ダイスの状態変化（ドラッグ開始）
+        /// </summary>
+        public void DraggingDiceToDiceActivations(DiceInteractionOrchestrator orchestrator)
+        {
+            if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingDice) return;
+
+            var state = orchestrator.UIStateMachine.CurrentState;
+            var draggedId = orchestrator.DraggedId;
+
+            foreach (var diceView in orchestrator.ViewRegistry.GetAllDiceViews())
+            {
+                if (diceView.GetObjectId() != draggedId) diceView.EnterInactiveState();
+            }
+        }
+
+        /// <summary>
         /// カードの状態変化（リセット）
         /// </summary>
         public void ResetToCardActivations(CardInteractionOrchestrator orchestrator)
@@ -84,6 +100,30 @@ namespace CardsAndDices
             foreach (var cardView in orchestrator.ViewRegistry.GetAllCreatureCardViews())
             {
                 cardView.EnterNormalState();
+            }
+        }
+        /// <summary>
+        /// ダイスの状態変化（リセット）
+        /// </summary>
+        public void ResetToDiceActivations(DiceInteractionOrchestrator orchestrator)
+        {
+            if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DropedDiceMove) return;
+            Debug.Log("ResetToDiceActivations");
+            var state = orchestrator.UIStateMachine.CurrentState;
+            var draggedId = orchestrator.DraggedId;
+
+            foreach (var cardView in orchestrator.ViewRegistry.GetAllCreatureCardViews())
+            {
+                cardView.EnterNormalState();
+            }
+            foreach (var diceView in orchestrator.ViewRegistry.GetAllDiceViews())
+            {
+                Debug.Log("ダイスがあるのか？");
+                diceView.EnterNormalState();
+            }
+            foreach (var slotView in orchestrator.ViewRegistry.GetAllSlotViews())
+            {
+                slotView.EnterInactiveState();
             }
         }
     }

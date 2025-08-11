@@ -37,9 +37,19 @@ namespace CardsAndDices
 			DropedCard,
 
 			/// <summary>
+			/// ダイスがインレットにドロップされた
+			/// </summary>
+			DropedDice,
+
+			/// <summary>
 			/// ドロップカードの移動中
 			/// </summary>
 			DropedCardMove,
+
+			/// <summary>
+			/// ドロップダイスの移動中
+			/// </summary>
+			DropedDiceMove,
 			/// <summary>
 			/// リフロー中
 			/// </summary>

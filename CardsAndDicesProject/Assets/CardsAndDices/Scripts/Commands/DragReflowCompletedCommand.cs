@@ -12,7 +12,7 @@ namespace CardsAndDices
         /// <summary>
         /// 移動が必要なカードのIDと、そのカードが移動すべき最終的なワールド座標のマップ。
         /// </summary>
-        public Dictionary<CompositeObjectId, Vector3> CardMovements { get; private set; }
+        public Dictionary<CompositeObjectId, Vector3> Movements { get; private set; }
 
         /// <summary>
         /// DragReflowCompletedCommandの新しいインスタンスを初期化します。
@@ -20,7 +20,7 @@ namespace CardsAndDices
         /// <param name="cardMovements">移動が必要なカードのIDと、そのカードが移動すべき最終的なワールド座標のマップ。</param>
         public DragReflowCompletedCommand(Dictionary<CompositeObjectId, Vector3> cardMovements)
         {
-            CardMovements = cardMovements;
+            Movements = cardMovements;
         }
 
         public void Execute() { }

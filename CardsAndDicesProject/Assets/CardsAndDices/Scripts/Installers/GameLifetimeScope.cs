@@ -27,6 +27,7 @@ namespace CardsAndDices
         [SerializeField] private CardInteractionStrategy _cardInteractionStrategy;
         [SerializeField] private DiceInteractionStrategy _diceInteractionStrategy;
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
+        [SerializeField] private ViewRegistry _viewRegistry;
 
         [SerializeField] private SystemReflowController _systemReflowController;
         [SerializeField] private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
@@ -59,6 +60,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_diceInteractionStrategy).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_uiActivationPolicy).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_systemReflowController).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_viewRegistry).AsSelf();
 
             _uiStateMachine.Initialize();
             _spriteCommandBus.Initialize();
@@ -70,14 +72,15 @@ namespace CardsAndDices
             _dicePlacementService.Initialize(_diceSlotStateRepository);
             _cardSlotInteractionHandler.InInitialize(_spriteCommandBus, _cardSlotStateRepository, _reflowService, _cardPlacementService);
             _diceSlotInteractionHandler.InInitialize(_spriteCommandBus, _diceSlotStateRepository, _reflowService, _dicePlacementService);
-            _cardSlotDebug.InInitialize(_cardSlotStateRepository, _cardInteractionOrchestrator.ViewRegistry);
+            _cardSlotDebug.InInitialize(_cardSlotStateRepository, _viewRegistry);
             _compositeObjectIdManager.Initialize();
-            _cardInteractionOrchestrator.Initialize(_uiStateMachine, _cardSlotManager, _spriteCommandBus, _reflowService, _uiActivationPolicy, _cardInteractionStrategy);
-            _diceInteractionOrchestrator.Initialize(_uiStateMachine, _spriteCommandBus, _diceInteractionStrategy);
+            _cardInteractionOrchestrator.Initialize(_uiStateMachine, _cardSlotManager, _spriteCommandBus, _reflowService, _uiActivationPolicy, _cardInteractionStrategy, _viewRegistry);
+            _diceInteractionOrchestrator.Initialize(_uiStateMachine, _diceSlotManager, _spriteCommandBus, _uiActivationPolicy, _diceInteractionStrategy, _viewRegistry);
             _reflowService.Initialize(_cardSlotStateRepository, _cardSlotDebug);
             _cardInteractionStrategy.Initialize();
             _uiActivationPolicy.Initialize();
             _systemReflowController.Initialize(_spriteCommandBus, _cardInteractionOrchestrator, _diceInteractionOrchestrator);
+            _viewRegistry.Initialize();
 
             foreach (var cardView in _creatureCardViews)
             {
