@@ -23,7 +23,7 @@ namespace CardsAndDices
         [SerializeField] private AudioClip _hoverSound;
         [SerializeField] public string _cardName;
         [SerializeField] private InletAbilityProfile _inletProfile; // このカードが持つインレットの能力プロファイル
-        [SerializeField] private DiceInletView _inletView; // このカードに属するインレットView
+        [SerializeField] private DiceInletView _inletView; // このカードに属するインレットView 
 
         private SpriteInputHandler _spriteInputHandler;
         public bool IsGrayscale { get; private set; }

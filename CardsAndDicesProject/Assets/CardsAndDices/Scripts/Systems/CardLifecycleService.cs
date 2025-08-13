@@ -1,8 +1,7 @@
 using UnityEngine;
 using VContainer;
-using CardsAndDices.Scripts.Data;
 
-namespace CardsAndDices.Scripts.Systems
+namespace CardsAndDices
 {
     /// <summary>
     /// カードの生成、初期化、破棄など、ライフサイクル全般を管理するサービス。
@@ -21,12 +20,23 @@ namespace CardsAndDices.Scripts.Systems
         }
 
         /// <summary>
+        /// 全てのカードを初期化し、その能力をレジストリに登録します。
+        /// </summary>
+        public void InitializeCards()
+        {
+            foreach (var cardView in _viewRegistry.GetAllCreatureCardViews())
+            {
+                InitializeCard(cardView.GetObjectId());
+            }
+        }
+
+        /// <summary>
         /// カードを初期化し、その能力をレジストリに登録します。
         /// TODO: このメソッドは、オブジェクトプールからカードが取得され、
         ///       特定のカード定義データで初期化される際に呼び出される必要があります。
         /// </summary>
         /// <param name="cardId">初期化するカードのID。</param>
-        public void InitializeCard(CompositeObjectId cardId)
+        private void InitializeCard(CompositeObjectId cardId)
         {
             var cardView = _viewRegistry.GetView<CreatureCardView>(cardId);
             if (cardView == null || cardView.InletView == null || cardView.InletProfile == null)

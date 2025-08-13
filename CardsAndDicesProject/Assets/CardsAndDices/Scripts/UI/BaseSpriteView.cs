@@ -31,9 +31,6 @@ namespace CardsAndDices
         protected Sequence _currentAnimation;
         protected Sequence _currentMoveAnimation;
         public SpriteStatus CurrentStatus { get { return _currentStatus; } }
-
-        public CompositeObjectId SlotId { get; private set; }
-
         protected virtual void Awake()
         {
             _commandBus.On<EnableUIInteractionCommand>(OnEnableUIInteraction);

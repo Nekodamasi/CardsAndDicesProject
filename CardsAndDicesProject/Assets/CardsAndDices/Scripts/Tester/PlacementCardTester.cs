@@ -15,6 +15,8 @@ namespace CardsAndDices
         [SerializeField] private CardSlotManager _cardSlotManager;
         [SerializeField] private DiceSlotManager _diceSlotManager;
         [SerializeField] private SpriteCommandBus _commandBus;
+        [SerializeField] private CardLifecycleService _cardLifecycleService;
+
 
 
         [Header("Test Placements")]
@@ -54,6 +56,9 @@ namespace CardsAndDices
         /// </summary>
         private async UniTask Start()
         {
+            // カードの初期化
+            _cardLifecycleService.InitializeCards();
+
             // 「UI操作制限モード」ON
             _commandBus.Emit(new DisableUIInteractionCommand());
 
