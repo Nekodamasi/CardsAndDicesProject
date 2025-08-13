@@ -1,14 +1,20 @@
 using UnityEngine;
 using VContainer;
+using CardsAndDices.Scripts.Systems;
 
 namespace CardsAndDices
 {
     [CreateAssetMenu(fileName = "UIActivationPolicy", menuName = "CardsAndDice/Systems/UIActivationPolicy")]
     public class UIActivationPolicy : ScriptableObject
     {
+        private DiceInletAbilityRegistry _diceInletAbilityRegistry;
+        private DiceManager _diceManager;
+
         [Inject]
-        public void Initialize()
+        public void Initialize(DiceInletAbilityRegistry diceInletAbilityRegistry, DiceManager diceManager)
         {
+            _diceInletAbilityRegistry = diceInletAbilityRegistry;
+            _diceManager = diceManager;
         }
 
         /// <summary>
@@ -36,8 +42,31 @@ namespace CardsAndDices
                 }
                 else
                 {
-//                    Debug.Log("ちゃんと動いてる？");
                     slotView.EnterAcceptableState();
+                }
+            }
+        }
+
+        /// <summary>
+        /// ダイスインレットの状態変化（ダイスドラッグ開始）
+        /// </summary>
+        public void DraggingDiceToInletActivations(DiceInteractionOrchestrator orchestrator)
+        {
+            if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingDice) return;
+
+            var draggedDice = _diceManager.GetDiceData(orchestrator.DraggedId);
+            if (draggedDice == null) return;
+
+            foreach (var inletView in orchestrator.ViewRegistry.GetAllInletViews())
+            {
+                var profile = _diceInletAbilityRegistry.GetProfile(inletView.GetObjectId());
+                if (profile?.Condition != null && profile.Condition.CanAccept(draggedDice))
+                {
+                    inletView.EnterAcceptableState();
+                }
+                else
+                {
+                    inletView.EnterInactiveState();
                 }
             }
         }

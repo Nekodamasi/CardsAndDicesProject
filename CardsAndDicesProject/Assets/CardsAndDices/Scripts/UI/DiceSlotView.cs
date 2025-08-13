@@ -30,8 +30,6 @@ namespace CardsAndDices
             _diceSlotManager.RegisterSlot(_diceSlotData);
         }
 
-       public override CompositeObjectId GetCurrentCardId() => GetObjectId();
-
         /// <summary>
         /// 通常状態に遷移します。
         /// </summary>

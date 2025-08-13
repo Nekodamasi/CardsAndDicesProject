@@ -16,6 +16,7 @@ namespace CardsAndDices
         private readonly List<CreatureCardView> _creatureCardViews = new();
         private readonly List<DiceView> _diceViews = new();
         private readonly List<DiceSlotView> _diceSlotViews = new();
+        private readonly List<DiceInletView> _inletViews = new();
 
         [Inject]
         public void Initialize()
@@ -25,6 +26,7 @@ namespace CardsAndDices
             _creatureCardViews.Clear();
             _diceViews.Clear();
             _diceSlotViews.Clear();
+            _inletViews.Clear();
         }
 
         /// <summary>
@@ -51,6 +53,10 @@ namespace CardsAndDices
             {
                 _diceSlotViews.Add(diceSlotView);
             }
+            else if (view is DiceInletView inletView)
+            {
+                _inletViews.Add(inletView);
+            }
         }
 
         /// <summary>
@@ -68,6 +74,10 @@ namespace CardsAndDices
             else if (view is CreatureCardView creatureCardView)
             {
                 _creatureCardViews.Remove(creatureCardView);
+            }
+            else if (view is DiceInletView inletView)
+            {
+                _inletViews.Remove(inletView);
             }
         }
 
@@ -94,6 +104,7 @@ namespace CardsAndDices
         public IReadOnlyList<CreatureCardView> GetAllCreatureCardViews() => _creatureCardViews;
         public IReadOnlyList<DiceView> GetAllDiceViews() => _diceViews;
         public IReadOnlyList<DiceSlotView> GetAllDiceSlotViews() => _diceSlotViews;
+        public IReadOnlyList<DiceInletView> GetAllInletViews() => _inletViews;
 
         public IReadOnlyDictionary<CompositeObjectId, BaseSpriteView> GetAllViews() => _views;
     }

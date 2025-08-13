@@ -23,8 +23,7 @@ namespace CardsAndDices
         private bool _animationSkipped = false;
         private bool _playAnimation = false;
         private SpriteStatus _pendingStatus;
-        public override CompositeObjectId GetCurrentCardId() => GetObjectId();
-
+ 
         /// <summary>
         /// 指定されたデータに基づいてダイスの表示を更新します。
         /// </summary>

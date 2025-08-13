@@ -3,15 +3,20 @@ using VContainer;
 using VContainer.Unity;
 using DG.Tweening;
 using System.Collections.Generic;
+using CardsAndDices.Scripts.Systems;
 
 namespace CardsAndDices
 {
     public class GameLifetimeScope : LifetimeScope
     {
+        [Header("Scene Components")]
+        [SerializeField] private DiceManager _diceManager;
+
         [Header("ScriptableObject Managers")]
         [SerializeField] private UIStateMachine _uiStateMachine;
         [SerializeField] private SpriteCommandBus _spriteCommandBus;
         [SerializeField] private CardSlotManager _cardSlotManager;
+        [SerializeField] private DiceInletManager _diceInletManager;
         [SerializeField] private DiceSlotManager _diceSlotManager;
         [SerializeField] private CardSlotStateRepository _cardSlotStateRepository;
         [SerializeField] private DiceSlotStateRepository _diceSlotStateRepository;
@@ -28,6 +33,8 @@ namespace CardsAndDices
         [SerializeField] private DiceInteractionStrategy _diceInteractionStrategy;
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
         [SerializeField] private ViewRegistry _viewRegistry;
+        [SerializeField] private CardLifecycleService _cardLifecycleService;
+        [SerializeField] private DiceInletAbilityRegistry _diceInletAbilityRegistry;
 
         [SerializeField] private SystemReflowController _systemReflowController;
         [SerializeField] private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
@@ -40,10 +47,14 @@ namespace CardsAndDices
             // DOTweenの初期化とTween容量の設定
             DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 100);
 
+            // Scene Components
+            builder.RegisterComponent(_diceManager);
+
             // ScriptableObject Managers のバインドと初期化
             builder.RegisterInstance(_uiStateMachine).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_spriteCommandBus).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_cardSlotManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_diceInletManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceSlotManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_cardSlotStateRepository).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceSlotStateRepository).AsSelf().AsImplementedInterfaces();
@@ -61,10 +72,13 @@ namespace CardsAndDices
             builder.RegisterInstance(_uiActivationPolicy).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_systemReflowController).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_viewRegistry).AsSelf();
+            builder.RegisterInstance(_cardLifecycleService).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_diceInletAbilityRegistry).AsSelf().AsImplementedInterfaces();
 
             _uiStateMachine.Initialize();
             _spriteCommandBus.Initialize();
             _cardSlotManager.Initialize(_cardSlotStateRepository, _cardPlacementService, _cardSlotInteractionHandler, _cardSlotDebug);
+            _diceInletManager.Initialize();
             _diceSlotManager.Initialize(_diceSlotStateRepository, _dicePlacementService, _diceSlotInteractionHandler);
             _cardSlotStateRepository.Initialize();
             _diceSlotStateRepository.Initialize();
@@ -78,9 +92,10 @@ namespace CardsAndDices
             _diceInteractionOrchestrator.Initialize(_uiStateMachine, _diceSlotManager, _spriteCommandBus, _uiActivationPolicy, _diceInteractionStrategy, _viewRegistry);
             _reflowService.Initialize(_cardSlotStateRepository, _cardSlotDebug);
             _cardInteractionStrategy.Initialize();
-            _uiActivationPolicy.Initialize();
             _systemReflowController.Initialize(_spriteCommandBus, _cardInteractionOrchestrator, _diceInteractionOrchestrator);
             _viewRegistry.Initialize();
+            _cardLifecycleService.Initialize(_diceInletAbilityRegistry, _viewRegistry);
+            _diceInletAbilityRegistry.Clear(); // ゲーム開始時にクリア
 
             foreach (var cardView in _creatureCardViews)
             {

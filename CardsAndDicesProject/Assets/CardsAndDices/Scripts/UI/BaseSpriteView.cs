@@ -109,7 +109,6 @@ namespace CardsAndDices
 
         // --- Helper Methods ---
         public CompositeObjectId GetObjectId() => _identifiableGameObject.ObjectId;
-        public abstract CompositeObjectId GetCurrentCardId();
 
         public void SetColliderEnabled(bool enable)
         {

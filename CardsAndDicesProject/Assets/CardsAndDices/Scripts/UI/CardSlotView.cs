@@ -36,7 +36,7 @@ namespace CardsAndDices
         /// <summary>
         /// 現在スロットに配置されているカードのIDを取得します。
         /// </summary>
-        public override CompositeObjectId GetCurrentCardId() => _slotData.PlacedCardId;
+        public CompositeObjectId GetCurrentCardId() => _slotData.PlacedCardId;
 
         /// <summary>
         /// スロットを通常状態に遷移させます。
@@ -107,4 +107,3 @@ namespace CardsAndDices
         public Team Team { get { return _slotData.Team; } }
     }
 }
-
