@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// オブジェクトを所定のターゲット位置に戻すアニメーション戦略。
     /// </summary>
-    [CreateAssetMenu(fileName = "ReturnToPositionAnimation", menuName = "CardsAndDice/Animations/Return To Position Animation")]
+    [CreateAssetMenu(fileName = "ReturnToPositionAnimation", menuName = "CardsAndDices/Animations/Return To Position Animation")]
     public class ReturnToPositionAnimationSO : BaseAnimationSO
     {
         public override Sequence PlayAnimation(GameObject targetObject, MultiRendererVisualController targetVisualController, Vector3 originalScale, Color originalColor, float duration, Vector3 targetPosition)

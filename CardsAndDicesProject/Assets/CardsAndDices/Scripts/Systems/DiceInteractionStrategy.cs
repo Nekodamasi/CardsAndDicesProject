@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "DiceInteractionStrategy", menuName = "CardsAndDice/InteractionStrategies/DiceInteractionStrategy")]
+    [CreateAssetMenu(fileName = "DiceInteractionStrategy", menuName = "CardsAndDices/InteractionStrategies/DiceInteractionStrategy")]
     public class DiceInteractionStrategy : ScriptableObject
     {
         public bool ChkDiceHover(SpriteHoverCommand command, DiceInteractionOrchestrator orchestrator)

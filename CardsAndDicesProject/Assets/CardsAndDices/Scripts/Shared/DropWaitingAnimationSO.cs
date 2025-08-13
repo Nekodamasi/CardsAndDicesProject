@@ -3,7 +3,7 @@ using DG.Tweening;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "DropWaitingAnimation", menuName = "CardsAndDice/Animations/Drop Waiting Animation")]
+    [CreateAssetMenu(fileName = "DropWaitingAnimation", menuName = "CardsAndDices/Animations/Drop Waiting Animation")]
     public class DropWaitingAnimationSO : BaseAnimationSO
     {
         [SerializeField] private float _pulseScale = 1.1f;

@@ -21,7 +21,7 @@ namespace CardsAndDices
     /// <summary>
     /// スロット関連のデバッグ機能を提供するクラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "CardSlotDebug", menuName = "CardsAndDice/Systems/CardSlotDebug")]
+    [CreateAssetMenu(fileName = "CardSlotDebug", menuName = "CardsAndDices/Systems/CardSlotDebug")]
     public class CardSlotDebug : ScriptableObject
     {
         [SerializeField] private CardSlotStateRepository _repository;

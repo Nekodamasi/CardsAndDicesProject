@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// <summary>
     /// 全てのダイススロットの状態を管理し、ダイスの配置などを担当するマネージャークラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceSlotManager", menuName = "CardsAndDice/Systems/DiceSlotManager")]
+    [CreateAssetMenu(fileName = "DiceSlotManager", menuName = "CardsAndDices/Systems/DiceSlotManager")]
     public class DiceSlotManager : ScriptableObject
     {
         [Header("System Components")]

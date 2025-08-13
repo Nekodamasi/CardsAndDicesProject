@@ -4,7 +4,7 @@ using CardsAndDices.Scripts.Systems;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "UIActivationPolicy", menuName = "CardsAndDice/Systems/UIActivationPolicy")]
+    [CreateAssetMenu(fileName = "UIActivationPolicy", menuName = "CardsAndDices/Systems/UIActivationPolicy")]
     public class UIActivationPolicy : ScriptableObject
     {
         private DiceInletAbilityRegistry _diceInletAbilityRegistry;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "DiceInletManager", menuName = "CardsAndDice/Systems/DiceInletManager")]
+    [CreateAssetMenu(fileName = "DiceInletManager", menuName = "CardsAndDices/Systems/DiceInletManager")]
     public class DiceInletManager : ScriptableObject
     {
         public void Initialize()

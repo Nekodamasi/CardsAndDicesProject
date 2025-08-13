@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using CardsAndDices.Scripts.Data;
 
-namespace CardsAndDices.Scripts.Systems
+namespace CardsAndDices
 {
     /// <summary>
     /// 現在アクティブなインレットの能力プロファイルを一元管理するレジストリ。

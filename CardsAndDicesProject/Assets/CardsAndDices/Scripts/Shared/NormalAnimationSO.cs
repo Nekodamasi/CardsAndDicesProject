@@ -3,7 +3,7 @@ using DG.Tweening;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "NormalAnimation", menuName = "CardsAndDice/Animations/Normal Animation")]
+    [CreateAssetMenu(fileName = "NormalAnimation", menuName = "CardsAndDices/Animations/Normal Animation")]
     public class NormalAnimationSO : BaseAnimationSO
     {
         public override Sequence PlayAnimation(GameObject targetObject, MultiRendererVisualController targetVisualController, Vector3 originalScale, Color originalColor, float duration, Vector3 targetPosition) // targetPosition を追加

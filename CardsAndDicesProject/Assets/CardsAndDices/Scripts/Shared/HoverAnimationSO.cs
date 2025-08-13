@@ -3,7 +3,7 @@ using DG.Tweening;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "HoverAnimation", menuName = "CardsAndDice/Animations/Hover Animation")]
+    [CreateAssetMenu(fileName = "HoverAnimation", menuName = "CardsAndDices/Animations/Hover Animation")]
     public class HoverAnimationSO : BaseAnimationSO
     {
         [SerializeField] private float _hoverScale = 1.2f;

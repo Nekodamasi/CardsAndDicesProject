@@ -3,7 +3,7 @@ using DG.Tweening;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "DragAnimation", menuName = "CardsAndDice/Animations/Drag Animation")]
+    [CreateAssetMenu(fileName = "DragAnimation", menuName = "CardsAndDices/Animations/Drag Animation")]
     public class DragAnimationSO : BaseAnimationSO
     {
         [SerializeField] private float _dragScale = 1.0f;

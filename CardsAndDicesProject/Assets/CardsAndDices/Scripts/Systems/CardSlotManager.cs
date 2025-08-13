@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// 全てのカードスロット関連の処理の窓口となるファサードクラス。
     /// 内部で各責務を持つクラスを呼び出します。
     /// </summary>
-    [CreateAssetMenu(fileName = "CardSlotManager", menuName = "CardsAndDice/Systems/CardSlotManager")]
+    [CreateAssetMenu(fileName = "CardSlotManager", menuName = "CardsAndDices/Systems/CardSlotManager")]
     public class CardSlotManager : ScriptableObject
     {
         [Header("System Components")]

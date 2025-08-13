@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "DiceInteractionOrchestrator", menuName = "CardsAndDice/Systems/DiceInteractionOrchestrator")]
+    [CreateAssetMenu(fileName = "DiceInteractionOrchestrator", menuName = "CardsAndDices/Systems/DiceInteractionOrchestrator")]
     public class DiceInteractionOrchestrator : ScriptableObject, IUIInteractionOrchestrator
     {
         [Header("Dependencies")]

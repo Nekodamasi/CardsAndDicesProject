@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// カードのUIインタラクション戦略を実装するクラスです。
     /// ドラッグ、ホバー、ドロップなどのカード固有のUI操作ロジックをカプセル化します。
     /// </summary>
-    [CreateAssetMenu(fileName = "CardInteractionStrategy", menuName = "CardsAndDice/InteractionStrategies/CardInteractionStrategy")]
+    [CreateAssetMenu(fileName = "CardInteractionStrategy", menuName = "CardsAndDices/InteractionStrategies/CardInteractionStrategy")]
     public class CardInteractionStrategy : ScriptableObject
     {
         [Inject]

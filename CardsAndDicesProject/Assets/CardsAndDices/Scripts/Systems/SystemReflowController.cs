@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// <summary>
     /// システム起因のリフロー処理を実行するコントローラー。
     /// </summary>
-    [CreateAssetMenu(fileName = "SystemReflowController", menuName = "CardsAndDice/Systems/SystemReflowController")]
+    [CreateAssetMenu(fileName = "SystemReflowController", menuName = "CardsAndDices/Systems/SystemReflowController")]
     public class SystemReflowController : ScriptableObject
     {
         private SpriteCommandBus _commandBus;

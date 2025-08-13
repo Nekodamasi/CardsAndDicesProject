@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// SpriteUIに関連するイベントの登録、配信、解除を一元管理する中央ハブ。
     /// ScriptableObjectを使用したシングルトンとして実装されています。
     /// </summary>
-    [CreateAssetMenu(fileName = "SpriteCommandBus", menuName = "CardsAndDice/Systems/SpriteCommandBus")]
+    [CreateAssetMenu(fileName = "SpriteCommandBus", menuName = "CardsAndDices/Systems/SpriteCommandBus")]
     public class SpriteCommandBus : ScriptableObject
     {
         private readonly Dictionary<Type, List<Action<ICommand>>> _subscribers = new();

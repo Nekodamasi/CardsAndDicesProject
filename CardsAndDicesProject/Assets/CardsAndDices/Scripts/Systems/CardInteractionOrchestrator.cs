@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "CardInteractionOrchestrator", menuName = "CardsAndDice/Systems/CardInteractionOrchestrator")]
+    [CreateAssetMenu(fileName = "CardInteractionOrchestrator", menuName = "CardsAndDices/Systems/CardInteractionOrchestrator")]
     public class CardInteractionOrchestrator : ScriptableObject, IUIInteractionOrchestrator
     {
         private enum ReflowState { Idle, InProgress }

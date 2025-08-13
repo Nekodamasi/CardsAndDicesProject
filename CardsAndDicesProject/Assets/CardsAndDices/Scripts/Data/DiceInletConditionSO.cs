@@ -14,7 +14,7 @@ namespace CardsAndDices
     /// <summary>
     /// ダイスインレットの発動条件を定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceInletCondition", menuName = "CardsAndDice/Data/DiceInletConditionSO")]
+    [CreateAssetMenu(fileName = "DiceInletCondition", menuName = "CardsAndDices/Data/DiceInletConditionSO")]
     public class DiceInletConditionSO : ScriptableObject
     {
         [Tooltip("投入を許可するダイスの目を定義するSOへの参照")]
