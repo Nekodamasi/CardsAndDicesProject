@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CardsAndDices
@@ -7,6 +8,8 @@ namespace CardsAndDices
     /// </summary>
     public class DiceData
     {
+        public event Action<int> OnFaceValueChanged;
+        
         /// <summary>
         /// スロットのワールド座標
         /// </summary>
@@ -15,21 +18,30 @@ namespace CardsAndDices
         /// <summary>
         /// ダイスを一意に識別するID。
         /// </summary>
-        public CompositeObjectId UniqueId { get; }
+        public CompositeObjectId Id { get; }
 
+        private int _faceValue;
         /// <summary>
         /// ダイスの出目 (1-6)。
         /// </summary>
-        public int FaceValue { get; private set; }
+        public int FaceValue
+        {
+            get => _faceValue;
+            private set
+            {
+                if (_faceValue == value) return;
+                _faceValue = value;
+                OnFaceValueChanged?.Invoke(_faceValue);
+            }
+        }
 
         /// <summary>
         /// コンストラクタ。
         /// </summary>
-        /// <param name="uniqueId">ダイスの一意なID。</param>
-        public DiceData(CompositeObjectId uniqueId)
+        public DiceData(CompositeObjectId id, int faceValue)
         {
-            UniqueId = uniqueId;
-            Roll();
+            Id = id;
+            _faceValue = faceValue;
         }
 
         /// <summary>

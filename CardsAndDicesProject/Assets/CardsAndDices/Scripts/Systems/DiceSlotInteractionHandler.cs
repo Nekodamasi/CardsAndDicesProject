@@ -18,7 +18,7 @@ namespace CardsAndDices
         private bool _isDiceFull = false;
 
         [Inject]
-        public void InInitialize(SpriteCommandBus commandBus, DiceSlotStateRepository repository, ReflowService reflowService, DicePlacementService placementService)
+        public void Initialize(SpriteCommandBus commandBus, DiceSlotStateRepository repository, ReflowService reflowService, DicePlacementService placementService)
         {
             _commandBus = commandBus;
             _repository = repository;

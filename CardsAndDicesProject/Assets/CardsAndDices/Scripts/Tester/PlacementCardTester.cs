@@ -16,7 +16,7 @@ namespace CardsAndDices
         [SerializeField] private DiceSlotManager _diceSlotManager;
         [SerializeField] private SpriteCommandBus _commandBus;
         [SerializeField] private CardLifecycleService _cardLifecycleService;
-
+        [SerializeField] private CombatManager _combatManager; // CombatManagerを追加
 
 
         [Header("Test Placements")]
@@ -56,14 +56,24 @@ namespace CardsAndDices
         /// </summary>
         private async UniTask Start()
         {
-            // カードの初期化
-            _cardLifecycleService.InitializeCards();
+            // カードの初期化はCombatManagerに任せる
+            if (_combatManager != null)
+            {
+                _combatManager.InitializeCombatField();
+            }
+            else
+            {
+                Debug.LogError("CombatManagerが設定されていません。");
+            }
 
             // 「UI操作制限モード」ON
             _commandBus.Emit(new DisableUIInteractionCommand());
 
-            PlaceCardsForTest();
-            PlaceDicesForTest();
+            // PlaceCardsForTest() と PlaceDicesForTest() は、
+            // CombatManagerがカードを生成・配置するので、ここでは不要になる可能性が高い。
+            // もし、CombatManagerとは別にテストしたい場合は残す。
+            // PlaceCardsForTest(); // 必要に応じてコメント解除
+            PlaceDicesForTest(); // 必要に応じてコメント解除
 
             // 0.5秒待機
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));

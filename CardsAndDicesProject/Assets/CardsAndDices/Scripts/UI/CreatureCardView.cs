@@ -3,6 +3,7 @@ using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using VContainer;
 using CardsAndDices.Scripts.Data;
+using System.Collections.Generic; // 追加
 
 namespace CardsAndDices
 {
@@ -25,6 +26,8 @@ namespace CardsAndDices
         [SerializeField] private InletAbilityProfile _inletProfile; // このカードが持つインレットの能力プロファイル
         [SerializeField] private DiceInletView _inletView; // このカードに属するインレットView 
 
+        public CreatureData CurrentCreatureData { get; private set; } // 追加
+
         private SpriteInputHandler _spriteInputHandler;
         public bool IsGrayscale { get; private set; }
 
@@ -35,9 +38,24 @@ namespace CardsAndDices
         public InletAbilityProfile InletProfile => _inletProfile;
         public DiceInletView InletView => _inletView;
 
+        /// <summary>
+        /// このカードに紐づく全てのインレットViewのリストを取得します。
+        /// </summary>
+        /// <returns>DiceInletViewのリスト。</returns>
+        public List<DiceInletView> GetInletViews()
+        {
+            // 現状は単一のインレットを想定
+            if (_inletView != null)
+            {
+                return new List<DiceInletView> { _inletView };
+            }
+            return new List<DiceInletView>();
+        }
+
         protected override void Awake()
         {
             base.Awake();
+            SetSpawnedState(false);
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
 
             if (_audioSource == null)
@@ -47,6 +65,18 @@ namespace CardsAndDices
             
             //_audioSource.clip = _hoverSound;
             //_audioSource.playOnAwake = false;
+        }
+
+        /// <summary>
+        /// クリーチャーデータをViewに適用します。
+        /// </summary>
+        /// <param name="data">適用するクリーチャーデータ。</param>
+        public void ApplyData(CreatureData data)
+        {
+            CurrentCreatureData = data; // ここでデータを保持
+            // TODO: CreatureDataの内容をViewに反映するロジックを実装
+            // 例: _cardName = data.CreatureName;
+            // カードの見た目やテキストを更新する
         }
 
         public void SetGrayscale(bool enabled)

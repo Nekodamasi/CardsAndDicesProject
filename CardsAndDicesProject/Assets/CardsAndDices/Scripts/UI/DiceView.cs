@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace CardsAndDices
         [Header("Dice Specific Settings")]
         [SerializeField] public string _diceName;
 
+        public event Action OnDestroyed;
+
         private SpriteInputHandler _spriteInputHandler;
         private bool _animationSkipped = false;
         private bool _playAnimation = false;
@@ -36,6 +39,7 @@ namespace CardsAndDices
         protected override void Awake()
         {
             base.Awake();
+            SetSpawnedState(false);
             Debug.Log($"[DiceView] {gameObject.name} (ID: {GetObjectId().UniqueId}) - Awake called. Orchestrator is null: {_orchestrator == null}");
             // _orchestrator?.RegisterView(this); // BaseSpriteViewのAwakeで既に呼ばれているためコメントアウト
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
@@ -53,9 +57,10 @@ namespace CardsAndDices
             await _currentMoveAnimation.AsyncWaitForCompletion();
         }
 
-        public void UpdateView(DiceData data)
+        public void UpdateFace(int faceValue)
         {
-            if (data == null) return;
+            // TODO: テキストやスプライトを更新して出目を表示する
+            Debug.Log($"[DiceView] {gameObject.name} updated with face value: {faceValue}");
         }
 
         /// <summary>
@@ -172,6 +177,7 @@ namespace CardsAndDices
 
         protected override void OnDestroy()
         {
+            OnDestroyed?.Invoke();
             base.OnDestroy();
         }
     }

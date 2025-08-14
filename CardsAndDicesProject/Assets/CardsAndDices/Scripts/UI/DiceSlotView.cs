@@ -26,6 +26,7 @@ namespace CardsAndDices
          protected override void Awake()
         {
             base.Awake();
+            SetSpawnedState(true);
             _diceSlotData = new DiceSlotData(GetObjectId(), transform.position, _location);
             _diceSlotManager.RegisterSlot(_diceSlotData);
         }

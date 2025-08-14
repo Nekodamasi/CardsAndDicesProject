@@ -17,7 +17,8 @@ namespace CardsAndDices
         /// <param name="inletId">インレットのID。</param>
         /// <param name="profile">登録する能力プロファイル。</param>
         public void Register(CompositeObjectId inletId, InletAbilityProfile profile)
-        { 
+        {
+            Debug.Log("<color=Green>Register:</color>" + inletId + "__" + profile.Condition.ActivationType);
             _activeProfiles[inletId] = profile;
         }
 
@@ -37,7 +38,9 @@ namespace CardsAndDices
         /// <returns>対応する能力プロファイル。登録されていない場合はnull。</returns>
         public InletAbilityProfile GetProfile(CompositeObjectId inletId)
         {
+            Debug.Log("<color=Green>GetProfile:</color>" + inletId);
             _activeProfiles.TryGetValue(inletId, out var profile);
+            Debug.Log("<color=Green>GetProfile:</color>" + inletId + "__" + profile.Condition.ActivationType);
             return profile;
         }
 

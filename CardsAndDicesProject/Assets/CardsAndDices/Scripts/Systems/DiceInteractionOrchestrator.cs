@@ -102,6 +102,7 @@ namespace CardsAndDices
                 var draggedView = ViewRegistry.GetView<DiceView>(command.TargetObjectId);
                 draggedView.EnterDraggingState();
                 _uiActivationPolicy.DraggingDiceToDiceActivations(this);
+                _uiActivationPolicy.DraggingDiceToInletActivations(this);
 //                _uiActivationPolicy.DraggingCardToCardSlotActivations(this);
             }
         }

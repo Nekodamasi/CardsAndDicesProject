@@ -6,6 +6,7 @@
 
 この設計書は、UnityにおけるSpriteベースのUI要素（SpriteUI）の基本的なインタラクションと構造を定義します。
 マウスイベントの検知、コマンドの発行、およびそれに応じたUIの視覚的変化を管理するための主要なクラスとその役割を記述します。
+また、オブジェクトプールによるUI要素の再利用と、その表示状態の管理についても詳述します。
 
 ---
 
@@ -37,11 +38,15 @@
 
 ### 3. BaseSpriteView
 
-- **役割:** すべてのSpriteUI要素の基底クラスとなり、共通の表示ロジックとコマンド購読機能を提供します。
+- **役割:** すべてのSpriteUI要素の基底クラスとなり、共通の表示ロジック、コマンド購読機能、およびオブジェクトプールにおける再利用状態管理機能を提供します。
     - `Awake()`時に `UIInteractionOrchestrator` の `ViewRegistry` に自身を登録し、`OnDestroy()`で登録解除します。
     - `EnableUIInteractionCommand` と `DisableUIInteractionCommand` を購読し、自身のコライダーの有効/無効を切り替えます。
     - `UIInteractionOrchestrator` から呼び出される状態遷移メソッド（`EnterNormalState`, `EnterHoveringState` など）を持ち、自身の状態を管理します。
     - アニメーションの定義は `ScriptableObject` として外部化され、このクラスに注入されます。
+    - **`IsSpawned` プロパティ:** このViewが現在オブジェクトプールから取り出され、ゲーム内で使用中であるかを示します。
+    - **`SetSpawnedState(bool state)` メソッド:** `IsSpawned` プロパティの状態を設定します。オブジェクトがプールから取り出される際に`true`に、プールに戻される際に`false`に設定されます。
+    - **`_displayRootGameObject` フィールド:** 表示に関わるコンポーネントをすべて配下に持つGameObjectへの参照です。このGameObjectの`SetActive`を切り替えることで、View全体の表示/非表示を制御します。
+    - **`SetDisplayActive(bool active)` メソッド:** `_displayRootGameObject` のアクティブ状態を設定し、Viewの表示/非表示を切り替えます。`Awake()`時に`SetDisplayActive(false)`が呼ばれ、初期状態では非表示になります。
 
 ---
 
@@ -94,7 +99,8 @@ SpriteUIは、複数の`SortingGroup`、`Canvas`で構成されることがあ�
 ### 2. BaseSpriteViewへの統合
 
 - `BaseSpriteView`は、`SpriteLayerController`のインスタンスをインスペクター経由で受け取ります。
-- `BaseSpriteView`に`public void SetOrderInLayer(int order)`メソッドを実装し、内部で`SpriteLayerController.SetOrderInLayer(order)`を呼び出します。これにより、`BaseSpriteView`を持つオブジェクトから、関連するすべてのUI要素の描画順序を簡単に変更できます。
+- `BaseSpriteView`に`public void SetOrderInLayer(int order)`メソッドを実装し、内部で`SpriteLayerController.SetOrderInLayer(order)`を呼び出します。
+これにより、`BaseSpriteView`を持つオブジェクトから、関連するすべてのUI要素の描画順序を簡単に変更できます。
 
 ---
 
@@ -179,6 +185,7 @@ SpriteUIは、複数の`SortingGroup`、`Canvas`で構成されることがあ�
 -   **`ReflowService`**: カードが配置または移動した際の、新しいレイアウト（リフロー）の計算を担当します。
 -   **`UIActivationPolicy`**: `UIStateMachine` の状態に基づき、各UI要素（カード、スロットなど）のインタラクション（コライダーの有効/無効）を制御します。
 -   **`ViewRegistry`**: シーン内に存在する全ての `BaseSpriteView` のインスタンスを管理し、`CompositeObjectId` からViewを取得する機能を提供します。
+    *   `GetNextAvailableCreatureCardView()` メソッドは、`IsSpawned` フラグが `false` の `CreatureCardView` を探し、見つかった場合はそのViewの `SetSpawnedState(true)` を呼び出してから返します。これにより、オブジェクトプールから再利用可能なViewを効率的に取得します。
 -   **`CreatureCardView` / `CardSlotView`**: それぞれカードとスロットの見た目と振る舞いを担当するViewクラス。`Orchestrator` からの指示に従い、状態遷移やアニメーションを実行します。
 
 ### インタラクションフロー詳細
@@ -233,15 +240,15 @@ SpriteUIは、複数の`SortingGroup`、`Canvas`で構成されることがあ�
 
 ## 更新履歴
 
-- 2025-07-18: 初版作成 (Gemini - Technical Writer for Game Development)
-- 2025-07-18: SpriteInputHandlerの修正とSpriteDragCommandの追加
-- 2025-07-18: SpriteInputHandlerのOnBeginDrag/OnDragにマウス追随処理を追加、SpriteClickCommandとSpriteEndDragCommandを追加
-- 2025-07-18: コマンドクラスのTargetObjectId変数名を統一し、設計書に反映
-- 2025-07-20: アニメーション機能の分離とドロップの失敗と成功の判定方法に関する設計を追加
-- 2025-07-20: CardPlacedOnSlotCommandをPlacedOnSlotCommandに変更し、ドロップ成否判定フローの記述をBaseSpriteViewに汎用化
-- 2025-07-20: ドロップ成否判定フローの記述を、BaseSpriteViewでの_isDroppedSuccessfullyの管理と遅延処理のキャンセルを明確化
-- 2025-07-20: PlacedOnSlotCommandをSpriteDropCommandに統合し、ドロップ成否判定フローをSpriteDropCommandで完結するように修正
-- 2025-07-20: アニメーション機能の分離において、IAnimationStrategyとBaseAnimationSOのPlayAnimationメソッドがSpriteRendererを引数として受け取るように修正
-- 2025-07-20: アニメーション機能の分離において、IAnimationStrategyとBaseAnimationSOのPlayAnimationメソッドがMultiRendererVisualControllerを引数として受け取るように修正
-- 2025-07-21: `SpriteDragOperationCompletedCommand` の導入と、それによるドラッグ＆ドロップフローの変更を追記 (Gemini - Technical Writer for Game Development)
+- 2025-08-14: SpriteUIの表示状態管理（`_displayRootGameObject`, `SetDisplayActive`）とオブジェクトプールにおける再利用（`IsSpawned`, `SetSpawnedState`）に関する記述を追加。`ViewRegistry`の`GetNextAvailableCreatureCardView`の変更を反映。(Gemini - Document Specialist)
 - 2025-08-04: ソースコードとの乖離を修正し、UIInteractionOrchestratorを中心とした全体フローを実装に合わせて更新 (Gemini - Codebase Analyst)
+- 2025-07-21: `SpriteDragOperationCompletedCommand` の導入と、それによるドラッグ＆ドロップフローの変更を追記 (Gemini - Technical Writer for Game Development)
+- 2025-07-20: アニメーション機能の分離において、IAnimationStrategyとBaseAnimationSOのPlayAnimationメソッドがMultiRendererVisualControllerを引数として受け取るように修正
+- 2025-07-20: PlacedOnSlotCommandをSpriteDropCommandに統合し、ドロップ成否判定フローをSpriteDropCommandで完結するように修正
+- 2025-07-20: ドロップ成否判定フローの記述を、BaseSpriteViewでの_isDroppedSuccessfullyの管理と遅延処理のキャンセルを明確化
+- 2025-07-20: CardPlacedOnSlotCommandをPlacedOnSlotCommandに変更し、ドロップ成否判定フローの記述をBaseSpriteViewに汎用化
+- 2025-07-20: アニメーション機能の分離とドロップの失敗と成功の判定方法に関する設計を追加
+- 2025-07-18: コマンドクラスのTargetObjectId変数名を統一し、設計書に反映
+- 2025-07-18: SpriteInputHandlerのOnBeginDrag/OnDragにマウス追随処理を追加、SpriteClickCommandとSpriteEndDragCommandを追加
+- 2025-07-18: SpriteInputHandlerの修正とSpriteDragCommandの追加
+- 2025-07-18: 初版作成 (Gemini - Technical Writer for Game Development)

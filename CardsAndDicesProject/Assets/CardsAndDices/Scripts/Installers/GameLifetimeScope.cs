@@ -3,14 +3,12 @@ using VContainer;
 using VContainer.Unity;
 using DG.Tweening;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace CardsAndDices
 {
     public class GameLifetimeScope : LifetimeScope
     {
-        [Header("Scene Components")]
-        [SerializeField] private DiceManager _diceManager;
-
         [Header("ScriptableObject Managers")]
         [SerializeField] private UIStateMachine _uiStateMachine;
         [SerializeField] private SpriteCommandBus _spriteCommandBus;
@@ -34,8 +32,13 @@ namespace CardsAndDices
         [SerializeField] private ViewRegistry _viewRegistry;
         [SerializeField] private CardLifecycleService _cardLifecycleService;
         [SerializeField] private DiceInletAbilityRegistry _diceInletAbilityRegistry;
-
+        [SerializeField] private DiceManager _diceManager;
         [SerializeField] private SystemReflowController _systemReflowController;
+        [SerializeField] private CombatManager _combatManager;
+        [SerializeField] private PlayerCardDataProvider _playerCardDataProvider;
+        [SerializeField] private EnemyCardDataProvider _enemyCardDataProvider;
+
+        [Header("Object Pools")]
         [SerializeField] private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
         [SerializeField] private List<CardSlotView> _cardSlotViews = new List<CardSlotView>();
         [SerializeField] private List<DiceSlotView> _diceSlotViews = new List<DiceSlotView>();
@@ -45,9 +48,6 @@ namespace CardsAndDices
         {
             // DOTweenの初期化とTween容量の設定
             DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 100);
-
-            // Scene Components
-            builder.RegisterComponent(_diceManager);
 
             // ScriptableObject Managers のバインドと初期化
             builder.RegisterInstance(_uiStateMachine).AsSelf().AsImplementedInterfaces();
@@ -70,9 +70,14 @@ namespace CardsAndDices
             builder.RegisterInstance(_diceInteractionStrategy).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_uiActivationPolicy).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_systemReflowController).AsSelf().AsImplementedInterfaces();
-            builder.RegisterInstance(_viewRegistry).AsSelf();
-            builder.RegisterInstance(_cardLifecycleService).AsSelf().AsImplementedInterfaces();
-            builder.RegisterInstance(_diceInletAbilityRegistry).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_diceManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_viewRegistry).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_combatManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_playerCardDataProvider).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_enemyCardDataProvider).AsSelf().AsImplementedInterfaces();
+
+            // DOTweenの初期化とTween容量の設定
+            DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 100);
 
             _uiStateMachine.Initialize();
             _spriteCommandBus.Initialize();
@@ -83,9 +88,9 @@ namespace CardsAndDices
             _diceSlotStateRepository.Initialize();
             _cardPlacementService.Initialize(_cardSlotStateRepository);
             _dicePlacementService.Initialize(_diceSlotStateRepository);
-            _cardSlotInteractionHandler.InInitialize(_spriteCommandBus, _cardSlotStateRepository, _reflowService, _cardPlacementService);
-            _diceSlotInteractionHandler.InInitialize(_spriteCommandBus, _diceSlotStateRepository, _reflowService, _dicePlacementService);
-            _cardSlotDebug.InInitialize(_cardSlotStateRepository, _viewRegistry);
+            _cardSlotInteractionHandler.Initialize(_spriteCommandBus, _cardSlotStateRepository, _reflowService, _cardPlacementService);
+            _diceSlotInteractionHandler.Initialize(_spriteCommandBus, _diceSlotStateRepository, _reflowService, _dicePlacementService);
+            _cardSlotDebug.Initialize(_cardSlotStateRepository, _viewRegistry);
             _compositeObjectIdManager.Initialize();
             _cardInteractionOrchestrator.Initialize(_uiStateMachine, _cardSlotManager, _spriteCommandBus, _reflowService, _uiActivationPolicy, _cardInteractionStrategy, _viewRegistry);
             _diceInteractionOrchestrator.Initialize(_uiStateMachine, _diceSlotManager, _spriteCommandBus, _uiActivationPolicy, _diceInteractionStrategy, _viewRegistry);
@@ -94,7 +99,12 @@ namespace CardsAndDices
             _systemReflowController.Initialize(_spriteCommandBus, _cardInteractionOrchestrator, _diceInteractionOrchestrator);
             _viewRegistry.Initialize();
             _cardLifecycleService.Initialize(_diceInletAbilityRegistry, _viewRegistry);
-            _diceInletAbilityRegistry.Clear(); // ゲーム開始時にクリア
+            _diceInletAbilityRegistry.Clear();
+            _diceManager.Initialize(_compositeObjectIdManager, _viewRegistry);
+            _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager);
+            _playerCardDataProvider.Initialize();
+            _enemyCardDataProvider.Initialize();
+            _uiActivationPolicy.Initialize(_diceInletAbilityRegistry, _diceManager);
 
             foreach (var cardView in _creatureCardViews)
             {

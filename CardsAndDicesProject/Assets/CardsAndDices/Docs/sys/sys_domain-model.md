@@ -63,6 +63,29 @@
 
 ---
 
+## Card Generation System: カード生成システム
+
+### 目的
+
+戦闘開始時やウェーブ開始時に、プレイヤーやエネミーのデータといった多様なソースから、一貫したプロセスでカードのインスタンスを生成し、初期化することを目的とします。
+
+### データ構造
+
+-   **`CardInitializationData` (DTO - Data Transfer Object):**
+    -   カード生成に必要な全ての情報を集約したデータコンテナクラスです。
+    -   このDTOを介してデータを受け渡しすることで、カード生成ロジックとデータソース間の結合を疎に保ちます。
+    -   **`CreatureData`**: 生成するカードのクリーチャーとしての基本データ。
+    -   **`List<InletAbilityProfile>`**: カードに付属する各インレットの能力（条件と効果）を定義するプロファイルのリスト。
+
+### 主要クラス
+
+-   **`CardLifecycleService`:**
+    -   `CardInitializationData` を受け取り、カードのインスタンス化、データの設定、インレット能力の登録といった、生成に関する一連の処理を実行する責務を持つサービスクラスです。
+-   **`PlayerCardDataProvider` / `EnemyCardDataProvider`:**
+    -   プレイヤーの装備データやエネミーのウェーブ情報といった、それぞれのデータソースを解釈し、`CardInitializationData` を生成する責務を持つクラスです。
+
+---
+
 ## 関連ファイル
 
 -   [guide_overview.md](../guide/guide_overview.md)

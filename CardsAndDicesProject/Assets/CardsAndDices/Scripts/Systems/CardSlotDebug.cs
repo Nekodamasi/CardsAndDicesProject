@@ -28,7 +28,7 @@ namespace CardsAndDices
         private ViewRegistry _viewRegistry;
 
         [Inject]
-        public void InInitialize(CardSlotStateRepository repository, ViewRegistry viewRegistry)
+        public void Initialize(CardSlotStateRepository repository, ViewRegistry viewRegistry)
         {
             _repository = repository;
             _viewRegistry = viewRegistry;

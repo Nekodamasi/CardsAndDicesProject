@@ -20,43 +20,39 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// 全てのカードを初期化し、その能力をレジストリに登録します。
+        /// 既存のカードViewを初期化し、能力を登録します。
         /// </summary>
-        public void InitializeCards()
+        /// <param name="cardView">初期化するCreatureCardViewのインスタンス。</param>
+        /// <param name="initData">カード生成に必要な情報。</param>
+        public void InitializeCard(CreatureCardView cardView, CardInitializationData initData)
         {
-            foreach (var cardView in _viewRegistry.GetAllCreatureCardViews())
+            // Viewにクリーチャーデータを設定
+            cardView.ApplyData(initData.CreatureData);
+
+            // インレット能力をRegistryに登録
+            var inletViews = cardView.GetInletViews();
+            if (inletViews.Count != initData.InletAbilityProfiles.Count)
             {
-                InitializeCard(cardView.GetObjectId());
+                Debug.LogError($"CardLifecycleService: インレットの数({inletViews.Count})とプロファイルの数({initData.InletAbilityProfiles.Count})が一致しません。");
+                // エラーハンドリング: 不一致の場合の挙動を定義する
+            }
+
+            Debug.Log("<color=Green>InitializeCardここは？</color>");
+            for (int i = 0; i < inletViews.Count; i++)
+            {
+                var inletId = inletViews[i].GetObjectId();
+                var profile = initData.InletAbilityProfiles[i];
+            Debug.Log("<color=Green>InitializeCard:</color>" + inletId + "__" + profile.Condition.ActivationType);
+                _abilityRegistry.Register(inletId, profile);
             }
         }
 
         /// <summary>
-        /// カードを初期化し、その能力をレジストリに登録します。
-        /// TODO: このメソッドは、オブジェクトプールからカードが取得され、
-        ///       特定のカード定義データで初期化される際に呼び出される必要があります。
+        /// カードの能力登録を解除します。
         /// </summary>
-        /// <param name="cardId">初期化するカードのID。</param>
-        private void InitializeCard(CompositeObjectId cardId)
+        /// <param name="cardView">解除するカードのView。</param>
+        public void TeardownCard(CreatureCardView cardView)
         {
-            var cardView = _viewRegistry.GetView<CreatureCardView>(cardId);
-            if (cardView == null || cardView.InletView == null || cardView.InletProfile == null)
-            {
-                return;
-            }
-
-            var inletId = cardView.InletView.GetObjectId();
-            var profile = cardView.InletProfile;
-
-            _abilityRegistry.Register(inletId, profile);
-        }
-
-        /// <summary>
-        /// カードが破棄またはプールに戻される際に、能力の登録を解除します。
-        /// </summary>
-        /// <param name="cardId">破棄されるカードのID。</param>
-        public void TeardownCard(CompositeObjectId cardId)
-        {
-            var cardView = _viewRegistry.GetView<CreatureCardView>(cardId);
             if (cardView == null || cardView.InletView == null)
             {
                 return;

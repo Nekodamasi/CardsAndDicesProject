@@ -130,10 +130,16 @@
 
 #### 1. 能力の登録フロー（カード初期化時）
 
-1.  **`（カード生成システム）`**: オブジェクトプールなどからカードを取得し、初期化を開始する。
-2.  **`CardLifecycleService`**: `InitializeCard(cardId)`が呼び出される。
-3.  **`CreatureCardView`**: `cardId`からViewが特定され、そのViewが持つ`InletAbilityProfile`と`DiceInletView`が取得される。
-4.  **`DiceInletAbilityRegistry`**: `Register(inletId, profile)`が呼び出され、インレットのIDとカードの能力プロファイルが紐付けられる。
+カードの生成とそれに伴うインレット能力の登録は、戦闘開始時やエネミーのウェーブ開始時に、以下の流れで実行されます。
+
+1.  **`CombatManager`**: 戦闘フローの制御役が、カード生成の起点となります。
+2.  **`PlayerCardDataProvider` / `EnemyCardDataProvider`**: `CombatManager`からの指示を受け、プレイヤーの装備やエネミーのデータに基づき、カード生成に必要な情報を集約したDTO（データ転送オブジェクト）である `CardInitializationData` を作成します。
+3.  **`CombatManager`**: 生成された `CardInitializationData` のリストを受け取ります。
+4.  **`CardLifecycleService`**: `CombatManager` は、リストの各 `CardInitializationData` を引数として `CreateAndInitializeCard` メソッドを呼び出します。このメソッドが、カード生成と能力登録の本体です。
+    a.  オブジェクトプールから `CreatureCardView` のインスタンスを取得します。
+    b.  `CardInitializationData` に含まれる情報（クリーチャーデータや能力プロファイル）を `CreatureCardView` に設定します。
+    c.  `CreatureCardView` が持つ各インレットのIDと、`CardInitializationData` 内の `InletAbilityProfile` を `DiceInletAbilityRegistry` の `Register` メソッドに渡し、紐付けを行います。
+5.  **`CardSlotManager`**: `CardLifecycleService` から返された初期化済みの `CreatureCardView` を受け取り、ボード上の適切なスロットに配置します。
 
 #### 2. 判定・実行フロー（ダイス操作時）
 
@@ -151,9 +157,10 @@
 
 ## 関連ファイル
 
--   [gdd_combat_system.md](../gdd/gdd_combat_system.md)
--   [guide_rules.md](../guide/guide_rules.md)
--   [guide_files.md](../guide/guide_files.md)
+- [sys_dice_lifecycle_design.md](./sys_dice_lifecycle_design.md)
+- [gdd_combat_system.md](../gdd/gdd_combat_system.md)
+- [guide_rules.md](../guide/guide_rules.md)
+- [guide_files.md](../guide/guide_files.md)
 
 ---
 

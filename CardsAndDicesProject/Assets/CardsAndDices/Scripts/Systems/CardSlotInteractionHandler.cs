@@ -18,7 +18,7 @@ namespace CardsAndDices
         private bool _isPlayerZoneFull = false;
 
         [Inject]
-        public void InInitialize(SpriteCommandBus commandBus, CardSlotStateRepository repository, ReflowService reflowService, CardPlacementService placementService)
+        public void Initialize(SpriteCommandBus commandBus, CardSlotStateRepository repository, ReflowService reflowService, CardPlacementService placementService)
         {
             _commandBus = commandBus;
             _repository = repository;

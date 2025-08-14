@@ -24,6 +24,10 @@ namespace CardsAndDices
         [SerializeField] protected SpriteStatus _currentStatus = SpriteStatus.Normal;
         protected IUIInteractionOrchestrator _orchestrator;
 
+        // 表示に関わるコンポーネントをすべて配下に持つGameObjectへの参照
+        [Header("Display Root")]
+        [SerializeField] private GameObject _displayRootGameObject;
+
         protected Vector3 _originalScale;
         protected Color _originalColor;
         protected bool isDisableUIInteraction = false;
@@ -31,10 +35,43 @@ namespace CardsAndDices
         protected Sequence _currentAnimation;
         protected Sequence _currentMoveAnimation;
         public SpriteStatus CurrentStatus { get { return _currentStatus; } }
+
+        /// <summary>
+        /// このゲームオブジェクトが現在プールから取り出され、ゲーム内で使用中であるかを示します。
+        /// </summary>
+        public bool IsSpawned { get; private set; }
+
+        /// <summary>
+        /// このゲームオブジェクトのスポーン状態を設定します。
+        /// </summary>
+        /// <param name="state">trueの場合、ゲーム内で使用中。falseの場合、プールに戻された状態。</param>
+        public void SetSpawnedState(bool state)
+        {
+            IsSpawned = state;
+            if (state == false)
+            {
+                SetDisplayActive(false);
+            }
+        }
+
+        /// <summary>
+        /// 表示ルートGameObjectのアクティブ状態を設定します。
+        /// </summary>
+        /// <param name="active">trueで表示、falseで非表示。</param>
+        public void SetDisplayActive(bool active)
+        {
+            if (_displayRootGameObject != null)
+            {
+                _displayRootGameObject.SetActive(active);
+            }
+        }
+
         protected virtual void Awake()
         {
             _commandBus.On<EnableUIInteractionCommand>(OnEnableUIInteraction);
             _commandBus.On<DisableUIInteractionCommand>(OnDisableUIInteraction);
+            // 初期状態では非表示にする
+            SetDisplayActive(false);
             if (_multiRendererVisualController == null) _multiRendererVisualController = GetComponent<MultiRendererVisualController>();
             if (_spriteLayerController == null) _spriteLayerController = GetComponent<SpriteLayerController>();
             if (_boxCollider2D == null) _boxCollider2D = GetComponent<BoxCollider2D>();

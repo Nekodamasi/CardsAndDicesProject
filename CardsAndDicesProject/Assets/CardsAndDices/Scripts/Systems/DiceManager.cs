@@ -7,42 +7,44 @@ namespace CardsAndDices
 {
     /// <summary>
     /// 全てのダイスの生成、状態管理、リロールなどを一元的に行うマネージャークラス。
+    /// ScriptableObjectとして、ダイスのデータ管理に特化します。
     /// </summary>
-    public class DiceManager : MonoBehaviour
+    [CreateAssetMenu(fileName = "DiceManager", menuName = "CardsAndDices/Systems/DiceManager")]
+    public class DiceManager : ScriptableObject
     {
-        [Inject] private readonly CompositeObjectIdManager _objectIdManager;
-        [Inject] private readonly ViewRegistry _viewRegistry;
-
-        [SerializeField] private DiceView _diceViewPrefab;
-        [SerializeField] private Transform _diceSpawnPoint;
-        [SerializeField] private int _initialDiceCount = 5;
-
+        private CompositeObjectIdManager _objectIdManager;
+        private ViewRegistry _viewRegistry;
         private readonly List<DiceData> _diceList = new();
 
-        private void Start()
+
+        /// <summary>
+        /// DiceManagerを初期化します。
+        /// </summary>
+        [Inject]
+        public void Initialize(CompositeObjectIdManager objectIdManager, ViewRegistry viewRegistry)
         {
-            InitializeDices(_initialDiceCount);
+            _objectIdManager = objectIdManager;
+            _viewRegistry = viewRegistry;
+            _diceList.Clear(); // 初期化時にリストをクリア
         }
 
         /// <summary>
-        /// 指定された数のダイスを初期化し、生成します。
+        /// 新しいダイスデータを生成し、管理リストに追加します。
+        /// ダイスのViewの生成は別のクラス（例: DiceSpawner）が担当します。
         /// </summary>
-        /// <param name="count">生成するダイスの数。</param>
-        public void InitializeDices(int count)
+        /// <param name="diceData">追加するダイスのデータ。</param>
+        public void AddDice(DiceData diceData)
         {
-/*
-            for (int i = 0; i < count; i++)
-            {
-                var objectId = _objectIdManager.CreateNewId(ObjectType.Dice);
-                var diceData = new DiceData(objectId);
-                _diceList.Add(diceData);
+            _diceList.Add(diceData);
+        }
 
-                var diceView = Instantiate(_diceViewPrefab, _diceSpawnPoint.position, Quaternion.identity, _diceSpawnPoint);
-                diceView.Initialize(objectId);
-                diceView.UpdateView(diceData);
-                _viewRegistry.Register(diceView);
-            }
-*/
+        /// <summary>
+        /// 指定されたIDのダイスを管理リストから削除します。
+        /// </summary>
+        /// <param name="id">削除するダイスのID。</param>
+        public void RemoveDice(CompositeObjectId id)
+        {
+            _diceList.RemoveAll(d => d.Id == id);
         }
 
         /// <summary>
@@ -50,16 +52,11 @@ namespace CardsAndDices
         /// </summary>
         public void RerollAllDices()
         {
-/*
             foreach (var diceData in _diceList)
             {
                 diceData.Roll();
-                if (_viewRegistry.GetView(diceData.UniqueId) is DiceView diceView)
-                {
-                    diceView.UpdateView(diceData);
-                }
+                // Viewの更新はDicePresenterがイベントを購読して自動的に行うため、ここでの直接操作は不要
             }
-*/
         }
 
         /// <summary>
@@ -69,7 +66,16 @@ namespace CardsAndDices
         /// <returns>見つかったダイスのデータ。見つからない場合はnull。</returns>
         public DiceData GetDiceData(CompositeObjectId id)
         {
-            return _diceList.FirstOrDefault(d => d.UniqueId == id);
+            return _diceList.FirstOrDefault(d => d.Id == id);
+        }
+
+        /// <summary>
+        /// 管理している全てのダイスデータを取得します。
+        /// </summary>
+        /// <returns>ダイスデータのリスト。</returns>
+        public IReadOnlyList<DiceData> GetAllDiceData()
+        {
+            return _diceList;
         }
     }
 }

@@ -24,6 +24,7 @@
 - **`DiceInteractionStrategy.cs`**: ダイスのインタラクションが可能か判断する戦略クラス。
 - **`UIActivationPolicy.cs`**: UI要素の有効/無効ルールを定義するポリシークラス。
 - **アニメーションScriptableObject**: `_hoverAnimation`, `_dragAnimation` など。
+- **`DicePresenter.cs` (新規)**: `DiceData`と`DiceView`を紐づけ、状態を同期させる仲介役。UIインタラクションの結果、最終的にこのクラスを介してデータが更新されます。
 
 ---
 

@@ -106,6 +106,42 @@ namespace CardsAndDices
         public IReadOnlyList<DiceSlotView> GetAllDiceSlotViews() => _diceSlotViews;
         public IReadOnlyList<DiceInletView> GetAllInletViews() => _inletViews;
 
+        /// <summary>
+        /// まだデータが適用されていない（初期化されていない）CreatureCardViewを取得します。
+        /// </summary>
+        /// <returns>利用可能なCreatureCardView、または見つからない場合はnull。</returns>
+        public CreatureCardView GetNextAvailableCreatureCardView()
+        {
+            foreach (var cardView in _creatureCardViews)
+            {
+                // IsSpawnedがfalseのViewを探す
+                if (cardView.IsSpawned == false)
+                {
+                    // 利用可能なViewが見つかったら、IsSpawnedをtrueに設定して返す
+                    cardView.SetSpawnedState(true);
+                    return cardView;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// まだデータが適用されていない（初期化されていない）DiceViewを取得します。
+        /// </summary>
+        /// <returns>利用可能なDiceView、または見つからない場合はnull。</returns>
+        public DiceView GetNextAvailableDiceView()
+        {
+            foreach (var diceView in _diceViews)
+            {
+                if (diceView.IsSpawned == false)
+                {
+                    diceView.SetSpawnedState(true);
+                    return diceView;
+                }
+            }
+            return null;
+        }
+
         public IReadOnlyDictionary<CompositeObjectId, BaseSpriteView> GetAllViews() => _views;
     }
 }
