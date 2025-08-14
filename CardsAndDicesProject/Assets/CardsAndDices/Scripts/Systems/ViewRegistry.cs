@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VContainer;
 
@@ -34,6 +35,7 @@ namespace CardsAndDices
         /// </summary>
         public void Register(BaseSpriteView view)
         {
+            Debug.Log("びゅーーーーとうろくーーーー：" + view.GetObjectId());
             if (view == null || view.GetObjectId() == null) return;
 
             _views[view.GetObjectId()] = view;
@@ -55,6 +57,7 @@ namespace CardsAndDices
             }
             else if (view is DiceInletView inletView)
             {
+                Debug.Log("いんれｔっとびゅーーーーーーーーーーーーーーーず");
                 _inletViews.Add(inletView);
             }
         }
@@ -104,7 +107,7 @@ namespace CardsAndDices
         public IReadOnlyList<CreatureCardView> GetAllCreatureCardViews() => _creatureCardViews;
         public IReadOnlyList<DiceView> GetAllDiceViews() => _diceViews;
         public IReadOnlyList<DiceSlotView> GetAllDiceSlotViews() => _diceSlotViews;
-        public IReadOnlyList<DiceInletView> GetAllInletViews() => _inletViews;
+        public IReadOnlyList<DiceInletView> GetAllInletViews() => _inletViews.Where(view => view.IsSpawned).ToList();
 
         /// <summary>
         /// まだデータが適用されていない（初期化されていない）CreatureCardViewを取得します。
@@ -140,6 +143,13 @@ namespace CardsAndDices
                 }
             }
             return null;
+        }
+        public void DebugInletView()
+        {
+            foreach (var diceInletView in _inletViews)
+            {
+                Debug.Log("<color=Green>インレットビューリスト情報:</color>" + diceInletView.GetObjectId() + " IsSpawned:" + diceInletView.IsSpawned);
+            }
         }
 
         public IReadOnlyDictionary<CompositeObjectId, BaseSpriteView> GetAllViews() => _views;

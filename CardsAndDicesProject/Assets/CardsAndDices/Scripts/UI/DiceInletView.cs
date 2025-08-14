@@ -11,7 +11,7 @@ namespace CardsAndDices
     public class DiceInletView : BaseSpriteView
     {
         [Inject]
-        public void Construct(CardInteractionOrchestrator orchestrator)
+        public void Construct(DiceInteractionOrchestrator orchestrator)
         {
             this._orchestrator = orchestrator;
         }
@@ -20,7 +20,11 @@ namespace CardsAndDices
         [SerializeField] private BaseAnimationSO _acceptableAnimation;
         [SerializeField] private BaseAnimationSO _dropWaitingAnimation;
 
-//        private DiceInletData _diceInletData;
+        protected override void Awake()
+        {
+            base.Awake();
+            SetSpawnedState(false);
+        }
 
         /// <summary>
         /// ダイスを受け入れ可能な状態に遷移します。

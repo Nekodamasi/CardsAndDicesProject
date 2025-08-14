@@ -30,6 +30,7 @@ namespace CardsAndDices
         {
             base.Awake();
             SetSpawnedState(true);
+            SetDisplayActive(true);
             _slotData = new CardSlotData(GetObjectId(), transform.position, _line, _location, _team);
             _cardSlotManager.RegisterSlot(_slotData);
         }

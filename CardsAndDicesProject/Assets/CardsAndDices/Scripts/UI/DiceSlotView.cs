@@ -27,6 +27,7 @@ namespace CardsAndDices
         {
             base.Awake();
             SetSpawnedState(true);
+            SetDisplayActive(true);
             _diceSlotData = new DiceSlotData(GetObjectId(), transform.position, _location);
             _diceSlotManager.RegisterSlot(_diceSlotData);
         }

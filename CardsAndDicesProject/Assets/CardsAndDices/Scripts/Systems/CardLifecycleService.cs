@@ -28,6 +28,7 @@ namespace CardsAndDices
         {
             // Viewにクリーチャーデータを設定
             cardView.ApplyData(initData.CreatureData);
+            cardView.SetSpawnedState(true);
 
             // インレット能力をRegistryに登録
             var inletViews = cardView.GetInletViews();
@@ -41,6 +42,7 @@ namespace CardsAndDices
             for (int i = 0; i < inletViews.Count; i++)
             {
                 var inletId = inletViews[i].GetObjectId();
+                inletViews[i].SetSpawnedState(true);
                 var profile = initData.InletAbilityProfiles[i];
             Debug.Log("<color=Green>InitializeCard:</color>" + inletId + "__" + profile.Condition.ActivationType);
                 _abilityRegistry.Register(inletId, profile);

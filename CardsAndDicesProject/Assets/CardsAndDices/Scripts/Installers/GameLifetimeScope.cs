@@ -43,6 +43,7 @@ namespace CardsAndDices
         [SerializeField] private List<CardSlotView> _cardSlotViews = new List<CardSlotView>();
         [SerializeField] private List<DiceSlotView> _diceSlotViews = new List<DiceSlotView>();
         [SerializeField] private List<DiceView> _diceViews = new List<DiceView>();
+        [SerializeField] private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -121,6 +122,10 @@ namespace CardsAndDices
             foreach (var diceView in _diceViews)
             {
                 diceView.Construct(_diceInteractionOrchestrator);
+            }
+            foreach (var diceInletView in _diceInletViews)
+            {
+                diceInletView.Construct(_diceInteractionOrchestrator);
             }
         }
     }

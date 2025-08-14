@@ -64,6 +64,7 @@ namespace CardsAndDices
                 if (targetSlot != null)
                 {
                     cardView.SetSpawnedState(true);
+                    cardView.SetDisplayActive(true);
                     _cardSlotManager.PlaceCardAsSystem(cardView.GetObjectId(), targetSlot.SlotId);
                 }
                 else
@@ -100,7 +101,7 @@ namespace CardsAndDices
                     var diceId = diceView.GetObjectId();
                     var diceData = _diceFactory.Create(diceId);
                     _diceManager.AddDice(diceData);
-                    
+                    diceView.SetDisplayActive(true);
                     var dicePresenter = new DicePresenter(diceData, diceView, _diceManager, _viewRegistry);
                     _dicePresenters.Add(dicePresenter);
                 }

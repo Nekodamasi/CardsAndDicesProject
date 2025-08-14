@@ -59,6 +59,7 @@ namespace CardsAndDices
             if (draggedDice == null) return;
 
             Debug.Log("<color=Green>DraggingDiceToInletActivations3:</color>"+ orchestrator.DraggedId);
+            orchestrator.ViewRegistry.DebugInletView();
             foreach (var inletView in orchestrator.ViewRegistry.GetAllInletViews())
             {
                 var profile = _diceInletAbilityRegistry.GetProfile(inletView.GetObjectId());
