@@ -18,7 +18,7 @@
 
 ## 主要コンポーネントと関連クラス
 
-- **`DiceView.cs`**: ダイスの視覚表現と状態遷移を担当するViewコンポーネント。
+- **`DiceView.cs`**: ダイスの視覚表現と状態遷移を担当するViewコンポーネント。`UpdateFace`メソッドを通じて、ダイスの面の見た目を更新する責務も持つ。
 - **`SpriteInputHandler.cs`**: マウスイベントを検知し、コマンドを発行します。
 - **`DiceInteractionOrchestrator.cs`**: UIインタラクション全体の司令塔。
 - **`DiceInteractionStrategy.cs`**: ダイスのインタラクションが可能か判断する戦略クラス。
@@ -64,6 +64,23 @@
 - **`EnterHoveringState()`**: ホバー状態に遷移します。
 - **`EnterDraggingState()`**: ドラッグ開始状態に遷移します。
 - **`EnterInactiveState()`**: 非アクティブ状態に遷移します。
+
+---
+
+## 見た目の更新
+
+### 1. UpdateFace(int faceValue)
+
+- **役割:** `DicePresenter` からダイスの出目 (`faceValue`) を受け取り、ダイスの視覚的な表現を更新します。
+- **処理の流れ**:
+    1. `DiceView` は、自身にアタッチされている `SpriteSelector` コンポーネントの参照を取得します。
+    2. 引数で受け取った `faceValue` を文字列に変換し、スプライトを識別するためのIDとして使用します (例: `faceValue` が `1` ならば IDは `"1"`)。
+    3. 生成したIDを `SpriteSelector.SelectSprite(string id)` メソッドに渡します。
+    4. `SpriteSelector` は、アタッチされた `SelectableSpriteSheet` (例: `DiceFaces.asset`) からIDに一致するスプライトを探し、`SpriteRenderer` の表示を更新します。
+
+この仕組みの詳細は、以下の設計書を参照してください。
+
+- [sys_sprite_selector_design.md](../sys/sys_sprite_selector_design.md)
 
 ---
 

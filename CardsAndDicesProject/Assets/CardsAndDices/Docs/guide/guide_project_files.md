@@ -15,26 +15,26 @@
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| assistant_meta_prompt copy 2.md | AIアシスタントのメタプロンプトのコピー(重複の可能性) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt copy 2.md |
-| assistant_update_document.md | AIアシスタント向けのドキュメント更新に関するドキュメント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_update_document.md |
-| aaa.md | 一時的な、あるいはテスト用のファイル。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\aaa.md |
+| aaa.md | 一時的なテストファイル。通常はプロジェクトに含まれません。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\aaa.md |
 | assistant_files.md | AIアシスタントが参照するファイル一覧。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_files.md |
-| assistant_meta_prompt copy.md | AIアシスタントのメタプロンプトのコピー(重複の可能性) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt copy.md |
+| assistant_meta_prompt copy 2.md | AIアシスタントのメタプロンプトのコピー(重複の可能性)。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt copy 2.md |
+| assistant_meta_prompt copy.md | AIアシスタントのメタプロンプトのコピー(重複の可能性)。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt copy.md |
 | assistant_meta_prompt_document.md | AIアシスタントのメタプロンプトに関するドキュメント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt_document.md |
 | assistant_meta_prompt.md | AIアシスタントのメタプロンプト。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_meta_prompt.md |
+| assistant_update_document.md | AIアシスタント向けのドキュメント更新に関するドキュメント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\assistant_update_document.md |
 | dice_document.md | AIアシスタント向けのダイスに関するドキュメント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\dice_document.md |
 | dice_prompt.md | AIアシスタント向けのダイスに関するプロンプト。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\dice_prompt.md |
 | inlet.md | AIアシスタント向けのインレットに関するドキュメント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\inlet.md |
-| inret_prompt.md | AIアシスタント向けのインレットに関するプロンプト(inletのタイポの可能性)。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\inret_prompt.md |
+| inret_prompt.md | AIアシスタント向けのインレットに関するプロンプト。ファイル名にタイポの可能性があります。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\inret_prompt.md |
 
 ### Docs/class
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | class_CardLifecycleService.md | カードの生成、初期化、破棄など、ライフサイクル全般を管理するサービス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\class\class_CardLifecycleService.md |
-| class_PlayerCardDataProvider.md | プレイヤーのデータからカード初期化データを生成するプロバイダー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\class\class_PlayerCardDataProvider.md |
-| class_EnemyCardDataProvider.md | エネミーのデータからカード初期化データを生成するプロバイダー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\class\class_EnemyCardDataProvider.md |
 | class_CombatManager.md | 戦闘フェーズ全体の流れを制御するマネージャー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\class\class_CombatManager.md |
+| class_EnemyCardDataProvider.md | エネミーのデータからカード初期化データを生成するプロバイダー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\class\class_EnemyCardDataProvider.md |
+| class_PlayerCardDataProvider.md | プレイヤーのデータからカード初期化データを生成するプロバイダー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\class\class_PlayerCardDataProvider.md |
 
 ### Docs/component
 
@@ -80,6 +80,7 @@
 | sys_dice_inlet_design.md | ダイスインレットの技術仕様書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_inlet_design.md |
 | sys_dice_lifecycle_design.md | ダイスのライフサイクル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_lifecycle_design.md |
 | sys_domain-model.md | ドメインモデルの解説 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
+| sys_sprite_selector_design.md | IDに基づいてスプライトを動的に切り替えるための、汎用的で再利用可能なシステム（SelectableSpriteSheetとSpriteSelector）の設計書。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sprite_selector_design.md |
 
 ### Docs/ui
 
@@ -132,12 +133,14 @@
 | AllowedDiceFacesSO.cs | 許可されるダイスの目を定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\AllowedDiceFacesSO.cs |
 | CardInitializationData.cs | カード生成に必要な情報（クリーチャーデータ、インレット能力）を集約するデータ転送用クラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CardInitializationData.cs |
 | CardSlotData.cs | カードスロットのデータ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CardSlotData.cs |
-| CreatureData.cs | クリーチャーの基本ステータス（名前、攻撃力、防御力、体力）を定義するデータクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CreatureData.cs |
-| DiceData.cs | 個々のダイスのデータを定義します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\DiceData.cs |
+| CreatureData.cs | クリーチャーの基本ステータス（名前、攻撃力、防御力、体力、クールダウン、エネルギー、アビリティ）を定義するデータクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CreatureData.cs |
+| DiceData.cs | 個々のダイスのデータを定義します。出目、状態、関連するインレット情報などを保持します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\DiceData.cs |
 | DiceInletConditionSO.cs | ダイスをインレットに配置するための条件を定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\DiceInletConditionSO.cs |
 | DiceInletData.cs | ダイスインレットの静的な識別情報を保持する構造体。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\DiceInletData.cs |
 | DiceSlotData.cs | 個々のダイススロットのデータを定義します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\DiceSlotData.cs |
+| FixedCardInitializer.cs | 固定情報からCardInitializationDataを生成するためのScriptableObject。インスペクターで設定されたデータに基づいてクリーチャーカードを初期化するのに使用します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\FixedCardInitializer.cs |
 | InletAbilityProfile.cs | インレットの「条件」と「効果」をセットで保持する不変なデータクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\InletAbilityProfile.cs |
+| SelectableSpriteSheet.cs | IDとスプライトのペアをコレクションとして保持するScriptableObject。IDによる高速なスプライト検索機能を提供します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\SelectableSpriteSheet.cs |
 
 ### Scripts/Installers
 
@@ -174,19 +177,21 @@
 | :--- | :--- | :--- |
 | CardInteractionOrchestrator.cs | カードのUIインタラクションを統括する司令塔。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardInteractionOrchestrator.cs |
 | CardInteractionStrategy.cs | カードのUIインタラクション戦略 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardInteractionStrategy.cs |
-| CardLifecycleService.cs | カードの生成、初期化、破棄など、ライフサイクル全般を管理するサービス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardLifecycleService.cs |
+| CardLifecycleService.cs | カードの生成、初期化、破棄など、ライフサイクル全般を管理するサービス。カードのプール管理も行います。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardLifecycleService.cs |
 | CardPlacementService.cs | カード配置サービス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardPlacementService.cs |
 | CardSlotDebug.cs | カードスロットのデバッグ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotDebug.cs |
 | CardSlotInteractionHandler.cs | カードスロットのインタラクションハンドラ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotInteractionHandler.cs |
 | CardSlotManager.cs | カードスロットマネージャー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotManager.cs |
 | CardSlotStateRepository.cs | カードスロットの状態リポジトリ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CardSlotStateRepository.cs |
-| CombatManager.cs | 戦闘全体の流れ（カード生成、配置、ウェーブ管理など）を統括する高レベルなマネージャー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CombatManager.cs |
+| CombatManager.cs | 戦闘フェーズ全体の流れを制御するマネージャー。カードの生成、配置、ウェーブ管理、ダイスのロールなどを統括します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\CombatManager.cs |
+| DiceFactory.cs | DiceDataインスタンスの生成ロジックに特化したFactoryクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceFactory.cs |
 | DiceInletAbilityRegistry.cs | 現在アクティブなインレットの能力プロファイルを一元管理するレジストリ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceInletAbilityRegistry.cs |
 | DiceInletManager.cs | ダイスインレットのロジックと状態を管理します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceInletManager.cs |
 | DiceInteractionOrchestrator.cs | ダイスのUIインタラクションを統括する司令塔。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceInteractionOrchestrator.cs |
 | DiceInteractionStrategy.cs | ダイスのUIインタラクション戦略を実装するクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceInteractionStrategy.cs |
 | DiceManager.cs | 全てのダイスのロジックと状態を管理します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceManager.cs |
 | DicePlacementService.cs | ダイスの配置処理を担当するサービス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DicePlacementService.cs |
+| DicePresenter.cs | DiceDataとDiceViewを紐づけ、状態を同期させる仲介役。UIインタラクションの結果をデータに反映させ、データの変更をViewに伝えます。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DicePresenter.cs |
 | DiceSlotInteractionHandler.cs | ダイススロットのインタラクションハンドラ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceSlotInteractionHandler.cs |
 | DiceSlotManager.cs | ダイススロットのロジックと状態を管理します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceSlotManager.cs |
 | DiceSlotStateRepository.cs | ダイススロットの状態リポジトリ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceSlotStateRepository.cs |
@@ -198,9 +203,7 @@
 | SystemReflowController.cs | システム起因のリフロー処理を実行するコントローラー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\SystemReflowController.cs |
 | UIActivationPolicy.cs | UIのアクティベーションポリシー | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIActivationPolicy.cs |
 | UIStateMachine.cs | UIのステートマシン | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\UIStateMachine.cs |
-| ViewRegistry.cs | Viewの登録 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\ViewRegistry.cs |
-| DiceFactory.cs | DiceDataインスタンスの生成ロジックに特化したFactoryクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DiceFactory.cs |
-| DicePresenter.cs | DiceDataとDiceViewを紐づけ、状態を同期させる仲介役。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\DicePresenter.cs |
+| ViewRegistry.cs | シーン内に存在するViewコンポーネントを一元的に管理し、IDによるViewの検索や登録解除機能を提供します。オブジェクトプールのViewの再利用にも利用されます。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems\ViewRegistry.cs |
 
 ### Scripts/Tester
 
@@ -221,6 +224,7 @@
 | DiceView.cs | 個々のダイスのViewコンポーネント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\DiceView.cs |
 | SpriteCommandBus.cs | スプライトのコマンドバス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteCommandBus.cs |
 | SpriteInputHandler.cs | スプライトの入力ハンドラ | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteInputHandler.cs |
+| SpriteSelector.cs | IDに基づきSpriteRendererの表示を切り替える汎用Viewコンポーネント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteSelector.cs |
 
 ---
 
@@ -232,6 +236,7 @@
 
 ## 更新履歴
 
+- 2025年8月14日木曜日: ファイルリストを最新化し、解説を充実 (Gemini)
 - 2025-08-14: ファイルリストを最新化 (Gemini)
 - 2025-08-13: ファイルリストを最新化 (Gemini)
 - 2025-08-08: ファイルリストを最新化 (Gemini)

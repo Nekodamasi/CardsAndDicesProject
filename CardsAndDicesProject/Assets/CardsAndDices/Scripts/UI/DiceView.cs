@@ -17,6 +17,10 @@ namespace CardsAndDices
             this._orchestrator = orchestrator;
         }
 
+        [Header("Components")]
+        [SerializeField]
+        private SpriteSelector _faceSpriteSelector; // ここにフィールドを追加
+
         [Header("Dice Specific Settings")]
         [SerializeField] public string _diceName;
 
@@ -57,10 +61,20 @@ namespace CardsAndDices
             await _currentMoveAnimation.AsyncWaitForCompletion();
         }
 
+        /// <summary>
+        /// ダイスの出目に基づいて、面の表示を更新します。
+        /// </summary>
+        /// <param name="faceValue">ダイスの出目の値。</param>
         public void UpdateFace(int faceValue)
         {
-            // TODO: テキストやスプライトを更新して出目を表示する
-            Debug.Log($"[DiceView] {gameObject.name} updated with face value: {faceValue}");
+            Debug.Log("<color=Green>だいすのめ：</color>" + faceValue);
+            if (_faceSpriteSelector == null)
+            {
+                Debug.LogWarning($"FaceSpriteSelector is not assigned in {gameObject.name}. Cannot update face.", this);
+                return;
+            }
+            // intの出目を文字列に変換して、SpriteSelectorにIDとして渡す
+            _faceSpriteSelector.SelectSprite("Dice" + faceValue.ToString());
         }
 
         /// <summary>
@@ -77,6 +91,7 @@ namespace CardsAndDices
         /// ホバー状態に遷移します。
         /// </summary>
         public override void EnterHoveringState()
+
         {
             base.EnterHoveringState();
             TryPlayStatusAnimation(CurrentStatus);

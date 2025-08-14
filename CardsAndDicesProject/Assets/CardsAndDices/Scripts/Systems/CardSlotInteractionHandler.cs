@@ -65,7 +65,6 @@ namespace CardsAndDices
 
         public void SystemReflowCardsCurrentValue()
         {
-            Debug.Log("ほげほげほげほげ");
             Dictionary<CompositeObjectId, Vector3> cardMovements = new Dictionary<CompositeObjectId, Vector3>();
             foreach (var slotData in _repository.GetAllSlots())
             {

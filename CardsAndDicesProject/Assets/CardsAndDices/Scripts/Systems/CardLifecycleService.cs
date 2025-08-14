@@ -38,13 +38,11 @@ namespace CardsAndDices
                 // エラーハンドリング: 不一致の場合の挙動を定義する
             }
 
-            Debug.Log("<color=Green>InitializeCardここは？</color>");
             for (int i = 0; i < inletViews.Count; i++)
             {
                 var inletId = inletViews[i].GetObjectId();
                 inletViews[i].SetSpawnedState(true);
                 var profile = initData.InletAbilityProfiles[i];
-            Debug.Log("<color=Green>InitializeCard:</color>" + inletId + "__" + profile.Condition.ActivationType);
                 _abilityRegistry.Register(inletId, profile);
             }
         }

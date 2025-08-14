@@ -104,6 +104,20 @@ SpriteUIは、複数の`SortingGroup`、`Canvas`で構成されることがあ�
 
 ---
 
+## 汎用スプライト選択機構
+
+IDに基づいて動的にスプライトを切り替えるための、再利用可能なコンポーネント群です。
+これにより、データとビューが明確に分離され、ダイスの面、アイテムのアイコンなど様々なUI要素に適用できます。
+
+-   **`SelectableSpriteSheet` (ScriptableObject)**: IDとスプライト画像の対応データを管理します。
+-   **`SpriteSelector` (MonoBehaviour)**: `SelectableSpriteSheet`のデータに基づき、指定されたIDのスプライトを`SpriteRenderer`に表示します。
+
+詳細な仕様については、以下の設計書を参照してください。
+
+-   [sys_sprite_selector_design.md](../sys/sys_sprite_selector_design.md)
+
+---
+
 ## コマンドクラスの定義
 
 以下のコマンドクラスは、`SpriteInputHandler`によって発行され、`SpriteCommandBus`を通じて配信されます。

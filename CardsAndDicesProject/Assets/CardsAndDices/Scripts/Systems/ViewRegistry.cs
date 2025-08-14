@@ -35,7 +35,6 @@ namespace CardsAndDices
         /// </summary>
         public void Register(BaseSpriteView view)
         {
-            Debug.Log("びゅーーーーとうろくーーーー：" + view.GetObjectId());
             if (view == null || view.GetObjectId() == null) return;
 
             _views[view.GetObjectId()] = view;
@@ -57,7 +56,6 @@ namespace CardsAndDices
             }
             else if (view is DiceInletView inletView)
             {
-                Debug.Log("いんれｔっとびゅーーーーーーーーーーーーーーーず");
                 _inletViews.Add(inletView);
             }
         }
