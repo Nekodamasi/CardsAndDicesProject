@@ -3,7 +3,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks; // UniTaskを使用するために追加
 using System;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// ゲームの初期状態をセットアップし、テスト用のカード配置を行うデバッグ用クラス。
@@ -13,13 +13,18 @@ namespace CardsAndDice
         [Header("System References")]
         [Tooltip("カードスロットを管理するCardSlotManager")]
         [SerializeField] private CardSlotManager _cardSlotManager;
+        [SerializeField] private DiceSlotManager _diceSlotManager;
         [SerializeField] private SpriteCommandBus _commandBus;
+        [SerializeField] private CardLifecycleService _cardLifecycleService;
+        [SerializeField] private CombatManager _combatManager; // CombatManagerを追加
 
 
         [Header("Test Placements")]
         [Tooltip("テスト用に配置するカードとスロットの情報のリスト")]
         [SerializeField] private List<PlacementInfo> _placements;
 
+        [Tooltip("テスト用に配置するダイスとスロットの情報のリスト")]
+        [SerializeField] private List<DicePlacementInfo> _diceplacements;
         /// <summary>
         /// 配置するカードとそのターゲットスロットを定義するシリアライズ可能なクラス。
         /// </summary>
@@ -35,14 +40,40 @@ namespace CardsAndDice
         }
 
         /// <summary>
+        /// 配置するカードとそのターゲットスロットを定義するシリアライズ可能なクラス。
+        /// </summary>
+        [System.Serializable]
+        public class DicePlacementInfo
+        {
+            [Tooltip("配置するダイスのIdentifiableGameObject")]
+            public IdentifiableGameObject CreatureDice;
+            [Tooltip("配置先のライン内での位置")]
+            public DiceSlotLocation TargetLocation;
+        }
+
+        /// <summary>
         /// ゲーム開始時にテスト配置を実行します。
         /// </summary>
         private async UniTask Start()
         {
+            // カードの初期化はCombatManagerに任せる
+            if (_combatManager != null)
+            {
+                _combatManager.InitializeCombatField();
+            }
+            else
+            {
+                Debug.LogError("CombatManagerが設定されていません。");
+            }
+
             // 「UI操作制限モード」ON
             _commandBus.Emit(new DisableUIInteractionCommand());
 
-            PlaceCardsForTest();
+            // PlaceCardsForTest() と PlaceDicesForTest() は、
+            // CombatManagerがカードを生成・配置するので、ここでは不要になる可能性が高い。
+            // もし、CombatManagerとは別にテストしたい場合は残す。
+            // PlaceCardsForTest(); // 必要に応じてコメント解除
+            PlaceDicesForTest(); // 必要に応じてコメント解除
 
             // 0.5秒待機
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
@@ -51,10 +82,6 @@ namespace CardsAndDice
             _commandBus.Emit(new EnableUIInteractionCommand());
         }
 
-        /// <summary>
-        /// Unityのインスペクターのコンテキストメニューからこのメソッドを呼び出してテストを実行します。
-        /// </summary>
-        [ContextMenu("Place Cards for Test")]
         public void PlaceCardsForTest()
         {
             if (_cardSlotManager == null)
@@ -93,6 +120,43 @@ namespace CardsAndDice
                 else
                 {
                     Debug.LogWarning($"スロットが見つかりませんでした: Line={placement.TargetLine}, Location={placement.TargetLocation}");
+                }
+            }
+        }
+
+        public void PlaceDicesForTest()
+        {
+            if (_diceSlotManager == null)
+            {
+                Debug.LogError("DiceSlotManagerがアタッチされていません。");
+                return;
+            }
+
+            if (_diceplacements == null || _diceplacements.Count == 0)
+            {
+                Debug.LogWarning("配置するダイスの情報が設定されていません。");
+                return;
+            }
+
+            foreach (var diceplacement in _diceplacements)
+            {
+                if (diceplacement.CreatureDice == null)
+                {
+                    Debug.LogWarning("配置情報にダイスが設定されていません。スキップします。");
+                    continue;
+                }
+
+                // 指定されたLineとLocationでスロットを検索
+                List<DiceSlotData> slots = _diceSlotManager.FindSlotsByLocation(diceplacement.TargetLocation);
+
+                if (slots != null && slots.Count > 0)
+                {
+                    // 該当する最初のスロットを取得
+                    DiceSlotData targetSlot = slots[0];
+
+                    // カードをスロットに配置するロジックを呼び出し
+//                    Debug.LogWarning("<color=Yellow>すろっと？:</color>" + slots.Count);
+                    _diceSlotManager.PlaceDiceAsSystem(diceplacement.CreatureDice.ObjectId, targetSlot.SlotId, true);
                 }
             }
         }

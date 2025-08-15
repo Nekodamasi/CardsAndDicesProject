@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
 	/// <summary>
 	/// SpriteUI要素がクリックされたことを通知するコマンド。

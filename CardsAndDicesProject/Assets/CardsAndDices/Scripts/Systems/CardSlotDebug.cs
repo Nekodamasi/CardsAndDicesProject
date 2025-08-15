@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// デバッグ用にスロットの情報を保持する構造体。
@@ -21,14 +21,14 @@ namespace CardsAndDice
     /// <summary>
     /// スロット関連のデバッグ機能を提供するクラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "CardSlotDebug", menuName = "CardsAndDice/Systems/CardSlotDebug")]
+    [CreateAssetMenu(fileName = "CardSlotDebug", menuName = "CardsAndDices/Systems/CardSlotDebug")]
     public class CardSlotDebug : ScriptableObject
     {
         [SerializeField] private CardSlotStateRepository _repository;
         private ViewRegistry _viewRegistry;
 
         [Inject]
-        public void InInitialize(CardSlotStateRepository repository, ViewRegistry viewRegistry)
+        public void Initialize(CardSlotStateRepository repository, ViewRegistry viewRegistry)
         {
             _repository = repository;
             _viewRegistry = viewRegistry;

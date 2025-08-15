@@ -16,7 +16,31 @@
 ### 1. 対象ファイル
 
 - 対象ディレクトリ直下の`*.md`と`*.cs`ファイルすべて
-- 対象ディレクトリ: `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices`
+- 対象ディレクトリ:
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\class`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\component`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Installers`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Systems`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Tester`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Factory`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Orchestrator`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Presenter`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Repository`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\State`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy`
 
 ### 2. フォーマット
 
@@ -45,7 +69,7 @@
 
 ファイル一覧を更新する際は、以下の点を確認してください。
 
-- [ ] 対象ディレクトリ (`D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices`) 配下のすべての`.md`ファイルと`.cs`ファイルがリストに含まれているか。
+- [ ] 対象ディレクトリ配下のすべての`.md`ファイルと`.cs`ファイルがリストに含まれているか。
 - [ ] 各ファイルの「解説」が適切で、そのファイルの役割を簡潔に表しているか。
 - [ ] 「格納場所」が正しいフルパスになっているか。
 - [ ] Markdownテーブルのフォーマットが崩れていないか。
@@ -60,4 +84,5 @@
 
 ## 更新履歴
 
+- 2025-08-15: 対象ディレクトリの明確化 (Nekodamasi)
 - 2025-07-30: 初版 (Nekodamasi)

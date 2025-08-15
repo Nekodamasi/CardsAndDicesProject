@@ -1,8 +1,11 @@
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using VContainer;
+using CardsAndDices.Scripts.Data;
+using System.Collections.Generic; // 追加
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// クリーチャーカードの視覚的な表示を管理するコンポーネント。
@@ -10,10 +13,20 @@ namespace CardsAndDice
     /// </summary>
     public class CreatureCardView : BaseSpriteView
     {
+        [Inject]
+        public void Construct(CardInteractionOrchestrator orchestrator)
+        {
+            this._orchestrator = orchestrator;
+        }
+
         [Header("Card Specific Settings")]
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hoverSound;
         [SerializeField] public string _cardName;
+        [SerializeField] private InletAbilityProfile _inletProfile; // このカードが持つインレットの能力プロファイル
+        [SerializeField] private DiceInletView _inletView; // このカードに属するインレットView 
+
+        public CreatureData CurrentCreatureData { get; private set; } // 追加
 
         private SpriteInputHandler _spriteInputHandler;
         public bool IsGrayscale { get; private set; }
@@ -22,9 +35,27 @@ namespace CardsAndDice
         private bool _playAnimation = false;
         private SpriteStatus _pendingStatus;
 
+        public InletAbilityProfile InletProfile => _inletProfile;
+        public DiceInletView InletView => _inletView;
+
+        /// <summary>
+        /// このカードに紐づく全てのインレットViewのリストを取得します。
+        /// </summary>
+        /// <returns>DiceInletViewのリスト。</returns>
+        public List<DiceInletView> GetInletViews()
+        {
+            // 現状は単一のインレットを想定
+            if (_inletView != null)
+            {
+                return new List<DiceInletView> { _inletView };
+            }
+            return new List<DiceInletView>();
+        }
+
         protected override void Awake()
         {
             base.Awake();
+            SetSpawnedState(false);
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
 
             if (_audioSource == null)
@@ -34,6 +65,18 @@ namespace CardsAndDice
             
             //_audioSource.clip = _hoverSound;
             //_audioSource.playOnAwake = false;
+        }
+
+        /// <summary>
+        /// クリーチャーデータをViewに適用します。
+        /// </summary>
+        /// <param name="data">適用するクリーチャーデータ。</param>
+        public void ApplyData(CreatureData data)
+        {
+            CurrentCreatureData = data; // ここでデータを保持
+            // TODO: CreatureDataの内容をViewに反映するロジックを実装
+            // 例: _cardName = data.CreatureName;
+            // カードの見た目やテキストを更新する
         }
 
         public void SetGrayscale(bool enabled)
@@ -50,7 +93,7 @@ namespace CardsAndDice
             }
         }
 
-        public override CompositeObjectId GetCurrentCardId() => GetObjectId();
+        public CompositeObjectId GetCurrentCardId() => GetObjectId();
 
         public override void EnterNormalState()
         {
@@ -84,7 +127,6 @@ namespace CardsAndDice
         public override void EnterDraggingInProgressState()
         {
             base.EnterDraggingInProgressState();
-//            TryPlayStatusAnimation(CurrentStatus);
         }
 
         public override void MoveTo(Vector3 targetPosition)
@@ -96,7 +138,6 @@ namespace CardsAndDice
         {
             if (this.transform.position == targetPosition) return;
 
-            Debug.Log("MoveToAnimated:" + _cardName + ":" + this.transform.position + "->" + targetPosition);
             _currentMoveAnimation = DOTween.Sequence();
             _currentMoveAnimation.Append(transform.DOMove(targetPosition, _animationDuration)
                                         .SetEase(Ease.OutQuad));
@@ -107,15 +148,12 @@ namespace CardsAndDice
         private async void TryPlayStatusAnimation(SpriteStatus targetStatus)
         {
             if(_playAnimation)
-//            if (_currentAnimation != null && _currentAnimation.IsActive() && _currentAnimation.IsPlaying())
             {
-                Debug.Log("<color=blue>カード：</color>" + _cardName + "->をスキップ:" + targetStatus + "->前：" + _currentStatus);
                 _animationSkipped = true;
                 _pendingStatus = targetStatus;
                 return;
             }
 
-            Debug.Log("<color=blue>カード：</color>" + _cardName + "->正規ルートアニメーション:" + targetStatus + "->前：" + _currentStatus);
             Sequence animationSequence = null;
                 _playAnimation = true;
 
@@ -134,13 +172,10 @@ namespace CardsAndDice
                     animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
                     break;
                 case SpriteStatus.DraggingInProgress:
-                    // ドラッグ中のアニメーションはOrchestratorが直接transformを操作するため、ここではアニメーションは不要
                     break;
                 case SpriteStatus.Acceptable:
-                    // Acceptable状態のアニメーションがあればここに追加
                     break;
                 case SpriteStatus.Move:
-                    // Move状態のアニメーションがあればここに追加
                     break;
             }
 
@@ -148,7 +183,6 @@ namespace CardsAndDice
             {
                 _currentAnimation = animationSequence;
                 await animationSequence.AsyncWaitForCompletion();
-            Debug.Log("<color=blue>カード：</color>" + _cardName + "->アニメーションえんど:" + targetStatus + "->前：" + _currentStatus);
                 HandleAnimationCompletion();
             }
             else
@@ -162,7 +196,6 @@ namespace CardsAndDice
             if (_animationSkipped)
             {
                 _animationSkipped = false;
-                Debug.Log("<color=blue>カード：</color>" + _cardName + "->スキップアニメーション用State:" + _pendingStatus);
                 TryPlayStatusAnimation(_pendingStatus);
             }
             _playAnimation = false;

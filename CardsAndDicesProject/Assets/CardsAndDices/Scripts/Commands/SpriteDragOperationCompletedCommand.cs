@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// ドラッグ操作が完全に終了し、その結果（成功/失敗）に関わらず、

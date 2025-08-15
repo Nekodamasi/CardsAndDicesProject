@@ -6,6 +6,7 @@
 
 この設計書は、UnityにおけるSpriteベースのUI要素（SpriteUI）の基本的なインタラクションと構造を定義します。
 マウスイベントの検知、コマンドの発行、およびそれに応じたUIの視覚的変化を管理するための主要なクラスとその役割を記述します。
+また、オブジェクトプールによるUI要素の再利用と、その表示状態の管理についても詳述します。
 
 ---
 
@@ -13,22 +14,22 @@
 
 ### 1. SpriteInputHandler
 
-- **役割:** Unityの`IPointerEnterHandler`などのインターフェースを実装し、マウスイベントを検知して対応するコマンドを発行します。
+- **役割:** Unityの`IPointerEnterHandler`などのインターフェースを実装し、マウスイベントを検知して対応するコマンドを発行します。また、`InteractionProfile` ScriptableObjectを介して、ホバー、クリック、ドラッグといった各インタラクションの有効/無効を動的に制御します。
 - **検知するマウスイベントと処理:**
     - `OnPointerEnter`:
-        - ドラッグ中でなければ `SpriteHoverCommand` を発行します。
+        - `InteractionProfile`で許可されており、かつドラッグ中でなければ `SpriteHoverCommand` を発行します。
     - `OnPointerExit`:
-        - ホバー中であれば `SpriteUnhoverCommand` を発行します。
+        - `InteractionProfile`で許可されており、かつホバー中であれば `SpriteUnhoverCommand` を発行します。
     - `OnBeginDrag`:
-        - `SpriteBeginDragCommand` を発行します。
+        - `InteractionProfile`で許可されていれば `SpriteBeginDragCommand` を発行します。
     - `OnPointerUp`:
-        - ドラッグ中でなければ `SpriteClickCommand` を発行します。
+        - `InteractionProfile`で許可されており、かつドラッグ中でなければ `SpriteClickCommand` を発行します。
     - `OnEndDrag`:
-        - `SpriteEndDragCommand` を発行します。
+        - ドラッグ中であれば `SpriteEndDragCommand` を発行します。
     - `OnDrag`:
-        - `SpriteDragCommand` を発行します。
+        - `InteractionProfile`で許可されており、かつドラッグ中であれば `SpriteDragCommand` を発行します。
     - `OnDrop`:
-        - `SpriteDropCommand` を発行します。
+        - `InteractionProfile`でドロップターゲットとして許可されていれば `SpriteDropCommand` を発行します。
 
 ### 2. SpriteCommandBus
 
@@ -37,10 +38,15 @@
 
 ### 3. BaseSpriteView
 
-- **役割:** すべてのSpriteUI要素の基底クラスとなり、共通の表示ロジックとコマンド購読機能を提供します。
-    - 各種Spriteコマンド（`SpriteHoverCommand`など）を購読します。
-    - **アニメーションの定義はScriptableObjectとして外部化され、このクラスに注入されます。**
-    - 内部の`enum`である`SpriteStatus`を更新し、その状態に基づいてSpriteの見た目（色、スケールなど）を変更します。
+- **役割:** すべてのSpriteUI要素の基底クラスとなり、共通の表示ロジック、コマンド購読機能、およびオブジェクトプールにおける再利用状態管理機能を提供します。
+    - `Awake()`時に `UIInteractionOrchestrator` の `ViewRegistry` に自身を登録し、`OnDestroy()`で登録解除します。
+    - `EnableUIInteractionCommand` と `DisableUIInteractionCommand` を購読し、自身のコライダーの有効/無効を切り替えます。
+    - `UIInteractionOrchestrator` から呼び出される状態遷移メソッド（`EnterNormalState`, `EnterHoveringState` など）を持ち、自身の状態を管理します。
+    - アニメーションの定義は `ScriptableObject` として外部化され、このクラスに注入されます。
+    - **`IsSpawned` プロパティ:** このViewが現在オブジェクトプールから取り出され、ゲーム内で使用中であるかを示します。
+    - **`SetSpawnedState(bool state)` メソッド:** `IsSpawned` プロパティの状態を設定します。オブジェクトがプールから取り出される際に`true`に、プールに戻される際に`false`に設定されます。
+    - **`_displayRootGameObject` フィールド:** 表示に関わるコンポーネントをすべて配下に持つGameObjectへの参照です。このGameObjectの`SetActive`を切り替えることで、View全体の表示/非表示を制御します。
+    - **`SetDisplayActive(bool active)` メソッド:** `_displayRootGameObject` のアクティブ状態を設定し、Viewの表示/非表示を切り替えます。`Awake()`時に`SetDisplayActive(false)`が呼ばれ、初期状態では非表示になります。
 
 ---
 
@@ -50,11 +56,11 @@ DOTweenを用いたアニメーションの定義と実行ロジックを、`Scr
 
 ### 1. IAnimationStrategy
 
-- **役割:** すべてのアニメーション戦略が実装すべきインターフェースです。`PlayAnimation(GameObject targetObject, MultiRendererVisualController targetVisualController, Vector3 originalScale, Color originalColor, float duration)`メソッドを定義します。
+- **役割:** すべてのアニメーション戦略が実装すべきインターフェースです。`PlayAnimation(GameObject targetObject, MultiRendererVisualController targetVisualController, Vector3 originalScale, Color originalColor, float duration, Vector3 targetPosition)`メソッドを定義します。`targetPosition`はアニメーションの目標位置を指定します。
 
 ### 2. BaseAnimationSO
 
-- **役割:** `IAnimationStrategy`を実装する`ScriptableObject`の抽象基底クラスです。`PlayAnimation`メソッドは、`GameObject`、`MultiRendererVisualController`、`originalScale`、`originalColor`を引数として受け取り、具体的なアニメーションロジックを`protected abstract Sequence DoPlayAnimation(GameObject targetObject, MultiRendererVisualController targetVisualController, Vector3 originalScale, Color originalColor, float duration)`で派生クラスに委譲します。共通の`_animationDuration`フィールドやヘルパーメソッド（例: `GetBrightenedColor`）も提供します。
+- **役割:** `IAnimationStrategy`を実装する`ScriptableObject`の抽象基底クラスです。`PlayAnimation`メソッドは、`GameObject`、`MultiRendererVisualController`、`originalScale`、`originalColor`, `duration`, `targetPosition`を引数として受け取ります。共通の`_animationDuration`フィールドやヘルパーメソッド（例: `GetBrightenedColor`）も提供します。
 
 ### 3. MultiRendererVisualController
 
@@ -93,14 +99,28 @@ SpriteUIは、複数の`SortingGroup`、`Canvas`で構成されることがあ�
 ### 2. BaseSpriteViewへの統合
 
 - `BaseSpriteView`は、`SpriteLayerController`のインスタンスをインスペクター経由で受け取ります。
-- `BaseSpriteView`に`public void SetOrderInLayer(int order)`メソッドを実装し、内部で`SpriteLayerController.SetOrderInLayer(order)`を呼び出します。これにより、`BaseSpriteView`を持つオブジェクトから、関連するすべてのUI要素の描画順序を簡単に変更できます。
+- `BaseSpriteView`に`public void SetOrderInLayer(int order)`メソッドを実装し、内部で`SpriteLayerController.SetOrderInLayer(order)`を呼び出します。
+これにより、`BaseSpriteView`を持つオブジェクトから、関連するすべてのUI要素の描画順序を簡単に変更できます。
+
+---
+
+## 汎用スプライト選択機構
+
+IDに基づいて動的にスプライトを切り替えるための、再利用可能なコンポーネント群です。
+これにより、データとビューが明確に分離され、ダイスの面、アイテムのアイコンなど様々なUI要素に適用できます。
+
+-   **`SelectableSpriteSheet` (ScriptableObject)**: IDとスプライト画像の対応データを管理します。
+-   **`SpriteSelector` (MonoBehaviour)**: `SelectableSpriteSheet`のデータに基づき、指定されたIDのスプライトを`SpriteRenderer`に表示します。
+
+詳細な仕様については、以下の設計書を参照してください。
+
+-   [sys_sprite_selector_design.md](../sys/sys_sprite_selector_design.md)
 
 ---
 
 ## コマンドクラスの定義
 
 以下のコマンドクラスは、`SpriteInputHandler`によって発行され、`SpriteCommandBus`を通じて配信されます。
-**各コマンドは、対象となるオブジェクトの`CompositeObjectId`を`TargetObjectId`プロパティとして持ちます。**
 
 ### 1. SpriteHoverCommand
 
@@ -156,52 +176,72 @@ SpriteUIは、複数の`SortingGroup`、`Canvas`で構成されることがあ�
 ### 8. SpriteDragOperationCompletedCommand
 
 - **役割:**
-    - ドラッグ操作が完全に終了したことを通知する。このコマンドは、ドラッグの成功・失敗に関わらず、関連する全てのUI要素に最終的な後処理を行わせるためのトリガーとなる。
+    - ドラッグ操作が完全に終了したことを通知するグローバルなイベント。このコマンドは、ドラッグの成功・失敗に関わらず、関連する全てのUI要素に最終的な後処理（コライダーの有効化、状態の正常化など）を行わせるためのトリガーとなる。
 - **主な処理:**
-    - **リフロー配置の確定:** `CardSlotView` は、このコマンドを受けて `ReflowPlacedCardId`（仮配置）を `PlacedCardId`（確定配置）に上書きする。
     - **コライダーの有効化:** `BaseSpriteView` は、無効化されていたコライダーを再度有効にする。
     - **状態の正常化:** 各Viewは、自身の状態を `Normal` に戻す。
+    - **UI操作の有効化:** `UIInteractionOrchestrator` は `EnableUIInteractionCommand` を発行する。
 - **項目:**
-    - `TargetObjectId`: ドラッグ操作が完了したオブジェクトの`CompositeObjectId`。
-    - `IsDropSuccessful`: ドロップが成功したかどうか。
+    - なし
 
 ---
 
-## ドロップの失敗と成功の判定方法
+## ドラッグ＆ドロップとUIインタラクションの全体フロー
 
-ドラッグ＆ドロップ操作におけるドロップの成否判定と、それに応じたUIの振る舞いは、`UIInteractionOrchestrator` が中心となって以下のフローで実現します。
+ドラッグ＆ドロップ操作における成否判定、UIの見た目の変化、リフロー処理は、複数のクラスが連携して実現されます。中心的な役割を担うのが `UIInteractionOrchestrator` です。
 
-1.  **ドラッグ開始時 (`Orchestrator.OnBeginDrag`)**
-    - `UIStateMachine` の状態を `DraggingCard` に設定します。
-    - ドラッグされたカードの `CreatureCardView` に対し、`EnterDraggingState()` を呼び出し、`DraggingStarted` 状態に遷移させます。
-    - 全ての `CardSlotView` に対し、ドラッグされたカードを乗せているスロットなら `Inactive` 状態に、それ以外なら `Acceptable` 状態になるよう指示します。
+### 関連クラスと責務
 
-2.  **ドラッグ中 (`Orchestrator.OnDrag`)**
-    - `SpriteDragCommand` を受け取ります。
-    - ドラッグ中のカードの `CreatureCardView` に対し、`transform.position` を `command.NewPosition` に設定し、`EnterDraggingInProgressState()` を呼び出し、`DraggingInProgress` 状態に遷移させます。
+-   **`UIInteractionOrchestrator`**: UIインタラクション全体の司令塔。`SpriteCommandBus` を通じて各種UIイベントを受け取り、`UIStateMachine` の状態を更新し、各ViewやManagerに具体的な指示を出します。
+-   **`UIStateMachine`**: UI全体の現在の状態（例: `Idle`, `DraggingCard`, `DropedCard`）を管理します。
+-   **`CardInteractionStrategy`**: 特定の状況下でカードやスロットがどのようなインタラクション（ドラッグ、ホバー等）を許可するかを判断する戦略クラス。
+-   **`CardSlotManager`**: 全ての `CardSlotView` を管理し、カードの配置、リフロー処理の実行依頼などを行います。
+-   **`ReflowService`**: カードが配置または移動した際の、新しいレイアウト（リフロー）の計算を担当します。
+-   **`UIActivationPolicy`**: `UIStateMachine` の状態に基づき、各UI要素（カード、スロットなど）のインタラクション（コライダーの有効/無効）を制御します。
+-   **`ViewRegistry`**: シーン内に存在する全ての `BaseSpriteView` のインスタンスを管理し、`CompositeObjectId` からViewを取得する機能を提供します。
+    *   `GetNextAvailableCreatureCardView()` メソッドは、`IsSpawned` フラグが `false` の `CreatureCardView` を探し、見つかった場合はそのViewの `SetSpawnedState(true)` を呼び出してから返します。これにより、オブジェクトプールから再利用可能なViewを効率的に取得します。
+-   **`CreatureCardView` / `CardSlotView`**: それぞれカードとスロットの見た目と振る舞いを担当するViewクラス。`Orchestrator` からの指示に従い、状態遷移やアニメーションを実行します。
 
-3.  **スロットへのホバー時 (`Orchestrator.OnHover`)**
-    - ホバーされた `CardSlotView` に対し、`Hovering` 状態になるよう指示します。
-    - `CardSlotManager` にリフローのプレビューを要求します。
+### インタラクションフロー詳細
 
-4.  **スロットからのアンホバー時 (`Orchestrator.OnUnhover`)**
-    - アンホバーされた `CardSlotView` に対し、`Acceptable` 状態に戻るよう指示します。
-    - `CardSlotManager` にリフローのプレビューキャンセルを要求します。
+1.  **ドラッグ開始時 (`OnBeginDrag`)**
+    -   `SpriteInputHandler` が `SpriteBeginDragCommand` を発行します。
+    -   `Orchestrator` は `CardInteractionStrategy` に問い合わせ、ドラッグが可能か確認します。
+    -   可能な場合、`UIStateMachine` を `DraggingCard` 状態に遷移させます。
+    -   `Orchestrator` はドラッグされたカードのID (`_draggedId`) を記録します。
+    -   ドラッグされた `CreatureCardView` は `EnterDraggingState` に遷移します。
+    -   `UIActivationPolicy` が、現在の状態に合わせて他のカードやスロットのインタラクションを更新します。
 
-5.  **ドロップ時 (`Orchestrator.OnDrop`)**
-    - ドロップを受け取った `CardSlotView` が存在する場合、`CardSlotManager.OnCardDroppedOnSlot()` を呼び出し、カード配置の確定とリフロー処理を依頼します。
+2.  **ドラッグ中 (`OnDrag`)**
+    -   `SpriteInputHandler` が `SpriteDragCommand` を発行します。
+    -   `Orchestrator` はドラッグ中の `CreatureCardView` に `MoveTo` を指示し、マウスに追従させます。
 
-6.  **ドラッグ終了時 (`Orchestrator.OnEndDrag`)**
-    - `UIStateMachine` の状態を `Idle` に戻します。
-    - **ドロップが成功しなかった場合** (`SpriteDropCommand` が直前に発行されていない場合)、`CardSlotManager.OnDropFailed()` を呼び出し、リフローのキャンセルとカードを元の位置に戻す処理を依頼します。
-    - 全ての `CardSlotView` に対し、`Normal` 状態に戻るよう指示します。
+3.  **スロットへのホバー時 (`OnHover`)**
+    -   `SpriteInputHandler` が `SpriteHoverCommand` を発行します。
+    -   `Orchestrator` は `CardInteractionStrategy` に問い合わせ、ホバーが可能か確認します。
+    -   可能な場合、`CardSlotManager` に `OnCardHoveredOnSlot` を通知し、リフローのプレビュー（仮配置）を開始させます。この処理は非同期で行われます。
 
-7.  **リフロー完了と後処理 (`CreatureCardView.OnReflowCompleted` -> `Orchestrator.OnSpriteDragOperationCompleted`)**
-    - `CardSlotManager` から `ReflowCompletedCommand` が発行されると、各 `CreatureCardView` は指示された位置へ移動アニメーションを行います。
-    - アニメーション完了後、`SpriteDragOperationCompletedCommand` が発行されます。
-    - `Orchestrator` はこのコマンドを受け取り、関係する全てのView（カードとスロット）のコライダーを有効化し、状態を `Normal` に確定させる指示を出します。
+4.  **ドロップ時 (`OnDrop`)**
+    -   `SpriteInputHandler` が `SpriteDropCommand` を発行します。
+    -   `Orchestrator` は `CardInteractionStrategy` に問い合わせ、ドロップが可能か確認します。
+    -   可能な場合、`UIStateMachine` を `DropedCard` 状態に遷移させ、UI操作を一時的に無効化します (`DisableUIInteractionCommand`)。
+    -   `Orchestrator` はドロップ成功フラグ (`_isDroppedSuccessfully`) を立てます。
+    -   `CardSlotManager` に `OnCardDroppedOnSlot` を通知し、カード配置の確定と、`ReflowService` を利用した最終的なリフロー計算を依頼します。
 
-このフローにより、複雑なインタラクションの判断は `UIInteractionOrchestrator` に集約され、各Viewは自身の見た目の変更に専念できます。
+5.  **ドラッグ終了時 (`OnEndDrag`)**
+    -   `SpriteInputHandler` が `SpriteEndDragCommand` を発行します。
+    -   `Orchestrator` は `UIStateMachine` を `DropedCard` 状態に設定します。
+    -   `UniTask.Delay` を用いて短時間待機し、その間に `OnDrop` が呼ばれて成功フラグが立っているかを確認します。
+    -   **ドロップが成功しなかった場合**、`CardSlotManager.OnDropFailed()` を呼び出し、リフローのキャンセルとカードを元の位置に戻す処理を依頼します。
+    -   成功・失敗に関わらず、成功フラグはリセットされます。
+
+6.  **リフローアニメーションと後処理**
+    -   `CardSlotManager` は `ReflowService` の計算結果に基づき、影響を受ける各カードに対して `ReflowCompletedCommand` または `DragReflowCompletedCommand` を発行します。
+    -   `Orchestrator` はこれらのコマンドを受け取り、影響を受ける `CreatureCardView` に `MoveToAnimated` を指示して、新しい位置へアニメーションさせます。
+    -   全てのアニメーションが完了した後、`Orchestrator` は `SpriteDragOperationCompletedCommand` を発行します。
+    -   この最終コマンドを受け、`Orchestrator` は `UIStateMachine` を `Idle` に戻し、`UIActivationPolicy` を通じて全てのUIのインタラクションを正常化し、`EnableUIInteractionCommand` を発行してUI操作を再開させます。
+
+このフローにより、複雑なUIインタラクションが状態機械と責務分離されたクラス群によって、堅牢かつ拡張可能に管理されます。
 
 ---
 
@@ -214,14 +254,15 @@ SpriteUIは、複数の`SortingGroup`、`Canvas`で構成されることがあ�
 
 ## 更新履歴
 
-- 2025-07-18: 初版作成 (Gemini - Technical Writer for Game Development)
-- 2025-07-18: SpriteInputHandlerの修正とSpriteDragCommandの追加
-- 2025-07-18: SpriteInputHandlerのOnBeginDrag/OnDragにマウス追随処理を追加、SpriteClickCommandとSpriteEndDragCommandを追加
-- 2025-07-18: コマンドクラスのTargetObjectId変数名を統一し、設計書に反映
-- 2025-07-20: アニメーション機能の分離とドロップの失敗と成功の判定方法に関する設計を追加
-- 2025-07-20: CardPlacedOnSlotCommandをPlacedOnSlotCommandに変更し、ドロップ成否判定フローの記述をBaseSpriteViewに汎用化
-- 2025-07-20: ドロップ成否判定フローの記述を、BaseSpriteViewでの_isDroppedSuccessfullyの管理と遅延処理のキャンセルを明確化
-- 2025-07-20: PlacedOnSlotCommandをSpriteDropCommandに統合し、ドロップ成否判定フローをSpriteDropCommandで完結するように修正
-- 2025-07-20: アニメーション機能の分離において、IAnimationStrategyとBaseAnimationSOのPlayAnimationメソッドがSpriteRendererを引数として受け取るように修正
-- 2025-07-20: アニメーション機能の分離において、IAnimationStrategyとBaseAnimationSOのPlayAnimationメソッドがMultiRendererVisualControllerを引数として受け取るように修正
+- 2025-08-14: SpriteUIの表示状態管理（`_displayRootGameObject`, `SetDisplayActive`）とオブジェクトプールにおける再利用（`IsSpawned`, `SetSpawnedState`）に関する記述を追加。`ViewRegistry`の`GetNextAvailableCreatureCardView`の変更を反映。(Gemini - Document Specialist)
+- 2025-08-04: ソースコードとの乖離を修正し、UIInteractionOrchestratorを中心とした全体フローを実装に合わせて更新 (Gemini - Codebase Analyst)
 - 2025-07-21: `SpriteDragOperationCompletedCommand` の導入と、それによるドラッグ＆ドロップフローの変更を追記 (Gemini - Technical Writer for Game Development)
+- 2025-07-20: アニメーション機能の分離において、IAnimationStrategyとBaseAnimationSOのPlayAnimationメソッドがMultiRendererVisualControllerを引数として受け取るように修正
+- 2025-07-20: PlacedOnSlotCommandをSpriteDropCommandに統合し、ドロップ成否判定フローをSpriteDropCommandで完結するように修正
+- 2025-07-20: ドロップ成否判定フローの記述を、BaseSpriteViewでの_isDroppedSuccessfullyの管理と遅延処理のキャンセルを明確化
+- 2025-07-20: CardPlacedOnSlotCommandをPlacedOnSlotCommandに変更し、ドロップ成否判定フローの記述をBaseSpriteViewに汎用化
+- 2025-07-20: アニメーション機能の分離とドロップの失敗と成功の判定方法に関する設計を追加
+- 2025-07-18: コマンドクラスのTargetObjectId変数名を統一し、設計書に反映
+- 2025-07-18: SpriteInputHandlerのOnBeginDrag/OnDragにマウス追随処理を追加、SpriteClickCommandとSpriteEndDragCommandを追加
+- 2025-07-18: SpriteInputHandlerの修正とSpriteDragCommandの追加
+- 2025-07-18: 初版作成 (Gemini - Technical Writer for Game Development)

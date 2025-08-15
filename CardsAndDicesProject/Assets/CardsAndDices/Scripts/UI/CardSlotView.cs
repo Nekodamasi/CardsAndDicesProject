@@ -1,10 +1,17 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     public class CardSlotView : BaseSpriteView
     {
+        [Inject]
+        public void Construct(CardInteractionOrchestrator orchestrator)
+        {
+            this._orchestrator = orchestrator;
+        }
+
         [Header("Components")]
         [SerializeField] private CardSlotManager _cardSlotManager;
 
@@ -22,6 +29,8 @@ namespace CardsAndDice
         protected override void Awake()
         {
             base.Awake();
+            SetSpawnedState(true);
+            SetDisplayActive(true);
             _slotData = new CardSlotData(GetObjectId(), transform.position, _line, _location, _team);
             _cardSlotManager.RegisterSlot(_slotData);
         }
@@ -29,7 +38,7 @@ namespace CardsAndDice
         /// <summary>
         /// 現在スロットに配置されているカードのIDを取得します。
         /// </summary>
-        public override CompositeObjectId GetCurrentCardId() => _slotData.PlacedCardId;
+        public CompositeObjectId GetCurrentCardId() => _slotData.PlacedCardId;
 
         /// <summary>
         /// スロットを通常状態に遷移させます。
@@ -100,4 +109,3 @@ namespace CardsAndDice
         public Team Team { get { return _slotData.Team; } }
     }
 }
-

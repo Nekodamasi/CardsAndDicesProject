@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// SpriteUIのマウスイベントを検知し、対応するコマンドを発行するハンドラー。

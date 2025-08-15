@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using VContainer;
 
-namespace CardsAndDice
+namespace CardsAndDices
 {
     public abstract class BaseSpriteView : MonoBehaviour
     {
@@ -13,7 +13,6 @@ namespace CardsAndDice
         [SerializeField] protected BoxCollider2D _boxCollider2D;
         [SerializeField] protected IdentifiableGameObject _identifiableGameObject;
         [SerializeField] protected SpriteCommandBus _commandBus;
-
         [Header("Animation Settings")]
         [SerializeField] protected float _animationDuration = 0.2f;
 
@@ -23,6 +22,12 @@ namespace CardsAndDice
         [SerializeField] protected BaseAnimationSO _dragAnimation;
 
         [SerializeField] protected SpriteStatus _currentStatus = SpriteStatus.Normal;
+        protected IUIInteractionOrchestrator _orchestrator;
+
+        // 表示に関わるコンポーネントをすべて配下に持つGameObjectへの参照
+        [Header("Display Root")]
+        [SerializeField] private GameObject _displayRootGameObject;
+
         protected Vector3 _originalScale;
         protected Color _originalColor;
         protected bool isDisableUIInteraction = false;
@@ -31,22 +36,42 @@ namespace CardsAndDice
         protected Sequence _currentMoveAnimation;
         public SpriteStatus CurrentStatus { get { return _currentStatus; } }
 
-        public CompositeObjectId SlotId { get; private set; }
+        /// <summary>
+        /// このゲームオブジェクトが現在プールから取り出され、ゲーム内で使用中であるかを示します。
+        /// </summary>
+        public bool IsSpawned { get; private set; }
 
-        [Header("Orchestrator Reference")]
-        [SerializeField] private UIInteractionOrchestrator _uiInteractionOrchestrator; // Inspectorから設定
-
-        [Inject]
-        public void Construct()
+        /// <summary>
+        /// このゲームオブジェクトのスポーン状態を設定します。
+        /// </summary>
+        /// <param name="state">trueの場合、ゲーム内で使用中。falseの場合、プールに戻された状態。</param>
+        public void SetSpawnedState(bool state)
         {
-            Debug.Log("よばれてるんかな？");
+            IsSpawned = state;
+            if (state == false)
+            {
+                SetDisplayActive(false);
+            }
+        }
 
+        /// <summary>
+        /// 表示ルートGameObjectのアクティブ状態を設定します。
+        /// </summary>
+        /// <param name="active">trueで表示、falseで非表示。</param>
+        public void SetDisplayActive(bool active)
+        {
+            if (_displayRootGameObject != null)
+            {
+                _displayRootGameObject.SetActive(active);
+            }
         }
 
         protected virtual void Awake()
         {
             _commandBus.On<EnableUIInteractionCommand>(OnEnableUIInteraction);
             _commandBus.On<DisableUIInteractionCommand>(OnDisableUIInteraction);
+            // 初期状態では非表示にする
+            SetDisplayActive(false);
             if (_multiRendererVisualController == null) _multiRendererVisualController = GetComponent<MultiRendererVisualController>();
             if (_spriteLayerController == null) _spriteLayerController = GetComponent<SpriteLayerController>();
             if (_boxCollider2D == null) _boxCollider2D = GetComponent<BoxCollider2D>();
@@ -56,12 +81,12 @@ namespace CardsAndDice
             _originalColliderEnabled = _boxCollider2D.enabled; // 初期状態を記憶
 
             // OrchestratorのViewRegistryに自身を登録
-            _uiInteractionOrchestrator?.RegisterView(this);
+            _orchestrator?.RegisterView(this);
         }
 
         protected virtual void OnDestroy()
         {
-            _uiInteractionOrchestrator?.UnregisterView(this);
+            _orchestrator?.UnregisterView(this);
             KillCurrentAnimation();
             KillCurrentMoveAnimation();
             DOTween.Kill(this);
@@ -118,7 +143,6 @@ namespace CardsAndDice
 
         // --- Helper Methods ---
         public CompositeObjectId GetObjectId() => _identifiableGameObject.ObjectId;
-        public abstract CompositeObjectId GetCurrentCardId();
 
         public void SetColliderEnabled(bool enable)
         {

@@ -32,6 +32,7 @@
 | クラス名 | 継承元 | 関連ドキュメント | 解説 |
 | :--- | :--- | :--- | :--- |
 | CardSlotData | なし | | カードスロットの状態を保持するデータクラス（Model）。 |
+| InletAbilityProfile | class | sys_dice_inlet_design.md | インレットの「条件」と「効果」をセットで保持するデータクラス。 |
 
 ### 3. Installers
 
@@ -70,6 +71,7 @@
 | CardSlotInteractionHandler | ScriptableObject | | UIからのスロット関連のインタラクションを処理するクラス。 |
 | CardSlotManager | ScriptableObject | | 全てのカードスロット関連の処理の窓口となるファサードクラス。 |
 | CardSlotStateRepository | ScriptableObject | | 全てのカードスロットの状態を管理するリポジトリクラス。 |
+| DiceInletAbilityRegistry | class | sys_dice_inlet_design.md | 現在アクティブなインレットの能力プロファイルを一元管理するレジストリ。 |
 | ReflowService | ScriptableObject | | カードのリフロー（再配置）および前詰め処理の計算ロジックを担当するサービスクラス。 |
 | SystemReflowController | ScriptableObject | | システム起因のリフロー処理を実行するコントローラー。 |
 | UIActivationPolicy | ScriptableObject | | UI要素のアクティブ/非アクティブ状態を管理するクラス。 |

@@ -1,4 +1,4 @@
-namespace CardsAndDice
+namespace CardsAndDices
 {
     /// <summary>
     /// PlayerZoneのスロットが満員かどうかの状態変化を通知するコマンド。
