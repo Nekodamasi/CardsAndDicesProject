@@ -51,6 +51,24 @@
 - `Docs/sys/`: 各システムの詳細設計に関するドキュメント。
 - `Docs/component/`: 各コンポーネントの仕様に関するドキュメント。
 - `Docs/class/`: 各クラスの詳細設計に関するドキュメント。
+- `Docs/ui/`: 各UIのトインタラクション設計に関するドキュメント。 
+ - `Scripts/Abilities/`: ScriptableObjectベースのアビリティ定義
+ - `Scripts/Animation/`: アニメーション関連のScriptableObject
+ - `Scripts/Commands/`: コマンドパターンで使用されるコマンド定義
+ - `Scripts/Core/`: プロジェクト全体で共通の基盤コード（インターフェース、抽象クラス、汎用ユーティリティ）
+ - `Scripts/Data/`: 純粋なデータ定義（ScriptableObject、構造体、クラス）
+ - `Scripts/Domain/`: ゲームのコアロジック、データモデル、エンティティ
+ - `Scripts/Factory/`: オブジェクトの生成ロジックをカプセル化
+ - `Scripts/Installers/`: DIコンテナのインストールロジック
+ - `Scripts/Manager/`: 複数のコンポーネントやシステムを統括・管理する高レベルなロジック
+ - `Scripts/Orchestrator/`: 複数のシステムやコンポーネント間の複雑な連携を調整
+ - `Scripts/Presenter/`: ViewとModelの仲介役
+ - `Scripts/Repository/`: データの永続化や取得を担当
+ - `Scripts/Service/`: 特定の機能を提供するサービス層（データ操作、外部API連携など）
+ - `Scripts/State/`: ステートマシン関連のクラス
+ - `Scripts/Strategy/`: 特定の振る舞いをカプセル化し、交換可能なアルゴリズムを提供
+ - `Scripts/Tester/`: テスト関連のスクリプト
+ - `Scripts/UI/`: UIコンポーネント（MonoBehaviour）
 
 ### 2. バージョン管理
 
@@ -67,5 +85,7 @@
 
 ## 更新履歴
 
-- 2025-07-10: 初版 (Nekodamasi)
+- 2025-08-15: フォルダ階層の原則を更新しソースプロ
 - 2025-07-18: ドキュメントの住み分けに伴う内容の再構成 (Gemini - Technical Writer for Game Development)
+グラムのディレクトリ階層を明確化
+- 2025-07-10: 初版 (Nekodamasi)
