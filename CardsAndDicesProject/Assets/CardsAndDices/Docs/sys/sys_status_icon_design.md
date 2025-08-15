@@ -9,39 +9,39 @@
 
 ---
 
-## 1. 主要コンポーネント
+## 主要コンポーネント
 
-### 1.1. `StatusIconView` (MonoBehaviour)
+### 1. `StatusIconView` (MonoBehaviour)
 
 -   **責務**: ステータスアイコンの視覚的な表示とアニメーションの実行。
 -   **配置**: `Assets/CardsAndDices/Scripts/UI/StatusIconView.cs`
 
-### 1.2. `StatusIconData` (ScriptableObject)
+### 2. `StatusIconData` (ScriptableObject)
 
 -   **責務**: ステータスアイコンの基本情報（アイコン画像、表示形式など）のマスターデータ。
 -   **配置**: `Assets/CardsAndDices/Scripts/Data/StatusIconData.cs`
 
-### 1.3. `StatusIconPresenter` (純粋なC#クラス)
+### 3. `StatusIconPresenter` (純粋なC#クラス)
 
 -   **責務**: `ICreature` (またはステータスを持つModel) と `StatusIconView` の間の仲介役。ステータス値の変更を購読し、更新タイミングを制御してViewに指示を出す。
 -   **配置**: `Assets/CardsAndDices/Scripts/Presenter/StatusIconPresenter.cs`
 
 ---
 
-## 2. `StatusIconView` の仕様
+## `StatusIconView` の仕様
 
-### 2.1. 責務
+### 1. 責務
 
 -   アイコン画像と数値を表示する。
 -   ステータス値が変更された際にShakeアニメーションを実行する。
 
-### 2.2. フィールド
+### 2. フィールド
 
 -   `SpriteRenderer _iconRenderer`: アイコン画像を表示するための `SpriteRenderer`。
 -   `TextMeshProUGUI _valueText`: 2桁の数値を表示するための `TextMeshProUGUI`。
 -   `StatusIconData _statusIconData`: このアイコンが表すステータスの定義データ。
 
-### 2.3. 主なメソッド
+### 3. 主なメソッド
 
 -   `void Initialize(StatusIconData data)`: アイコンの初期設定を行います。`_iconRenderer.sprite` を設定し、`_valueText` の表示形式を準備します。
 -   `void UpdateDisplay(int value)`:
@@ -53,20 +53,20 @@
 
 ---
 
-## 3. `StatusIconData` の仕様
+## `StatusIconData` の仕様
 
-### 3.1. 責務
+### 1. 責務
 
 -   特定のステータスアイコンに関する静的な情報を提供します。
 
-### 3.2. フィールド
+### 2. フィールド
 
 -   `Sprite IconSprite`: ステータスアイコンとして表示される画像。
 -   `string FormatString`: 数値の表示形式を定義する文字列（例: `"HP: {0}"`）。`{0}` が数値に置き換えられます。
 -   `bool ShowValue`: 数値を表示するかどうかを制御するフラグ。
 -   `EffectTargetType TargetType`: このアイコンがどの `EffectTargetType` (例: `Health`, `Attack`) に対応するかを示す。
 
-### 3.3. アセットメニュー
+### 3. アセットメニュー
 
 -   `[CreateAssetMenu(fileName = "NewStatusIconData", menuName = "CardsAndDices/Status Icon Data")]`
 

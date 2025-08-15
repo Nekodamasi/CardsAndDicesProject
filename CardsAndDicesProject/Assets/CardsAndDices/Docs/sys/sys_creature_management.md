@@ -27,9 +27,14 @@
 -   **主なプロパティ**:
     -   `string Id`: クリーチャーの一意な識別子。
     -   `int CurrentHealth`: 現在の体力値。
-    -   `int MaxHealth`: エフェクトによる変動を考慮した現在の最大体力。
+    -   `int BaseHealth`: エフェクトによる変動を考慮した現在の最大体力。
     -   `int Attack`: 現在の攻撃力。
-    -   `int Shield`: 現在のシールド値。
+    -   `int CurrentShield`: 現在のシールド値。
+    -   `int BaseShield`: エフェクトによる変動を考慮した現在の最大シールド値。
+    -   `int CurrentCooldown`: 現在のカウントダウン値。
+    -   `int BaseCooldown`: エフェクトによる変動を考慮した現在の最大カウントダウン値。
+    -   `int Energy`: 現在のエネルギー。
+    -   
 -   **主なメソッド**:
     -   `void TakeDamage(int amount)`: ダメージを受ける処理。
     -   `void ApplyEffect(EffectInstance effect)`: エフェクトを適用する処理。
@@ -41,7 +46,7 @@
 -   **依存関係**: `CreatureData` (基本データ)、`EffectManager` (エフェクト管理)。これらはDIによって注入されます。
 -   **ステータス計算**:
     -   `MaxHealth` は、`CreatureData.Health` (基本最大体力) に `EffectManager.GetTotalEffectValue(Id, EffectTargetType.Health)` (エフェクトによる体力変動量) を加算して動的に計算されます。
-    -   `CurrentHealth` は、`TakeDamage` や回復処理によって直接変動します。`MaxHealth` を超えることはありません。
+    -   `CurrentHealth` は、`TakeDamage` や回復処理によって直接変動します。`BaseHealth` を超えることがあります。
 -   **イベント発行**: 体力変更などの重要なステータス変更時には、`SpriteCommandBus` を介してイベント（例: `HealthChangedCommand`）を発行し、Viewや他のシステムに通知します。
 
 ---
@@ -61,7 +66,7 @@
 
 ### 2.3. 主なメソッド
 
--   `ICreature Create(string id, CreatureData baseData)`: 指定されたIDと基本データに基づいて新しい `ICreature` インスタンスを生成し、返します。
+-   `ICreature Create(CompositeObjectId id, CreatureData baseData)`: 指定されたIDと基本データに基づいて新しい `ICreature` インスタンスを生成し、返します。
 
 ---
 
@@ -85,9 +90,9 @@
 
 ### 3.3. 主なメソッド
 
--   `ICreature SpawnCreature(string id, CreatureData baseData, string viewId)`: 新しいクリーチャーを生成し、管理リストに追加します。対応するViewが存在すれば、Presenterを生成して紐付けます。
--   `ICreature GetCreature(string id)`: 指定されたIDのクリーチャーを取得します。
--   `void RemoveCreature(string id)`: 指定されたIDのクリーチャーをゲームから除去します。
+-   `ICreature SpawnCreature(CompositeObjectId id, CreatureData baseData, CompositeObjectId viewId)`: 新しいクリーチャーを生成し、管理リストに追加します。対応するViewが存在すれば、Presenterを生成して紐付けます。
+-   `ICreature GetCreature(CompositeObjectId id)`: 指定されたIDのクリーチャーを取得します。
+-   `void RemoveCreature(CompositeObjectId id)`: 指定されたIDのクリーチャーをゲームから除去します。
 
 ---
 

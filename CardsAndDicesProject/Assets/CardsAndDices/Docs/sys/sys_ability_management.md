@@ -165,12 +165,6 @@ public abstract class AbilityDurationSO : ScriptableObject
 -   **効果の適用**: 固有能力の効果がステータス変更やバフ/デバフである場合、`AbilityEffectDefinitionSO.Execute()`内で`BuffApplyCommand`や`DebuffApplyCommand`を発行し、`EffectManager`を介して処理されます。
 -   **基礎攻撃の変更**: `gdd_combat_system.md`で言及されている基礎攻撃の`使用能力値`や`効果範囲`を変更する固有能力は、特殊な`EffectData`タイプを定義し、それが`ICreature`に適用されることで基礎攻撃のプロパティが一時的に変更されるように実装します。これにより、`EffectManager`の寿命管理の仕組みを再利用できます。
 
-### 4.3. UIシステム
-
--   **能力表示**: `AbilityView`と`AbilityPresenter`を導入し、クリーチャーカード上にアクティブな固有能力のアイコン、クールダウン、残り使用回数などを表示します。
--   **インタラクション**: 固有能力がUIインタラクションを伴う場合（例: クリックで発動する能力）、`guide_ui_interaction_design.md`で定義されている`Orchestrator`/`Strategy`パターンと`Command Bus`を介してUIイベントを処理します。
--   **視覚的フィードバック**: 能力の発動時には、`SpriteCommandBus`を介してアニメーションやSE再生のコマンドを発行し、視覚的・聴覚的なフィードバックを提供します。
-
 ---
 
 ## 関連ファイル

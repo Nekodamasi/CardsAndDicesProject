@@ -61,6 +61,7 @@
 | :--- | :--- | :--- |
 | sys_card_slot_manager.md | カードスロットマネージャーの技術仕様書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md |
 | sys_classes.md | システムクラスの概要 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_classes.md |
+| sys_creature_card_lifecycle_design.md | クリーチャーカードのライフサイクル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_card_lifecycle_design.md |
 | sys_dice_inlet_design.md | ダイスインレットの技術仕様書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_inlet_design.md |
 | sys_dice_lifecycle_design.md | ダイスのライフサイクル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_lifecycle_design.md |
 | sys_domain-model.md | ドメインモデルの解説 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
@@ -160,7 +161,6 @@
 | CardSlotData.cs | カードスロットのデータ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CardSlotData.cs |
 | CreatureData.cs | クリーチャーの基本ステータス（名前、攻撃力、防御力、体力、クールダウン、エネルギー、アビリティ）を定義するデータクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CreatureData.cs |
 | DiceData.cs | 個々のダイスのデータを定義します。出目、状態、関連するインレット情報などを保持します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceData.cs |
-| DiceInletData.cs | ダイスインレットの静的な識別情報を保持する構造体。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceInletData.cs |
 | DiceSlotData.cs | 個々のダイススロットのデータを定義します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceSlotData.cs |
 
 ### Scripts/Factory
