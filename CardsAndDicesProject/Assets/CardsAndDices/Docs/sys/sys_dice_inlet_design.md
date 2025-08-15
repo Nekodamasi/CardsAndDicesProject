@@ -33,6 +33,14 @@
 
 ---
 
+## DiceInletFactory
+
+-   **役割**: `DiceInlet`インスタンスの生成ロジックに特化したFactoryクラス。
+-   **主なメソッド**:
+    -   `DiceInlet Create(CompositeObjectId id, InletAbilityProfile profile)`: 提供されたIDと能力プロファイルを用いて、新しい`DiceInlet`インスタンスを生成し、初期化して返します。
+
+---
+
 ## ダイスインレット実行時インスタンス (`DiceInlet`)
 
 ゲーム中に存在するダイスインレットの論理的な表現であり、`CurrentCountdownValue` などの変動する状態を保持します。
@@ -61,7 +69,7 @@
 
 ### 1. 責務
 
--   `DiceInlet` インスタンスの生成と管理。
+-   `DiceInletFactory` を介して `DiceInlet` インスタンスを生成し、管理する。
 -   ダイス投入イベントを受け取り、適切な `DiceInlet` インスタンスに処理を委譲する。
 
 ---
@@ -79,7 +87,7 @@
 
 1.  **ダイス投入**: プレイヤーがダイスをインレットにドロップする。
 2.  **イベント発行**: `SpriteInputHandler` が `SpriteDropCommand` を発行し、`DiceInteractionOrchestrator` がこれを受け取る。
-3.  **インレット特定**: `DiceInteractionOrchestrator` は、ドロップされたインレットのIDから `DiceInletManager` を介して対応する `DiceInlet` インスタンスを取得する。
+3.  **インレット特定**: `DiceInteractionOrchestrator` は、ドロップされたインレットのIDから `DiceInletManager` を介して対応する `DiceInlet` インスタンスを取得する。（もしManagerに存在しない場合は、`DiceInletFactory`に生成を依頼する）
 4.  **能力発動トリガー**: `DiceInteractionOrchestrator` は、取得した `DiceInlet` インスタンスの `OnDiceDropped(diceValue, targetCreature)` メソッドを呼び出す。
 5.  **カウントダウン減少と効果実行**: `DiceInlet.OnDiceDropped()` 内で、条件が満たされていれば、投入された `diceValue` に応じて `CurrentCountdownValue` が減少します。この減少により `CurrentCountdownValue` が0以下になった場合、能力を発動し、カウントダウン値をリセット値 (`ResetCountdownValue`) に戻します。
 6.  **コマンド発行**: `ExecuteAbility` メソッド内で、具体的な効果に応じたコマンド（例: `BuffApplyCommand`, `ApplyDamageCommand`）が `SpriteCommandBus` を介して発行される。
@@ -106,6 +114,7 @@
 
 ## 更新履歴
 
+-   2025-08-15: Factoryパターンの導入を設計に反映 (Gemini)
 -   2025-08-15: InletAbilityProfileの生成元と登録フローについて追記 (Gemini)
 -   2025-08-15: 初版 (Gemini)
 -   2025-08-15: CurrentCountdownValueの保有者と効果発動担当システムの設計を追加 (Gemini)
