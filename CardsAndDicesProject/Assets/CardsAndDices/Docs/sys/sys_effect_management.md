@@ -4,10 +4,14 @@
 
 システム全体でのバフ／デバフ効果の適用および寿命管理を統一的に実装する。
 
+---
+
 ## 範囲
 
 - `EffectData`、`EffectInstance`、`EffectManager` の設計  
 - コマンドとの連携およびイベント駆動フローの定義  
+
+---
 
 ## データ定義
 
@@ -36,6 +40,8 @@
   - `OnEvent(eventData)`: イベント受信処理  
   - `CheckExpiration()`: 寿命判定  
 
+---
+
 ## EffectManager
 
 - バフ／デバフ効果を一元管理する ScriptableObject  
@@ -45,12 +51,16 @@
   - イベント受信時に `remainingTurns` を更新し、`EffectExpirationCommand` をキューイング  
   - `RegisterEffect(effectInstance)` / `RemoveEffect(effectInstance)` の提供  
 
+---
+
 ## イベントフロー
 
 - `TurnStartEvent`: すべての `EffectInstance` の残存ターン数を減少  
 - `TurnEndEvent`: ターン終了後の追加処理  
 - `CooldownResetEvent`: `CooldownCommand` 実行後、ペイロードに `cardId` を含めて発行  
 - カスタムイベント (`EventTrigger`): 任意条件で効果発動または終了  
+
+---
 
 ## コマンド連携
 
@@ -59,6 +69,14 @@
 - `EffectExpirationCommand`  
   - 寿命切れの `EffectInstance` を `EffectManager.RemoveEffect()` で破棄  
 - すべてのコマンドは `CommandInvoker` を介してキューイング・実行し、履歴登録を行う  
+
+---
+
+## 関連ファイル
+
+- [gdd_combat_system.md](../gdd/gdd_combat_system.md)
+
+---
 
 ## 更新履歴
 

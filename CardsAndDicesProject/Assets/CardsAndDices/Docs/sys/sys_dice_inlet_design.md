@@ -4,170 +4,111 @@
 
 ## 概要
 
-このドキュメントは、「CardsAndDices」プロジェクトにおけるダイスインレットの技術的な仕様を定義します。
-ダイスインレットは、クリーチャーカードに付属し、ダイスを投入することで特定の能力を発動させるためのインタラクティブな要素です。
+このドキュメントは、ダイスインレットの技術仕様を定義します。
+ダイスインレットは、クリーチャーカードに付随する特殊能力であり、ダイスを投入することで発動します。
 
 ---
 
-## インレットの基本機能
+## 1. データ定義
 
-### 1. ダイス投入による能力発動
+### 1.1. `DiceInletData` (ScriptableObject)
 
-プレイヤーは、ダイスをドラッグ＆ドロップすることでインレットに投入します。
-インレットは、投入されたダイスが発動条件を満たした場合に、固有の能力を発動します。
+-   **役割**: ダイスインレットの静的な識別情報と基本設定を保持します。
+-   **主なフィールド**:
+    -   `string Id`: インレットの一意な識別子。
+    -   `DiceInletConditionSO Condition`: ダイス投入時の発動条件。
+    -   `BaseInletAbilitySO Ability`: インレットが発動する能力。
+    -   `int InitialCountdownValue`: インレットの初期カウントダウン値。
+    -   `int ResetCountdownValue`: 能力発動後のカウントダウンリセット値。
 
-### 2. 投入可能なダイスの目の制限
+### 1.2. `DiceInletConditionSO` (ScriptableObject)
 
-各インレットには、投入を許可するダイスの目のリストが設定されます。
-例えば、「偶数のみ」「3以上」といった条件を定義できます。
+-   **役割**: ダイス投入時の発動条件を定義します。
+-   **主なメソッド**:
+    -   `bool Check(int diceValue)`: 投入されたダイスの値が条件を満たすかチェックします。
 
-### 3. カウントダウンによる発動条件
+### 1.3. `BaseInletAbilitySO` (ScriptableObject)
 
-インレットは、能力発動までに必要なカウントダウン値を持ちます。
-ダイスが投入されると、その目の数だけカウントダウン値が減少し、0以下になった時点で能力が発動します。
-
-### 4. クールタイム
-
-一度能力が発動したインレットは、特定の期間（例: 1ターン）再発動できなくなるクールタイム状態になります。
-クールタイム中のインレットは、視覚的に無効であることがプレイヤーに示されます。
-
-### 5. エネミーインレット
-
-敵クリーチャーのインレットは、プレイヤーがダイスを投入することで、そのターンにおける敵の特定の能力を封じる役割を持ちます。
-これは、敵の強力な能力に対する対抗策として機能します。
+-   **役割**: インレットが発動する「効果」を定義するすべてのScriptableObjectの基底クラス。
+-   **主なメソッド**:
+    -   `void ExecuteAbility(ICreature targetCreature, int diceValue, SpriteCommandBus commandBus)`: インレットの能力を実行します。具体的な効果に応じたコマンドを `SpriteCommandBus` を介して発行します。
 
 ---
 
-## データ構造とプロパティ
+## 2. ダイスインレット実行時インスタンス (`DiceInlet`)
 
-インレットの状態と振る舞いは、複数のデータオブジェクトの組み合わせによって管理されます。中心となるのは `DiceInletData` であり、その発動条件は `DiceInletConditionSO` によって定義されます。
+ゲーム中に存在するダイスインレットの論理的な表現であり、`CurrentCountdownValue` などの変動する状態を保持します。
 
-### 1. DiceInletData (クラス)
+### 2.1. 責務
 
-インレットのインスタンスごとにユニークな状態を管理するデータクラスです。
+-   `DiceInletData` への参照を保持し、基本設定を取得する。
+-   `CurrentCountdownValue` を保有し、ダイス投入時に更新する。
+-   ダイス投入時の条件チェックと、能力発動のトリガー。
+-   カウントダウン値の変更をイベントとして発行する。
 
--   **`UniqueId` (`CompositeObjectId`):**
-    -   このインレットを一意に識別するためのID。
--   **`Condition` (`DiceInletConditionSO`):**
-    -   このインレットの発動条件を定義する `ScriptableObject` への参照。
--   **`CurrentCountdownValue` (int):**
-    -   現在のカウントダウン値。ダイス投入により減少します。`Condition` の `InitialCountdownValue` で初期化されます。
--   **`IsInCooldown` (bool):**
-    -   クールタイム中かどうかを示すフラグ。
+### 2.2. 主なプロパティ
 
-### 2. DiceInletConditionSO (ScriptableObject)
+-   `string Id`: インレットの一意な識別子。
+-   `int CurrentCountdownValue`: 現在のカウントダウン値。
 
-インレットの発動条件を定義する `ScriptableObject` です。これにより、複数のインレットで同じ発動条件を再利用できます。
+### 2.3. 主なメソッド
 
--   **`AllowedDiceFaces` (`AllowedDiceFacesSO`):**
-    -   投入を許可するダイスの目を定義する `ScriptableObject` への参照。
--   **`InitialCountdownValue` (int):**
-    -   発動に必要なカウントダウンの初期値。
--   **`ActivationType` (`InletActivationType`):**
-    -   プレイヤーに提示される発動条件の見た目とロジックを定義するenum。
--   **`SuppressAbilityOnActivation` (bool):**
-    -   エネミーインレット用のフラグ。`true` の場合、インレット発動時に、紐づくアビリティを次のターンまで無効にします。
-
-### 3. AllowedDiceFacesSO (ScriptableObject)
-
-投入可能なダイスの目の組み合わせを定義する `ScriptableObject` です。「奇数のみ」「偶数のみ」「3以上」といった共通の条件をアセットとして作成し、複数の `DiceInletConditionSO` で再利用することを目的とします。
-
--   **`IsFaceAllowed` (`List<bool>` サイズ6):**
-    -   どの目が許可されているかを管理するboolのリスト。リストのインデックスがダイスの目に対応します（例: `IsFaceAllowed[0]` は1の目、`IsFaceAllowed[5]` は6の目）。
-
-### 4. InletActivationType (enum)
-
--   **`SingleMatchTrigger`:**
-    -   特定の目に一致するダイスが投入されたら即座に発動するタイプ。
--   **`TotalSumTrigger`:**
-    -   投入されたダイスの目の合計値がカウントダウン値に達したら発動するタイプ。
+-   `void OnDiceDropped(int diceValue, ICreature targetCreature)`: ダイスがインレットに投入された際の処理。条件チェック後、投入された `diceValue` に応じてカウントダウン値を減少させます。カウントダウン値が0以下になった場合、能力を発動し、カウントダウン値をリセット値 (`ResetCountdownValue`) に戻します。
 
 ---
 
-## 発動条件の種別
+## 3. ダイスインレットマネージャー (`DiceInletManager`)
 
-### 1. Single Match Trigger
+ゲーム内に存在するすべての `DiceInlet` インスタンスを一元的に管理するクラスです。
 
--   **動作ロジック:**
-    -   `DiceInletConditionSO` の `AllowedDiceFaces` で許可されているいずれかの目のダイスが投入された時点で、即座に能力が発動します。
-    -   このタイプの場合、`InitialCountdownValue` は通常1として扱われます。
--   **必要なデータ (`DiceInletConditionSO`):**
-    -   `AllowedDiceFaces`: 発動トリガーとなる目のリストを持つ `AllowedDiceFacesSO` を参照。
+### 3.1. 責務
 
-### 2. Total Sum Trigger
-
--   **動作ロジック:**
-    -   ダイスが投入されるたびに、`DiceInletData` の `CurrentCountdownValue` がその目の数だけ減少します。
-    -   `CurrentCountdownValue` が0以下になった時点で、能力が発動します。
-    -   UI上では、カウントダウン値が徐々に減っていく様子が視覚的に表現されます。
--   **必要なデータ (`DiceInletConditionSO`):**
-    -   `AllowedDiceFaces`: 投入可能な目のリストを持つ `AllowedDiceFacesSO` を参照（通常は全て許可）。
-    -   `InitialCountdownValue`: 発動に必要な合計値。
+-   `DiceInlet` インスタンスの生成と管理。
+-   ダイス投入イベントを受け取り、適切な `DiceInlet` インスタンスに処理を委譲する。
 
 ---
 
-## インレット能力アーキテクチャ
+## 4. 効果発動担当システム
 
-### 設計目標
+ダイスインレットの効果発動は、`BaseInletAbilitySO` を拡張し、イベント駆動の原則に沿ってコマンドを発行することで実現します。
 
-インレットの能力は、それが付属するクリーチャーカードによって動的に決定される。また、カードオブジェクトはプールされ再利用されるため、カードのライフサイクルと能力のライフサイクルを明確に分離し、動的な紐付け替えを可能にする必要がある。同時に、UIシステム（どのインレットを有効化するか）やゲームロジック（能力の発動）など、複数のシステムがインレットの現在の能力（条件と効果）を安全に参照できる仕組みを構築する。
+### 4.1. `BaseInletAbilitySO` の役割
 
-この目標を達成するため、以下の「関心の分離」に基づいたアーキテクチャを採用する。
+-   インレットが発動する具体的な効果ロジックをカプセル化します。
+-   `ExecuteAbility(ICreature targetCreature, int diceValue, SpriteCommandBus commandBus)` 抽象メソッドを実装し、内部で適切なコマンド（例: `BuffApplyCommand`, `ApplyDamageCommand`）を `SpriteCommandBus` を介して発行します。
 
-### 責務の分離（クラスの役割）
+### 4.2. 全体フロー (ダイス投入から効果発動まで)
 
-| クラス名 | 役割 | 種別 | 解説 |
-| :--- | :--- | :--- | :--- |
-| `DiceInletData` | **静的な識別子** | `struct` | インレットViewを一意に識別する`CompositeObjectId`のみを保持する。不変。 |
-| `CreatureCardData` | **能力の所有者** | `class` | 自身の能力として`InletAbilityProfile`のインスタンスを保持する。カード初期化時に生成。 |
-| `InletAbilityProfile` | **能力のパッケージ** | `class` | 「条件(`Condition`)」と「効果(`Ability`)」をペアで保持するデータコンテナ。 |
-| `DiceInletAbilityRegistry` | **現在の担当者名簿** | `ScriptableObject` | どのインレットIDに、現在どの`InletAbilityProfile`が割り当てられているかを動的に記録する。 |
-| `CardLifecycleService` | **ライフサイクル管理** | `ScriptableObject` | カードの生成・初期化・破棄を管理し、`Registry`への能力の登録・解除を行う。 |
-| `UIActivationPolicy` | **判定の利用者** | `ScriptableObject` | `Registry`に問い合わせ、現在の`Condition`に基づいてUIの有効/無効を判断する。 |
-| `(効果発動担当)` | **効果の実行者** | - | ダイス配置成功後、`Registry`に問い合わせ、現在の`Ability`を実行する。 |
-
-### データフロー
-
-#### 1. 能力の登録フロー（カード初期化時）
-
-カードの生成とそれに伴うインレット能力の登録は、戦闘開始時やエネミーのウェーブ開始時に、以下の流れで実行されます。
-
-1.  **`CombatManager`**: 戦闘フローの制御役が、カード生成の起点となります。
-2.  **`PlayerCardDataProvider` / `EnemyCardDataProvider`**: `CombatManager`からの指示を受け、プレイヤーの装備やエネミーのデータに基づき、カード生成に必要な情報を集約したDTO（データ転送オブジェクト）である `CardInitializationData` を作成します。
-3.  **`CombatManager`**: 生成された `CardInitializationData` のリストを受け取ります。
-4.  **`CardLifecycleService`**: `CombatManager` は、リストの各 `CardInitializationData` を引数として `CreateAndInitializeCard` メソッドを呼び出します。このメソッドが、カード生成と能力登録の本体です。
-    a.  オブジェクトプールから `CreatureCardView` のインスタンスを取得します。
-    b.  `CardInitializationData` に含まれる情報（クリーチャーデータや能力プロファイル）を `CreatureCardView` に設定します。
-    c.  `CreatureCardView` が持つ各インレットのIDと、`CardInitializationData` 内の `InletAbilityProfile` を `DiceInletAbilityRegistry` の `Register` メソッドに渡し、紐付けを行います。
-5.  **`CardSlotManager`**: `CardLifecycleService` から返された初期化済みの `CreatureCardView` を受け取り、ボード上の適切なスロットに配置します。
-
-#### 2. 判定・実行フロー（ダイス操作時）
-
-1.  **`Player`**: ダイスをドラッグする。
-2.  **`UIActivationPolicy`**: `ShouldActivateInlet`が各インレットに対して呼び出される。
-    a. **`DiceInletAbilityRegistry`**: `GetProfile(inletId)`で現在の能力プロファイルを取得。
-    b. **`InletAbilityProfile`**: `profile.Condition`にアクセスし、ドラッグ中のダイスで条件を満たすか判定。
-    c. 条件を満たすインレットのみUIが有効化される。
-3.  **`Player`**: 有効化されたインレットにダイスをドロップする。
-4.  **`（効果発動担当システム）`**: ドロップを検知し、配置を確定させる。
-    a. **`DiceInletAbilityRegistry`**: `GetProfile(inletId)`で再度プロファイルを取得。
-    b. **`InletAbilityProfile`**: `profile.Ability.Execute()`を呼び出し、効果を発動する。
+1.  **ダイス投入**: プレイヤーがダイスをインレットにドロップする。
+2.  **イベント発行**: `SpriteInputHandler` が `SpriteDropCommand` を発行し、`DiceInteractionOrchestrator` がこれを受け取る。
+3.  **インレット特定**: `DiceInteractionOrchestrator` は、ドロップされたインレットのIDから `DiceInletManager` を介して対応する `DiceInlet` インスタンスを取得する。
+4.  **能力発動トリガー**: `DiceInteractionOrchestrator` は、取得した `DiceInlet` インスタンスの `OnDiceDropped(diceValue, targetCreature)` メソッドを呼び出す。
+5.  **カウントダウン減少と効果実行**: `DiceInlet.OnDiceDropped()` 内で、条件が満たされていれば、投入された `diceValue` に応じて `CurrentCountdownValue` が減少します。この減少により `CurrentCountdownValue` が0以下になった場合、能力を発動し、カウントダウン値をリセット値 (`ResetCountdownValue`) に戻します。
+6.  **コマンド発行**: `ExecuteAbility` メソッド内で、具体的な効果に応じたコマンド（例: `BuffApplyCommand`, `ApplyDamageCommand`）が `SpriteCommandBus` を介して発行される。
+7.  **コマンド処理**: 各コマンドの購読者（例: `EffectManager`、`CombatManager`）がコマンドを受け取り、それぞれの責務に応じた処理を実行する。
+8.  **カウントダウンリセット**: 能力が発動した場合、`DiceInlet.OnDiceDropped()` 内で `CurrentCountdownValue` がリセット値 (`ResetCountdownValue`) に戻されます。
 
 ---
 
 ## 関連ファイル
 
-- [sys_dice_lifecycle_design.md](./sys_dice_lifecycle_design.md)
-- [gdd_combat_system.md](../gdd/gdd_combat_system.md)
-- [guide_rules.md](../guide/guide_rules.md)
-- [guide_files.md](../guide/guide_files.md)
+-   [gdd_combat_system.md](../../gdd/gdd_combat_system.md)
+-   [sys_effect_management.md](../sys_effect_management.md)
+-   [sys_creature_management.md](../sys_creature_management.md)
+-   [guide_design-principles.md](../../guide/guide_design-principles.md)
+-   [DiceInletData.cs](../../Scripts/Data/DiceInletData.cs)
+-   [DiceInletConditionSO.cs](../../Scripts/Data/DiceInletConditionSO.cs)
+-   [BaseInletAbilitySO.cs](../../Scripts/Data/BaseInletAbilitySO.cs)
+-   [DiceInletManager.cs](../../Scripts/Manager/DiceInletManager.cs)
+-   [ICreature.cs](../../Scripts/Domain/ICreature.cs)
+-   [SpriteCommandBus.cs](../../Scripts/UI/SpriteCommandBus.cs)
 
 ---
 
 ## 更新履歴
 
--   2025-08-14: コードスニペットを削除し、メンテナンス性を向上 (Gemini)
--   2025-08-14: データフローの記述をソースコードと一致するように修正 (Gemini)
--   2025-08-13: インレット能力アーキテクチャの章を追記 (Gemini)
--   2025-08-13: 発動条件をScriptableObject化し、データ構造を更新 (Gemini)
--   2025-08-08: 初版 (Gemini - Technical Writer for Game Development)
+-   2025-08-15: 初版 (Gemini)
+-   2025-08-15: CurrentCountdownValueの保有者と効果発動担当システムの設計を追加 (Gemini)
+-   2025-08-15: 投入されたダイスの目によるカウントダウン値の減少ロジックを明確化 (Gemini)
+-   2025-08-15: 全体フローにおけるカウントダウン処理の記述を修正 (Gemini)
+-   2025-08-15: ターン経過によるカウントダウン減少の記述を削除 (Gemini)
