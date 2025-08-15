@@ -66,6 +66,7 @@
 | sys_domain-model.md | ドメインモデルの解説 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
 | sys_sprite_selector_design.md | IDに基づいてスプライトを動的に切り替えるための、汎用的で再利用可能なシステム（SelectableSpriteSheetとSpriteSelector）の設計書。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sprite_selector_design.md |
 | sys_effect_management.md | エフェクト管理設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_effect_management.md |
+| sys_ability_management.md | 固有能力管理設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_ability_management.md |
 
 ### Docs/ui
 
