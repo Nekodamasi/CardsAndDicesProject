@@ -30,8 +30,8 @@
 ### 2. EffectInstance
 
 - `EffectData` を参照し、カードごとに生成される実行時エフェクトインスタンス  
-- 主なプロパティ  
-  - `cardId`: 対象カード識別子  
+- 主なプロパティ
+  - `cardId`: 対象カード識別子
   - `data`: 参照先の `EffectData`  
   - `remainingTurns`: 残存ターン数  
   - `isExpired`: 有効期限切れフラグ  
@@ -47,8 +47,8 @@
 - バフ／デバフ効果を一元管理する ScriptableObject  
 - 責務  
   - 登録された `EffectInstance` のリスト管理  
-  - `TurnStartEvent`、`TurnEndEvent`、`CooldownResetEvent` の購読  
-  - イベント受信時に `remainingTurns` を更新し、`EffectExpirationCommand` をキューイング  
+  - `TurnStartEvent`、`CooldownResetEvent` の購読  
+  - イベント受信時に `remainingTurns` を更新し、`isExpired` を更新。  
   - `RegisterEffect(effectInstance)` / `RemoveEffect(effectInstance)` の提供  
 
 ---
@@ -56,7 +56,6 @@
 ## イベントフロー
 
 - `TurnStartEvent`: すべての `EffectInstance` の残存ターン数を減少  
-- `TurnEndEvent`: ターン終了後の追加処理  
 - `CooldownResetEvent`: `CooldownCommand` 実行後、ペイロードに `cardId` を含めて発行  
 - カスタムイベント (`EventTrigger`): 任意条件で効果発動または終了  
 
