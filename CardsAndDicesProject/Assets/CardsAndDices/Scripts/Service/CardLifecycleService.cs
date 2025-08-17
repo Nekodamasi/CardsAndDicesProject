@@ -9,7 +9,6 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "CardLifecycleService", menuName = "CardsAndDices/Services/CardLifecycleService")]
     public class CardLifecycleService : ScriptableObject
     {
-        private DiceInletAbilityRegistry _abilityRegistry;
         private CreatureManager _creatureManager;
         private DiceInletManager _diceInletManager;
         private ViewRegistry _viewRegistry;
@@ -55,13 +54,14 @@ namespace CardsAndDices
         /// <param name="cardView">解除するカードのView。</param>
         public void TeardownCard(CreatureCardView cardView)
         {
-            if (cardView == null || cardView.InletView == null)
-            {
-                return;
-            }
+            var cardId = cardView.GetObjectId();
+            _creatureManager.RemoveCreature(cardId);
 
-            var inletId = cardView.InletView.GetObjectId();
-            _abilityRegistry.Unregister(inletId);
+            var inletViews = cardView.GetInletViews();
+            for (int i = 0; i < inletViews.Count; i++)
+            {
+                _diceInletManager.RemoveDiceInlet(inletViews[i].GetObjectId());
+            }
         }
     }
 }

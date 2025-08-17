@@ -10,35 +10,41 @@ namespace CardsAndDices
     public class GameLifetimeScope : LifetimeScope
     {
         [Header("ScriptableObject Managers")]
-        [SerializeField] private UIStateMachine _uiStateMachine;
-        [SerializeField] private SpriteCommandBus _spriteCommandBus;
         [SerializeField] private CardSlotManager _cardSlotManager;
         [SerializeField] private DiceInletManager _diceInletManager;
         [SerializeField] private DiceSlotManager _diceSlotManager;
+        [SerializeField] private CreatureManager _creatureManager;
+        [SerializeField] private EffectManager _effectManager;
+        [SerializeField] private DiceManager _diceManager;
+        [SerializeField] private ViewRegistry _viewRegistry;
+        [SerializeField] private CombatManager _combatManager;
+        [SerializeField] private CardSlotInteractionHandler _cardSlotInteractionHandler;
+        [SerializeField] private DiceSlotInteractionHandler _diceSlotInteractionHandler;
+  
+        [SerializeField] private CompositeObjectIdManager _compositeObjectIdManager;
+        [SerializeField] private UIStateMachine _uiStateMachine;
+        [SerializeField] private SpriteCommandBus _spriteCommandBus;
+
+        [Header("ScriptableObject Repositories")]
         [SerializeField] private CardSlotStateRepository _cardSlotStateRepository;
         [SerializeField] private DiceSlotStateRepository _diceSlotStateRepository;
+        [Header("ScriptableObject Services")]
         [SerializeField] private CardPlacementService _cardPlacementService;
         [SerializeField] private DicePlacementService _dicePlacementService;
         [SerializeField] private ReflowService _reflowService;
-        [SerializeField] private CardSlotInteractionHandler _cardSlotInteractionHandler;
-        [SerializeField] private DiceSlotInteractionHandler _diceSlotInteractionHandler;
-        [SerializeField] private CardSlotDebug _cardSlotDebug;
-        [SerializeField] private CompositeObjectIdManager _compositeObjectIdManager;
+        [SerializeField] private CardLifecycleService _cardLifecycleService;
+        [SerializeField] private EnemyCardDataProvider _enemyCardDataProvider;
+        [SerializeField] private PlayerCardDataProvider _playerCardDataProvider;
+        [Header("ScriptableObject Orchestrators")]
         [SerializeField] private CardInteractionOrchestrator _cardInteractionOrchestrator;
         [SerializeField] private DiceInteractionOrchestrator _diceInteractionOrchestrator;
+        [Header("ScriptableObject InteractionStrategies")]
         [SerializeField] private CardInteractionStrategy _cardInteractionStrategy;
         [SerializeField] private DiceInteractionStrategy _diceInteractionStrategy;
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
-        [SerializeField] private ViewRegistry _viewRegistry;
-        [SerializeField] private CardLifecycleService _cardLifecycleService;
-        [SerializeField] private DiceInletAbilityRegistry _diceInletAbilityRegistry;
-        [SerializeField] private DiceManager _diceManager;
+        [Header("ScriptableObject Systems")]
+        [SerializeField] private CardSlotDebug _cardSlotDebug;
         [SerializeField] private SystemReflowController _systemReflowController;
-        [SerializeField] private CombatManager _combatManager;
-        [SerializeField] private PlayerCardDataProvider _playerCardDataProvider;
-        [SerializeField] private EnemyCardDataProvider _enemyCardDataProvider;
-        [SerializeField] private CreatureManager _creatureManager;
-        [SerializeField] private EffectManager _effectManager;
 
         [Header("Object Pools")]
         [SerializeField] private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
@@ -78,7 +84,6 @@ namespace CardsAndDices
             builder.RegisterInstance(_combatManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_playerCardDataProvider).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_enemyCardDataProvider).AsSelf().AsImplementedInterfaces();
-            builder.RegisterInstance(_creatureManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_effectManager).AsSelf().AsImplementedInterfaces();
 
             // DOTweenの初期化とTween容量の設定
@@ -104,7 +109,6 @@ namespace CardsAndDices
             _systemReflowController.Initialize(_spriteCommandBus, _cardInteractionOrchestrator, _diceInteractionOrchestrator);
             _viewRegistry.Initialize();
             _cardLifecycleService.Initialize(_creatureManager, _diceInletManager, _viewRegistry);
-            _diceInletAbilityRegistry.Clear();
             _diceManager.Initialize(_compositeObjectIdManager, _viewRegistry);
             _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager);
             _playerCardDataProvider.Initialize();

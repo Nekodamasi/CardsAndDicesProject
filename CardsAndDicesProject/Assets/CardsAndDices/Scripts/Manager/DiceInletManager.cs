@@ -61,8 +61,13 @@ namespace CardsAndDices
         /// 指定されたIDのダイスインレットを管理下から削除します。
         /// </summary>
         /// <param name="id">削除するインレットのID</param>
-        public void UnregisterInlet(CompositeObjectId id)
+        public void RemoveDiceInlet(CompositeObjectId id)
         {
+            if (_presenters.TryGetValue(id, out var presenter))
+            {
+                presenter.Dispose();
+                _presenters.Remove(id);
+            }
             _inlets.Remove(id);
         }
     }
