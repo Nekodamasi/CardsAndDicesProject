@@ -30,5 +30,8 @@ namespace CardsAndDices
             // TODO: _viewの表示を_modelの状態に合わせて更新する
             // _view.UpdateCountdownDisplay(_model.CurrentCountdownValue);
         }
+        public void Dispose()
+        {
+        }
     }
 }

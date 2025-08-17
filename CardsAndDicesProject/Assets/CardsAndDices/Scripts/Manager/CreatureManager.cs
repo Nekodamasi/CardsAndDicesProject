@@ -22,9 +22,20 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(ViewRegistry viewRegistry, SpriteCommandBus commandBus, EffectManager effectManager)
         {
+            ClearCollections();
             _creatureFactory = new CreatureFactory(effectManager, commandBus);
             _viewRegistry = viewRegistry;
             _commandBus = commandBus;
+        }
+
+        private void ClearCollections()
+        {
+            _creatures.Clear();
+            foreach (var presenter in _presenters.Values)
+            {
+                presenter.Dispose();
+            }
+            _presenters.Clear();
         }
 
         /// <summary>

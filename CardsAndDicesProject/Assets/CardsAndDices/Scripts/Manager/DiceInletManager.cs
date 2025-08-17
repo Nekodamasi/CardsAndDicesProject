@@ -18,8 +18,18 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(SpriteCommandBus commandBus)
         {
+            ClearCollections();
             _commandBus = commandBus;
             _factory = new DiceInletFactory();
+        }
+        private void ClearCollections()
+        {
+            _inlets.Clear();
+            foreach (var presenter in _presenters.Values)
+            {
+                presenter.Dispose();
+            }
+            _presenters.Clear();
         }
 
         /// <summary>
