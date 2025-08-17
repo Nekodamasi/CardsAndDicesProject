@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// UIからのスロット関連のインタラクションを処理するクラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceSlotInteractionHandler", menuName = "CardsAndDices/Systems/DiceSlotInteractionHandler")]
+    [CreateAssetMenu(fileName = "DiceSlotInteractionHandler", menuName = "CardsAndDices/Managers/DiceSlotInteractionHandler")]
     public class DiceSlotInteractionHandler : ScriptableObject
     {
         [SerializeField] private SpriteCommandBus _commandBus;

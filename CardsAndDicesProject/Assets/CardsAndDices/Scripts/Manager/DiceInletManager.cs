@@ -1,29 +1,52 @@
 using System.Collections.Generic;
-using System.Linq;
+using VContainer;
 using UnityEngine;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "DiceInletManager", menuName = "CardsAndDices/Systems/DiceInletManager")]
+    /// <summary>
+    /// ゲーム内に存在するすべてのDiceInletインスタンスを一元的に管理するクラス。
+    /// </summary>
+    [CreateAssetMenu(fileName = "DiceInletManager", menuName = "CardsAndDices/Managers/DiceInletManager")]
     public class DiceInletManager : ScriptableObject
     {
+        private  DiceInletFactory _factory;
+        private readonly Dictionary<CompositeObjectId, IDiceInlet> _inlets = new Dictionary<CompositeObjectId, IDiceInlet>();
+
+        [Inject]
         public void Initialize()
         {
+            _factory = new DiceInletFactory();
         }
-/*
-        [SerializeField] private List<DiceInletData> _diceInlets = new();
-        private Dictionary<CompositeObjectId, DiceInletData> _diceInletsById;
 
-
-        public DiceInletData GetInlet(CompositeObjectId id)
+        /// <summary>
+        /// 新しいダイスインレットを生成し、管理下に置きます。
+        /// </summary>
+        public IDiceInlet CreateAndRegisterInlet(CompositeObjectId inletId, CompositeObjectId cardId, InletAbilityProfile profile)
         {
-            return _diceInletsById.GetValueOrDefault(id);
+            var inlet = _factory.Create(inletId, cardId, profile);
+            _inlets[inletId] = inlet;
+            return inlet;
         }
 
-        public IEnumerable<DiceInletData> GetAllInlets()
+        /// <summary>
+        /// 指定されたIDのダイスインレットを取得します。
+        /// </summary>
+        /// <param name="id">取得するインレットのID</param>
+        /// <returns>見つかったダイスインレット。見つからない場合はnull。</returns>
+        public IDiceInlet GetInlet(CompositeObjectId id)
         {
-            return _diceInlets.ToList();
+            _inlets.TryGetValue(id, out var inlet);
+            return inlet;
         }
-*/
+
+        /// <summary>
+        /// 指定されたIDのダイスインレットを管理下から削除します。
+        /// </summary>
+        /// <param name="id">削除するインレットのID</param>
+        public void UnregisterInlet(CompositeObjectId id)
+        {
+            _inlets.Remove(id);
+        }
     }
 }

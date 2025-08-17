@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// 特に、戦闘の開始、プレイヤーおよびエネミーカードの生成と配置、ウェーブの管理など、高レベルなゲームロジックを統括します。
     /// ScriptableObjectとして、ゲームロジックの統括に特化します。
     /// </summary>
-    [CreateAssetMenu(fileName = "CombatManager", menuName = "CardsAndDices/Systems/CombatManager")]
+    [CreateAssetMenu(fileName = "CombatManager", menuName = "CardsAndDices/Managers/CombatManager")]
     public class CombatManager : ScriptableObject
     {
         [Inject] private CardLifecycleService _cardLifecycleService;

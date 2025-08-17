@@ -3,52 +3,27 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ダイスインレットの発動条件の種類を定義するenum。
+    /// ダイスをインレットに配置するための条件を定義するScriptableObjectの基底クラス。
     /// </summary>
-    public enum InletActivationType
+    public abstract class DiceInletConditionSO : ScriptableObject
     {
-        SingleMatchTrigger, // 特定の目に一致したら発動
-        TotalSumTrigger     // 目の合計値が条件を満たしたら発動
-    }
+        [Tooltip("インレットの初期カウントダウン値")]
+        [SerializeField] private int _initialCountdownValue = 1;
+        public int InitialCountdownValue => _initialCountdownValue;
 
-    /// <summary>
-    /// ダイスインレットの発動条件を定義するScriptableObject。
-    /// </summary>
-    [CreateAssetMenu(fileName = "DiceInletCondition", menuName = "CardsAndDices/Data/DiceInletConditionSO")]
-    public class DiceInletConditionSO : ScriptableObject
-    {
-        [Tooltip("投入を許可するダイスの目を定義するSOへの参照")]
-        public AllowedDiceFacesSO AllowedDiceFaces;
+        [Tooltip("インレットの初期使用可能回数")]
+        [SerializeField] private int _initialUsageCount = 1;
+        public int InitialUsageCount => _initialUsageCount;
 
-        [Tooltip("発動に必要なカウントダウンの初期値")]
-        public int InitialCountdownValue;
-
-        [Tooltip("発動条件のタイプ")]
-        public InletActivationType ActivationType;
-
-        [Tooltip("発動時にアビリティを抑制するかどうかのフラグ")]
-        public bool SuppressAbilityOnActivation;
+        [Tooltip("使用可能回数がリセットされるタイミング")]
+        [SerializeField] private UsageCountResetType _usageCountResetType;
+        public UsageCountResetType UsageCountResetType => _usageCountResetType;
 
         /// <summary>
-        /// 指定されたダイスがこの条件に受け入れられるかを判断します。
+        /// 指定されたダイスをこのインレットが受け入れ可能か判断します。
         /// </summary>
-        /// <param name="diceData">判定するダイスのデータ。</param>
-        /// <returns>受け入れ可能な場合はtrue、そうでない場合はfalse。</returns>
-        public bool CanAccept(DiceData diceData)
-        {
-            if (AllowedDiceFaces == null || diceData == null)
-            {
-                return false;
-            }
-
-            int faceIndex = diceData.FaceValue - 1;
-
-            if (faceIndex < 0 || faceIndex >= AllowedDiceFaces.IsFaceAllowed.Count)
-            {
-                return false; // 無効な出目
-            }
-
-            return AllowedDiceFaces.IsFaceAllowed[faceIndex];
-        }
+        /// <param name="diceData">投入しようとしているダイスのデータ</param>
+        /// <returns>受け入れ可能な場合はtrue、そうでない場合はfalse</returns>
+        public abstract bool CanAccept(DiceData diceData);
     }
 }

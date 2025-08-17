@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// 全てのダイスの生成、状態管理、リロールなどを一元的に行うマネージャークラス。
     /// ScriptableObjectとして、ダイスのデータ管理に特化します。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceManager", menuName = "CardsAndDices/Systems/DiceManager")]
+    [CreateAssetMenu(fileName = "DiceManager", menuName = "CardsAndDices/Managers/DiceManager")]
     public class DiceManager : ScriptableObject
     {
         private CompositeObjectIdManager _objectIdManager;

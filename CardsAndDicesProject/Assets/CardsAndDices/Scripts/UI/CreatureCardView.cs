@@ -2,7 +2,6 @@ using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using VContainer;
-using CardsAndDices.Scripts.Data;
 using System.Collections.Generic; // 追加
 
 namespace CardsAndDices

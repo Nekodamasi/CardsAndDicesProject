@@ -123,6 +123,11 @@
 | SpriteUnhoverCommand.cs | スプライトのアンホバーコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SpriteUnhoverCommand.cs |
 | SystemDiceReflowCommand.cs | システム起因のダイスリフローを実行するコマンド。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SystemDiceReflowCommand.cs |
 | SystemReflowCommand.cs | システム起因のカードリフローを実行するコマンド。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\SystemReflowCommand.cs |
+| CreatureHealthChangedCommand.cs | クリーチャーの体力変更イベント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureHealthChangedCommand.cs |
+| CreatureShieldChangedCommand.cs | クリーチャーのシールド変更イベント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureShieldChangedCommand.cs |
+| CreatureCooldownChangedCommand.cs | クリーチャーのクールダウン変更イベント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureCooldownChangedCommand.cs |
+| CreatureAttackChangedCommand.cs | クリーチャーの攻撃力変更イベント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureAttackChangedCommand.cs |
+| CreatureEnergyChangedCommand.cs | クリーチャーのエネルギー変更イベント。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureEnergyChangedCommand.cs |
 
 ### Scripts/Core
 
@@ -133,6 +138,7 @@
 | DiceSlotLocation.cs | ダイススロットの位置を表現します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\DiceSlotLocation.cs |
 | IAnimationStrategy.cs | アニメーション戦略のインターフェース。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IAnimationStrategy.cs |
 | ICardDataProvider.cs | カード初期化データを提供するプロバイダーの共通インターフェース。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\ICardDataProvider.cs |
+| ICreature.cs | クリーチャーの実行時インスタンスが実装すべき共通インターフェース。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\ICreature.cs |
 | IdentifiableGameObject.cs | IDを持つゲームオブジェクト。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IdentifiableGameObject.cs |
 | InteractionProfile.cs | インタラクションプロファイル。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\InteractionProfile.cs |
 | IUIInteractionOrchestrator.cs | UIインタラクションオーケストレーターのインターフェース。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IUIInteractionOrchestrator.cs |
@@ -160,6 +166,7 @@
 | CardInitializationData.cs | カード生成に必要な情報（クリーチャーデータ、インレット能力）を集約するデータ転送用クラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CardInitializationData.cs |
 | CardSlotData.cs | カードスロットのデータ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CardSlotData.cs |
 | CreatureData.cs | クリーチャーの基本ステータス（名前、攻撃力、防御力、体力、クールダウン、エネルギー、アビリティ）を定義するデータクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CreatureData.cs |
+| Creature.cs | ICreatureインターフェースの具体的な実装。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\Creature.cs |
 | DiceData.cs | 個々のダイスのデータを定義します。出目、状態、関連するインレット情報などを保持します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceData.cs |
 | DiceSlotData.cs | 個々のダイススロットのデータを定義します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceSlotData.cs |
 
@@ -168,6 +175,7 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | DiceFactory.cs | DiceDataインスタンスの生成ロジックに特化したFactoryクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Factory\DiceFactory.cs |
+| CreatureFactory.cs | ICreatureインスタンスの生成ロジックに特化したFactoryクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Factory\CreatureFactory.cs |
 
 ### Scripts/Installers
 
@@ -182,6 +190,7 @@
 | CardSlotInteractionHandler.cs | カードスロットのインタラクションハンドラ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CardSlotInteractionHandler.cs |
 | CardSlotManager.cs | カードスロットマネージャー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CardSlotManager.cs |
 | CombatManager.cs | 戦闘フェーズ全体の流れを制御するマネージャー。カードの生成、配置、ウェーブ管理、ダイスのロールなどを統括します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CombatManager.cs |
+| CreatureManager.cs | ゲーム内に存在するすべてのICreatureインスタンスを一元的に管理するクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CreatureManager.cs |
 | DiceInletAbilityRegistry.cs | 現在アクティブなインレットの能力プロファイルを一元管理するレジストリ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceInletAbilityRegistry.cs |
 | DiceInletManager.cs | ダイスインレットのロジックと状態を管理します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceInletManager.cs |
 | DiceManager.cs | 全てのダイスのロジックと状態を管理します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceManager.cs |
@@ -201,6 +210,7 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | DicePresenter.cs | DiceDataとDiceViewを紐づけ、状態を同期させる仲介役。UIインタラクションの結果をデータに反映させ、データの変更をViewに伝えます。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Presenter\DicePresenter.cs |
+| CreatureCardPresenter.cs | ICreature (Model) と CreatureCardView (View) の間の仲介役。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Presenter\CreatureCardPresenter.cs |
 
 ### Scripts/Repository
 

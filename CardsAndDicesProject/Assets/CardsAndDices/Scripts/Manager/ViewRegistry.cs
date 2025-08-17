@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// シーン上の全てのBaseSpriteViewインスタンスを管理し、IDによる検索機能を提供するレジストリ。
     /// ScriptableObjectとして実装し、プロジェクト全体で単一のインスタンスを共有する。
     /// </summary>
-    [CreateAssetMenu(fileName = "ViewRegistry", menuName = "CardsAndDices/Systems/ViewRegistry")]
+    [CreateAssetMenu(fileName = "ViewRegistry", menuName = "CardsAndDices/Managers/ViewRegistry")]
     public class ViewRegistry : ScriptableObject
     {
         private readonly Dictionary<CompositeObjectId, BaseSpriteView> _views = new();

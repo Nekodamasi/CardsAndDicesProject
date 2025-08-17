@@ -37,6 +37,8 @@ namespace CardsAndDices
         [SerializeField] private CombatManager _combatManager;
         [SerializeField] private PlayerCardDataProvider _playerCardDataProvider;
         [SerializeField] private EnemyCardDataProvider _enemyCardDataProvider;
+        [SerializeField] private CreatureManager _creatureManager;
+        [SerializeField] private EffectManager _effectManager;
 
         [Header("Object Pools")]
         [SerializeField] private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
@@ -76,6 +78,8 @@ namespace CardsAndDices
             builder.RegisterInstance(_combatManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_playerCardDataProvider).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_enemyCardDataProvider).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_creatureManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_effectManager).AsSelf().AsImplementedInterfaces();
 
             // DOTweenの初期化とTween容量の設定
             DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 100);
@@ -106,6 +110,7 @@ namespace CardsAndDices
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
             _uiActivationPolicy.Initialize(_diceInletAbilityRegistry, _diceManager);
+            _creatureManager.Initialize(_viewRegistry, _spriteCommandBus, _effectManager);
 
             foreach (var cardView in _creatureCardViews)
             {

@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// 現在アクティブなインレットの能力プロファイルを一元管理するレジストリ。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceInletAbilityRegistry", menuName = "CardsAndDices/Systems/DiceInletAbilityRegistry")]
+    [CreateAssetMenu(fileName = "DiceInletAbilityRegistry", menuName = "CardsAndDices/Managers/DiceInletAbilityRegistry")]
     public class DiceInletAbilityRegistry : ScriptableObject
     {
         private readonly Dictionary<CompositeObjectId, InletAbilityProfile> _activeProfiles = new();
@@ -18,7 +18,6 @@ namespace CardsAndDices
         /// <param name="profile">登録する能力プロファイル。</param>
         public void Register(CompositeObjectId inletId, InletAbilityProfile profile)
         {
-            Debug.Log("<color=Green>Register:</color>" + inletId + "__" + profile.Condition.ActivationType);
             _activeProfiles[inletId] = profile;
         }
 
@@ -38,9 +37,7 @@ namespace CardsAndDices
         /// <returns>対応する能力プロファイル。登録されていない場合はnull。</returns>
         public InletAbilityProfile GetProfile(CompositeObjectId inletId)
         {
-            Debug.Log("<color=Green>GetProfile:</color>" + inletId);
             _activeProfiles.TryGetValue(inletId, out var profile);
-            Debug.Log("<color=Green>GetProfile:</color>" + inletId + "__" + profile.Condition.ActivationType);
             return profile;
         }
 

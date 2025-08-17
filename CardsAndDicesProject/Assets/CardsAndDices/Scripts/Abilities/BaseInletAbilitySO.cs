@@ -8,9 +8,10 @@ namespace CardsAndDices
     public abstract class BaseInletAbilitySO : ScriptableObject
     {
         /// <summary>
-        /// 効果を実行します。
+        /// インレットの能力を実行します。
         /// </summary>
-        /// <param name="placedDice">効果発動のトリガーとなったダイスのデータ。</param>
-        public abstract void Execute(DiceData placedDice);
+        /// <param name="targetCreature">能力の対象となるクリーチャー</param>
+        /// <param name="placedDice">投入されたダイスのデータ</param>
+        public abstract void ExecuteAbility(ICreature targetCreature, DiceData placedDice);
     }
 }
