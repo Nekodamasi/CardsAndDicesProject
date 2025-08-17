@@ -10,12 +10,15 @@ namespace CardsAndDices
     public class CardLifecycleService : ScriptableObject
     {
         private DiceInletAbilityRegistry _abilityRegistry;
+        private CreatureManager _creatureManager;
+        private DiceInletManager _diceInletManager;
         private ViewRegistry _viewRegistry;
 
         [Inject]
-        public void Initialize(DiceInletAbilityRegistry abilityRegistry, ViewRegistry viewRegistry)
+        public void Initialize(CreatureManager creatureManager, DiceInletManager diceInletManager, ViewRegistry viewRegistry)
         {
-            _abilityRegistry = abilityRegistry;
+            _creatureManager = creatureManager;
+            _diceInletManager = diceInletManager;
             _viewRegistry = viewRegistry;
         }
 
@@ -26,8 +29,8 @@ namespace CardsAndDices
         /// <param name="initData">カード生成に必要な情報。</param>
         public void InitializeCard(CreatureCardView cardView, CardInitializationData initData)
         {
-            // Viewにクリーチャーデータを設定
-            cardView.ApplyData(initData.CreatureData);
+            // クリーチャーのスポーン
+            _creatureManager.SpawnCreature(initData.CreatureData, cardView);
             cardView.SetSpawnedState(true);
 
             // インレット能力をRegistryに登録
@@ -40,10 +43,9 @@ namespace CardsAndDices
 
             for (int i = 0; i < inletViews.Count; i++)
             {
-                var inletId = inletViews[i].GetObjectId();
                 inletViews[i].SetSpawnedState(true);
                 var profile = initData.InletAbilityProfiles[i];
-                _abilityRegistry.Register(inletId, profile);
+                _diceInletManager.CreateAndRegisterInlet(inletViews[i], cardView.GetObjectId(), profile);
             }
         }
 

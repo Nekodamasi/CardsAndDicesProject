@@ -3,10 +3,14 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ダイスをインレットに配置するための条件を定義するScriptableObjectの基底クラス。
+    /// ダイスをインレットに配置するための条件を定義するScriptableObjectクラス。
     /// </summary>
-    public abstract class DiceInletConditionSO : ScriptableObject
+    [CreateAssetMenu(fileName = "DiceInletCondition", menuName = "CardsAndDices/Data/DiceInletConditionSO")]
+    public class DiceInletConditionSO : ScriptableObject
     {
+        [Tooltip("投入可能なダイスの目")]
+        [SerializeField] private AllowedDiceFacesSO _allowedDiceFaces;
+
         [Tooltip("インレットの初期カウントダウン値")]
         [SerializeField] private int _initialCountdownValue = 1;
         public int InitialCountdownValue => _initialCountdownValue;
@@ -24,6 +28,9 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="diceData">投入しようとしているダイスのデータ</param>
         /// <returns>受け入れ可能な場合はtrue、そうでない場合はfalse</returns>
-        public abstract bool CanAccept(DiceData diceData);
+        public bool CanAccept(DiceData diceData)
+        {
+            return _allowedDiceFaces.IsFaceAllowed[diceData.FaceValue - 1];
+        }
     }
 }

@@ -19,6 +19,8 @@ namespace CardsAndDices
         [Inject] private ViewRegistry _viewRegistry;
         [Inject] private DiceManager _diceManager;
         [Inject] private DiceFactory _diceFactory;
+        [Inject] private CreatureManager _creatureManager;
+        [Inject] private DiceInletManager _diceInletManager;
 
         private readonly List<DicePresenter> _dicePresenters = new();
 
@@ -28,7 +30,7 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(CardLifecycleService cardLifecycleService, CardSlotManager cardSlotManager,
                                PlayerCardDataProvider playerCardDataProvider, EnemyCardDataProvider enemyCardDataProvider,
-                               ViewRegistry viewRegistry, DiceManager diceManager)
+                               ViewRegistry viewRegistry, DiceManager diceManager, CreatureManager creatureManager, DiceInletManager diceInletManager)
         {
             _cardLifecycleService = cardLifecycleService;
             _cardSlotManager = cardSlotManager;
@@ -36,6 +38,8 @@ namespace CardsAndDices
             _enemyCardDataProvider = enemyCardDataProvider;
             _viewRegistry = viewRegistry;
             _diceManager = diceManager;
+            _creatureManager = creatureManager;
+            _diceInletManager = diceInletManager;
             _diceFactory = new DiceFactory();
         }
 

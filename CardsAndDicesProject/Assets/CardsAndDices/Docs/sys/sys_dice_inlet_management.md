@@ -24,6 +24,8 @@
 ### 2. `DiceInletConditionSO` (ScriptableObject)
 
 - **役割**: ダイス投入時の発動条件を定義します。
+- **主なフィールド**:
+    - `AllowedDiceFacesSO AllowedDiceFaces`: 投入許可されたダイスの目（１～６）。
 - **主なメソッド**:
     - `bool CanAccept(DiceData diceData)`: 投入されたダイスの値が条件を満たすかチェックします。
 

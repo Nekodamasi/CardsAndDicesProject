@@ -11,21 +11,28 @@ namespace CardsAndDices
     public class DiceInletManager : ScriptableObject
     {
         private  DiceInletFactory _factory;
+        private SpriteCommandBus _commandBus;
         private readonly Dictionary<CompositeObjectId, IDiceInlet> _inlets = new Dictionary<CompositeObjectId, IDiceInlet>();
+        private readonly Dictionary<CompositeObjectId, DiceInletPresenter> _presenters = new();
 
         [Inject]
-        public void Initialize()
+        public void Initialize(SpriteCommandBus commandBus)
         {
+            _commandBus = commandBus;
             _factory = new DiceInletFactory();
         }
 
         /// <summary>
         /// 新しいダイスインレットを生成し、管理下に置きます。
         /// </summary>
-        public IDiceInlet CreateAndRegisterInlet(CompositeObjectId inletId, CompositeObjectId cardId, InletAbilityProfile profile)
+        public IDiceInlet CreateAndRegisterInlet(DiceInletView view, CompositeObjectId cardId, InletAbilityProfile profile)
         {
+            var inletId = view.GetObjectId();
             var inlet = _factory.Create(inletId, cardId, profile);
             _inlets[inletId] = inlet;
+            var presenter = new DiceInletPresenter(inlet, view, _commandBus);
+            _presenters.Add(inletId, presenter);
+
             return inlet;
         }
 

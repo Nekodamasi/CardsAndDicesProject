@@ -32,29 +32,22 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="id">The ID for the new creature.</param>
         /// <param name="baseData">The base data for the creature.</param>
-        /// <param name="viewId">The ID of the view component for this creature.</param>
+        /// <param name="view">The ID of the view component for this creature.</param>
         /// <returns>The newly created creature instance.</returns>
-        public ICreature SpawnCreature(CompositeObjectId id, CreatureData baseData, CompositeObjectId viewId)
+        public ICreature SpawnCreature(CreatureData baseData, CreatureCardView view)
         {
-            if (_creatures.ContainsKey(id))
+            CompositeObjectId viewId = view.GetObjectId();
+            if (_creatures.ContainsKey(viewId))
             {
-                // Handle error: creature with this ID already exists
+                Debug.LogError("Handle error: creature with this ID already exists");
                 return null;
             }
 
-            ICreature newCreature = _creatureFactory.Create(id, baseData);
-            _creatures.Add(id, newCreature);
+            ICreature newCreature = _creatureFactory.Create(viewId, baseData);
+            _creatures.Add(viewId, newCreature);
 
-            var view = _viewRegistry.GetView<CreatureCardView>(viewId);
-            if (view != null)
-            {
-                var presenter = new CreatureCardPresenter(newCreature, view, _commandBus);
-                _presenters.Add(id, presenter);
-            }
-            else
-            {
-                // Handle error: view not found
-            }
+            var presenter = new CreatureCardPresenter(newCreature, view, _commandBus);
+            _presenters.Add(viewId, presenter);
 
             return newCreature;
         }
