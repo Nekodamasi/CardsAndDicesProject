@@ -8,9 +8,9 @@
 
 ---
 
-## 1. クラスおよびコンポーネント設計
+## クラスおよびコンポーネント設計
 
-### 1.1. データ定義 (Model - ScriptableObject)
+### 1. データ定義 (Model - ScriptableObject)
 
 -   **`BaseAbilityDataSO` (ScriptableObject)**:
     -   全ての固有能力の定義データが継承する抽象基底クラス。
@@ -30,7 +30,7 @@
     -   プロパティ: `int InitialValue`, `int ResetValue` など。
     -   メソッド: `void OnEvent(AbilityInstance instance, ICommand command)`: イベントに応じた寿命管理ロジック。
 
-### 1.2. ランタイムインスタンス (Model - Pure C# Class)
+### 2. ランタイムインスタンス (Model - Pure C# Class)
 
 -   **`AbilityInstance`**:
     -   ゲーム中に存在する固有能力のランタイムインスタンス。
@@ -38,7 +38,7 @@
     -   責務: 自身の状態（クールダウン、使用回数、抑止状態）を管理。
     -   イベント発行: 状態変化時に`SpriteCommandBus`を介してイベントを発行（例: `AbilityCooldownChangedCommand`）。
 
-### 1.3. 管理クラス (Controller)
+### 3. 管理クラス (Controller)
 
 -   **`AbilityManager`**:
     -   全ての`AbilityInstance`を一元的に管理するクラス。
@@ -54,17 +54,9 @@
     -   `ICreature`に紐づく`BaseAbilityDataSO`から`AbilityInstance`を生成し、`AbilityManager`に登録。
     -   `ICreature`のライフサイクルイベント（死亡など）に応じて、関連する`AbilityInstance`を`AbilityManager`から削除。
 
-### 1.4. UI連携 (View/Presenter)
-
--   **`AbilityView` (MonoBehaviour)**:
-    -   固有能力のUI表示を担当。アイコン、クールダウン表示、使用回数表示など。
--   **`AbilityPresenter`**:
-    -   `AbilityInstance` (Model) と `AbilityView` (View) の間の仲介役。
-    -   `AbilityInstance`の状態変化イベントを購読し、`AbilityView`の表示を更新。
-
 ---
 
-## 2. データ構造
+## データ構造
 
 固有能力のデータは、ScriptableObjectとして定義します。これにより、Unityエディタ上での管理と、デザイナーによる柔軟な調整が可能になります。
 
@@ -123,15 +115,15 @@ public abstract class AbilityDurationSO : ScriptableObject
 
 ---
 
-## 3. 主要な処理フロー
+## 主要な処理フロー
 
-### 3.1. 固有能力の初期化と登録
+### 1. 固有能力の初期化と登録
 
 1.  `CreatureManager`が`ICreature`を生成する際、`CreatureAbilityBinder`を介して`ICreature`に紐づく`BaseAbilityDataSO`のリストを取得。
 2.  `CreatureAbilityBinder`は各`BaseAbilityDataSO`から`AbilityInstance`を生成し、`AbilityManager.RegisterAbility(abilityInstance)`を呼び出して登録。
 3.  `AbilityInstance`は自身の`CompositeObjectId`を`CompositeObjectIdManager`から取得し、`Owner`を`ICreature`の`CompositeObjectId`に設定。
 
-### 3.2. 固有能力の発動
+### 2. 固有能力の発動
 
 1.  ゲーム内で特定のイベント（例: クリーチャーが攻撃された、ターンが終了した）が発生。
 2.  イベントに対応するコマンド（例: `CreatureAttackedCommand`, `TurnEndCommand`）が`SpriteCommandBus`を介して発行される。
@@ -142,7 +134,7 @@ public abstract class AbilityDurationSO : ScriptableObject
 7.  `AbilityEffectDefinitionSO.Execute()`内で、具体的な効果に応じたコマンド（例: `ApplyDamageCommand`, `BuffApplyCommand`）が`SpriteCommandBus`を介して発行される。
 8.  能力が発動した場合、`AbilityManager`は`AbilityInstance.Data.Duration.OnEvent(abilityInstance, command)`を呼び出し、クールダウンや使用回数制限の更新ロジックを実行。
 
-### 3.3. 固有能力の寿命管理（クールダウン、使用回数制限）
+### 3. 固有能力の寿命管理（クールダウン、使用回数制限）
 
 1.  `AbilityManager`は`TurnStartCommand`や`TurnEndCommand`などの時間経過を示すコマンドを購読。
 2.  これらのコマンドを受信した際、`AbilityManager`は登録されている全ての`AbilityInstance`の`AbilityDurationSO.OnEvent(abilityInstance, command)`を呼び出す。
@@ -152,15 +144,15 @@ public abstract class AbilityDurationSO : ScriptableObject
 
 ---
 
-## 4. 既存システムとの連携
+## 既存システムとの連携
 
-### 4.1. クリーチャーシステム
+### 1. クリーチャーシステム
 
 -   **能力の付与**: `ICreature`のデータ（`CreatureData`）に`BaseAbilityDataSO`のリストを持たせることで、クリーチャーごとに固有能力を定義します。
 -   **ランタイム管理**: `CreatureManager`が`ICreature`を生成する際に、`CreatureAbilityBinder`を介して対応する`AbilityInstance`を生成し、`AbilityManager`に登録します。
 -   **ターゲット指定**: 固有能力のターゲットがクリーチャーである場合、`CompositeObjectId`を使用して`ICreature`を特定します。
 
-### 4.2. エフェクトシステム
+### 2. エフェクトシステム
 
 -   **効果の適用**: 固有能力の効果がステータス変更やバフ/デバフである場合、`AbilityEffectDefinitionSO.Execute()`内で`BuffApplyCommand`や`DebuffApplyCommand`を発行し、`EffectManager`を介して処理されます。
 -   **基礎攻撃の変更**: `gdd_combat_system.md`で言及されている基礎攻撃の`使用能力値`や`効果範囲`を変更する固有能力は、特殊な`EffectData`タイプを定義し、それが`ICreature`に適用されることで基礎攻撃のプロパティが一時的に変更されるように実装します。これにより、`EffectManager`の寿命管理の仕組みを再利用できます。
