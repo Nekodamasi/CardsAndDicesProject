@@ -62,8 +62,7 @@ namespace CardsAndDices
                 }
                 _cardLifecycleService.InitializeCard(cardView, initData); // 既存のViewを初期化
 
-                // TODO: 適切な空きスロットを探すロジックを実装する
-                // 現状は仮でGetNextEmptyHandSlot()を使用するが、これはハンドスロット専用
+                // 空いているハンドスロットを取得し、カードを配置する
                 CardSlotData targetSlot = _cardSlotManager.GetNextEmptyHandSlot();
                 if (targetSlot != null)
                 {

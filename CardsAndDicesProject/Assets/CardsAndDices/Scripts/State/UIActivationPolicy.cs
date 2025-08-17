@@ -3,16 +3,16 @@ using VContainer;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "UIActivationPolicy", menuName = "CardsAndDices/Systems/UIActivationPolicy")]
+    [CreateAssetMenu(fileName = "UIActivationPolicy", menuName = "CardsAndDices/States/UIActivationPolicy")]
     public class UIActivationPolicy : ScriptableObject
     {
-        private DiceInletAbilityRegistry _diceInletAbilityRegistry;
+        private DiceInletManager _diceInletManager;
         private DiceManager _diceManager;
 
         [Inject]
-        public void Initialize(DiceInletAbilityRegistry diceInletAbilityRegistry, DiceManager diceManager)
+        public void Initialize(DiceInletManager diceInletManager, DiceManager diceManager)
         {
-            _diceInletAbilityRegistry = diceInletAbilityRegistry;
+            _diceInletManager = diceInletManager;
             _diceManager = diceManager;
         }
 
@@ -62,9 +62,9 @@ namespace CardsAndDices
             orchestrator.ViewRegistry.DebugInletView();
             foreach (var inletView in orchestrator.ViewRegistry.GetAllInletViews())
             {
-                var profile = _diceInletAbilityRegistry.GetProfile(inletView.GetObjectId());
+                var diceInlet = _diceInletManager.GetInlet(inletView.GetObjectId());
                 Debug.Log("<color=red>DraggingDiceToInletActivations3:</color>");
-                if (profile?.Condition != null && profile.Condition.CanAccept(draggedDice))
+                if (diceInlet.CanAccept(draggedDice))
                 {
                     Debug.Log("<color=red>インレットActiveです</color>");
                     inletView.EnterAcceptableState();

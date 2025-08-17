@@ -109,7 +109,7 @@ namespace CardsAndDices
             _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager);
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
-            _uiActivationPolicy.Initialize(_diceInletAbilityRegistry, _diceManager);
+            _uiActivationPolicy.Initialize(_diceInletManager, _diceManager);
             _creatureManager.Initialize(_viewRegistry, _spriteCommandBus, _effectManager);
 
             foreach (var cardView in _creatureCardViews)

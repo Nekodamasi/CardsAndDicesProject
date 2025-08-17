@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// カードの生成、初期化、破棄など、ライフサイクル全般を管理するサービス。
     /// </summary>
-    [CreateAssetMenu(fileName = "CardLifecycleService", menuName = "CardsAndDices/Systems/CardLifecycleService")]
+    [CreateAssetMenu(fileName = "CardLifecycleService", menuName = "CardsAndDices/Services/CardLifecycleService")]
     public class CardLifecycleService : ScriptableObject
     {
         private DiceInletAbilityRegistry _abilityRegistry;

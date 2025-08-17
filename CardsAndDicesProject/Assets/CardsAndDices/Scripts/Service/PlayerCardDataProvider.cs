@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// プレイヤーの現在の状態（装備、キャラクターデータなど）から、
     /// カード生成システムが利用するCardInitializationDataを生成する責務を負います。
     /// </summary>
-    [CreateAssetMenu(fileName = "PlayerCardDataProvider", menuName = "CardsAndDices/DataProviders/PlayerCardDataProvider")]
+    [CreateAssetMenu(fileName = "PlayerCardDataProvider", menuName = "CardsAndDices/Services/PlayerCardDataProvider")]
     public class PlayerCardDataProvider : ScriptableObject, ICardDataProvider
     {
         [Inject]

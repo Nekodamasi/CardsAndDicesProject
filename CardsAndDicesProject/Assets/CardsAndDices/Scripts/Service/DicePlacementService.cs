@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// カードの配置ロジックを担当するサービスクラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "DicePlacementService", menuName = "CardsAndDices/Systems/DicePlacementService")]
+    [CreateAssetMenu(fileName = "DicePlacementService", menuName = "CardsAndDices/Services/DicePlacementService")]
     public class DicePlacementService : ScriptableObject
     {
         [SerializeField] private DiceSlotStateRepository _repository;

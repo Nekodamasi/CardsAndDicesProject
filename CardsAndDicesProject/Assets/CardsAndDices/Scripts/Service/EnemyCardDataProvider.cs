@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// エネミーのデータ（マスターデータ、ウェーブ情報、難易度設定など）から、
     /// カード生成システムが利用するCardInitializationDataを生成する責務を負います。
     /// </summary>
-    [CreateAssetMenu(fileName = "EnemyCardDataProvider", menuName = "CardsAndDices/DataProviders/EnemyCardDataProvider")]
+    [CreateAssetMenu(fileName = "EnemyCardDataProvider", menuName = "CardsAndDices/Services/EnemyCardDataProvider")]
     public class EnemyCardDataProvider : ScriptableObject, ICardDataProvider
     {
         [Inject]

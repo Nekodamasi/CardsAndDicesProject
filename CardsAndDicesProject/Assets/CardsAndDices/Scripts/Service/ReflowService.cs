@@ -11,7 +11,7 @@ namespace CardsAndDices
     /// このクラスは状態を持たず、現在のスロット状態とユーザー操作を基に、
     /// 「どのカードがどこへ移動すべきか」という結果だけを返します。
     /// </summary>
-    [CreateAssetMenu(fileName = "ReflowService", menuName = "CardsAndDices/Systems/ReflowService")]
+    [CreateAssetMenu(fileName = "ReflowService", menuName = "CardsAndDices/Services/ReflowService")]
     public class ReflowService : ScriptableObject
     {
         [SerializeField] private CardSlotStateRepository _repository;

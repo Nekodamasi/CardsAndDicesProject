@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// <summary>
     /// 全てのカードスロットの状態を管理するリポジトリクラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceSlotStateRepository", menuName = "CardsAndDices/Systems/DiceSlotStateRepository")]
+    [CreateAssetMenu(fileName = "DiceSlotStateRepository", menuName = "CardsAndDices/Repositories/DiceSlotStateRepository")]
     public class DiceSlotStateRepository : ScriptableObject
     {
         private readonly Dictionary<CompositeObjectId, DiceSlotData> _slotDataMap = new();

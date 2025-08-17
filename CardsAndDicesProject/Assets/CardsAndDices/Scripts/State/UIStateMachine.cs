@@ -8,7 +8,7 @@ namespace CardsAndDices
 	/// カードやダイスのドラッグ状態などを一元的に管理し、UIの競合を防ぎます。
 	/// 設計書「gdd_combat_system_mockup.md」に基づき、ScriptableObjectとして機能します。
 	/// </summary>
-	[CreateAssetMenu(fileName = "UIStateMachine", menuName = "CardsAndDices/UI State Machine")]
+	[CreateAssetMenu(fileName = "UIStateMachine", menuName = "CardsAndDices/States/UIStateMachine")]
 	public class UIStateMachine : ScriptableObject
 	{
 		/// <summary>
