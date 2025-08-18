@@ -5,7 +5,6 @@ namespace CardsAndDices
     /// <summary>
     /// SelectableSpriteSheetのデータに基づき、IDを指定してSpriteRendererの表示を切り替える汎用コンポーネント。
     /// </summary>
-    [RequireComponent(typeof(SpriteRenderer))]
     public class SpriteSelector : MonoBehaviour
     {
         [Header("Data Source")]

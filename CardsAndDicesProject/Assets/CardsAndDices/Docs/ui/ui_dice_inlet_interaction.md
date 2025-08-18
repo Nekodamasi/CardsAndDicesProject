@@ -22,7 +22,7 @@
 - **`DiceInteractionOrchestrator.cs`**: ダイス関連のUIインタラクション全体の司令塔。ダイスのドラッグ開始・終了といったイベントを検知し、関連クラスに処理を委譲します。
 - **`UIActivationPolicy.cs`**: UIの状態に応じて、各インレットのインタラクション可否（Acceptable/Inactive）を決定するポリシークラス。
 - **`DiceInteractionStrategy.cs`**: ダイス関連の操作（ドラッグ開始など）が、現在の状況で実行可能かを判断する戦略クラス。
-- **`DiceInletAbilityRegistry.cs`**: どのインレットに、現在どの能力（条件と効果）が割り当てられているかを動的に記録するレジストリ。`UIActivationPolicy` はこの情報を参照して受け入れ可否を判断します。
+- **`DiceInletManager.cs`**: ゲーム内に存在するすべての `DiceInlet` インスタンスを一元的に管理するクラスです。`UIActivationPolicy` はこの情報を参照して受け入れ可否を判断します。
 - **`InletAbilityProfile.cs`**: インレットの「発動条件」と「効果」をセットで保持するデータコンテナ。
 - **`DiceInletConditionSO.cs`**: インレットの具体的な発動条件（例: 偶数の目のみ許可）を定義する `ScriptableObject`。
 - **アニメーションScriptableObject**: `_acceptableAnimation`, `_dropWaitingAnimation` など、各状態に対応するアニメーションアセット。
@@ -39,8 +39,8 @@
     2. 有効な場合、`UIStateMachine` の状態を `DraggingDice` に遷移させます。
     3. `DiceInteractionOrchestrator` は `UIActivationPolicy.DraggingDiceToInletActivations()` を呼び出します。
     4. `UIActivationPolicy` は、`ViewRegistry` から全ての `DiceInletView` を取得します。
-    5. 各インレットについて、`DiceInletAbilityRegistry` を参照して現在の能力プロファイル (`InletAbilityProfile`) を取得します。
-    6. プロファイル内の発動条件 (`Condition`) を用いて、ドラッグ中のダイスを受け入れ可能か判断します。
+    5. 各インレットについて、`DiceInletManager` を参照してダイスインレットインスタンス (`DiceInlet`) を取得します。
+    6. 発動条件 `DiceInlet` の `CanAccept` を用いて、ドラッグ中のダイスを受け入れ可能か判断します。
     7. 受け入れ可能なインレットは `EnterAcceptableState()` を、不可なインレットは `EnterInactiveState()` を呼び出し、状態を遷移させます。
 
 ### 2. ダイスドラッグ中のホバー時
@@ -51,13 +51,12 @@
     2. `DiceInteractionOrchestrator` はコマンドを受信し、`DiceInletView` の `EnterHoveringState()` を呼び出します。
     3. `DiceInletView` は、ドロップを待っていることを示すアニメーション (`_dropWaitingAnimation`) を再生します。
 
-### 3. 能力発動のタイミング
+### 3. ダイスドロップ後の処理
 
-- **トリガー**: プレイヤーがダイスを有効なダイススロット (`DiceSlotView`) にドロップし、一連の配置処理が完了したタイミング。
+- **トリガー**: プレイヤーがダイスインレット(`DiceInletView`) にダイスをドロップしたタイミング。
 - **処理の流れ**:
-    - ダイスインレットは、ダイスの**直接のドロップターゲットではありません**。
-    - ダイスがスロットに配置されると、`DiceSlotManager` などのシステムがその結果を処理します。
-    - その後、配置されたカードに紐づくインレットの能力が、`DiceInletAbilityRegistry` を介して参照され、適切なタイミングで発動されます。能力発動の具体的なロジックは、カードやアビリティ側の責務となります。
+    - `sys_dice_inlet_management.md`の「全体フロー (ダイス投入から効果発動まで)」を参照の事
+    - 一連の効果発動処理が終了した後、「ドラッグ終了時」の処理を行う。
 
 ### 4. ドラッグ終了時
 
@@ -81,7 +80,7 @@
 
 ## 関連ファイル
 
-- [sys_dice_inlet_design.md](../sys/sys_dice_inlet_design.md)
+- [sys_dice_inlet_management.md](../sys/sys_dice_inlet_management.md)
 - [guide_ui_interaction_design.md](../guide/guide_ui_interaction_design.md)
 
 ---

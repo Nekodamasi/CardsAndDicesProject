@@ -19,7 +19,7 @@ namespace CardsAndDices
 
         [Header("Components")]
         [SerializeField]
-        private SpriteSelector _faceSpriteSelector; // ここにフィールドを追加
+        private SpriteSelector _faceSpriteSelector;
 
         [Header("Dice Specific Settings")]
         [SerializeField] public string _diceName;

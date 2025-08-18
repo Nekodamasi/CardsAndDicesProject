@@ -8,6 +8,18 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "DiceInletCondition", menuName = "CardsAndDices/Data/DiceInletConditionSO")]
     public class DiceInletConditionSO : ScriptableObject
     {
+        [Tooltip("インレット発動条件ID")]
+        [SerializeField] private string _diceInletConditionId;
+        public string DiceInletConditionId => _diceInletConditionId;
+
+        [Tooltip("インレット発動条件表示用ID")]
+        [SerializeField] private string _diceInletConditionDisplayId;
+        public string DiceInletConditionDisplayId => _diceInletConditionDisplayId;
+
+        [Tooltip("インレット発動ビュータイプ")]
+        [SerializeField] private InletActivationViewType _inletActivationViewType;
+        public InletActivationViewType InletActivationViewType => _inletActivationViewType;
+
         [Tooltip("投入可能なダイスの目")]
         [SerializeField] private AllowedDiceFacesSO _allowedDiceFaces;
 

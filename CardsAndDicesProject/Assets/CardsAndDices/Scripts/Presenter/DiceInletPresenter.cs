@@ -20,9 +20,9 @@ namespace CardsAndDices
 
             // TODO: モデルのイベントを購読し、Viewを更新する
             // _model.OnCountdownChanged += UpdateView;
-            
+
             // 初期表示を更新
-            UpdateView();
+            _view.InitializeDisplay(_model.Condition);
         }
 
         private void UpdateView()

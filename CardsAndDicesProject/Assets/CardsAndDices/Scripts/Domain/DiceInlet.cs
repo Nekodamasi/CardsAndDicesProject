@@ -10,6 +10,7 @@ namespace CardsAndDices
         public int CurrentCountdownValue { get; private set; }
         public int CurrentUsageCount { get; private set; }
 
+        public DiceInletConditionSO Condition => _profile.Condition;
         private readonly InletAbilityProfile _profile;
 
         public DiceInlet(CompositeObjectId id, CompositeObjectId cardId, InletAbilityProfile profile)

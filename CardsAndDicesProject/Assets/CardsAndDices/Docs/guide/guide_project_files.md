@@ -191,7 +191,6 @@
 | CardSlotManager.cs | カードスロットマネージャー。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CardSlotManager.cs |
 | CombatManager.cs | 戦闘フェーズ全体の流れを制御するマネージャー。カードの生成、配置、ウェーブ管理、ダイスのロールなどを統括します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CombatManager.cs |
 | CreatureManager.cs | ゲーム内に存在するすべてのICreatureインスタンスを一元的に管理するクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CreatureManager.cs |
-| DiceInletAbilityRegistry.cs | 現在アクティブなインレットの能力プロファイルを一元管理するレジストリ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceInletAbilityRegistry.cs |
 | DiceInletManager.cs | ダイスインレットのロジックと状態を管理します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceInletManager.cs |
 | DiceManager.cs | 全てのダイスのロジックと状態を管理します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceManager.cs |
 | DiceSlotInteractionHandler.cs | ダイススロットのインタラクションハンドラ。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceSlotInteractionHandler.cs |

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Cysharp.Threading.Tasks;
 using VContainer;
+using TMPro;
 
 namespace CardsAndDices
 {
@@ -16,6 +17,9 @@ namespace CardsAndDices
             this._orchestrator = orchestrator;
         }
 
+        [Header("Components")]
+        [SerializeField] private SpriteSelector _faceSpriteSelector;
+        [SerializeField] private TextMeshProUGUI _countdown;
         [Header("Animations")]
         [SerializeField] private BaseAnimationSO _acceptableAnimation;
         [SerializeField] private BaseAnimationSO _dropWaitingAnimation;
@@ -24,6 +28,23 @@ namespace CardsAndDices
         {
             base.Awake();
             SetSpawnedState(false);
+        }
+
+        /// <summary>
+        /// ダイスインレットの見た目を初期化します
+        /// </summary>
+        public void InitializeDisplay(DiceInletConditionSO diceInletCondition)
+        {
+            if (diceInletCondition.InletActivationViewType == InletActivationViewType.SingleMatchTrigger)
+            {
+                _countdown.enabled = true;
+                _countdown.SetText(diceInletCondition.InitialCountdownValue.ToString());
+            }
+            else
+            {
+                _countdown.enabled = false;
+            }
+            _faceSpriteSelector.SelectSprite(diceInletCondition.DiceInletConditionDisplayId);
         }
 
         /// <summary>

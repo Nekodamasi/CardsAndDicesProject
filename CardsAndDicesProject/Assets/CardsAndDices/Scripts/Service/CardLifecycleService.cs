@@ -43,6 +43,7 @@ namespace CardsAndDices
             for (int i = 0; i < inletViews.Count; i++)
             {
                 inletViews[i].SetSpawnedState(true);
+                inletViews[i].SetDisplayActive(true);
                 var profile = initData.InletAbilityProfiles[i];
                 _diceInletManager.CreateAndRegisterInlet(inletViews[i], cardView.GetObjectId(), profile);
             }

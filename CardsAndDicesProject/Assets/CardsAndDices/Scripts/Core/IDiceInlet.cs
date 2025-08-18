@@ -25,6 +25,8 @@ namespace CardsAndDices
         /// </summary>
         int CurrentUsageCount { get; }
 
+        DiceInletConditionSO Condition { get; }
+
         /// <summary>
         /// ダイスがインレットに投入された際の処理。
         /// </summary>
