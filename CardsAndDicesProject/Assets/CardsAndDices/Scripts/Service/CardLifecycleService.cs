@@ -46,6 +46,7 @@ namespace CardsAndDices
                 inletViews[i].SetDisplayActive(true);
                 var profile = initData.InletAbilityProfiles[i];
                 _diceInletManager.CreateAndRegisterInlet(inletViews[i], cardView.GetObjectId(), profile);
+                Debug.Log("<color=red>いんれっと；</color>" + cardView._cardName + "_" + profile.Condition.DiceInletConditionId);
             }
         }
 

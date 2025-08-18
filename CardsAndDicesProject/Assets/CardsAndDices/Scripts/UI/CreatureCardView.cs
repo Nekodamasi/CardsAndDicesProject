@@ -22,8 +22,8 @@ namespace CardsAndDices
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hoverSound;
         [SerializeField] public string _cardName;
-        [SerializeField] private InletAbilityProfile _inletProfile; // このカードが持つインレットの能力プロファイル
-        [SerializeField] private DiceInletView _inletView; // このカードに属するインレットView 
+        [SerializeField] private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
+        [SerializeField] private List<StatusIconView> _statusIconViews = new List<StatusIconView>();
 
         public CreatureData CurrentCreatureData { get; private set; } // 追加
 
@@ -34,8 +34,14 @@ namespace CardsAndDices
         private bool _playAnimation = false;
         private SpriteStatus _pendingStatus;
 
-        public InletAbilityProfile InletProfile => _inletProfile;
-        public DiceInletView InletView => _inletView;
+        /// <summary>
+        /// このカードに紐づく全てのインレットViewのリストを取得します。
+        /// </summary>
+        /// <returns>DiceInletViewのリスト。</returns>
+        public List<StatusIconView> GetStatusIconViews()
+        {
+            return _statusIconViews;
+        }
 
         /// <summary>
         /// このカードに紐づく全てのインレットViewのリストを取得します。
@@ -43,12 +49,7 @@ namespace CardsAndDices
         /// <returns>DiceInletViewのリスト。</returns>
         public List<DiceInletView> GetInletViews()
         {
-            // 現状は単一のインレットを想定
-            if (_inletView != null)
-            {
-                return new List<DiceInletView> { _inletView };
-            }
-            return new List<DiceInletView>();
+            return _diceInletViews;
         }
 
         protected override void Awake()

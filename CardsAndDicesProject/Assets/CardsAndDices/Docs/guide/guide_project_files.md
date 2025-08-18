@@ -210,6 +210,7 @@
 | :--- | :--- | :--- |
 | DicePresenter.cs | DiceDataとDiceViewを紐づけ、状態を同期させる仲介役。UIインタラクションの結果をデータに反映させ、データの変更をViewに伝えます。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Presenter\DicePresenter.cs |
 | CreatureCardPresenter.cs | ICreature (Model) と CreatureCardView (View) の間の仲介役。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Presenter\CreatureCardPresenter.cs |
+| StatusIconPresenter.cs | ICreature (Model) と StatusIconView (View) を仲介し、更新タイミングを制御するPresenter。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Presenter\StatusIconPresenter.cs |
 
 ### Scripts/Repository
 

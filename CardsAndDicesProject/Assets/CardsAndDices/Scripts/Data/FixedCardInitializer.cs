@@ -56,7 +56,7 @@ namespace CardsAndDices
             }
 
             // インレット2のデータが存在すればリストに追加
-            if (_inlet2Condition != null && _inlet2Ability != null)
+            if (_inlet2Condition != null)
             {
                 inletAbilityProfiles.Add(new InletAbilityProfile(_inlet2Condition, _inlet2Ability));
             }

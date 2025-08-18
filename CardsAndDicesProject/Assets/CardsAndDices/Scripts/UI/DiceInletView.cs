@@ -26,6 +26,7 @@ namespace CardsAndDices
 
         protected override void Awake()
         {
+            Debug.Log("<color=red>いんれっとだけだせるといいんだけどね：</color>" + gameObject.name + "_");
             base.Awake();
             SetSpawnedState(false);
         }

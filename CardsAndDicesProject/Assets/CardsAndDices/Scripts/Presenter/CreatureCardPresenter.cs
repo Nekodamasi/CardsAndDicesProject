@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CardsAndDices
 {
@@ -10,6 +11,7 @@ namespace CardsAndDices
         private readonly ICreature _creature;
         private readonly CreatureCardView _view;
         private readonly SpriteCommandBus _commandBus;
+        private readonly List<StatusIconPresenter> _statusIconPresenters = new List<StatusIconPresenter>();
 
         public CreatureCardPresenter(ICreature creature, CreatureCardView view, SpriteCommandBus commandBus)
         {
@@ -17,14 +19,20 @@ namespace CardsAndDices
             _view = view;
             _commandBus = commandBus;
 
+            List<StatusIconView> statusIconViews = _view.GetStatusIconViews();
+            foreach (StatusIconView statusIconView in statusIconViews)
+            {
+                var presenter = new StatusIconPresenter(_creature, statusIconView, _commandBus);
+                _statusIconPresenters.Add(presenter);
+            }
             // Initial view setup
-/*
-            _view.UpdateHealth(_creature.CurrentHealth, _creature.BaseHealth);
-            _view.UpdateShield(_creature.CurrentShield, _creature.BaseShield);
-            _view.UpdateCooldown(_creature.CurrentCooldown, _creature.BaseCooldown);
-            _view.UpdateAttack(_creature.Attack);
-            _view.UpdateEnergy(_creature.Energy);
-*/
+            /*
+                        _view.UpdateHealth(_creature.CurrentHealth, _creature.BaseHealth);
+                        _view.UpdateShield(_creature.CurrentShield, _creature.BaseShield);
+                        _view.UpdateCooldown(_creature.CurrentCooldown, _creature.BaseCooldown);
+                        _view.UpdateAttack(_creature.Attack);
+                        _view.UpdateEnergy(_creature.Energy);
+            */
 
             // Subscribe to events
             _commandBus.On<CreatureHealthChangedCommand>(OnHealthChanged);

@@ -51,11 +51,42 @@ namespace CardsAndDices
             public DiceSlotLocation TargetLocation;
         }
 
+        protected async UniTask Awake()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(10.0f));
+            Debug.Log("<color=red>てすたーあうぇいく</color>");
+
+            if (_combatManager != null)
+            {
+                _combatManager.InitializeCombatField();
+            }
+            else
+            {
+                Debug.LogError("CombatManagerが設定されていません。");
+            }
+
+            // 「UI操作制限モード」ON
+            _commandBus.Emit(new DisableUIInteractionCommand());
+
+            // PlaceCardsForTest() と PlaceDicesForTest() は、
+            // CombatManagerがカードを生成・配置するので、ここでは不要になる可能性が高い。
+            // もし、CombatManagerとは別にテストしたい場合は残す。
+            // PlaceCardsForTest(); // 必要に応じてコメント解除
+            PlaceDicesForTest(); // 必要に応じてコメント解除
+
+            // 0.5秒待機
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+
+            // 「UI操作制限モード」OFF
+            _commandBus.Emit(new EnableUIInteractionCommand());
+        }
         /// <summary>
         /// ゲーム開始時にテスト配置を実行します。
         /// </summary>
+/*
         private async UniTask Start()
         {
+            Debug.Log("<color=red>てすたーすたーと</color>");
             // カードの初期化はCombatManagerに任せる
             if (_combatManager != null)
             {
@@ -81,6 +112,7 @@ namespace CardsAndDices
             // 「UI操作制限モード」OFF
             _commandBus.Emit(new EnableUIInteractionCommand());
         }
+*/
 
         public void PlaceCardsForTest()
         {
