@@ -26,7 +26,7 @@ namespace CardsAndDices
 		/// <summary>
 		/// コンポーネントの初期化を行います。
 		/// </summary>
-		private void Awake()
+		public void OnAwake()
 		{
 			// 自身のCompositeObjectIdを生成
 			ObjectId = _idManager.CreateId(_objectType);

@@ -66,8 +66,9 @@ namespace CardsAndDices
             }
         }
 
-        protected virtual void Awake()
+        public virtual void OnAwake()
         {
+            _identifiableGameObject.OnAwake();
             _commandBus.On<EnableUIInteractionCommand>(OnEnableUIInteraction);
             _commandBus.On<DisableUIInteractionCommand>(OnDisableUIInteraction);
             // 初期状態では非表示にする

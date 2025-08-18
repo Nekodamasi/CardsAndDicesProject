@@ -52,19 +52,22 @@ namespace CardsAndDices
             return _diceInletViews;
         }
 
-        protected override void Awake()
+        public override void OnAwake()
         {
-            base.Awake();
+            base.OnAwake();
             SetSpawnedState(false);
-            _spriteInputHandler = GetComponent<SpriteInputHandler>();
 
-            if (_audioSource == null)
+            foreach (var diceInletView in _diceInletViews)
             {
-                //_audioSource = gameObject.AddComponent<AudioSource>();
+                diceInletView.OnAwake();
             }
-            
-            //_audioSource.clip = _hoverSound;
-            //_audioSource.playOnAwake = false;
+
+            foreach (var statusIconView in _statusIconViews)
+            {
+                statusIconView.OnAwake();
+            }
+
+            _spriteInputHandler = GetComponent<SpriteInputHandler>();
         }
 
         /// <summary>

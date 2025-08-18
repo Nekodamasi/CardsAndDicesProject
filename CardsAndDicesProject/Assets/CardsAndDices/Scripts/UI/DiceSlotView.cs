@@ -23,9 +23,9 @@ namespace CardsAndDices
 
         private DiceSlotData _diceSlotData;
 
-         protected override void Awake()
+         public override void OnAwake()
         {
-            base.Awake();
+            base.OnAwake();
             SetSpawnedState(true);
             SetDisplayActive(true);
             _diceSlotData = new DiceSlotData(GetObjectId(), transform.position, _location);

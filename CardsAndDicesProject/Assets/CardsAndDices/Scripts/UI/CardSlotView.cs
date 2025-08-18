@@ -26,9 +26,9 @@ namespace CardsAndDices
 
         private CardSlotData _slotData;
 
-        protected override void Awake()
+        public override void OnAwake()
         {
-            base.Awake();
+            base.OnAwake();
             SetSpawnedState(true);
             SetDisplayActive(true);
             _slotData = new CardSlotData(GetObjectId(), transform.position, _line, _location, _team);

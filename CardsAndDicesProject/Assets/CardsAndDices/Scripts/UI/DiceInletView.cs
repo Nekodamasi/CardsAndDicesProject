@@ -24,10 +24,10 @@ namespace CardsAndDices
         [SerializeField] private BaseAnimationSO _acceptableAnimation;
         [SerializeField] private BaseAnimationSO _dropWaitingAnimation;
 
-        protected override void Awake()
+        public override void OnAwake()
         {
             Debug.Log("<color=red>いんれっとだけだせるといいんだけどね：</color>" + gameObject.name + "_");
-            base.Awake();
+            base.OnAwake();
             SetSpawnedState(false);
         }
 

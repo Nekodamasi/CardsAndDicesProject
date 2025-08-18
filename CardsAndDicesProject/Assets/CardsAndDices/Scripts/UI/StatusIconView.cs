@@ -25,7 +25,7 @@ namespace CardsAndDices
         private Vector3 _originalPosition;
         public StatusIconData StatusIconData => _statusIconData;
 
-        private void Awake()
+        public void OnAwake()
         {
             _originalPosition = transform.localPosition;
             Initialize();

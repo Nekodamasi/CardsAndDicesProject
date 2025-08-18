@@ -26,10 +26,6 @@ namespace CardsAndDices
             _interactionHandler = interactionHandler;
         }
 
-        private void Awake()
-        {
-        }
-
         public List<DiceSlotData> FindSlotsByLocation(DiceSlotLocation location) => _repository.FindSlotsByLocation(location);
         public void RegisterSlot(DiceSlotData slotData) => _repository.RegisterSlot(slotData);
 
