@@ -40,7 +40,7 @@
 
 ### 3. 管理クラス (Controller)
 
--   **`AbilityManager`**:
+-   **`AbilityManager`(ScriptableObject)**:
     -   全ての`AbilityInstance`を一元的に管理するクラス。
     -   責務:
         -   `AbilityInstance`の生成と破棄。
