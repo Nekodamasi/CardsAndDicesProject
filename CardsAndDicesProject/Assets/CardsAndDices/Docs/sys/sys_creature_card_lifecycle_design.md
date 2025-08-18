@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD024 -->
 # sys_creature_card_lifecycle_design.md - クリーチャーカードのライフサイクル設計書
 
 ---
@@ -5,86 +6,98 @@
 ## 概要
 
 このドキュメントは、クリーチャーカードの生成から除去までのライフサイクル全体を定義します。
-クリーチャーカードは、プレイヤー、エネミーといった異なる情報源からカードの基礎情報を生成し、それをカードオブジェクトに適用することでその性質を決定します。
-このプロセスは、戦闘管理、データ供給、ライフサイクル管理、能力登録といった複数のサービスやマネージャーが連携して実現されます。
+このプロセスは、`CardLifecycleService` を中心に、`CreatureManager`、`DiceInletManager`、`ViewRegistry` などの複数のサービスやマネージャーが連携して実現されます。`CardLifecycleService` は、カードの論理的な側面（クリーチャー、能力）と視覚的な側面（View）のセットアップとティアダウンを統括する役割を担います。
 
 ---
 
-## クリーチャーカード生成フロー
+## 主要コンポーネントとクラス図
 
-クリーチャーカードは、戦闘開始時や新たなウェーブの発生時に生成されます。このフローは `CombatManager` を起点とし、カードのデータ構造、View、能力が段階的に構築・設定されます。
-
-### 1. シーケンス
-
-1.  **ユーザー操作** が **CombatManager** の `InitializeCombatField()` を呼び出します。
-2.  **CombatManager** は **Player/EnemyCardDataProvider** の `GetCardDataList()` を呼び出し、`List<CardInitializationData>` を取得します。
-3.  取得したリストの各 `CardInitializationData` に対して、以下の処理をループ実行します。
-    1.  **CombatManager** が **ViewRegistry** の `GetNextAvailableCreatureCardView()` を呼び出し、利用可能な **CreatureCardView** を取得します。
-    2.  **CombatManager** が **CardLifecycleService** の `InitializeCard()` を呼び出します。
-        1.  **CardLifecycleService** は **CreatureCardView** の `ApplyData()` を呼び出し、クリーチャーの基本データを適用します。
-        2.  **CardLifecycleService** は **CreatureCardView** の `GetInletViews()` を呼び出し、インレットのリストを取得します。
-        3.  各インレットに対して、**CardLifecycleService** は **DiceInletAbilityRegistry** の `Register()` を呼び出し、能力を登録します。
-    3.  **CombatManager** が **CardSlotManager** の `PlaceCardAsSystem()` を呼び出し、カードをスロットに配置します。
-
-### 2. 各コンポーネントの役割
+### 1. 各コンポーネントの役割
 
 | コンポーネント | 役割 |
 | :--- | :--- |
-| **CombatManager** | 戦闘全体の流れを制御する司令塔。カード生成のトリガーとなり、各サービスに必要な指示を出します。 |
-| **Player/EnemyCardDataProvider** | プレイヤーやエネミーのデータソース（マスターデータ、装備、ウェーブ情報など）に基づき、カードの初期化情報(`CardInitializationData`)を生成する責務を負います。 |
-| **CardInitializationData** | カード生成に必要な情報（`CreatureData`、`InletAbilityProfile`リスト）を集約したデータ転送オブジェクト(DTO)。これにより、データソースと生成ロジックを疎結合に保ちます。 |
-| **CardLifecycleService** | カードのライフサイクルを直接管理するサービス。`CardInitializationData` を受け取り、カードのViewへのデータ適用や、能力の登録・解除処理を実行します。 |
-| **DiceInletAbilityRegistry** | 全てのアクティブなインレットの能力(`InletAbilityProfile`)を一元管理するレジストリ。インレットIDをキーとして能力を登録・取得・解除する機能を提供します。 |
-| **ViewRegistry** | シーン上のViewコンポーネント（`CreatureCardView`など）を管理するレジストリ。オブジェクトプールとして機能し、非アクティブなViewを再利用のために管理します。 |
-| **CreatureCardView** | クリーチャーカードの視覚表現を担当するコンポーネント。`CreatureData`に基づき、自身の見た目を更新します。また、自身に紐づく`DiceInletView`のリストを保持します。 |
-| **CardSlotManager** | カードスロットの状態を管理し、カードの配置処理を実行します。 |
+| **`CombatManager`** | 戦闘全体の流れを制御する司令塔。カード生成のトリガーとなり、`ICardDataProvider` から初期化データを取得し、`CardLifecycleService` にカードの初期化を依頼します。 |
+| **`ICardDataProvider`** | プレイヤーやエネミーのデータソースに基づき、カードの初期化情報(`CardInitializationData`)を生成する責務を負います。 |
+| **`CardInitializationData`** | カード生成に必要な情報（`CreatureData`、`InletAbilityProfile`リスト）を集約したデータ転送オブジェクト(DTO)。 |
+| **`ViewRegistry`** | シーン上のViewコンポーネントを管理するレジストリ。オブジェクトプールとして機能し、利用可能な `CreatureCardView` を提供します。 |
+| **`CardLifecycleService`** | **本システムの中心。** `CreatureManager` と `DiceInletManager` を調整し、カードの論理部分とView部分の生成・初期化・破棄を統括します。 |
+| **`CreatureManager`** | `ICreature` インスタンス（クリーチャーの論理部分）と、それをViewに接続する `CreatureCardPresenter` の生成と管理を担当します。 |
+| **`DiceInletManager`** | `IDiceInlet` インスタンス（インレットの論理部分）と、それをViewに接続する `DiceInletPresenter` の生成と管理を担当します。 |
+| **`CreatureCardView`** | クリーチャーカードの視覚表現を担当するコンポーネント。自身に紐づく`DiceInletView`のリストを保持します。 |
+
+### 2. クラス図 (Mermaid)
+
+```mermaid
+classDiagram
+    CombatManager --> ICardDataProvider : uses
+    CombatManager --> ViewRegistry : uses
+    CombatManager --> CardLifecycleService : uses
+    CardLifecycleService --> CreatureManager : orchestrates
+    CardLifecycleService --> DiceInletManager : orchestrates
+    CreatureManager --> CreatureFactory : uses
+    CreatureManager ..> CreatureCardPresenter : creates
+    DiceInletManager --> DiceInletFactory : uses
+    DiceInletManager ..> DiceInletPresenter : creates
+    CreatureFactory ..> Creature : creates
+    DiceInletFactory ..> DiceInlet : creates
+    CreatureCardPresenter o-- ICreature
+    CreatureCardPresenter o-- CreatureCardView
+    DiceInletPresenter o-- IDiceInlet
+    DiceInletPresenter o-- DiceInletView
+    CreatureCardView *-- DiceInletView
+```
 
 ---
 
-## クリーチャーカード除去フロー
+## カード生成・初期化フロー
 
-クリーチャーカードが戦闘不能になった場合など、盤面から取り除かれる際のフローです。カードの能力を無効化し、オブジェクトをプールに返却して再利用に備えます。
+クリーチャーカードは、戦闘開始時や新たなウェーブの発生時に `CombatManager` を起点として生成されます。
 
 ### 1. シーケンス
 
-1.  **Trigger**（例: `CombatManager`）が、カード除去の必要性を判断し、**CardLifecycleService** の `TeardownCard()` を呼び出します。
-2.  **CardLifecycleService** は **CreatureCardView** の `GetInletViews()` を呼び出し、関連する全てのインレットのリストを取得します。
-3.  各インレットに対して、以下の処理をループ実行します。
-    1.  **CardLifecycleService** は **DiceInletAbilityRegistry** の `Unregister()` を呼び出し、能力の登録を解除します。
-4.  **CardLifecycleService** は **CreatureCardView** の `SetDisplayActive(false)` を呼び出し、カードを非表示にします。
-5.  **CardLifecycleService** は **ViewRegistry** の `ReturnCreatureCardView()` を呼び出し、カードのViewをオブジェクトプールに返却します。
-
-### 2. 各コンポーネントの役割
-
-| コンポーネント | 役割 |
-| :--- | :--- |
-| **Trigger** | カードの除去を判断するコンポーネント（例: `CombatManager`、カード自身のロジックなど）。`CardLifecycleService`に処理を依頼します。 |
-| **CardLifecycleService** | カードの除去処理を統括します。カードに紐づく全てのインレット能力の登録を解除し、Viewをオブジェクトプールへ返却するよう指示します。 |
-| **DiceInletAbilityRegistry** | 除去されるカードに関連する全てのインレットの能力プロファイルをレジストリから削除します。 |
-| **CreatureCardView** | 自身の表示を非アクティブにし、オブジェクトプールに返却される準備をします。 |
-| **ViewRegistry** | 非アクティブになった`CreatureCardView`を回収し、再利用可能なオブジェクトとしてプールします。 |
+1.  **`CombatManager`**: `ICardDataProvider` (例: `PlayerCardDataProvider`) を使用して、生成すべきカードの `CardInitializationData` のリストを取得します。
+2.  **`CombatManager`**: ループ処理で、リスト内の各 `CardInitializationData` に対して以下の処理を実行します。
+3.  **`CombatManager`**: `ViewRegistry.GetNextAvailableCreatureCardView()` を呼び出し、オブジェクトプールから利用可能な `CreatureCardView` インスタンスを取得します。この時点で、Viewの `IsSpawned` フラグは `true` に設定されます。
+4.  **`CombatManager`**: 取得した `cardView` と `initData` を引数に、`CardLifecycleService.InitializeCard()` を呼び出します。
+5.  **`CardLifecycleService`**: `InitializeCard` メソッド内部で、以下の処理を統括します。
+    1.  `_creatureManager.SpawnCreature(initData.CreatureData, cardView)` を呼び出します。
+        -   **`CreatureManager`** は `CreatureFactory` を使って `ICreature` (Model) を生成し、さらに `CreatureCardPresenter` を生成してModelと`cardView`(View)を接続します。
+    2.  `cardView.GetInletViews()` でインレットのViewリストを取得します。
+    3.  `initData.InletAbilityProfiles` とインレットViewをペアにしてループ処理します。
+    4.  ループ内で `_diceInletManager.CreateAndRegisterInlet(inletView, cardView.GetObjectId(), profile)` を呼び出します。
+        -   **`DiceInletManager`** は `DiceInletFactory` を使って `IDiceInlet` (Model) を生成し、さらに `DiceInletPresenter` を生成してModelと`inletView`(View)を接続します。
+6.  **`CombatManager`**: 初期化が完了したカードを `CardSlotManager` を使って盤面に配置します。
 
 ---
 
-## データクラス参照
+## カード除去フロー
 
-- **`CardInitializationData`**: `CreatureData`と`List<InletAbilityProfile>`を保持します。
-- **`InletAbilityProfile`**: `DiceInletConditionSO`（条件）と`BaseInletAbilitySO`（効果）を保持します。
+クリーチャーが倒されるなど、盤面からカードが取り除かれる際のフローです。この処理は、カードの論理部分（クリーチャー、インレット）を破棄し、関連するPresenterの購読を解除します。
+
+### 1. シーケンス
+
+1.  **Trigger** (例: `CombatManager`): カードの除去を判断し、対象の `CreatureCardView` を引数に `CardLifecycleService.TeardownCard()` を呼び出します。
+2.  **`CardLifecycleService`**: `TeardownCard` メソッド内部で、以下の処理を統括します。
+    1.  `_creatureManager.RemoveCreature(cardView.GetObjectId())` を呼び出します。
+        -   **`CreatureManager`** は、管理下の `ICreature` インスタンスを削除し、関連する `CreatureCardPresenter` の `Dispose()` メソッドを呼び出してイベント購読を解除します。
+    2.  `cardView.GetInletViews()` でインレットのViewリストを取得し、ループ処理します。
+    3.  ループ内で `_diceInletManager.RemoveDiceInlet(inletView.GetObjectId())` を呼び出します。
+        -   **`DiceInletManager`** は、管理下の `IDiceInlet` インスタンスを削除し、関連する `DiceInletPresenter` の `Dispose()` メソッドを呼び出します。
+3.  **Viewのプール返却**: `TeardownCard` の呼び出し元（例: `CombatManager`）が、`cardView.SetDisplayActive(false)` や `cardView.SetSpawnedState(false)` を呼び出し、Viewを非表示にしてオブジェクトプールで再利用可能な状態に戻します。
 
 ---
 
 ## 関連ファイル
 
-- [sys_classes.md](./sys_classes.md)
-- [sys_domain-model.md](./sys_domain-model.md)
-- [class_CombatManager.md](../class/class_CombatManager.md)
-- [class_CardLifecycleService.md](../class/class_CardLifecycleService.md)
-- [sys_dice_inlet_design.md](./sys_dice_inlet_design.md)
+-   [./sys_creature_management.md](./sys_creature_management.md)
+-   [./sys_dice_inlet_management.md](./sys_dice_inlet_management.md)
+-   [../gdd/gdd_combat_system.md](../gdd/gdd_combat_system.md)
 
 ---
 
 ## 更新履歴
 
-- 2025-08-15: シーケンス図をテキストベースの記述に修正 (Gemini)
-- 2025-08-15: ソースコードとの同期。シーケンス図の正確性を向上させ、各コンポーネントの役割を明確化。 (Gemini)
-- 2025-08-15: 初版 (Gemini)
+-   2025-08-17: ソースコードの現状に合わせて、全体のフローを更新し、クラス図を追加 (AI Document Specialist)
+-   2025-08-15: シーケンス図をテキストベースの記述に修正 (Gemini)
+-   2025-08-15: ソースコードとの同期。シーケンス図の正確性を向上させ、各コンポーネントの役割を明確化。 (Gemini)
+-   2025-08-15: 初版 (Gemini)
