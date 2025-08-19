@@ -14,17 +14,17 @@
 
 -   **`BaseAbilityDataSO` (ScriptableObject)**:
     -   全ての固有能力の定義データが継承する抽象基底クラス。
-    -   共通プロパティ: `string Id`, `string Name`, `string Description`。
+    -   共通プロパティ: `string Id`。
     -   抽象メソッド: `GetTriggerCondition()`, `GetEffectDefinition()` など、具体的な能力で実装されるべきインターフェースを定義。
--   **`AbilityTriggerConditionSO` (ScriptableObject)**:
+-   **`BaseAbilityTriggerConditionSO` (ScriptableObject)**:
     -   能力の発動条件を定義する基底クラス。
     -   例: `OnAttackTriggerConditionSO`, `OnPlacementTriggerConditionSO`, `OnTurnEndTriggerConditionSO`。
     -   メソッド: `bool Check(ICommand command, AbilityInstance abilityInstance)`: 発行されたコマンドと能力インスタンスの状態に基づいて条件をチェック。
--   **`AbilityEffectDefinitionSO` (ScriptableObject)**:
+-   **`BaseAbilityEffectDefinitionSO` (ScriptableObject)**:
     -   能力が発動した際の効果内容を定義する基底クラス。
     -   例: `ApplyEffectAbilityEffectSO`, `DealDamageAbilityEffectSO`, `ModifyBasicAttackEffectSO`。
     -   メソッド: `void Execute(AbilityContext context, SpriteCommandBus commandBus)`: 効果を実行し、必要に応じてコマンドを発行。
--   **`AbilityDurationSO` (ScriptableObject)**:
+-   **`BaseAbilityDurationSO` (ScriptableObject)**:
     -   能力の有効期限や使用回数制限を定義する基底クラス。
     -   例: `CooldownDurationSO`, `TurnLimitedDurationSO`, `CombatLongDurationSO`, `UsageLimitedDurationSO`。
     -   プロパティ: `int InitialValue`, `int ResetValue` など。
@@ -46,7 +46,7 @@
         -   `AbilityInstance`の生成と破棄。
         -   `SpriteCommandBus`を購読し、ゲームイベント（コマンド）を監視。
         -   購読したコマンドを各`AbilityInstance`の発動条件に渡し、条件を満たす`AbilityInstance`を特定。
-        -   発動条件を満たした`AbilityInstance`の`AbilityEffectDefinitionSO`を呼び出し、効果を実行。
+        -   発動条件を満たした`AbilityInstance`の`BaseAbilityEffectDefinitionSO`を呼び出し、効果を実行。
         -   `AbilityInstance`のクールダウンや使用回数制限の更新（`AbilityDurationSO`のロジックを呼び出す）。
         -   `CompositeObjectIdManager`と連携し、`AbilityInstance`に`CompositeObjectId`を付与。
 -   **`CreatureAbilityBinder`**:
@@ -69,24 +69,24 @@ public abstract class BaseAbilityDataSO : ScriptableObject
     public string Description;
 
     // 発動条件を定義するScriptableObjectへの参照
-    public AbilityTriggerConditionSO TriggerCondition;
+    public BaseAbilityTriggerConditionSO TriggerCondition;
 
     // 効果内容を定義するScriptableObjectへの参照
-    public AbilityEffectDefinitionSO EffectDefinition;
+    public BaseAbilityEffectDefinitionSO EffectDefinition;
 
     // 有効期限や使用回数制限を定義するScriptableObjectへの参照
     public AbilityDurationSO Duration;
 }
 
-// AbilityTriggerConditionSO.cs
-public abstract class AbilityTriggerConditionSO : ScriptableObject
+// BaseAbilityTriggerConditionSO.cs
+public abstract class BaseAbilityTriggerConditionSO : ScriptableObject
 {
     // コマンドと能力インスタンスの状態に基づいて条件をチェック
     public abstract bool Check(ICommand command, AbilityInstance abilityInstance);
 }
 
-// AbilityEffectDefinitionSO.cs
-public abstract class AbilityEffectDefinitionSO : ScriptableObject
+// BaseAbilityEffectDefinitionSO.cs
+public abstract class BaseAbilityEffectDefinitionSO : ScriptableObject
 {
     // 能力実行時のコンテキスト（発動源、ターゲットなど）
     public class AbilityContext
@@ -100,8 +100,8 @@ public abstract class AbilityEffectDefinitionSO : ScriptableObject
     public abstract void Execute(AbilityContext context, SpriteCommandBus commandBus);
 }
 
-// AbilityDurationSO.cs
-public abstract class AbilityDurationSO : ScriptableObject
+// BaseAbilityDurationSO.cs
+public abstract class BaseAbilityDurationSO : ScriptableObject
 {
     // 初期値（クールダウンの初期値、使用回数の初期値など）
     public int InitialValue;
@@ -121,7 +121,7 @@ public abstract class AbilityDurationSO : ScriptableObject
 
 1.  `CreatureManager`が`ICreature`を生成する際、`CreatureAbilityBinder`を介して`ICreature`に紐づく`BaseAbilityDataSO`のリストを取得。
 2.  `CreatureAbilityBinder`は各`BaseAbilityDataSO`から`AbilityInstance`を生成し、`AbilityManager.RegisterAbility(abilityInstance)`を呼び出して登録。
-3.  `AbilityInstance`は自身の`CompositeObjectId`を`CompositeObjectIdManager`から取得し、`Owner`を`ICreature`の`CompositeObjectId`に設定。
+3.  `AbilityInstance`は自身の`CompositeObjectId`を`ICreature`の`CompositeObjectId`に設定。
 
 ### 2. 固有能力の発動
 
@@ -130,17 +130,17 @@ public abstract class AbilityDurationSO : ScriptableObject
 3.  `AbilityManager`は`SpriteCommandBus`を購読しており、発行されたコマンドを受信。
 4.  `AbilityManager`は登録されている全ての`AbilityInstance`をループし、各`AbilityInstance.Data.TriggerCondition.Check(command, abilityInstance)`を呼び出して発動条件をチェック。
 5.  条件を満たし、かつクールダウン中や使用回数制限を超えていない`AbilityInstance`を特定。
-6.  `AbilityManager`は、特定された`AbilityInstance`の`AbilityEffectDefinitionSO.Execute(context, SpriteCommandBus)`を呼び出し、能力の効果を実行。`AbilityContext`には、発動源（例: 攻撃されたクリーチャーのID）、ターゲット（例: 攻撃してきたクリーチャーのID）、その他必要な情報を含める。
-7.  `AbilityEffectDefinitionSO.Execute()`内で、具体的な効果に応じたコマンド（例: `ApplyDamageCommand`, `BuffApplyCommand`）が`SpriteCommandBus`を介して発行される。
+6.  `AbilityManager`は、特定された`AbilityInstance`の`BaseAbilityEffectDefinitionSO.Execute(context, SpriteCommandBus)`を呼び出し、能力の効果を実行。`AbilityContext`には、発動源（例: 攻撃されたクリーチャーのID）、ターゲット（例: 攻撃してきたクリーチャーのID）、その他必要な情報を含める。
+7.  `BaseAbilityEffectDefinitionSO.Execute()`内で、具体的な効果に応じたコマンド（例: `ApplyDamageCommand`, `BuffApplyCommand`）が`SpriteCommandBus`を介して発行される。
 8.  能力が発動した場合、`AbilityManager`は`AbilityInstance.Data.Duration.OnEvent(abilityInstance, command)`を呼び出し、クールダウンや使用回数制限の更新ロジックを実行。
 
 ### 3. 固有能力の寿命管理（クールダウン、使用回数制限）
 
 1.  `AbilityManager`は`TurnStartCommand`や`TurnEndCommand`などの時間経過を示すコマンドを購読。
-2.  これらのコマンドを受信した際、`AbilityManager`は登録されている全ての`AbilityInstance`の`AbilityDurationSO.OnEvent(abilityInstance, command)`を呼び出す。
-3.  `AbilityDurationSO.OnEvent()`内で、`AbilityInstance`の`CurrentCooldown`を減少させたり、`RemainingUsages`をリセットしたりするロジックが実行される。
+2.  これらのコマンドを受信した際、`AbilityManager`は登録されている全ての`AbilityInstance`の`BaseAbilityDurationSO.OnEvent(abilityInstance, command)`を呼び出す。
+3.  `BaseAbilityDurationSO.OnEvent()`内で、`AbilityInstance`の`CurrentCooldown`を減少させたり、`RemainingUsages`をリセットしたりするロジックが実行される。
 4.  `AbilityInstance`の状態変化（クールダウン終了、使用回数ゼロなど）は、`AbilityPresenter`を介してUIに反映される。
-5.  発動抑止は、`AbilityInstance`の`IsSuppressed`フラグを操作するコマンド（例: `SuppressAbilityCommand`）を発行することで制御。`AbilityTriggerConditionSO.Check()`内で`IsSuppressed`フラグもチェックする。
+5.  発動抑止は、`AbilityInstance`の`IsSuppressed`フラグを操作するコマンド（例: `SuppressAbilityCommand`）を発行することで制御。`BaseAbilityTriggerConditionSO.Check()`内で`IsSuppressed`フラグもチェックする。
 
 ---
 
@@ -154,7 +154,7 @@ public abstract class AbilityDurationSO : ScriptableObject
 
 ### 2. エフェクトシステム
 
--   **効果の適用**: 固有能力の効果がステータス変更やバフ/デバフである場合、`AbilityEffectDefinitionSO.Execute()`内で`BuffApplyCommand`や`DebuffApplyCommand`を発行し、`EffectManager`を介して処理されます。
+-   **効果の適用**: 固有能力の効果がステータス変更やバフ/デバフである場合、`BaseAbilityEffectDefinitionSO.Execute()`内で`BuffApplyCommand`や`DebuffApplyCommand`を発行し、`EffectManager`を介して処理されます。
 -   **基礎攻撃の変更**: `gdd_combat_system.md`で言及されている基礎攻撃の`使用能力値`や`効果範囲`を変更する固有能力は、特殊な`EffectData`タイプを定義し、それが`ICreature`に適用されることで基礎攻撃のプロパティが一時的に変更されるように実装します。これにより、`EffectManager`の寿命管理の仕組みを再利用できます。
 
 ---
