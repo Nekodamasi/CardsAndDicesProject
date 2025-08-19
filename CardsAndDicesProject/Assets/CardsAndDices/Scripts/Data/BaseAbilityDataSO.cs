@@ -8,23 +8,16 @@ namespace CardsAndDices
     /// </summary>
     public abstract class BaseAbilityDataSO : ScriptableObject
     {
-        [Tooltip("Unique identifier for this ability.")]
+        [Tooltip("この機能の一意の識別子")]
         public string Id;
 
-        [Tooltip("Display name of the ability.")]
-        public string Name;
-
-        [Tooltip("Description of what the ability does.")]
-        [TextArea]
-        public string Description;
-
-        [Tooltip("The condition that triggers this ability.")]
+        [Tooltip("この能力を発動させる条件")]
         public BaseAbilityTriggerConditionSO TriggerCondition;
 
-        [Tooltip("The effect that is executed when the ability is triggered.")]
+        [Tooltip("能力が発動されたときに実行される効果")]
         public BaseAbilityEffectDefinitionSO EffectDefinition;
 
-        [Tooltip("The duration, cooldown, or usage limits of the ability.")]
+        [Tooltip("能力の持続時間、クールダウン、または使用制限")]
         public BaseAbilityDurationSO Duration;
     }
 }

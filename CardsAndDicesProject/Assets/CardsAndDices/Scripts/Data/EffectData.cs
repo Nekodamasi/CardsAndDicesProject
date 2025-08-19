@@ -10,12 +10,7 @@ namespace CardsAndDices
     public class EffectData : ScriptableObject
     {
         [Tooltip("効果を識別するための一意なID")]
-        [SerializeField] private CompositeObjectId _effectId;
-        public CompositeObjectId EffectId => _effectId;
-
-        [Tooltip("効果名")]
-        [SerializeField] private new string name;
-        public string Name => name;
+        public string EffectId;
 
         [Tooltip("ステータス増減量")]
         [SerializeField] private int _value;
@@ -32,9 +27,5 @@ namespace CardsAndDices
         [Tooltip("持続ターン数または条件値")]
         [SerializeField] private int _durationValue;
         public int DurationValue => _durationValue;
-
-        [Tooltip("効果終了のトリガーとなるイベント名の一覧")]
-        [SerializeField] private List<string> _eventTriggers = new List<string>();
-        public List<string> EventTriggers => _eventTriggers;
     }
 }

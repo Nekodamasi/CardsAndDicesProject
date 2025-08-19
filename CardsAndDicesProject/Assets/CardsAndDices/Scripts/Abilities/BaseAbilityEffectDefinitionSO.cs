@@ -3,12 +3,12 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// Abstract base class for all ability effect definitions.
+    /// すべての能力効果の定義の抽象基本クラス。
     /// </summary>
     public abstract class BaseAbilityEffectDefinitionSO : ScriptableObject
     {
         /// <summary>
-        /// Contains the context for an ability's execution, such as the source and target.
+        /// ソースやターゲットなど、アビリティ実行のコンテキストが含まれます。
         /// </summary>
         public class AbilityContext
         {
@@ -19,7 +19,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// Executes the ability's effect.
+        /// 能力の効果を実行します。
         /// </summary>
         /// <param name="context">The context of the ability execution.</param>
         /// <param name="commandBus">The command bus to dispatch new commands if needed.</param>

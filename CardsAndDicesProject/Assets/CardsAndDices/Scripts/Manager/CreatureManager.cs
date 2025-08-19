@@ -61,7 +61,6 @@ namespace CardsAndDices
 
             var presenter = new CreatureCardPresenter(newCreature, view, _commandBus);
             _presenters.Add(viewId, presenter);
-
             return newCreature;
         }
 
@@ -88,7 +87,6 @@ namespace CardsAndDices
                 _presenters.Remove(id);
             }
             _creatures.Remove(id);
-            _abilityManager.UnregisterAbilitiesForOwner(id);
         }
     }
 }
