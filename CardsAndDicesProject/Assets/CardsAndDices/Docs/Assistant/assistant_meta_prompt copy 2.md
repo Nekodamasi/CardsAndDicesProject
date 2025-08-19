@@ -454,7 +454,7 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-sys_effect_management.mdに記載された機能を実装します
+sys_ability_management.mdに記載された機能を実装します
 各ファイルの格納場所は、  D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.mdを参照のこと
 
 step1. 関連する設計書を読込、このプロジェクトのルールや原則を理解します
@@ -462,7 +462,7 @@ step1. 関連する設計書を読込、このプロジェクトのルールや�
         - guide_ui_interaction_design.md
         - gdd_composite_object_id.md
         - gdd_sprite_ui_design.md
-        - sys_ability_management.md
+        - sys_effect_management.md
         - sys_creature_management.md
         - gdd_combat_system.md
         - guide_rules.md

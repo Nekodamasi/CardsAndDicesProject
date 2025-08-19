@@ -42,7 +42,7 @@ namespace CardsAndDices
         /// <summary>
         /// クリーチャーが持つ固有能力のリスト。
         /// </summary>
-        public List<string> Abilities; // 仮の型。適切なAbilityData型に置き換える必要があるかもしれません。
+        public List<BaseAbilityDataSO> Abilities; // 仮の型。適切なAbilityData型に置き換える必要があるかもしれません。
 
         /// <summary>
         /// CreatureDataの新しいインスタンスを初期化します。
@@ -55,7 +55,7 @@ namespace CardsAndDices
         /// <param name="cooldown">クールダウンダイス数。</param>
         /// <param name="energy">特殊な能力値（エネルギーなど）。</param>
         /// <param name="abilities">固有能力のリスト。</param>
-        public CreatureData(string creatureId, int attack, int health, int shield, int cooldown, int energy, List<string> abilities)
+        public CreatureData(string creatureId, int attack, int health, int shield, int cooldown, int energy, List<BaseAbilityDataSO> abilities)
         {
             CreatureId = creatureId;
             Attack = attack;

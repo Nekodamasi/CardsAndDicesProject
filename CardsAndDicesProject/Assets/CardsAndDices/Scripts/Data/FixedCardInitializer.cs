@@ -16,7 +16,7 @@ namespace CardsAndDices
         [SerializeField] private int _shield;
         [SerializeField] private int _cooldown;
         [SerializeField] private int _energy;
-        [SerializeField] private List<string> _abilities = new List<string>(); // 初期化
+        [SerializeField] private List<BaseAbilityDataSO> _abilities = new List<BaseAbilityDataSO>(); // 初期化
 
         // ダイスインレット1のデータ
         [Header("Inlet 1 Data")]

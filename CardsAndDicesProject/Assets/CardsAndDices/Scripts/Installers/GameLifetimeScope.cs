@@ -20,10 +20,10 @@ namespace CardsAndDices
         [SerializeField] private CombatManager _combatManager;
         [SerializeField] private CardSlotInteractionHandler _cardSlotInteractionHandler;
         [SerializeField] private DiceSlotInteractionHandler _diceSlotInteractionHandler;
-  
         [SerializeField] private CompositeObjectIdManager _compositeObjectIdManager;
         [SerializeField] private UIStateMachine _uiStateMachine;
         [SerializeField] private SpriteCommandBus _spriteCommandBus;
+        [SerializeField] private AbilityManager _abilityManager;
 
         [Header("ScriptableObject Repositories")]
         [SerializeField] private CardSlotStateRepository _cardSlotStateRepository;
@@ -85,6 +85,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_playerCardDataProvider).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_enemyCardDataProvider).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_effectManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_abilityManager).AsSelf().AsImplementedInterfaces();
 
             // DOTweenの初期化とTween容量の設定
             DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 100);
@@ -114,7 +115,8 @@ namespace CardsAndDices
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
             _uiActivationPolicy.Initialize(_diceInletManager, _diceManager);
-            _creatureManager.Initialize(_viewRegistry, _spriteCommandBus, _effectManager);
+            _creatureManager.Initialize(_viewRegistry, _spriteCommandBus, _effectManager, _abilityManager);
+            _abilityManager.Initialize(_spriteCommandBus, _compositeObjectIdManager);
 
             foreach (var cardView in _creatureCardViews)
             {

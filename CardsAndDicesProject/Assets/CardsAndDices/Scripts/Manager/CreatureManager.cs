@@ -13,6 +13,7 @@ namespace CardsAndDices
         private  CreatureFactory _creatureFactory;
         private ViewRegistry _viewRegistry;
         private SpriteCommandBus _commandBus;
+        private AbilityManager _abilityManager; // 追加
         private readonly Dictionary<CompositeObjectId, ICreature> _creatures = new();
         private readonly Dictionary<CompositeObjectId, CreatureCardPresenter> _presenters = new();
 
@@ -20,12 +21,13 @@ namespace CardsAndDices
         /// CombatManagerを初期化します。
         /// </summary>
         [Inject]
-        public void Initialize(ViewRegistry viewRegistry, SpriteCommandBus commandBus, EffectManager effectManager)
+        public void Initialize(ViewRegistry viewRegistry, SpriteCommandBus commandBus, EffectManager effectManager, AbilityManager abilityManager)
         {
             ClearCollections();
             _creatureFactory = new CreatureFactory(effectManager, commandBus);
             _viewRegistry = viewRegistry;
             _commandBus = commandBus;
+            _abilityManager = abilityManager; // 初期化
         }
 
         private void ClearCollections()
@@ -86,6 +88,7 @@ namespace CardsAndDices
                 _presenters.Remove(id);
             }
             _creatures.Remove(id);
+            _abilityManager.UnregisterAbilitiesForOwner(id);
         }
     }
 }
