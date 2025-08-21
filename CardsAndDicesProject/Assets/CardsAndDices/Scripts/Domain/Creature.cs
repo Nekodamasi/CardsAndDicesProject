@@ -18,13 +18,15 @@ namespace CardsAndDices
         private readonly CreatureData _data;
         private readonly EffectManager _effectManager;
         private readonly SpriteCommandBus _commandBus;
+        private readonly CardSlotManager _cardSlotManager;
 
-        public Creature(CompositeObjectId id, CreatureData data, EffectManager effectManager, SpriteCommandBus commandBus)
+        public Creature(CompositeObjectId id, CreatureData data, EffectManager effectManager, SpriteCommandBus commandBus, CardSlotManager cardSlotManager)
         {
             Id = id;
             _data = data;
             _effectManager = effectManager;
             _commandBus = commandBus;
+            _cardSlotManager = cardSlotManager;
 
             CurrentHealth = data.Health;
             CurrentShield = data.Shield;
@@ -63,6 +65,7 @@ namespace CardsAndDices
             _effectManager.RemoveEffect(effect);
             RecalculateStats();
         }
+        public SlotLocation Location { get { return _cardSlotManager.GetSlotDataByReflowPlacedCardId(Id).Location; } }
 
         private void RecalculateStats()
         {

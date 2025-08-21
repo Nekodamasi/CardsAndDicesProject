@@ -115,8 +115,8 @@ namespace CardsAndDices
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
             _uiActivationPolicy.Initialize(_diceInletManager, _diceManager);
-            _creatureManager.Initialize(_viewRegistry, _spriteCommandBus, _effectManager, _abilityManager);
-            _abilityManager.Initialize(_spriteCommandBus, _creatureManager, _diceManager);
+            _creatureManager.Initialize(_viewRegistry, _spriteCommandBus, _effectManager, _abilityManager, _cardSlotManager);
+            _abilityManager.Initialize(_spriteCommandBus, _creatureManager, _diceManager, _abilityManager, _effectManager);
 
             foreach (var cardView in _creatureCardViews)
             {

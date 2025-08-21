@@ -10,12 +10,15 @@ namespace CardsAndDices
         [Tooltip("持続時間の初期値（例：クールダウンターン、使用回数）")]
         public int InitialValue;
 
+        [Tooltip("リセットタイミング")]
+        public TriggerTiming ResetTiming;
+
         /// <summary>
         /// ゲーム イベント (TurnEnd など) で呼び出され、アビリティ インスタンスの持続状態を更新します。
         /// </summary>
         /// <param name="instance">The ability instance to update.</param>
         /// <param name="command">The command that triggered the event.</param>
-        public abstract void OnEvent(AbilityInstance instance, ICommand command);
+        public abstract void OnUse(AbilityInstance instance);
 
         /// <summary>
         /// アビリティインスタンスの持続状態を初期値にリセットします。

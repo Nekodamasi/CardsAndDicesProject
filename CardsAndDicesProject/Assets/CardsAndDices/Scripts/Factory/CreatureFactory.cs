@@ -7,11 +7,13 @@ namespace CardsAndDices
     {
         private readonly EffectManager _effectManager;
         private readonly SpriteCommandBus _commandBus;
+        private readonly CardSlotManager _cardSlotManager;
 
-        public CreatureFactory(EffectManager effectManager, SpriteCommandBus commandBus)
+        public CreatureFactory(EffectManager effectManager, SpriteCommandBus commandBus, CardSlotManager cardSlotManager)
         {
             _effectManager = effectManager;
             _commandBus = commandBus;
+            _cardSlotManager = cardSlotManager;
         }
 
         /// <summary>
@@ -22,7 +24,7 @@ namespace CardsAndDices
         /// <returns>A new ICreature instance.</returns>
         public ICreature Create(CompositeObjectId id, CreatureData baseData)
         {
-            return new Creature(id, baseData, _effectManager, _commandBus);
+            return new Creature(id, baseData, _effectManager, _commandBus, _cardSlotManager);
         }
     }
 }

@@ -35,6 +35,21 @@ namespace CardsAndDices
         /// </summary>
         public bool IsSuppressed { get; set; }
 
+        /// <summary>
+        /// アビリティが実行できるかチェックします
+        /// </summary>
+        public bool ExecuteAbility(CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager, SpriteCommandBus spriteCommandBus)
+        {
+            if (IsSuppressed) return false;
+            if (RemainingUsages <= 0) return false;
+            if (!Data.TriggerCondition.Check(OwnerId, creatureManager, diceManager, abilityManager)) return false;
+            var abilityContext = new BaseAbilityEffectDefinitionSO.AbilityContext();
+            abilityContext.SourceId = OwnerId;
+            abilityContext.TargetIds = Data.TargetSelector.SelectTarget(OwnerId, creatureManager, diceManager);
+            Data.EffectDefinition.Execute(abilityContext, spriteCommandBus, creatureManager, diceManager, abilityManager, effectManager);
+            Data.Duration.OnUse(this);
+            return true;
+        }
         public AbilityInstance(CompositeObjectId ownerId, BaseAbilityDataSO data, CompositeObjectId subOwnerId)
         {
             OwnerId = ownerId;

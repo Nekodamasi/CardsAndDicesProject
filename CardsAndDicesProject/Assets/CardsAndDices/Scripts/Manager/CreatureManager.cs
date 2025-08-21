@@ -14,6 +14,7 @@ namespace CardsAndDices
         private ViewRegistry _viewRegistry;
         private SpriteCommandBus _commandBus;
         private AbilityManager _abilityManager; // 追加
+        private CardSlotManager _cardSlotManager;
         private readonly Dictionary<CompositeObjectId, ICreature> _creatures = new();
         private readonly Dictionary<CompositeObjectId, CreatureCardPresenter> _presenters = new();
 
@@ -21,13 +22,14 @@ namespace CardsAndDices
         /// CombatManagerを初期化します。
         /// </summary>
         [Inject]
-        public void Initialize(ViewRegistry viewRegistry, SpriteCommandBus commandBus, EffectManager effectManager, AbilityManager abilityManager)
+        public void Initialize(ViewRegistry viewRegistry, SpriteCommandBus commandBus, EffectManager effectManager, AbilityManager abilityManager, CardSlotManager cardSlotManager)
         {
             ClearCollections();
-            _creatureFactory = new CreatureFactory(effectManager, commandBus);
+            _creatureFactory = new CreatureFactory(effectManager, commandBus, cardSlotManager);
             _viewRegistry = viewRegistry;
             _commandBus = commandBus;
-            _abilityManager = abilityManager; // 初期化
+            _abilityManager = abilityManager;
+            _cardSlotManager = cardSlotManager;
         }
 
         private void ClearCollections()

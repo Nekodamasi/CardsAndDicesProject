@@ -8,11 +8,12 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "UnlimitedUsage", menuName = "CardsAndDices/Abilities/Durations/UnlimitedUsage")]
     public class UnlimitedUsageSO : BaseAbilityDurationSO
     {
-        public override void OnEvent(AbilityInstance instance, ICommand command)
+        public override void OnUse(AbilityInstance instance)
         {
         }
         public override void OnReset(AbilityInstance instance)
         {
+            instance.RemainingUsages = 99;
         }
     }
 }

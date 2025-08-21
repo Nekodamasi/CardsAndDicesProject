@@ -51,6 +51,12 @@ namespace CardsAndDices
         int Energy { get; }
 
         /// <summary>
+        /// The current energy of the creature.
+        /// </summary>
+        SlotLocation Location { get; }
+
+
+        /// <summary>
         /// Applies a specified amount of damage to the creature.
         /// </summary>
         /// <param name="amount">The amount of damage to take.</param>

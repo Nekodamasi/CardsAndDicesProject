@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace CardsAndDices
 {
@@ -13,7 +14,7 @@ namespace CardsAndDices
         public class AbilityContext
         {
             public CompositeObjectId SourceId;
-            public CompositeObjectId TargetId;
+            public List<CompositeObjectId> TargetIds;
             public int DiceValue;
             // Add other context-specific data as needed
         }
@@ -23,6 +24,6 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="context">The context of the ability execution.</param>
         /// <param name="commandBus">The command bus to dispatch new commands if needed.</param>
-        public abstract void Execute(AbilityContext context, SpriteCommandBus commandBus);
+        public abstract void Execute(AbilityContext context, SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager);
     }
 }

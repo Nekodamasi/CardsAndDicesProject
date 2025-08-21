@@ -16,15 +16,17 @@ namespace CardsAndDices
         private CreatureManager _creatureManager;
         private DiceManager _diceManager;
         private AbilityFactory _abilityFactory;
+        private EffectManager _effectManager;
 
         private readonly List<AbilityInstance> _abilities = new();
 
         [Inject]
-        public void Initialize(SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager)
+        public void Initialize(SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager)
         {
             _commandBus = commandBus;
             _creatureManager = creatureManager;
             _diceManager = diceManager;
+            _effectManager = effectManager;
             _abilityFactory = new AbilityFactory();
             // すべてのコマンドをサブスクライブします。より最適化されたアプローチとしては、専用のイベントタイプを使用するとよいでしょう
             _commandBus.On<ICommand>(OnCommandDispatched);
@@ -56,9 +58,14 @@ namespace CardsAndDices
 
         private void OnExecuteAbilityEffect(ICommand command)
         {
+            foreach (var instance in _abilities)
+            {
+                Debug.Log("<color=Green>OnExecuteAbilityEffect：</color>" + instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus));
+            }
         }
         private void OnCommandDispatched(ICommand command)
         {
+/*
             // Handle ability triggering
             foreach (var instance in _abilities)
             {
@@ -82,6 +89,7 @@ namespace CardsAndDices
             {
                 instance.Data.Duration?.OnEvent(instance, command);
             }
+*/
         }
     }
 }

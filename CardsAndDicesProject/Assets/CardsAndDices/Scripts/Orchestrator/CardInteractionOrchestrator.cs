@@ -233,6 +233,9 @@ namespace CardsAndDices
             _uiStateMachine.SetState(UIStateMachine.UIState.Idle);
             _isDroppedSuccessfully = false;
             _commandBus.Emit(new EnableUIInteractionCommand());
+            Debug.Log("<color=Green>あびりてぃーーーーーー-></color>");
+            _commandBus.Emit(new ExecuteAbilityEffectCommand(TriggerTiming.CardPlacement, null, null));
+
         }
 
         private async void OnDragReflowCompleted(DragReflowCompletedCommand command)

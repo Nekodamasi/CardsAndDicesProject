@@ -13,6 +13,6 @@ namespace CardsAndDices
         /// <param name="command">The command that was dispatched on the event bus.</param>
         /// <param name="abilityInstance">The instance of the ability being checked.</param>
         /// <returns>True if the condition is met, false otherwise.</returns>
-        public abstract bool Check(ICommand command, AbilityInstance abilityInstance);
+        public abstract bool Check(CompositeObjectId ownerId, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager);
     }
 }
