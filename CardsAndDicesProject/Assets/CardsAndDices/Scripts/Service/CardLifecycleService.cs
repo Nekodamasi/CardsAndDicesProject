@@ -11,13 +11,15 @@ namespace CardsAndDices
     {
         private CreatureManager _creatureManager;
         private DiceInletManager _diceInletManager;
+        private AbilityManager _abilityManager;
         private ViewRegistry _viewRegistry;
 
         [Inject]
-        public void Initialize(CreatureManager creatureManager, DiceInletManager diceInletManager, ViewRegistry viewRegistry)
+        public void Initialize(CreatureManager creatureManager, DiceInletManager diceInletManager, AbilityManager abilityManager, ViewRegistry viewRegistry)
         {
             _creatureManager = creatureManager;
             _diceInletManager = diceInletManager;
+            _abilityManager = abilityManager;
             _viewRegistry = viewRegistry;
         }
 
@@ -32,8 +34,16 @@ namespace CardsAndDices
             _creatureManager.SpawnCreature(initData.CreatureData, cardView);
             cardView.SetSpawnedState(true);
 
+            // アビリティのスポーン
+            var Abilities = initData.CreatureData.Abilities;
+            for (int i = 0; i < Abilities.Count; i++)
+            {
+                Debug.Log("<color=Blue>ability:</color>" + cardView.GetCurrentCardId() + "_" + Abilities[i].Id);
+                _abilityManager.RegisterAbility(Abilities[i], cardView.GetCurrentCardId(), null);
+            }
+
             // インレット能力をRegistryに登録
-            var inletViews = cardView.GetInletViews();
+                var inletViews = cardView.GetInletViews();
             if (inletViews.Count != initData.InletAbilityProfiles.Count)
             {
                 Debug.LogError($"CardLifecycleService: インレットの数({inletViews.Count})とプロファイルの数({initData.InletAbilityProfiles.Count})が一致しません。");

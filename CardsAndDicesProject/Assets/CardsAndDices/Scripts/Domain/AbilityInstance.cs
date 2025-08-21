@@ -6,42 +6,42 @@ namespace CardsAndDices
     public class AbilityInstance
     {
         /// <summary>
-        /// Unique identifier for this specific instance of the ability.
+        /// abilityの所有者のオブジェクトID
         /// </summary>
-        public CompositeObjectId Id { get; }
+        public CompositeObjectId OwnerId { get; }
 
         /// <summary>
-        /// The ScriptableObject that defines this ability's behavior.
+        /// アビリティデータ
         /// </summary>
         public BaseAbilityDataSO Data { get; }
 
         /// <summary>
-        /// The creature that owns this ability instance.
+        /// サブオーナーID
         /// </summary>
-        public ICreature OwnerCreature { get; }
+        public CompositeObjectId SubOwnerId { get; }
 
         /// <summary>
-        /// The current cooldown turns remaining.
+        /// 現在クールダウン値
         /// </summary>
         public int CurrentCooldown { get; set; }
 
         /// <summary>
-        /// The number of times this ability can still be used.
+        /// 残り使用回数
         /// </summary>
         public int RemainingUsages { get; set; }
 
         /// <summary>
-        /// If true, the ability is temporarily suppressed and cannot be triggered.
+        /// スポーンフラグ
         /// </summary>
         public bool IsSuppressed { get; set; }
 
-        public AbilityInstance(CompositeObjectId id, BaseAbilityDataSO data, ICreature owner)
+        public AbilityInstance(CompositeObjectId ownerId, BaseAbilityDataSO data, CompositeObjectId subOwnerId)
         {
-            Id = id;
+            OwnerId = ownerId;
             Data = data;
-            OwnerCreature = owner;
+            SubOwnerId = subOwnerId;
             IsSuppressed = false;
-            data.Duration?.Reset(this);
+            data.Duration?.OnReset(this);
         }
     }
 }

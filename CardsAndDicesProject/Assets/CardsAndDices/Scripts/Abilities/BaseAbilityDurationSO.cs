@@ -21,7 +21,7 @@ namespace CardsAndDices
         /// アビリティインスタンスの持続状態を初期値にリセットします。
         /// </summary>
         /// <param name="instance">The ability instance to reset.</param>
-        public virtual void Reset(AbilityInstance instance)
+        public virtual void OnReset(AbilityInstance instance)
         {
             instance.RemainingUsages = InitialValue;
             instance.CurrentCooldown = 0;

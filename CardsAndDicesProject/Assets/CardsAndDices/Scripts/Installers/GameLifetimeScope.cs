@@ -109,14 +109,14 @@ namespace CardsAndDices
             _cardInteractionStrategy.Initialize();
             _systemReflowController.Initialize(_spriteCommandBus, _cardInteractionOrchestrator, _diceInteractionOrchestrator);
             _viewRegistry.Initialize();
-            _cardLifecycleService.Initialize(_creatureManager, _diceInletManager, _viewRegistry);
+            _cardLifecycleService.Initialize(_creatureManager, _diceInletManager, _abilityManager, _viewRegistry);
             _diceManager.Initialize(_compositeObjectIdManager, _viewRegistry);
             _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager);
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
             _uiActivationPolicy.Initialize(_diceInletManager, _diceManager);
             _creatureManager.Initialize(_viewRegistry, _spriteCommandBus, _effectManager, _abilityManager);
-            _abilityManager.Initialize(_spriteCommandBus, _compositeObjectIdManager);
+            _abilityManager.Initialize(_spriteCommandBus, _creatureManager, _diceManager);
 
             foreach (var cardView in _creatureCardViews)
             {

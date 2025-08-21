@@ -16,6 +16,16 @@ namespace CardsAndDices
         public EffectData Data { get; private set; }
 
         /// <summary>
+        /// 参照先のEffectData
+        /// </summary>
+        public int CurrentValue { get; private set; }
+
+        /// <summary>
+        /// 適用対象タイプ
+        /// </summary>
+        public EffectTargetType TargetType { get; private set; }
+
+        /// <summary>
         /// 残存ターン数
         /// </summary>
         public int RemainingTurns { get; private set; }

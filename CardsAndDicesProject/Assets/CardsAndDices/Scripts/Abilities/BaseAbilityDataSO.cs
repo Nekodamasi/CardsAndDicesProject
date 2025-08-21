@@ -3,13 +3,16 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// Abstract base class for all ability definition ScriptableObjects.
-    /// It holds references to the specific condition, effect, and duration logic.
+    /// すべてのアビリティ定義 ScriptableObjects の抽象基本クラス
+    /// 特定の条件、効果、効果範囲、および期間のロジックへの参照を保持します。
     /// </summary>
     public abstract class BaseAbilityDataSO : ScriptableObject
     {
         [Tooltip("この機能の一意の識別子")]
         public string Id;
+
+        [Tooltip("この能力の効果範囲")]
+        public BaseAbilityTargetSelectorSO TargetSelector;
 
         [Tooltip("この能力を発動させる条件")]
         public BaseAbilityTriggerConditionSO TriggerCondition;

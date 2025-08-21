@@ -15,7 +15,7 @@ namespace CardsAndDices
         {
             if (command is CreatureAttackedCommand attackedCommand)
             {
-                return attackedCommand.TargetId == abilityInstance.OwnerCreature.Id;
+                return false;
             }
             return false;
         }
