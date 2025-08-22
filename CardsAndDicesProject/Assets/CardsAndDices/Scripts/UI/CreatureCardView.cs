@@ -70,18 +70,6 @@ namespace CardsAndDices
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
         }
 
-        /// <summary>
-        /// クリーチャーデータをViewに適用します。
-        /// </summary>
-        /// <param name="data">適用するクリーチャーデータ。</param>
-        public void ApplyData(CreatureData data)
-        {
-            CurrentCreatureData = data; // ここでデータを保持
-            // TODO: CreatureDataの内容をViewに反映するロジックを実装
-            // 例: _cardName = data.CreatureName;
-            // カードの見た目やテキストを更新する
-        }
-
         public void SetGrayscale(bool enabled)
         {
             IsGrayscale = enabled;

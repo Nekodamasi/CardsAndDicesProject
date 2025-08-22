@@ -23,6 +23,7 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager)
         {
+            ClearCollections();
             _commandBus = commandBus;
             _creatureManager = creatureManager;
             _diceManager = diceManager;
@@ -31,6 +32,10 @@ namespace CardsAndDices
             // すべてのコマンドをサブスクライブします。より最適化されたアプローチとしては、専用のイベントタイプを使用するとよいでしょう
             _commandBus.On<ICommand>(OnCommandDispatched);
             _commandBus.On<ExecuteAbilityEffectCommand>(OnExecuteAbilityEffect);
+        }
+        private void ClearCollections()
+        {
+            _abilities.Clear();
         }
 
         private void OnDisable()

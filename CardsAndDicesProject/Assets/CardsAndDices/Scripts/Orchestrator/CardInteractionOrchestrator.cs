@@ -234,7 +234,10 @@ namespace CardsAndDices
             _isDroppedSuccessfully = false;
             _commandBus.Emit(new EnableUIInteractionCommand());
             Debug.Log("<color=Green>あびりてぃーーーーーー-></color>");
+            
+            _commandBus.Emit(new UpdateEffectExpiredCommand(TriggerTiming.CardPlacement));
             _commandBus.Emit(new ExecuteAbilityEffectCommand(TriggerTiming.CardPlacement, null, null));
+            _commandBus.Emit(new CreatureCardUpdateDisplayCommand());
 
         }
 

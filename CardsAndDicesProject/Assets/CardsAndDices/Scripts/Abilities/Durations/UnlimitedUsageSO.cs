@@ -13,7 +13,7 @@ namespace CardsAndDices
         }
         public override void OnReset(AbilityInstance instance)
         {
-            instance.RemainingUsages = 99;
+            instance.RemainingUsages = InitialValue;
         }
     }
 }

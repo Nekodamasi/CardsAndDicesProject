@@ -17,11 +17,17 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(SpriteCommandBus commandBus)
         {
+            ClearCollections();
             _commandBus = commandBus;
             _effectFactory = new EffectFactory();
             _commandBus.On<UpdateEffectExpiredCommand>(OnUpdateEffectExpired);
             _commandBus.On<ApplyEffectCommand>(OnApplyEffect);
         }
+        private void ClearCollections()
+        {
+            _activeEffects.Clear();
+        }
+
         private void OnDisable()
         {
             _commandBus.Off<UpdateEffectExpiredCommand>(OnUpdateEffectExpired);
@@ -31,7 +37,7 @@ namespace CardsAndDices
         private void OnApplyEffect(ApplyEffectCommand command)
         {
             var instance = _effectFactory.Create(command.TargetObjectId, command.EffectData, command.EffectTargetType, command.Value);
-            Debug.Log("<color=Green>えふぇくとあぷらい：</color>" + instance.TargetType);
+            Debug.Log("<color=Green>えふぇくとあぷらい：</color>" + command.TargetObjectId + "_" + instance.TargetType + "_" + instance.CurrentValue);
             RegisterEffect(instance);
         }
 

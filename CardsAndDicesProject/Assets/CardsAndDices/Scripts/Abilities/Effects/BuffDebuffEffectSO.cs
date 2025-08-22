@@ -26,6 +26,7 @@ namespace CardsAndDices
             {
                 foreach (var buffDebuff in _buffDebuffContexts)
                 {
+                    Debug.Log("<color=Green>アプライエフェクト：</color>" + targetId + "_");
                     commandBus.Emit(new ApplyEffectCommand(targetId, _effectData, buffDebuff.EffectTargetType, buffDebuff.Value));
                 }
             }

@@ -21,12 +21,19 @@ namespace CardsAndDices
             _view = view;
             _commandBus = commandBus;
 
-//            SubscribeToEvents();
+            SubscribeToEvents();
             ForceUpdateDisplay(); // Initial display update
+        }
+
+        private void OnCreatureCardUpdateDisplay(CreatureCardUpdateDisplayCommand cmd)
+        {
+            ForceUpdateDisplay();
         }
 
         private void SubscribeToEvents()
         {
+            _commandBus.On<CreatureCardUpdateDisplayCommand>(OnCreatureCardUpdateDisplay);
+
             switch (_view.StatusIconData.TargetType)
             {
                 case EffectTargetType.Health:
@@ -122,7 +129,7 @@ namespace CardsAndDices
 
         public void Dispose()
         {
-//            UnsubscribeFromEvents();
+            UnsubscribeFromEvents();
         }
     }
 }
