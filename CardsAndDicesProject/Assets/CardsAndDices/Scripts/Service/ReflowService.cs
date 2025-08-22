@@ -32,7 +32,7 @@ namespace CardsAndDices
         /// 各ラインで前衛方向に無配置のカードスロットがある場合、そちらに向かって隙間なく詰める移動を計算します。
         /// </summary>
         /// <returns>前詰めによって移動するカードのIDと移動先のワールド座標の辞書。</returns>
-        public Dictionary<CompositeObjectId, Vector3> CalculateFrontLoadMovements(CompositeObjectId draggedCardId)
+        public Dictionary<CompositeObjectId, Vector3> CalculateFrontLoadMovements(CompositeObjectId draggedCardId, Team team)
         {
             var movements = new Dictionary<CompositeObjectId, Vector3>();
 
@@ -42,9 +42,9 @@ namespace CardsAndDices
                 if (line == LinePosition.TopLine || line == LinePosition.BottomLine)
                 {
                     // 各位置のスロットデータを取得
-                    var rear = _repository.GetSlotDataByLocation(line, SlotLocation.Rear);
-                    var center = _repository.GetSlotDataByLocation(line, SlotLocation.Center);
-                    var vanguard = _repository.GetSlotDataByLocation(line, SlotLocation.Vanguard);
+                    var rear = _repository.GetSlotDataByLocation(team, line, SlotLocation.Rear);
+                    var center = _repository.GetSlotDataByLocation(team, line, SlotLocation.Center);
+                    var vanguard = _repository.GetSlotDataByLocation(team, line, SlotLocation.Vanguard);
 
                     // CenterからVanguardへの移動
                     // Centerにカードがあり、Vanguardが空いている場合
@@ -193,7 +193,7 @@ namespace CardsAndDices
                      targetSlotData.Location == SlotLocation.Rear)
             {
                 // Centerスロットのデータを取得
-                CardSlotData centerSlotData = _repository.GetSlotDataByLocation(draggedSlotData.Line, SlotLocation.Center);
+                CardSlotData centerSlotData = _repository.GetSlotDataByLocation(Team.Player, draggedSlotData.Line, SlotLocation.Center);
 
                 // １つずつずらして移動情報を記録
                 // Centerのカードをドラッグ元スロットの位置へ
@@ -307,11 +307,11 @@ namespace CardsAndDices
                     switch (currentLocation)
                     {
                         case SlotLocation.Vanguard:
-                            return _repository.GetSlotDataByLocation(LinePosition.TopLine, SlotLocation.Center);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.TopLine, SlotLocation.Center);
                         case SlotLocation.Center:
-                            return _repository.GetSlotDataByLocation(LinePosition.TopLine, SlotLocation.Rear);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.TopLine, SlotLocation.Rear);
                         case SlotLocation.Rear:
-                            return _repository.GetSlotDataByLocation(LinePosition.BottomLine, SlotLocation.Rear);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.BottomLine, SlotLocation.Rear);
                     }
                 }
                 else // currentLine == LinePosition.Bottom
@@ -319,9 +319,9 @@ namespace CardsAndDices
                     switch (currentLocation)
                     {
                         case SlotLocation.Rear:
-                            return _repository.GetSlotDataByLocation(LinePosition.BottomLine, SlotLocation.Center);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.BottomLine, SlotLocation.Center);
                         case SlotLocation.Center:
-                            return _repository.GetSlotDataByLocation(LinePosition.BottomLine, SlotLocation.Vanguard);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.BottomLine, SlotLocation.Vanguard);
                         // case SlotLocation.Vanguard: ルールにないのでnullが返る
                     }
                 }
@@ -334,11 +334,11 @@ namespace CardsAndDices
                     switch (currentLocation)
                     {
                         case SlotLocation.Vanguard:
-                            return _repository.GetSlotDataByLocation(LinePosition.BottomLine, SlotLocation.Center);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.BottomLine, SlotLocation.Center);
                         case SlotLocation.Center:
-                            return _repository.GetSlotDataByLocation(LinePosition.BottomLine, SlotLocation.Rear);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.BottomLine, SlotLocation.Rear);
                         case SlotLocation.Rear:
-                            return _repository.GetSlotDataByLocation(LinePosition.TopLine, SlotLocation.Rear);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.TopLine, SlotLocation.Rear);
                     }
                 }
                 else // currentLine == LinePosition.TopLineLine
@@ -346,9 +346,9 @@ namespace CardsAndDices
                     switch (currentLocation)
                     {
                         case SlotLocation.Rear:
-                            return _repository.GetSlotDataByLocation(LinePosition.TopLine, SlotLocation.Center);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.TopLine, SlotLocation.Center);
                         case SlotLocation.Center:
-                            return _repository.GetSlotDataByLocation(LinePosition.TopLine, SlotLocation.Vanguard);
+                            return _repository.GetSlotDataByLocation(Team.Player, LinePosition.TopLine, SlotLocation.Vanguard);
                         // case SlotLocation.Vanguard: ルールにないのでnullが返る
                     }
                 }
@@ -366,7 +366,7 @@ namespace CardsAndDices
         /// <returns>対応するCardSlotData。見つからない場合はnull。</returns>
         private CardSlotData GetSlotDataByLocation(LinePosition line, SlotLocation location)
         {
-            return _repository.GetSlotDataByLocation(line, location);
+            return _repository.GetSlotDataByLocation(Team.Player, line, location);
         }
     }
 }

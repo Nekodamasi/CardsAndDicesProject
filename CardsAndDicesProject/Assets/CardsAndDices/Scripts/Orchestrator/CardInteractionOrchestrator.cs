@@ -261,7 +261,22 @@ namespace CardsAndDices
         private async void OnExecuteFrontLoad(ExecuteFrontLoadCommand command)
         {
             if (UIStateMachine.CurrentState != UIStateMachine.UIState.DropedCardMove) return;
-            var frontLoadMovements = _reflowService.CalculateFrontLoadMovements(_draggedId);
+            var frontLoadMovements = _reflowService.CalculateFrontLoadMovements(_draggedId, Team.Player);
+            if (frontLoadMovements.Count > 0)
+            {
+                var animationTasks = new List<UniTask>();
+                foreach (var movement in frontLoadMovements)
+                {
+                    var cardView = _viewRegistry.GetView<CreatureCardView>(movement.Key);
+                    if (cardView != null)
+                    {
+                        animationTasks.Add(cardView.MoveToAnimated(movement.Value));
+                    }
+                }
+                await UniTask.WhenAll(animationTasks);
+            }
+
+            frontLoadMovements = _reflowService.CalculateFrontLoadMovements(_draggedId, Team.Enemy);
             if (frontLoadMovements.Count > 0)
             {
                 var animationTasks = new List<UniTask>();

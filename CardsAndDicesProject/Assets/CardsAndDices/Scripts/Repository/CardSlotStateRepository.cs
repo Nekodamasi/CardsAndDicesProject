@@ -37,9 +37,9 @@ namespace CardsAndDices
             return slotData;
         }
 
-        public CardSlotData GetSlotDataByLocation(LinePosition line, SlotLocation location)
+        public CardSlotData GetSlotDataByLocation(Team team, LinePosition line, SlotLocation location)
         {
-            return _slotDataMap.Values.FirstOrDefault(s => s.Line == line && s.Location == location);
+            return _slotDataMap.Values.FirstOrDefault(s => s.Line == line && s.Location == location && s.Team == team);
         }
         
         public CardSlotData GetSlotDataByReflowPlacedCardId(CompositeObjectId reflowPlacedCardId)
