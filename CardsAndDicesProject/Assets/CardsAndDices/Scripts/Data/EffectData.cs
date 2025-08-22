@@ -10,19 +10,12 @@ namespace CardsAndDices
     public class EffectData : ScriptableObject
     {
         [Tooltip("効果を識別するための一意なID")]
-        public string EffectId;
+        [SerializeField] private  BuffDebuffType _buffDebuffType;
+        public BuffDebuffType BuffDebuffType => _buffDebuffType;
 
-        [Tooltip("ステータス増減量")]
-        [SerializeField] private int _value;
-        public int Value => _value;
-
-        [Tooltip("適用対象タイプ")]
-        [SerializeField] private EffectTargetType _targetType;
-        public EffectTargetType TargetType => _targetType;
-
-        [Tooltip("持続条件タイプ")]
-        [SerializeField] private EffectDurationType _durationType;
-        public EffectDurationType DurationType => _durationType;
+        [Tooltip("更新タイミング")]
+        [SerializeField] private TriggerTiming _updateTiming;
+        public TriggerTiming UpdateTiming => _updateTiming;
 
         [Tooltip("持続ターン数または条件値")]
         [SerializeField] private int _durationValue;

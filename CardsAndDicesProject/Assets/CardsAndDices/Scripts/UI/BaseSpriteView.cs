@@ -5,7 +5,7 @@ using VContainer;
 
 namespace CardsAndDices
 {
-    public abstract class BaseSpriteView : MonoBehaviour
+    public abstract class BaseSpriteView : MonoBehaviour, IGameInitializable
     {
         [Header("Components")]
         [SerializeField] protected MultiRendererVisualController _multiRendererVisualController;
@@ -83,6 +83,9 @@ namespace CardsAndDices
 
             // OrchestratorのViewRegistryに自身を登録
             _orchestrator?.RegisterView(this);
+        }
+        public virtual void OnStart()
+        {
         }
 
         protected virtual void OnDestroy()

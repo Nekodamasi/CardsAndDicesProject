@@ -454,22 +454,44 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-sys_ability_management.mdに記載された機能を実装します
-各ファイルの格納場所は、  D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.mdを参照のこと
+ファイルが読めない問題が発生しております。gitの設定ファイルを無視してください
 
-step1. 関連する設計書を読込、このプロジェクトのルールや原則を理解します
-    - 関連設計書
-        - guide_ui_interaction_design.md
-        - gdd_composite_object_id.md
-        - gdd_sprite_ui_design.md
-        - sys_effect_management.md
-        - sys_creature_management.md
-        - gdd_combat_system.md
-        - guide_rules.md
-        - guide_files.md
+途中で止まってしまった様にみえます
+続きを実行できますか？
 
-step2. sys_effect_management.mdを読込、各クラスの機能や実装内容を生成します
-step3. guide_unity-cs.mdのガイドに従い、ソースプログラムを生成し、適切な名前で適切なディレクトリに保存します
+このプロジェクトでは、初期化処理の同期をとるために以下のソースプログラムにて初期化処理を行っている
+この仕様を設計書に記載したい。「確認すべき設計書」に追記が必要な場合は、追記してください
+新規に設計書を作成する必要がある場合は、guide_rules.mdとguide_files.mdのガイドに従って作成してください
+作業の流れは、実行タスクに従って下さい
+
+# 実行タスク
+
+ - step1. ソースプログラムの確認
+    - 「ソースプログラム」のファイルを読込、実装内容を正しく理解してください
+
+ - step2. 確認すべき設計書の確認
+    - 「確認すべき設計書」のファイルを読込、記載内容を正しく理解してください
+    - ソースプログラムの内容やルールを記載すべきだと判断した場合は、既存の内容と整合性を担保しつつ修正してください
+
+ - step3. 追加設計書の確認
+    - 「ソースプログラム」の内容を記載するのに、既存の設計書だけでは不十分である場合は、新規の設計書を作成してください
+    - 新規設計書は、guide_rules.mdとguide_files.mdのガイドに従い、適切な名称をつけて、適切な場所に保存してください
+    - 新規設計書を追加した場合は、ファイル一覧を更新してください
+
+# 確認すべき設計書
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_design-principles.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_rules.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_files.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_sprite_ui_design.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md
+
+# ソースプログラム
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IGameInitializable.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Installers\GameInitializer.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Installers\GameLifetimeScope.cs
+
+# ファイル一覧
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.md
 </Task>
 
 指示を書くには、次の指示に従ってください。

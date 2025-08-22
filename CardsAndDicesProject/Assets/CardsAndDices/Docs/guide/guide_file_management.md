@@ -24,6 +24,10 @@
     - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys`
     - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\ui`
     - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\Durations`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\Effects`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\Targets`
+    - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\Triggers`
     - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands`
     - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data`
     - `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Installers`
@@ -71,6 +75,7 @@
 
 - [ ] 対象ディレクトリ配下のすべての`.md`ファイルと`.cs`ファイルがリストに含まれているか。
 - [ ] 各ファイルの「解説」が適切で、そのファイルの役割を簡潔に表しているか。
+- [ ] 各ファイルの「解説」が(要追記)となっていないか。
 - [ ] 「格納場所」が正しいフルパスになっているか。
 - [ ] Markdownテーブルのフォーマットが崩れていないか。
 

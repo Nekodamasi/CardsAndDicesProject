@@ -6,9 +6,9 @@ namespace CardsAndDices
     public class EffectInstance
     {
         /// <summary>
-        /// 対象カードの識別子
+        /// エフェクトの対象者の識別子
         /// </summary>
-        public CompositeObjectId CardId { get; private set; }
+        public CompositeObjectId TargetObjectId { get; private set; }
 
         /// <summary>
         /// 参照先のEffectData
@@ -40,50 +40,29 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="effectData">参照するエフェクトデータ</param>
         /// <param name="cardId">対象カードのID</param>
-        public void Initialize(EffectData effectData, CompositeObjectId cardId)
+        public void Initialize(EffectData effectData, CompositeObjectId cardId, EffectTargetType effectTargetType, int currentValue)
         {
             Data = effectData;
-            CardId = cardId;
+            TargetObjectId = cardId;
             IsExpired = false;
+            TargetType = effectTargetType;
+            CurrentValue = currentValue;
 
-            if (Data.DurationType == EffectDurationType.TurnCount)
-            {
-                RemainingTurns = Data.DurationValue;
-            }
-        }
-
-        /// <summary>
-        /// イベントを受信した際の処理。
-        /// </summary>
-        /// <param name="eventData">受信したイベントデータ</param>
-        public void OnEvent(ICommand eventData)
-        {
-            // TODO: イベントに応じた処理を実装
-            // 例: TurnStartEventならRemainingTurnsをデクリメント
-            CheckExpiration();
+            RemainingTurns = Data.DurationValue;
         }
 
         /// <summary>
         /// 有効期限をチェックし、切れていればIsExpiredフラグを立てます。
         /// </summary>
-        public void CheckExpiration()
+        public void CheckExpired(TriggerTiming triggerTiming)
         {
-            if (Data.DurationType == EffectDurationType.TurnCount && RemainingTurns <= 0)
-            {
-                IsExpired = true;
-            }
-            // TODO: 他のDurationTypeに応じた期限切れチェックを実装
-        }
-
-        /// <summary>
-        /// ターン数を1減少させます。
-        /// </summary>
-        public void DecrementTurn()
-        {
-            if (Data.DurationType == EffectDurationType.TurnCount)
+            if (Data.UpdateTiming == triggerTiming)
             {
                 RemainingTurns--;
-                CheckExpiration();
+            }
+            if (RemainingTurns <= 0)
+            {
+                IsExpired = true;
             }
         }
     }

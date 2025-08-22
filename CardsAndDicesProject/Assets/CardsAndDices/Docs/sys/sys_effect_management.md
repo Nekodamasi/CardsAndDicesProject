@@ -1,15 +1,10 @@
 # sys_effect_management.md - エフェクト管理設計書
 
-## 目的
-
-システム全体でのバフ／デバフ効果の適用および寿命管理を統一的に実装する。
-
 ---
 
-## 範囲
+## 概要
 
-- `EffectData`、`EffectInstance`、`EffectManager` の設計  
-- コマンドとの連携およびイベント駆動フローの定義  
+このドキュメントは、ゲーム内におけるバフ・デバフといった継続的な効果（エフェクト）のデータ定義、ライフサイクル管理、および関連システムとの連携方法について設計するものです。
 
 ---
 
@@ -17,67 +12,93 @@
 
 ### 1. EffectData
 
-- バフ／デバフ効果内容を定義する ScriptableObject  
-- 主なフィールド  
-  - `effectId`: 効果識別子  
-  - `name`: 効果名  
-  - `value`: ステータス増減量  
-  - `targetType`: 適用対象タイプ  
-  - `durationType`: 持続条件タイプ（TurnCount, CooldownReset, EventTrigger）  
-  - `durationValue`: 持続ターン数または条件値  
-  - `eventTriggers`: 対応するイベント名一覧  
+バフ・デバフ効果の静的な情報を定義するScriptableObjectです。
+
+-   **主なフィールド:**
+    -   `BuffDebuffType`: エフェクトの種類を識別するEnum型。
+    -   `UpdateTiming`: 効果の持続時間を更新するタイミング（例: ターン開始時、終了時）を定義する`TriggerTiming` Enum型。
+    -   `DurationValue`: 効果が持続するターン数。
 
 ### 2. EffectInstance
 
-- `EffectData` を参照し、カードごとに生成される実行時エフェクトインスタンス  
-- 主なプロパティ
-  - `cardId`: 対象カード識別子
-  - `data`: 参照先の `EffectData`  
-  - `remainingTurns`: 残存ターン数  
-  - `isExpired`: 有効期限切れフラグ  
-- 主なメソッド  
-  - `Initialize(effectData, cardId)`: インスタンス初期化  
-  - `OnEvent(eventData)`: イベント受信処理  
-  - `CheckExpiration()`: 寿命判定  
+`EffectData`に基づき、特定のターゲットに対して適用されたエフェクトの実行時インスタンスです。
+
+-   **主なプロパティ:**
+    -   `TargetObjectId`: エフェクトが適用されている対象のID。
+    -   `Data`: 参照する`EffectData`。
+    -   `CurrentValue`: 現在の効果量（例: 攻撃力+5の「5」の部分）。
+    -   `TargetType`: 効果が影響を与えるステータスの種類（例: 攻撃力、体力）。
+    -   `RemainingTurns`: 効果が持続する残りターン数。
+    -   `IsExpired`: 効果が期限切れになったかどうかを示すフラグ。
+
+-   **主なメソッド:**
+    -   `Initialize(effectData, cardId, effectTargetType, currentValue)`: インスタンスを初期化します。
+    -   `CheckExpired(triggerTiming)`: 指定されたタイミングに基づき、残りターン数を更新し、期限切れかどうかを判定します。
 
 ---
 
 ## EffectManager
 
-- バフ／デバフ効果を一元管理する ScriptableObject  
-- 責務  
-  - 登録された `EffectInstance` のリスト管理  
-  - `TurnStartEvent`、`CooldownResetEvent` の購読  
-  - イベント受信時に `remainingTurns` を更新し、`isExpired` を更新。  
-  - `RegisterEffect(effectInstance)` / `RemoveEffect(effectInstance)` の提供  
+全てのエフェクトインスタンスを一元管理するScriptableObjectです。
+
+-   **責務:**
+    -   現在アクティブな`EffectInstance`のリストを管理します。
+    -   `SpriteCommandBus`を購読し、`ApplyEffectCommand`と`UpdateEffectExpiredCommand`を処理します。
+    -   `EffectFactory`を使用して新しい`EffectInstance`を生成します。
+    -   `RegisterEffect(effectInstance)`: 新しいエフェクトをリストに追加します。
+    -   `RemoveEffect(effectInstance)`: 指定されたエフェクトをリストから削除します。
+    -   `GetTotalEffectValue(targetObjectId, targetType)`: 特定のターゲットと効果タイプに対する合計効果量を計算して返します。
 
 ---
 
-## イベントフロー
+## コマンドフロー
 
-- `TurnStartEvent`: すべての `EffectInstance` の残存ターン数を減少  
-- `CooldownResetEvent`: `CooldownCommand` 実行後、ペイロードに `cardId` を含めて発行  
-- カスタムイベント (`EventTrigger`): 任意条件で効果発動または終了  
+本システムのエフェクト適用と更新は、`SpriteCommandBus`を介したコマンドによって駆動されます。
+
+1.  **エフェクト適用**:
+    -   アビリティなどが発動されると、`BuffDebuffEffectSO`のようなクラスが`ApplyEffectCommand`を生成します。
+    -   このコマンドには、ターゲットID、`EffectData`、効果対象タイプ、効果量が格納されます。
+    -   `SpriteCommandBus.Emit()`を通じてコマンドが発行されます。
+    -   `EffectManager`がコマンドを購読し、`OnApplyEffect`メソッドで`EffectFactory`を使い`EffectInstance`を生成・登録します。
+
+2.  **エフェクト更新・期限切れ処理**:
+    -   ターン管理システムなどが、特定のタイミング（例: ターン開始時）で`UpdateEffectExpiredCommand`を発行します。
+    -   `EffectManager`がこのコマンドを購読し、`OnUpdateEffectExpired`メソッドで全アクティブエフェクトの`CheckExpired`を呼び出します。
+    -   `IsExpired`フラグが立ったエフェクトは、`RemoveExpiredEffects`メソッドによってリストから削除されます。
 
 ---
 
 ## コマンド連携
 
-- `BuffApplyCommand` / `DebuffApplyCommand`  
-  - `EffectInstance` を生成し、`EffectManager.RegisterEffect()` を実行  
-- `EffectExpirationCommand`  
-  - 寿命切れの `EffectInstance` を `EffectManager.RemoveEffect()` で破棄  
-- すべてのコマンドは `CommandInvoker` を介してキューイング・実行し、履歴登録を行う  
+### 1. SpriteCommandBus
+
+-   `ICommand`インターフェースを実装したコマンドを一元的に配信するイベントバスです。
+-   本システムでは、`CommandInvoker`の役割を果たし、各マネージャ間の疎結合な連携を実現します。
+
+### 2. ApplyEffectCommand
+
+-   新しいエフェクトをターゲットに適用する際に使用されるコマンドです。
+-   `EffectManager`がこれを処理し、エフェクトインスタンスを生成・登録します。
+
+### 3. UpdateEffectExpiredCommand
+
+-   エフェクトの残りターン数を更新し、期限切れをチェックするタイミングを通知するコマンドです。
+-   `EffectManager`がこれを処理し、全エフェクトのライフサイクルを管理します。
 
 ---
 
 ## 関連ファイル
 
-- [gdd_combat_system.md](../gdd/gdd_combat_system.md)
+-   [gdd_combat_system.md](../gdd/gdd_combat_system.md)
+-   [sys_ability_management.md](./sys_ability_management.md)
+-   [sys_creature_management.md](./sys_creature_management.md)
+-   [guide_design-principles.md](../guide/guide_design-principles.md)
 
 ---
 
 ## 更新履歴
 
-- 2025-07-12: 初版 (Technical Writer)  
-- 2025-08-15: EffectManagerをScriptableObjectとして再定義 (Gemini)
+-   2025-08-22: ソースコードの現状に合わせ、データ定義、管理クラスの責務、コマンドフローを全面的に更新 (Gemini)
+-   2025-08-21: 関連ファイルとコマンド名を最新化 (Gemini)
+-   2025-08-15: EffectManagerをScriptableObjectとして再定義 (Gemini)
+-   2025-07-12: 初版 (Technical Writer)
