@@ -86,6 +86,7 @@
 | sys_initialization_flow.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_initialization_flow.md |
 | sys_sprite_selector_design.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sprite_selector_design.md |
 | sys_status_icon_design.md | (要追記) | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_status_icon_design.md |
+| sys_wave_system.md | 戦闘における敵の出現パターンを管理する「ウェーブシステム」の設計 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_wave_system.md |
 
 ### Docs/ui
 

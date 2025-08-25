@@ -54,7 +54,7 @@ namespace CardsAndDices
             Debug.Log("こんばっとまねーじゃー：" + playerInitList.Count);
             foreach (CardInitializationData initData in playerInitList)
             {
-                CreatureCardView cardView = _viewRegistry.GetNextAvailableCreatureCardView(); // 利用可能なViewを取得
+                CreatureCardView cardView = _viewRegistry.GetNextAvailableCreatureCardView(CreatureCardType.PlayerCard); // 利用可能なViewを取得
                 if (cardView == null)
                 {
                     Debug.LogError("利用可能なCreatureCardViewが見つかりません。シーンに十分な数のカードが配置されているか確認してください。");
@@ -124,7 +124,7 @@ namespace CardsAndDices
             List<CardInitializationData> enemyInitList = _enemyCardDataProvider.GetCardDataListForWave(waveNumber);
             foreach (CardInitializationData initData in enemyInitList)
             {
-                CreatureCardView cardView = _viewRegistry.GetNextAvailableCreatureCardView(); // 利用可能なViewを取得
+                CreatureCardView cardView = _viewRegistry.GetNextAvailableCreatureCardView(CreatureCardType.EnemyCard); // 利用可能なViewを取得
                 if (cardView == null)
                 {
                     Debug.LogError("利用可能なCreatureCardViewが見つかりません。シーンに十分な数のカードが配置されているか確認してください。");

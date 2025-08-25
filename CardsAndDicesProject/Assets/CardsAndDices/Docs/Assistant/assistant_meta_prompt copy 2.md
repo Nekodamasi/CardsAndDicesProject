@@ -454,15 +454,36 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-敵のクリーチャーカードを配置できるようにしたい
-各CardSlotは、Team, SlotLocation, LinePositionの３つで一意の場所を指定できるが、SlotLocation, LinePositionだけで一意検索している箇所が見受けられる
-以下の設計書を読込、紐づくソースプログラムをすべて確認し、SlotLocation, LinePositionだけで一意のカードスロットを検索している箇所を洗い出してください
+戦闘システム設計書の「2. ウェーブ」を実装するにあたり、以下の実装方式を検討しています
+検討内容を確認し、タスクにそって、現状の実装状況から提案をしてください
 
-# 設計書
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_reflow_system.md
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md
+# タスク
 
+step1. 「戦闘システム設計書」を良く読込、戦闘システムの内容を理解します
+step2. 「関連する設計書」をすべて読込、関連するソースプログラムもすべて読み込んで、現在の実装を把握します
+step3. 「検討してる実装」を確認し、実装方法に問題がないか、より良い実装方法がないかを判断します
+
+# 検討してる実装
+
+- 「FixedCardInitializer」に「2.4 エネミークリーチャーカードを決めるパラメータ」のパラメータを追加する
+- 「ウェーブデータ」に相当するScriptableObjectのクラスを作り、各ウェーブのパラメータと配置場所を設定する
+- 「FixedCardInitializer」をリスト化するScriptableObjectのクラスを作り、パラメータに一致するものからRandomで取得できるようにする
+- 「ウェーブデータ」のパラメータを元に、実際に使用するウェーブデータを生成するManagerクラスを実装する
+
+# 戦闘システム設計書
+
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_combat_system.md
+
+# 関連する設計書
+
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_composite_object_id.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_reflow_system.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_sprite_ui_design.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_design-principles.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_card_lifecycle_design.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_management.md
 </Task>
 
 指示を書くには、次の指示に従ってください。

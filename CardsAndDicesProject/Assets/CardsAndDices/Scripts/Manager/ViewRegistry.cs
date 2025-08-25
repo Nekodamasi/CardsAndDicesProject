@@ -111,12 +111,12 @@ namespace CardsAndDices
         /// まだデータが適用されていない（初期化されていない）CreatureCardViewを取得します。
         /// </summary>
         /// <returns>利用可能なCreatureCardView、または見つからない場合はnull。</returns>
-        public CreatureCardView GetNextAvailableCreatureCardView()
+        public CreatureCardView GetNextAvailableCreatureCardView(CreatureCardType cardType)
         {
             foreach (var cardView in _creatureCardViews)
             {
                 // IsSpawnedがfalseのViewを探す
-                if (cardView.IsSpawned == false)
+                if (cardView.IsSpawned == false && cardView.CreatureCardType == cardType)
                 {
                     // 利用可能なViewが見つかったら、IsSpawnedをtrueに設定して返す
                     cardView.SetSpawnedState(true);

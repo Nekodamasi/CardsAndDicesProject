@@ -22,10 +22,12 @@ namespace CardsAndDices
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hoverSound;
         [SerializeField] public string _cardName;
+        [SerializeField] private CreatureCardType _creatureCardType;        
         [SerializeField] private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
         [SerializeField] private List<StatusIconView> _statusIconViews = new List<StatusIconView>();
 
         public CreatureData CurrentCreatureData { get; private set; } // 追加
+        public CreatureCardType CreatureCardType => _creatureCardType;
 
         private SpriteInputHandler _spriteInputHandler;
         public bool IsGrayscale { get; private set; }
