@@ -47,7 +47,6 @@ namespace CardsAndDices
         /// <param name="value">The new value to display.</param>
         public void UpdateDisplay(int value)
         {
-            Debug.Log("<color=red>ここにきてる？</color>");
             if (_statusIconData == null) return;
 
             if (_statusIconData.ShowValue)

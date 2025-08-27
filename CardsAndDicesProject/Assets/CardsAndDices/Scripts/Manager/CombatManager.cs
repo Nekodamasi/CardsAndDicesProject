@@ -23,6 +23,8 @@ namespace CardsAndDices
         [Inject] private DiceInletManager _diceInletManager;
 
         private readonly List<DicePresenter> _dicePresenters = new();
+        private CombatDataLoaderService _combatDataLoaderService;
+        private WaveGeneratorService _waveGeneratorService;
 
         /// <summary>
         /// CombatManagerを初期化します。
@@ -30,7 +32,8 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(CardLifecycleService cardLifecycleService, CardSlotManager cardSlotManager,
                                PlayerCardDataProvider playerCardDataProvider, EnemyCardDataProvider enemyCardDataProvider,
-                               ViewRegistry viewRegistry, DiceManager diceManager, CreatureManager creatureManager, DiceInletManager diceInletManager)
+                               ViewRegistry viewRegistry, DiceManager diceManager, CreatureManager creatureManager,
+                               DiceInletManager diceInletManager, CombatScenarioRegistry combatScenarioRegistry)
         {
             _cardLifecycleService = cardLifecycleService;
             _cardSlotManager = cardSlotManager;
@@ -41,6 +44,8 @@ namespace CardsAndDices
             _creatureManager = creatureManager;
             _diceInletManager = diceInletManager;
             _diceFactory = new DiceFactory();
+            _combatDataLoaderService = new CombatDataLoaderService(combatScenarioRegistry);
+            _waveGeneratorService = new WaveGeneratorService();
         }
 
         /// <summary>
@@ -77,7 +82,7 @@ namespace CardsAndDices
             }
 
             // 最初の敵ウェーブを生成
-//            SpawnNewWave(1);
+            SpawnNewWave(0);
 
             // テスト用にダイスを5つ生成
             RollDices(2);
@@ -121,6 +126,37 @@ namespace CardsAndDices
         /// <param name="waveNumber">生成するウェーブの番号。</param>
         public void SpawnNewWave(int waveNumber)
         {
+            var combatData = _combatDataLoaderService.GetRandomCombatData(AreaId.None, ChallengeRating.None);
+            var waveGeneratorContextList = _waveGeneratorService.GenerateWaveEnemies(combatData, 0);
+
+            foreach (WaveGeneratorService.WaveGeneratorContext waveGeneratorContext in waveGeneratorContextList)
+            {
+                Debug.Log("FixedCardInitializer:" + waveGeneratorContext.FixedCardInitializer.name);
+                CreatureCardView cardView = _viewRegistry.GetNextAvailableCreatureCardView(CreatureCardType.EnemyCard); // 利用可能なViewを取得
+                if (cardView == null)
+                {
+                    Debug.LogError("利用可能なCreatureCardViewが見つかりません。シーンに十分な数のカードが配置されているか確認してください。");
+                    break; // エラーなのでループを抜ける
+                }
+                _cardLifecycleService.InitializeCard(cardView, waveGeneratorContext.FixedCardInitializer.CreateCardInitializationData()); // 既存のViewを初期化
+
+                // 空いているハンドスロットを取得し、カードを配置する
+                CardSlotData targetSlot = _cardSlotManager.FindSlotsByLocation(Team.Enemy, waveGeneratorContext.LinePosition, waveGeneratorContext.SlotLocation);
+
+                if (targetSlot != null)
+                {
+                    cardView.SetSpawnedState(true);
+                    cardView.SetDisplayActive(true);
+                    _cardSlotManager.PlaceCardAsSystem(cardView.GetObjectId(), targetSlot.SlotId);
+                }
+                else
+                {
+                    Debug.LogWarning($"No empty slot found for player card {cardView.name}.");
+                }
+
+            }
+
+/*
             List<CardInitializationData> enemyInitList = _enemyCardDataProvider.GetCardDataListForWave(waveNumber);
             foreach (CardInitializationData initData in enemyInitList)
             {
@@ -144,6 +180,7 @@ namespace CardsAndDices
                     Debug.LogWarning($"No empty slot found for enemy card {cardView.name}.");
                 }
             }
+*/
         }
 
         // TODO: 戦闘終了処理、ターン管理、イベント処理など、他の戦闘ロジックを追加

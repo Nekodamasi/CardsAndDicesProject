@@ -3,7 +3,6 @@ using VContainer;
 using VContainer.Unity;
 using DG.Tweening;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 namespace CardsAndDices
 {
@@ -46,6 +45,8 @@ namespace CardsAndDices
         [Header("ScriptableObject Systems")]
         [SerializeField] private CardSlotDebug _cardSlotDebug;
         [SerializeField] private SystemReflowController _systemReflowController;
+        [Header("Data")]
+        [SerializeField] private CombatScenarioRegistry _combatScenarioRegistry;
 
         [Header("Object Pools")]
         [SerializeField] private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
@@ -88,6 +89,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_effectManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_abilityManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_gameInitializer).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_combatScenarioRegistry).AsSelf().AsImplementedInterfaces();
             
 
             // DOTweenの初期化とTween容量の設定
@@ -114,7 +116,7 @@ namespace CardsAndDices
             _viewRegistry.Initialize();
             _cardLifecycleService.Initialize(_creatureManager, _diceInletManager, _abilityManager, _viewRegistry);
             _diceManager.Initialize(_compositeObjectIdManager, _viewRegistry);
-            _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager);
+            _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager, _combatScenarioRegistry);
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
             _uiActivationPolicy.Initialize(_diceInletManager, _diceManager);

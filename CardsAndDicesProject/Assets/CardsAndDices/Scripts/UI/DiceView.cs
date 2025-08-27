@@ -44,7 +44,7 @@ namespace CardsAndDices
         {
             base.OnAwake();
             SetSpawnedState(false);
-            Debug.Log($"[DiceView] {gameObject.name} (ID: {GetObjectId().UniqueId}) - Awake called. Orchestrator is null: {_orchestrator == null}");
+//            Debug.Log($"[DiceView] {gameObject.name} (ID: {GetObjectId().UniqueId}) - Awake called. Orchestrator is null: {_orchestrator == null}");
             // _orchestrator?.RegisterView(this); // BaseSpriteViewのAwakeで既に呼ばれているためコメントアウト
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
         }

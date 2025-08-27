@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using VContainer;
 
@@ -53,9 +54,14 @@ namespace CardsAndDices
 
         public CardSlotData GetSlotDataByReflowPlacedCardId(CompositeObjectId reflowPlacedCardId) => _repository.GetSlotDataByReflowPlacedCardId(reflowPlacedCardId);
 
-        public List<CardSlotData> FindSlotsByLocation(LinePosition line, SlotLocation location) => _repository.FindSlotsByLocation(line, location);
+        public CardSlotData FindSlotsByLocation(Team team, LinePosition line, SlotLocation location) => _repository.FindSlotsByLocation(team,  line, location);
 
         public bool IsPlayerZoneFull() => _repository.IsPlayerZoneFull();
+
+        public void ClearCombatField()
+        {
+            _repository.ClearAllSlots();
+        }
 
         // --- Debug ---
 

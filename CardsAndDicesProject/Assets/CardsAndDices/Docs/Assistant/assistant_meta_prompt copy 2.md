@@ -454,36 +454,24 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-戦闘システム設計書の「2. ウェーブ」を実装するにあたり、以下の実装方式を検討しています
-検討内容を確認し、タスクにそって、現状の実装状況から提案をしてください
+sys_wave_system.mdの内容を実装します
+以下の手順で実装してください
+各ファイルの格納場所は、D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.mdを参照してください
 
-# タスク
+step1. sys_wave_system.mdを読みこんで、実装内容を理解します
+step2. 関連設計書を読みこんで、このプロジェクトの実装内容を把握します
+step3. 関連設計書に関連するソースプログラムを読みこんで、実装されている機能を理解します
+step4. 読みこんだソースプログラムと矛盾しない形で、sys_wave_system.mdの内容をソースプログラムとして実装します
 
-step1. 「戦闘システム設計書」を良く読込、戦闘システムの内容を理解します
-step2. 「関連する設計書」をすべて読込、関連するソースプログラムもすべて読み込んで、現在の実装を把握します
-step3. 「検討してる実装」を確認し、実装方法に問題がないか、より良い実装方法がないかを判断します
+# 関連設計書
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_card_lifecycle_design.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_management.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
 
-# 検討してる実装
-
-- 「FixedCardInitializer」に「2.4 エネミークリーチャーカードを決めるパラメータ」のパラメータを追加する
-- 「ウェーブデータ」に相当するScriptableObjectのクラスを作り、各ウェーブのパラメータと配置場所を設定する
-- 「FixedCardInitializer」をリスト化するScriptableObjectのクラスを作り、パラメータに一致するものからRandomで取得できるようにする
-- 「ウェーブデータ」のパラメータを元に、実際に使用するウェーブデータを生成するManagerクラスを実装する
-
-# 戦闘システム設計書
-
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_combat_system.md
-
-# 関連する設計書
-
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_composite_object_id.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_reflow_system.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_sprite_ui_design.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_design-principles.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_card_lifecycle_design.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_management.md
+# コード出力ガイド
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md
 </Task>
 
 指示を書くには、次の指示に従ってください。

@@ -137,13 +137,10 @@ namespace CardsAndDices
                 }
 
                 // 指定されたLineとLocationでスロットを検索
-                List<CardSlotData> slots = _cardSlotManager.FindSlotsByLocation(placement.TargetLine, placement.TargetLocation);
+                CardSlotData targetSlot = _cardSlotManager.FindSlotsByLocation(Team.Player, placement.TargetLine, placement.TargetLocation);
 
-                if (slots != null && slots.Count > 0)
+                if (targetSlot != null)
                 {
-                    // 該当する最初のスロットを取得
-                    CardSlotData targetSlot = slots[0];
-
                     // カードをスロットに配置するロジックを呼び出し
                     _cardSlotManager.PlaceCardAsSystem(placement.CreatureCard.ObjectId, targetSlot.SlotId, true);
 

@@ -47,11 +47,13 @@ namespace CardsAndDices
             return _slotDataMap.Values.FirstOrDefault(s => s.ReflowPlacedCardId == reflowPlacedCardId);
         }
 
-        public List<CardSlotData> FindSlotsByLocation(LinePosition line, SlotLocation location)
+        public CardSlotData FindSlotsByLocation(Team team, LinePosition line, SlotLocation location)
         {
-            return _slotDataMap.Values
-                .Where(slot => slot.Line == line && slot.Location == location)
+            List<CardSlotData> list = _slotDataMap.Values
+                .Where(slot => slot.Team == team && slot.Line == line && slot.Location == location)
                 .ToList();
+
+            return list[0];
         }
 
         public CardSlotData GetNextEmptyHandSlot()
@@ -72,6 +74,13 @@ namespace CardsAndDices
             return _slotDataMap.Values.Count(s => s.Line != LinePosition.Hand && s.IsOccupied) >= 6;
         }
 
-        
+        public void ClearAllSlots()
+        {
+            foreach (var slotData in _slotDataMap.Values)
+            {
+//                slotData.OccupyingCardId = CompositeObjectId.None;
+//                slotData.IsOccupied = false;
+            }
+        }
     }
 }
