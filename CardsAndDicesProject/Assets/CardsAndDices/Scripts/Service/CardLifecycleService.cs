@@ -34,6 +34,9 @@ namespace CardsAndDices
             _creatureManager.SpawnCreature(initData.CreatureData, cardView);
             cardView.SetSpawnedState(true);
 
+            // 外観の更新
+            cardView.SetAppearance(initData.Appearance);
+
             // アビリティのスポーン
             var Abilities = initData.CreatureData.Abilities;
             for (int i = 0; i < Abilities.Count; i++)

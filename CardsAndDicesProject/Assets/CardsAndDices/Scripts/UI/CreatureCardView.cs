@@ -25,6 +25,7 @@ namespace CardsAndDices
         [SerializeField] private CreatureCardType _creatureCardType;        
         [SerializeField] private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
         [SerializeField] private List<StatusIconView> _statusIconViews = new List<StatusIconView>();
+        [SerializeField] private CreatureAppearanceController _appearanceController;
 
         public CreatureData CurrentCreatureData { get; private set; } // 追加
         public CreatureCardType CreatureCardType => _creatureCardType;
@@ -70,6 +71,18 @@ namespace CardsAndDices
             }
 
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
+        }
+
+        /// <summary>
+        /// 指定された外観プロファイルに基づいて、カードの見た目を更新します。
+        /// </summary>
+        /// <param name="profile">適用する外観プロファイル。</param>
+        public void SetAppearance(AppearanceProfile profile)
+        {
+            if (_appearanceController != null && profile != null)
+            {
+                _appearanceController.UpdateAppearance(profile);
+            }
         }
 
         public void SetGrayscale(bool enabled)

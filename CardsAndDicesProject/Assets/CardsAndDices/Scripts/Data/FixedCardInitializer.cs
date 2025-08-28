@@ -18,6 +18,9 @@ namespace CardsAndDices
         [SerializeField] private int _energy;
         [SerializeField] private List<BaseAbilityDataSO> _abilities = new List<BaseAbilityDataSO>(); // 初期化
 
+        [Header("Appearance")]
+        [SerializeField] private AppearanceProfile _appearanceProfile;
+
         // ダイスインレット1のデータ
         [Header("Inlet 1 Data")]
         [SerializeField] private DiceInletConditionSO _inlet1Condition;
@@ -62,7 +65,7 @@ namespace CardsAndDices
             }
             Debug.Log("<color=Green>インレットプロフィール：</color>" + inletAbilityProfiles.Count);
             // CardInitializationDataのインスタンスを生成して返す
-            return new CardInitializationData(creatureData, inletAbilityProfiles);
+            return new CardInitializationData(creatureData, inletAbilityProfiles, _appearanceProfile);
         }
     }
 }
