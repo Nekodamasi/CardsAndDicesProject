@@ -2,7 +2,8 @@ using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using VContainer;
-using System.Collections.Generic; // 追加
+using System.Collections.Generic;
+using TMPro; // 追加
 
 namespace CardsAndDices
 {
@@ -12,16 +13,19 @@ namespace CardsAndDices
     /// </summary>
     public class CreatureCardView : BaseSpriteView
     {
+        private NameService _nameService;
+
         [Inject]
-        public void Construct(CardInteractionOrchestrator orchestrator)
+        public void Construct(CardInteractionOrchestrator orchestrator, NameService nameService)
         {
             this._orchestrator = orchestrator;
+            _nameService = nameService;
         }
 
         [Header("Card Specific Settings")]
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hoverSound;
-        [SerializeField] public string _cardName;
+        [SerializeField] public TextMeshProUGUI _cardName;
         [SerializeField] private CreatureCardType _creatureCardType;        
         [SerializeField] private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
         [SerializeField] private List<StatusIconView> _statusIconViews = new List<StatusIconView>();
@@ -77,12 +81,13 @@ namespace CardsAndDices
         /// 指定された外観プロファイルに基づいて、カードの見た目を更新します。
         /// </summary>
         /// <param name="profile">適用する外観プロファイル。</param>
-        public void SetAppearance(AppearanceProfile profile)
+        public void SetAppearance(AppearanceProfile profile, CreatureIdEntity creatureIdEntity)
         {
             if (_appearanceController != null && profile != null)
             {
                 _appearanceController.UpdateAppearance(profile);
             }
+            _cardName.text = _nameService.GetDisplayName(creatureIdEntity);
         }
 
         public void SetGrayscale(bool enabled)

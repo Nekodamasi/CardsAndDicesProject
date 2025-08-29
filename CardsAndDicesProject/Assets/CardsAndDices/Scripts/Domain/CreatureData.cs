@@ -12,7 +12,7 @@ namespace CardsAndDices
         /// <summary>
         /// クリーチャーを一意に識別するID。
         /// </summary>
-        public string CreatureId;
+        public CreatureIdEntity CreatureId;
 
         /// <summary>
         /// クリーチャーの攻撃力。
@@ -55,7 +55,7 @@ namespace CardsAndDices
         /// <param name="cooldown">クールダウンダイス数。</param>
         /// <param name="energy">特殊な能力値（エネルギーなど）。</param>
         /// <param name="abilities">固有能力のリスト。</param>
-        public CreatureData(string creatureId, int attack, int health, int shield, int cooldown, int energy, List<BaseAbilityDataSO> abilities)
+        public CreatureData(CreatureIdEntity creatureId, int attack, int health, int shield, int cooldown, int energy, List<BaseAbilityDataSO> abilities)
         {
             CreatureId = creatureId;
             Attack = attack;

@@ -35,6 +35,9 @@ namespace CardsAndDices
         [SerializeField] private CardLifecycleService _cardLifecycleService;
         [SerializeField] private EnemyCardDataProvider _enemyCardDataProvider;
         [SerializeField] private PlayerCardDataProvider _playerCardDataProvider;
+        [SerializeField] private NameDatabase _nameDatabase;
+        [SerializeField] private NameService _nameService;
+
         [Header("ScriptableObject Orchestrators")]
         [SerializeField] private CardInteractionOrchestrator _cardInteractionOrchestrator;
         [SerializeField] private DiceInteractionOrchestrator _diceInteractionOrchestrator;
@@ -90,7 +93,8 @@ namespace CardsAndDices
             builder.RegisterInstance(_abilityManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_gameInitializer).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_combatScenarioRegistry).AsSelf().AsImplementedInterfaces();
-            
+            builder.RegisterInstance(_nameDatabase).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_nameService).AsSelf().AsImplementedInterfaces();
 
             // DOTweenの初期化とTween容量の設定
             DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 100);
@@ -124,10 +128,11 @@ namespace CardsAndDices
             _abilityManager.Initialize(_spriteCommandBus, _creatureManager, _diceManager, _abilityManager, _effectManager);
             _effectManager.Initialize(_spriteCommandBus);
             _gameInitializer.Initialize(_creatureCardViews, _cardSlotViews, _diceSlotViews, _diceViews, _diceInletViews);
+            _nameService.Initialize(_nameDatabase);
 
             foreach (var cardView in _creatureCardViews)
             {
-                cardView.Construct(_cardInteractionOrchestrator);
+                cardView.Construct(_cardInteractionOrchestrator, _nameService);
             }
             foreach (var cardSlotView in _cardSlotViews)
             {

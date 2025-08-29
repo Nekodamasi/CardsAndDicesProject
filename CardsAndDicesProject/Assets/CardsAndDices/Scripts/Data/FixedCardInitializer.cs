@@ -10,7 +10,7 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "FixedCardInitializer", menuName = "CardsAndDices/CardInitializers/FixedCardInitializer")]
     public class FixedCardInitializer : ScriptableObject
     {
-        [SerializeField] private string _creatureId;
+        [SerializeField] private CreatureIdEntity _creatureId;
         [SerializeField] private int _attack;
         [SerializeField] private int _health;
         [SerializeField] private int _shield;

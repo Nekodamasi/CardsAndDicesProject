@@ -48,11 +48,7 @@
 | guide_developer-cookbook.md | 開発者向けのクックブック | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_developer-cookbook.md |
 | guide_file_management.md | ファイル一覧の管理方法を定めたガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_file_management.md |
 | guide_overview.md | プロジェクトの全体像を説明するドキュメント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_overview.md |
-| guide_project_files.md | プロジェクト内の全ファイル一覧 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.md |
-| guide_rules.md | プロジェクトのコーディング規約などを定めたルールブック | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_rules.md |
-| guide_sys_classes_creation.md | システム系クラスの作成ガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_sys_classes_creation.md |
-| guide_ui_interaction_design.md | UIのインタラクション設計ガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md |
-| guide_unity-cs.md | Unity C#のコーディングスタイルガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md |
+| # guide_project_files.md - プロジェクトファイル一覧
 
 ### Docs/sys
 
@@ -67,6 +63,7 @@
 | sys_dice_lifecycle_design.md | ダイスのライフサイクル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_lifecycle_design.md |
 | sys_domain-model.md | プロジェクトのドメインモデル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
 | sys_effect_management.md | エフェクト管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_effect_management.md |
+| sys_identity-and-name-management.md | ID・名称管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_identity-and-name-management.md |
 | sys_initialization_flow.md | ゲームの初期化フロー設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_initialization_flow.md |
 | sys_sprite_selector_design.md | スプライトセレクターの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sprite_selector_design.md |
 | sys_status_icon_design.md | ステータスアイコンの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_status_icon_design.md |
@@ -189,6 +186,7 @@
 | IdentifiableGameObject.cs | 一意なIDを持つGameObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IdentifiableGameObject.cs |
 | IDiceInlet.cs | ダイスインレットの基本機能を定義するインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IDiceInlet.cs |
 | IGameInitializable.cs | ゲーム初期化時に処理を実行するためのインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IGameInitializable.cs |
+| INameService.cs | 名称解決サービスのインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\INameService.cs |
 | InletActivationViewType.cs | インレットのアクティベーション表示種別を定義するEnum | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\InletActivationViewType.cs |
 | InteractionProfile.cs | UIのインタラクションプロファイルを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\InteractionProfile.cs |
 | IUIInteractionOrchestrator.cs | UIインタラクションを統括するクラスのインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IUIInteractionOrchestrator.cs |
@@ -210,10 +208,12 @@
 | CombatScenarioRegistry.cs | 戦闘シナリオを登録・管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CombatScenarioRegistry.cs |
 | DiceInletConditionSO.cs | ダイスインレットの条件を定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\DiceInletConditionSO.cs |
 | EffectData.cs | エフェクトデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\EffectData.cs |
+| EntityDefinition.cs | エンティティのIDとして機能するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\EntityDefinition.cs |
 | EnemyGroup.cs | 敵グループのデータを定義するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\EnemyGroup.cs |
 | EnemyProfile.cs | 敵のプロフィールデータを定義するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\EnemyProfile.cs |
 | FixedCardInitializer.cs | 固定カードの初期化を行うクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\FixedCardInitializer.cs |
 | InletAbilityProfile.cs | インレットアビリティのプロファイルを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\InletAbilityProfile.cs |
+| NameDatabase.cs | エンティティの名称を管理するデータベース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\NameDatabase.cs |
 | SelectableSpriteSheet.cs | 選択可能なスプライトシートを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\SelectableSpriteSheet.cs |
 | StatusIconData.cs | ステータスアイコンのデータを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\StatusIconData.cs |
 | WaveData.cs | 敵のウェーブデータを定義するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\WaveData.cs |
@@ -298,6 +298,7 @@
 | CombatDataLoaderService.cs | 戦闘データのロードを行うサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\CombatDataLoaderService.cs |
 | DicePlacementService.cs | ダイスの配置に関するロジックを提供するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\DicePlacementService.cs |
 | EnemyCardDataProvider.cs | 敵カードのデータを提供するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\EnemyCardDataProvider.cs |
+| NameService.cs | エンティティの名称を解決するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\NameService.cs |
 | PlayerCardDataProvider.cs | プレイヤーカードのデータを提供するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\PlayerCardDataProvider.cs |
 | ReflowService.cs | UI要素の再配置（リフロー）を行うサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\ReflowService.cs |
 | WaveGeneratorService.cs | 敵のウェーブを生成するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\WaveGeneratorService.cs |

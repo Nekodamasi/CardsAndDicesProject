@@ -35,7 +35,7 @@ namespace CardsAndDices
             cardView.SetSpawnedState(true);
 
             // 外観の更新
-            cardView.SetAppearance(initData.Appearance);
+            cardView.SetAppearance(initData.Appearance, initData.CreatureData.CreatureId);
 
             // アビリティのスポーン
             var Abilities = initData.CreatureData.Abilities;

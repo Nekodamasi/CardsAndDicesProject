@@ -16,7 +16,7 @@ namespace CardsAndDices
         /// <summary>
         /// カードに付属する各インレットの能力（条件と効果）を定義するプロファイルのリスト。
         /// </summary>
-                public List<InletAbilityProfile> InletAbilityProfiles { get; private set; }
+        public List<InletAbilityProfile> InletAbilityProfiles { get; private set; }
 
         /// <summary>
         /// クリーチャーの外観を定義するプロファイル。
