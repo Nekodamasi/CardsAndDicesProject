@@ -111,12 +111,14 @@ namespace CardsAndDices
             base.EnterNormalState();
             TryPlayStatusAnimation(CurrentStatus);
             SetColliderEnabled(true);
+            SetOrderInLayer(SortingOrders.Cards.Default);
         }
 
         public override void EnterHoveringState()
         {
             base.EnterHoveringState();
             TryPlayStatusAnimation(CurrentStatus);
+            SetOrderInLayer(SortingOrders.Cards.Hovered);
         }
 
         public override void EnterInactiveState()
@@ -124,6 +126,7 @@ namespace CardsAndDices
             base.EnterInactiveState();
             TryPlayStatusAnimation(CurrentStatus);
             SetColliderEnabled(false);
+            SetOrderInLayer(SortingOrders.Cards.Default);
         }
 
         public override void EnterDraggingState()
@@ -133,6 +136,7 @@ namespace CardsAndDices
             SetColliderEnabled(false);
             Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             newPosition.z = transform.position.z;
+            SetOrderInLayer(SortingOrders.Cards.Dragging);
         }
 
         public override void EnterDraggingInProgressState()

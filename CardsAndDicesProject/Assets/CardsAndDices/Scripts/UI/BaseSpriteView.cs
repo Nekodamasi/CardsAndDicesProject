@@ -128,12 +128,24 @@ namespace CardsAndDices
         }
 
         // --- Public Methods for Orchestrator ---
-        public virtual void EnterNormalState() { _currentStatus = SpriteStatus.Normal; }
-        public virtual void EnterHoveringState() { _currentStatus = SpriteStatus.Hover; }
-        public virtual void EnterDraggingState() { _currentStatus = SpriteStatus.DraggingStarted; }
-        public virtual void EnterDraggingInProgressState() { _currentStatus = SpriteStatus.DraggingInProgress; }
+        public virtual void EnterNormalState()
+        {
+            _currentStatus = SpriteStatus.Normal;
+        }
+        public virtual void EnterHoveringState()
+        {
+            _currentStatus = SpriteStatus.Hover;
+        }
+        public virtual void EnterDraggingState()
+        {
+            _currentStatus = SpriteStatus.DraggingStarted;
+        }
+        public virtual void EnterDraggingInProgressState(){ _currentStatus = SpriteStatus.DraggingInProgress; }
         public virtual void EnterAcceptableState() { _currentStatus = SpriteStatus.Acceptable; }
-        public virtual void EnterInactiveState() { _currentStatus = SpriteStatus.Inactive; }
+        public virtual void EnterInactiveState()
+        {
+            _currentStatus = SpriteStatus.Inactive;
+        }
         public virtual void MoveTo(Vector3 targetPosition)
         {
             transform.position = targetPosition; // 即座に位置を設定

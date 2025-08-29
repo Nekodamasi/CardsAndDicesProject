@@ -9,13 +9,5 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "EntityDef_", menuName = "CardsAndDices/Definition/CreatureNameEntity")]
     public class CreatureIdEntity : BaseEntityDefinition
     {
-        [SerializeField]
-        [Tooltip("A unique string ID for persistence purposes (e.g., save data).")]
-        private string _id;
-
-        /// <summary>
-        /// Gets the unique string ID for persistence.
-        /// </summary>
-        public string Id => _id;
     }
 }
