@@ -113,14 +113,14 @@ namespace CardsAndDices
             _cardSlotDebug.Initialize(_cardSlotStateRepository, _viewRegistry);
             _compositeObjectIdManager.Initialize();
             _cardInteractionOrchestrator.Initialize(_uiStateMachine, _cardSlotManager, _spriteCommandBus, _reflowService, _uiActivationPolicy, _cardInteractionStrategy, _viewRegistry);
-            _diceInteractionOrchestrator.Initialize(_uiStateMachine, _diceSlotManager, _spriteCommandBus, _uiActivationPolicy, _diceInteractionStrategy, _viewRegistry);
+            _diceInteractionOrchestrator.Initialize(_uiStateMachine, _diceSlotManager, _spriteCommandBus, _uiActivationPolicy, _diceInteractionStrategy, _viewRegistry, _diceManager);
             _reflowService.Initialize(_cardSlotStateRepository, _cardSlotDebug);
             _cardInteractionStrategy.Initialize();
             _systemReflowController.Initialize(_spriteCommandBus, _cardInteractionOrchestrator, _diceInteractionOrchestrator);
             _viewRegistry.Initialize();
             _cardLifecycleService.Initialize(_creatureManager, _diceInletManager, _abilityManager, _viewRegistry);
             _diceManager.Initialize(_compositeObjectIdManager, _viewRegistry);
-            _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager, _combatScenarioRegistry);
+            _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager, _combatScenarioRegistry, _diceSlotManager, _spriteCommandBus);
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
             _uiActivationPolicy.Initialize(_diceInletManager, _diceManager);

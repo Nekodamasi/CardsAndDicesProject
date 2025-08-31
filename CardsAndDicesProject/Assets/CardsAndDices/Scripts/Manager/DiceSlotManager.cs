@@ -27,6 +27,7 @@ namespace CardsAndDices
         }
 
         public List<DiceSlotData> FindSlotsByLocation(DiceSlotLocation location) => _repository.FindSlotsByLocation(location);
+        public DiceSlotData GetNextEmptyHandSlot() => _repository.GetNextEmptyHandSlot();
         public void RegisterSlot(DiceSlotData slotData) => _repository.RegisterSlot(slotData);
 
         public void OnDiceDroppedOnSlot(CompositeObjectId diceId, CompositeObjectId slotId) => _interactionHandler.OnDiceDroppedOnSlot(diceId, slotId);

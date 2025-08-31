@@ -50,8 +50,6 @@ namespace CardsAndDices
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
         public bool ChkCardHover(SpriteHoverCommand command, CardInteractionOrchestrator orchestrator)
         {
-            Debug.Log("ChkCardHover");
-
             // UIがアイドル状態の場合
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
@@ -70,6 +68,7 @@ namespace CardsAndDices
         public bool ChkCardBeginDrag(SpriteBeginDragCommand command, CardInteractionOrchestrator orchestrator)
         {
             // UIがアイドルの場合
+            Debug.Log("<color=red>ChkCardBeginDrag-></color>" + orchestrator.UIStateMachine.CurrentState);
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.Idle) return false;
             var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
             if (draggedCardView == null) return false;

@@ -21,6 +21,8 @@ namespace CardsAndDices
         [Inject] private DiceFactory _diceFactory;
         [Inject] private CreatureManager _creatureManager;
         [Inject] private DiceInletManager _diceInletManager;
+        [Inject] private DiceSlotManager _diceSlotManager;
+        [Inject] private SpriteCommandBus _commandBus;
 
         private readonly List<DicePresenter> _dicePresenters = new();
         private CombatDataLoaderService _combatDataLoaderService;
@@ -33,7 +35,8 @@ namespace CardsAndDices
         public void Initialize(CardLifecycleService cardLifecycleService, CardSlotManager cardSlotManager,
                                PlayerCardDataProvider playerCardDataProvider, EnemyCardDataProvider enemyCardDataProvider,
                                ViewRegistry viewRegistry, DiceManager diceManager, CreatureManager creatureManager,
-                               DiceInletManager diceInletManager, CombatScenarioRegistry combatScenarioRegistry)
+                               DiceInletManager diceInletManager, CombatScenarioRegistry combatScenarioRegistry,
+                               DiceSlotManager diceSlotManager, SpriteCommandBus commandBus)
         {
             _cardLifecycleService = cardLifecycleService;
             _cardSlotManager = cardSlotManager;
@@ -43,6 +46,8 @@ namespace CardsAndDices
             _diceManager = diceManager;
             _creatureManager = creatureManager;
             _diceInletManager = diceInletManager;
+            _diceSlotManager = diceSlotManager;
+            _commandBus = commandBus;
             _diceFactory = new DiceFactory();
             _combatDataLoaderService = new CombatDataLoaderService(combatScenarioRegistry);
             _waveGeneratorService = new WaveGeneratorService();
@@ -110,8 +115,9 @@ namespace CardsAndDices
                     var diceData = _diceFactory.Create(diceId);
                     _diceManager.AddDice(diceData);
                     diceView.SetDisplayActive(true);
-                    var dicePresenter = new DicePresenter(diceData, diceView, _diceManager, _viewRegistry);
+                    var dicePresenter = new DicePresenter(diceData, diceView, _diceManager, _viewRegistry, _commandBus);
                     _dicePresenters.Add(dicePresenter);
+                    _diceSlotManager.PlaceDiceAsSystem(diceView.GetObjectId(), _diceSlotManager.GetNextEmptyHandSlot().SlotId, true);
                 }
                 else
                 {

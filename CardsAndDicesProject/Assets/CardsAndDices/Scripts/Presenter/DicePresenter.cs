@@ -11,13 +11,16 @@ namespace CardsAndDices
         private readonly DiceView _view;
         private readonly DiceManager _diceManager;
         private readonly ViewRegistry _viewRegistry;
+        private readonly SpriteCommandBus _commandBus;
 
-        public DicePresenter(DiceData data, DiceView view, DiceManager diceManager, ViewRegistry viewRegistry)
+
+        public DicePresenter(DiceData data, DiceView view, DiceManager diceManager, ViewRegistry viewRegistry, SpriteCommandBus commandBus)
         {
             _data = data;
             _view = view;
             _diceManager = diceManager;
             _viewRegistry = viewRegistry;
+            _commandBus = commandBus;
 
             // Modelの変更をViewに反映
             _data.OnFaceValueChanged += _view.UpdateFace;
@@ -25,6 +28,15 @@ namespace CardsAndDices
             _view.OnDestroyed += Dispose;
 
             _view.UpdateFace(_data.FaceValue); // 初期表示
+            _commandBus.On<DiceDropInInletCommand>(OnDiceDropInInlet);
+        }
+        /// <summary>
+        /// ダイスがインレットにドロップされたとき
+        /// </summary>
+        private void OnDiceDropInInlet(DiceDropInInletCommand cmd)
+        {
+            if (cmd.DiceId != _data.Id) return;
+            Dispose();
         }
 
         /// <summary>
@@ -34,8 +46,9 @@ namespace CardsAndDices
         {
             if (_data == null) return; // すでにDisposeされている
 
+            _commandBus.Off<DiceDropInInletCommand>(OnDiceDropInInlet);
             _diceManager.RemoveDice(_data.Id);
-            
+
             // イベント購読を解除
             _data.OnFaceValueChanged -= _view.UpdateFace;
             _view.OnDestroyed -= Dispose;

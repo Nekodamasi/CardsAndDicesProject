@@ -70,6 +70,14 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// スロットをホバー状態に遷移させます。
+        /// </summary>
+        public override void EnterInactiveState()
+        {
+            SetColliderEnabled(false);
+        }
+
+        /// <summary>
         /// ドロップイベントを検知し、コマンドを発行します。
         /// </summary>
         public void OnDrop(PointerEventData eventData)

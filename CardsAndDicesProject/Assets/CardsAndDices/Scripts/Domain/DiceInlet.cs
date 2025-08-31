@@ -24,8 +24,6 @@ namespace CardsAndDices
 
         public void OnDiceDropped(DiceData diceData, ICreature targetCreature)
         {
-            if (!CanAccept(diceData)) return;
-
             CurrentCountdownValue -= diceData.FaceValue;
             CurrentUsageCount--;
 

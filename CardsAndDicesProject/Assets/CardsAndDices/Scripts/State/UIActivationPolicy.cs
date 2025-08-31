@@ -153,12 +153,15 @@ namespace CardsAndDices
             }
             foreach (var diceView in orchestrator.ViewRegistry.GetAllDiceViews())
             {
-                Debug.Log("ダイスがあるのか？");
                 diceView.EnterNormalState();
             }
             foreach (var slotView in orchestrator.ViewRegistry.GetAllSlotViews())
             {
                 slotView.EnterInactiveState();
+            }
+            foreach (var inletView in orchestrator.ViewRegistry.GetAllInletViews())
+            {
+                inletView.EnterInactiveState();
             }
         }
     }

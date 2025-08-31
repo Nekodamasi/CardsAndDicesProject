@@ -130,13 +130,13 @@ namespace CardsAndDices
             if(_playAnimation)
 //            if (_currentAnimation != null && _currentAnimation.IsActive() && _currentAnimation.IsPlaying())
             {
-                Debug.Log("<color=blue>カード：</color>" + _diceName + "->をスキップ:" + targetStatus + "->前：" + _currentStatus);
+//                Debug.Log("<color=blue>カード：</color>" + _diceName + "->をスキップ:" + targetStatus + "->前：" + _currentStatus);
                 _animationSkipped = true;
                 _pendingStatus = targetStatus;
                 return;
             }
 
-            Debug.Log("<color=blue>カード：</color>" + _diceName + "->正規ルートアニメーション:" + targetStatus + "->前：" + _currentStatus);
+//            Debug.Log("<color=blue>カード：</color>" + _diceName + "->正規ルートアニメーション:" + targetStatus + "->前：" + _currentStatus);
             Sequence animationSequence = null;
                 _playAnimation = true;
 

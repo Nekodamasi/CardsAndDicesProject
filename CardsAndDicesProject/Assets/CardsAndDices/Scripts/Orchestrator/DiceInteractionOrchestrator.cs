@@ -16,6 +16,7 @@ namespace CardsAndDices
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
         [SerializeField] private DiceInteractionStrategy _diceInteractionStrategy;
         [SerializeField] private ViewRegistry _viewRegistry;
+        [SerializeField] private DiceManager _diceManager;
 
         private CompositeObjectId _draggedId;
         public ViewRegistry ViewRegistry => _viewRegistry;
@@ -26,7 +27,7 @@ namespace CardsAndDices
         public bool IsDroppedSuccessfully { get => _isDroppedSuccessfully; set => _isDroppedSuccessfully = value; }
 
         [Inject]
-        public void Initialize(UIStateMachine uiStateMachine, DiceSlotManager diceSlotManager, SpriteCommandBus commandBus, UIActivationPolicy uiActivationPolicy, DiceInteractionStrategy diceInteractionStrategy, ViewRegistry viewRegistry)
+        public void Initialize(UIStateMachine uiStateMachine, DiceSlotManager diceSlotManager, SpriteCommandBus commandBus, UIActivationPolicy uiActivationPolicy, DiceInteractionStrategy diceInteractionStrategy, ViewRegistry viewRegistry, DiceManager diceManager)
         {
             _uiStateMachine = uiStateMachine;
             _commandBus = commandBus;
@@ -34,6 +35,7 @@ namespace CardsAndDices
             _viewRegistry = viewRegistry;
             _diceSlotManager = diceSlotManager;
             _uiActivationPolicy = uiActivationPolicy;
+            _diceManager = diceManager;
 
             _commandBus.On<SpriteBeginDragCommand>(OnBeginDrag);
             _commandBus.On<SpriteHoverCommand>(OnHover);
@@ -107,17 +109,19 @@ namespace CardsAndDices
             }
         }
 
+        /// <summary>
+        /// ダイスをドロップしたときに呼び出されます。
+        /// </summary>
+        /// <param name="command">ドロップコマンド。</param>
         private void OnDrop(SpriteDropCommand command)
         {
             if (_diceInteractionStrategy.ChkDiceDrop(command, this))
             {
-                var draggedView = ViewRegistry.GetView<DiceView>(DraggedId);
-
                 _commandBus.Emit(new DisableUIInteractionCommand());
                 UIStateMachine.SetState(UIStateMachine.UIState.DropedDice);
 
                 // ダイススロットマネージャーにドロップ処理を依頼
-                DiceSlotManager.OnDiceDroppedOnSlot(command.DroppedObjectId, command.TargetSlotObjectId);
+                _commandBus.Emit(new DiceDropInInletCommand(command.TargetSlotObjectId, DraggedId, _diceManager.GetDiceData(DraggedId).FaceValue));
                 // ドロップが成功したことを示すフラグを設定
                 IsDroppedSuccessfully = true;
             }
@@ -136,6 +140,10 @@ namespace CardsAndDices
             }
         }
 
+        /// <summary>
+        /// ダイスのドラッグが終了したときに呼び出されます。
+        /// </summary>
+        /// <param name="command">ドラッグ終了コマンド。</param>
         private void OnEndDrag(SpriteEndDragCommand command)
         {
             Debug.Log("<color=red>OnEndDragここはきてる？</color>");
@@ -147,10 +155,9 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// カードのドラッグが終了したときに呼び出されます。
+        /// ドロップが成功しなかった場合、リフローを元に戻す処理を行います
         /// </summary>
         /// <param name="command">ドラッグ終了コマンド。</param>
-        /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
         public async void DiceEndDrag(SpriteEndDragCommand command)
         {
             Debug.Log("<color=red>Card_OnEndDrag-></color>" + UIStateMachine.CurrentState + " Flg:" + IsDroppedSuccessfully);

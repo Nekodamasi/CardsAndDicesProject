@@ -7,8 +7,6 @@ namespace CardsAndDices
     {
         public bool ChkDiceHover(SpriteHoverCommand command, DiceInteractionOrchestrator orchestrator)
         {
-            Debug.Log("ChkDiceHover");
-
             // UIがアイドル状態の場合
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
@@ -26,7 +24,7 @@ namespace CardsAndDices
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
         public bool ChkDiceUnhover(SpriteUnhoverCommand command, DiceInteractionOrchestrator orchestrator)
         {
-            Debug.Log("ChkDiceUnhover");
+//            Debug.Log("ChkDiceUnhover");
 
             // UIがアイドル状態の場合
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
