@@ -454,12 +454,13 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-particleの再生機能を実装したい
+クールダウンの処理を実装します
+以下の実装内容を元に、実装内容の詳細を提案してください
 
 # タスク
 
     step1.参考設計書を良く読込、このプロジェクトの設計思想及び既存の実装内容を理解します
-    step2.ユースケースを確認し、実装すべき内容を考えます
+    step2. 実装内容を確認し、実装すべき内容を考えます
     step3.広く知られる一般的なベストプラクティスがあればできるそれを実装内容に反映させます
     step4.実装内容を提案します。クラスとその役割、簡単なフローを解説します
     step5.要件定義の段階です、ソースプログラムの出力は必要ありません
@@ -472,17 +473,18 @@ particleの再生機能を実装したい
     - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_identity-and-name-management.md
     - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_initialization_flow.md
 
-# ユースケース
+# 実装内容
 
-- 特定のSpriteの上に、特定の操作を行った時にparticleを再生する
-- particle再生時にSEを鳴らす
-- 条件によって、違うparticleを再生する
-    - 例：火属性のダメージの時は火のパーティクルなど、ダメージ属性によって変える
-- particleの再生終了を待てるようにしたい
-- 一定期間だけparticleを再生する
-    - 例：マウスホバー時のみparticleを出して、アンホバーでparticleを消すなど
-- 戦闘中に再生したparticleはObjectpoolとして再利用する
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_effect_management.md
+    - クールダウンコマンドを作成します
+    - CombatManagerにクールダウンコマンドを購読させます
+    - 購読したクールダウンコマンドを受けて、すべてのクリーチャーにたいして、以下のクールダウン処理を行う
+    - このクールダウン処理は、EnemyのクリーチャーカードのSlotLocationがVanguard -> Center -> Rear -> PlayerのクリーチャーカードのSlotLocationがVanguard -> Center -> Rearの順に行い、Handのカードは対象外
+
+## クールダウン処理
+
+    - CreatureCooldownChangedCommandで、各クリーチャーのCooldownをマイナス１する
+    - CreatureCardUpdateDisplayCommandを発行して、CreatureCardViewに数値を反映させる
+    - 0.2fのウェイト
 </Task>
 
 指示を書くには、次の指示に従ってください。

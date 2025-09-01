@@ -59,6 +59,7 @@
 | sys_classes.md | プロジェクトで使用される主要なクラスの概要 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_classes.md |
 | sys_creature_card_lifecycle_design.md | クリーチャーカードのライフサイクル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_card_lifecycle_design.md |
 | sys_creature_management.md | クリーチャー管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_management.md |
+| sys_cooldown_processing.md | クールダウン処理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_cooldown_processing.md |
 | sys_dice_inlet_management.md | ダイスインレット管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_inlet_management.md |
 | sys_dice_lifecycle_design.md | ダイスのライフサイクル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_lifecycle_design.md |
 | sys_domain-model.md | プロジェクトのドメインモデル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
@@ -151,6 +152,7 @@
 | ExecuteAbilityEffectCommand.cs | アビリティ効果の発動を指示するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ExecuteAbilityEffectCommand.cs |
 | ExecuteFrontLoadCommand.cs | フロントロード処理の実行を指示するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ExecuteFrontLoadCommand.cs |
 | ICommand.cs | 全てのコマンドが実装するインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ICommand.cs |
+| ProcessAllCreaturesCooldownCommand.cs | 全クリーチャーのクールダウン処理を開始するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ProcessAllCreaturesCooldownCommand.cs |
 | PlayerZoneStateChangedCommand.cs | プレイヤーゾーンの状態変更を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\PlayerZoneStateChangedCommand.cs |
 | ReflowCompletedCommand.cs | リフロー完了を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ReflowCompletedCommand.cs |
 | ReflowOperationCompletedCommand.cs | リフロー操作完了を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ReflowOperationCompletedCommand.cs |

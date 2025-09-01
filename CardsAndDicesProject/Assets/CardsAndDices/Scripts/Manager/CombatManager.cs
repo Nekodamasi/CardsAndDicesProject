@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using VContainer;
 using UnityEngine;
+using System.Linq;
+using System;
+using Cysharp.Threading.Tasks;
 
 namespace CardsAndDices
 {
@@ -51,6 +54,8 @@ namespace CardsAndDices
             _diceFactory = new DiceFactory();
             _combatDataLoaderService = new CombatDataLoaderService(combatScenarioRegistry);
             _waveGeneratorService = new WaveGeneratorService();
+            
+            _commandBus.On<ProcessAllCreaturesCooldownCommand>(HandleCooldownProcessing);
         }
 
         /// <summary>
@@ -161,34 +166,25 @@ namespace CardsAndDices
                 }
 
             }
-
-/*
-            List<CardInitializationData> enemyInitList = _enemyCardDataProvider.GetCardDataListForWave(waveNumber);
-            foreach (CardInitializationData initData in enemyInitList)
-            {
-                CreatureCardView cardView = _viewRegistry.GetNextAvailableCreatureCardView(CreatureCardType.EnemyCard); // 利用可能なViewを取得
-                if (cardView == null)
-                {
-                    Debug.LogError("利用可能なCreatureCardViewが見つかりません。シーンに十分な数のカードが配置されているか確認してください。");
-                    break; // エラーなのでループを抜ける
-                }
-                _cardLifecycleService.InitializeCard(cardView, initData); // 既存のViewを初期化
-
-                // TODO: 適切な空きスロットを探すロジックを実装する
-                // 現状は仮でGetNextEmptyHandSlot()を使用するが、これはハンドスロット専用
-                CardSlotData targetSlot = _cardSlotManager.GetNextEmptyHandSlot();
-                if (targetSlot != null)
-                {
-                    _cardSlotManager.PlaceCardAsSystem(cardView.GetObjectId(), targetSlot.SlotId);
-                }
-                else
-                {
-                    Debug.LogWarning($"No empty slot found for enemy card {cardView.name}.");
-                }
-            }
-*/
         }
 
-        // TODO: 戦闘終了処理、ターン管理、イベント処理など、他の戦闘ロジックを追加
+        private async void HandleCooldownProcessing(ProcessAllCreaturesCooldownCommand command)
+        {
+            var sortedSlots = _cardSlotManager.GetAllSlots()
+                .Where(slot => slot.Line != LinePosition.Hand && slot.IsOccupied)
+                .OrderBy(slot => slot.Team == Team.Enemy ? 0 : 1) // Enemy first
+                .ThenBy(slot => slot.Location);
+
+            foreach (var slot in sortedSlots)
+            {
+                var creature = _creatureManager.GetCreature(slot.PlacedCardId);
+                if (creature != null && creature.CurrentCooldown > 0)
+                {
+                    _commandBus.Emit(new CreatureCooldownChangedCommand(creature.Id, creature.CurrentCooldown - 1, creature.BaseCooldown));
+                    _commandBus.Emit(new CreatureCardUpdateDisplayCommand());
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                }
+            }
+        }
     }
 }

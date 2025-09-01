@@ -8,7 +8,7 @@ namespace CardsAndDices
     public abstract class BaseEntityDefinition : ScriptableObject
     {
         [Tooltip("A unique string ID for persistence purposes (e.g., save data).")]
-        private string _id;
+        [SerializeField] private string _id;
 
         /// <summary>
         /// Gets the unique string ID for persistence.

@@ -58,6 +58,8 @@ namespace CardsAndDices
 
         public bool IsPlayerZoneFull() => _repository.IsPlayerZoneFull();
 
+        public IEnumerable<CardSlotData> GetAllSlots() => _repository.GetAllSlots();
+
         public void ClearCombatField()
         {
             _repository.ClearAllSlots();
