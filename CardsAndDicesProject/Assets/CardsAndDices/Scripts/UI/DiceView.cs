@@ -23,6 +23,7 @@ namespace CardsAndDices
 
         [Header("Dice Specific Settings")]
         [SerializeField] public string _diceName;
+        [SerializeField] public VfxTrigger _diceDropVfxTrigger;
 
         public event Action OnDestroyed;
 
@@ -53,7 +54,7 @@ namespace CardsAndDices
         {
             if (this.transform.position == targetPosition) return;
 
-            Debug.Log("MoveToAnimated:" + _diceName + ":" + this.transform.position + "->" + targetPosition);
+//            Debug.Log("MoveToAnimated:" + _diceName + ":" + this.transform.position + "->" + targetPosition);
             _currentMoveAnimation = DOTween.Sequence();
             _currentMoveAnimation.Append(transform.DOMove(targetPosition, _animationDuration)
                                         .SetEase(Ease.OutQuad));
@@ -62,12 +63,20 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// VFXの実行
+        /// </summary>
+        public void DropVfxPlay()
+        {
+            _diceDropVfxTrigger.Play();
+        }
+
+        /// <summary>
         /// ダイスの出目に基づいて、面の表示を更新します。
         /// </summary>
         /// <param name="faceValue">ダイスの出目の値。</param>
         public void UpdateFace(int faceValue)
         {
-            Debug.Log("<color=Green>だいすのめ：</color>" + faceValue);
+//            Debug.Log("<color=Green>だいすのめ：</color>" + faceValue);
             if (_faceSpriteSelector == null)
             {
                 Debug.LogWarning($"FaceSpriteSelector is not assigned in {gameObject.name}. Cannot update face.", this);
@@ -85,6 +94,7 @@ namespace CardsAndDices
             base.EnterNormalState();
             TryPlayStatusAnimation(CurrentStatus);
             SetColliderEnabled(true);
+            SetOrderInLayer(SortingOrders.Dices.Default);
         }
 
         /// <summary>
@@ -95,6 +105,7 @@ namespace CardsAndDices
         {
             base.EnterHoveringState();
             TryPlayStatusAnimation(CurrentStatus);
+            SetOrderInLayer(SortingOrders.Dices.Hovered);
         }
 
         /// <summary>
@@ -107,6 +118,7 @@ namespace CardsAndDices
             SetColliderEnabled(false);
             Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             newPosition.z = transform.position.z;
+            SetOrderInLayer(SortingOrders.Dices.Dragging);
         }
 
         /// <summary>
@@ -117,6 +129,7 @@ namespace CardsAndDices
             base.EnterInactiveState();
             TryPlayStatusAnimation(CurrentStatus);
             SetColliderEnabled(false);
+            SetOrderInLayer(SortingOrders.Dices.Default);
         }
 
         public override void EnterDraggingInProgressState()

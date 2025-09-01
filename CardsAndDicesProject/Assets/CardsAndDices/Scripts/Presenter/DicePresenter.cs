@@ -36,6 +36,9 @@ namespace CardsAndDices
         private void OnDiceDropInInlet(DiceDropInInletCommand cmd)
         {
             if (cmd.DiceId != _data.Id) return;
+
+            //エフェクトを実行
+            _view.DropVfxPlay();
             Dispose();
         }
 

@@ -22,17 +22,16 @@ namespace CardsAndDices
             CurrentUsageCount = _profile.Condition.InitialUsageCount;
         }
 
-        public void OnDiceDropped(DiceData diceData, ICreature targetCreature)
+        public int OnDiceDropped(int diceValue)
         {
-            CurrentCountdownValue -= diceData.FaceValue;
-            CurrentUsageCount--;
+            CurrentCountdownValue -= diceValue;
 
             if (CurrentCountdownValue <= 0)
             {
-                _profile.Ability.ExecuteAbility(targetCreature, diceData);
-                CurrentCountdownValue = _profile.Condition.InitialCountdownValue;
-                // TODO: UsageCountResetTypeに応じた使用回数リセット処理
+                CurrentCountdownValue = 0;
+                CurrentUsageCount--;
             }
+            return CurrentCountdownValue;
         }
 
         public bool CanAccept(DiceData diceData)

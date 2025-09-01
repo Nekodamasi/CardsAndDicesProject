@@ -46,6 +46,7 @@ namespace CardsAndDices
             _commandBus.On<DragReflowCompletedCommand>(OnDragReflowCompleted);
             _commandBus.On<ExecuteFrontLoadCommand>(OnExecuteFrontLoad);
             _commandBus.On<SpriteDragOperationCompletedCommand>(OnSpriteDragOperationCompleted);
+            _commandBus.On<DiceInletCountdownCompleteCommand>(OnDiceInletCountdownComplete);
         }
 
         public void Dispose()
@@ -177,6 +178,11 @@ namespace CardsAndDices
             // ドロップ成功フラグをリセット
             IsDroppedSuccessfully = false;
         }
+        private void OnDiceInletCountdownComplete(DiceInletCountdownCompleteCommand command)
+        {
+            DiceSlotManager.OnDiceDroppedOnInlet();
+        }
+        
         private async void OnDragReflowCompleted(DragReflowCompletedCommand command)
         {
             if (UIStateMachine.CurrentState != UIStateMachine.UIState.DropedDice) return;

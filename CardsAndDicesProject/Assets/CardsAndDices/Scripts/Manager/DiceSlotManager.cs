@@ -35,10 +35,11 @@ namespace CardsAndDices
         public void OnDiceHoveredOnSlot(CompositeObjectId diceId, CompositeObjectId slotId) => _interactionHandler.OnDiceHoveredOnSlot(diceId, slotId);
 
         public void OnDropFailed() => _interactionHandler.OnDropFailed();
+        public void OnDiceDroppedOnInlet() => _interactionHandler.OnDiceDroppedOnInlet();
 
         public void PlaceDiceAsSystem(CompositeObjectId diceId, CompositeObjectId slotId, bool triggerReflow = true)
         {
-            Debug.Log("<color=Yellow>PlaceDiceAsSystem</color>");
+//            Debug.Log("<color=Yellow>PlaceDiceAsSystem</color>");
             _placementService.UnplaceDice(diceId);
             _placementService.PlaceDice(diceId, slotId);
             if (triggerReflow)

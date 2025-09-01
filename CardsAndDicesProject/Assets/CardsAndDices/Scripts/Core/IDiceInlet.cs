@@ -30,9 +30,8 @@ namespace CardsAndDices
         /// <summary>
         /// ダイスがインレットに投入された際の処理。
         /// </summary>
-        /// <param name="diceData">投入されたダイスのデータ</param>
-        /// <param name="targetCreature">能力の対象となるクリーチャー</param>
-        void OnDiceDropped(DiceData diceData, ICreature targetCreature);
+        /// <param name="diceValue">投入されたダイスの目</param>
+        int OnDiceDropped(int diceValue);
 
         /// <summary>
         /// 指定されたダイスを受け入れ可能かチェックします。

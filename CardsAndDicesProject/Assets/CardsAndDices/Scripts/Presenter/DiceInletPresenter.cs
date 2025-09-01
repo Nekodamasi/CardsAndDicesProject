@@ -1,4 +1,6 @@
 using VContainer;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace CardsAndDices
 {
@@ -23,12 +25,31 @@ namespace CardsAndDices
 
             // 初期表示を更新
             _view.InitializeDisplay(_model.Condition);
+            _commandBus.On<DiceDropInInletCommand>(OnDiceDropInInlet);
         }
 
-        private void UpdateView()
+        /// <summary>
+        /// ダイスがインレットにドロップされたとき
+        /// </summary>
+        private async void OnDiceDropInInlet(DiceDropInInletCommand cmd)
         {
-            // TODO: _viewの表示を_modelの状態に合わせて更新する
-            // _view.UpdateCountdownDisplay(_model.CurrentCountdownValue);
+            if (cmd.InletId != _model.Id) return;
+            Debug.Log("<color=Blue>インレットにドロップ：");
+            int newValue = _model.OnDiceDropped(cmd.DiceValue);
+            await UpdateCountdownValueAsync(newValue, 0.2f);
+
+        }
+
+        public async UniTask UpdateCountdownValueAsync(int newValue, float animationTime)
+        {
+            // Viewのアニメーションメソッドを呼び出し、その完了を待つ
+            await _view.AnimateCountdownAsync(newValue, animationTime);
+
+            // アニメーション完了後に実行したい処理をここに記述
+            if (newValue > 0)
+            {
+                _commandBus.Emit(new DiceInletCountdownCompleteCommand(_model.Id));
+            }
         }
         public void Dispose()
         {

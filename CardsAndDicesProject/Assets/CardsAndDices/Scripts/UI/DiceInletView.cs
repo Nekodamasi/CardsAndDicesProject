@@ -36,7 +36,7 @@ namespace CardsAndDices
         /// </summary>
         public void InitializeDisplay(DiceInletConditionSO diceInletCondition)
         {
-            if (diceInletCondition.InletActivationViewType == InletActivationViewType.SingleMatchTrigger)
+            if (diceInletCondition.InletActivationViewType == InletActivationViewType.TotalSumTrigger)
             {
                 _countdown.enabled = true;
                 _countdown.SetText(diceInletCondition.InitialCountdownValue.ToString());
@@ -100,6 +100,42 @@ namespace CardsAndDices
         public override UniTask MoveToAnimated(Vector3 targetPosition)
         {
             return UniTask.CompletedTask;
+        }
+        
+        /// <summary>
+        /// カウントダウンの数値を指定時間かけてアニメーションさせます。
+        /// </summary>
+        /// <param name="targetValue">目標の数値</param>
+        /// <param name="duration">アニメーション時間（秒）</param>
+        public async UniTask AnimateCountdownAsync(int targetValue, float duration)
+        {
+            if (duration <= 0)
+            {
+                _countdown.SetText(targetValue.ToString());
+                return;
+            }
+
+            if (!int.TryParse(_countdown.text, out var currentValue))
+            {
+                // パースに失敗した場合は即座に目標値を設定
+                _countdown.SetText(targetValue.ToString());
+                return;
+            }
+
+            float elapsedTime = 0f;
+            int startValue = currentValue;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / duration);
+                int animatedValue = Mathf.RoundToInt(Mathf.Lerp((float)startValue, (float)targetValue, t));
+                _countdown.SetText(animatedValue.ToString());
+                await UniTask.Yield(PlayerLoopTiming.Update);
+            }
+
+            // アニメーション終了後、最終的な値を正確に設定
+            _countdown.SetText(targetValue.ToString());
         }
     }
 }

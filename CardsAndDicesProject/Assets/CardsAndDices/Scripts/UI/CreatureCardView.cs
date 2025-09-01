@@ -66,7 +66,7 @@ namespace CardsAndDices
 
             foreach (var diceInletView in _diceInletViews)
             {
-                diceInletView.OnAwake();
+//                diceInletView.OnAwake();
             }
 
             foreach (var statusIconView in _statusIconViews)

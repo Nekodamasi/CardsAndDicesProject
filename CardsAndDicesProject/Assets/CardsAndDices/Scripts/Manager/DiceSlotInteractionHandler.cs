@@ -29,8 +29,6 @@ namespace CardsAndDices
         public void OnDiceDroppedOnSlot(CompositeObjectId diceId, CompositeObjectId slotId)
         {
             Debug.Log("OnDiceDroppedOnSlot->" + diceId + "-->" + slotId);
-            // このメソッドが呼ばれる場合、カードは全てスロットに配置ずみであり、新たな配置コマンドは必要ない
-            //_placementService.PlaceCard(cardId, slotId);
 
             //リフローの状態を確定する
             ReflowConfirm();
@@ -38,6 +36,16 @@ namespace CardsAndDices
             //確定配置でリフローを行う
             ReflowDicesCurrentValue();
 //            CheckAndNotifyPlayerZoneState();
+        }
+        public void OnDiceDroppedOnInlet()
+        {
+            Debug.Log("<color=Blue>OnDiceDroppedOnInlet-></color>");
+
+            //リフローの状態を確定する
+            ReflowConfirm();
+
+            //確定配置でリフローを行う
+            ReflowDicesCurrentValue();
         }
 
         public void OnDiceHoveredOnSlot(CompositeObjectId diceId, CompositeObjectId slotId)
@@ -65,7 +73,6 @@ namespace CardsAndDices
 
         public void SystemReflowDicesCurrentValue()
         {
-            Debug.Log("ほげほげほげほげ");
             Dictionary<CompositeObjectId, Vector3> diceMovements = new Dictionary<CompositeObjectId, Vector3>();
             foreach (var slotData in _repository.GetAllSlots())
             {

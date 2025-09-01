@@ -454,24 +454,35 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-sys_identity-and-name-management.mdの内容を実装します
-以下の手順で実装してください
-各ファイルの格納場所は、D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.mdを参照してください
+particleの再生機能を実装したい
 
-step1. sys_identity-and-name-management.mdを読みこんで、実装内容を理解します
-step2. 関連設計書を読みこんで、このプロジェクトの実装内容を把握します
-step3. 関連設計書に関連するソースプログラムを読みこんで、実装されている機能を理解します
-step4. 読みこんだソースプログラムと矛盾しない形で、sys_identity-and-name-management.mdの内容をソースプログラムとして実装します
+# タスク
 
-# 関連設計書
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_card_lifecycle_design.md
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_management.md
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
+    step1.参考設計書を良く読込、このプロジェクトの設計思想及び既存の実装内容を理解します
+    step2.ユースケースを確認し、実装すべき内容を考えます
+    step3.広く知られる一般的なベストプラクティスがあればできるそれを実装内容に反映させます
+    step4.実装内容を提案します。クラスとその役割、簡単なフローを解説します
+    step5.要件定義の段階です、ソースプログラムの出力は必要ありません
 
-# コード出力ガイド
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md
+# 参考設計書
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_design-principles.md
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_identity-and-name-management.md
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_initialization_flow.md
+
+# ユースケース
+
+- 特定のSpriteの上に、特定の操作を行った時にparticleを再生する
+- particle再生時にSEを鳴らす
+- 条件によって、違うparticleを再生する
+    - 例：火属性のダメージの時は火のパーティクルなど、ダメージ属性によって変える
+- particleの再生終了を待てるようにしたい
+- 一定期間だけparticleを再生する
+    - 例：マウスホバー時のみparticleを出して、アンホバーでparticleを消すなど
+- 戦闘中に再生したparticleはObjectpoolとして再利用する
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_effect_management.md
 </Task>
 
 指示を書くには、次の指示に従ってください。

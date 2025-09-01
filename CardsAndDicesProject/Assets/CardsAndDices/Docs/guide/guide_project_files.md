@@ -232,6 +232,8 @@
 | DiceSlotData.cs | ダイススロットのドメインデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceSlotData.cs |
 | EffectInstance.cs | エフェクトのインスタンスを表現するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EffectInstance.cs |
 | EnemyPlacement.cs | 敵の配置情報を保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EnemyPlacement.cs |
+| VfxPlayer.cs | 個々のVFX再生を管理するコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxPlayer.cs |
+| VfxTrigger.cs | 特定のVFXを再生するトリガーコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxTrigger.cs |
 
 ### Scripts/Factory
 
@@ -370,4 +372,4 @@
 - 2025-08-14: ファイルリストを最新化 (Gemini)
 - 2025-08-13: ファイルリストを最新化 (Gemini)
 - 2025-08-08: ファイルリストを最新化 (Gemini)
-- 2025-07-30: プロジェクトルールへの準拠 (Gemini - Technical Writer for Game Development)
+- 2025-07-30: プロジェクトルールへの準拠 (Gemini - Technical Writer for Game Development)me Development)

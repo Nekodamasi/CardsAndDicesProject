@@ -63,7 +63,7 @@ namespace CardsAndDices
             {
                 inletAbilityProfiles.Add(new InletAbilityProfile(_inlet2Condition, _inlet2Ability));
             }
-            Debug.Log("<color=Green>インレットプロフィール：</color>" + inletAbilityProfiles.Count);
+//            Debug.Log("<color=Green>インレットプロフィール：</color>" + inletAbilityProfiles.Count);
             // CardInitializationDataのインスタンスを生成して返す
             return new CardInitializationData(creatureData, inletAbilityProfiles, _appearanceProfile);
         }
