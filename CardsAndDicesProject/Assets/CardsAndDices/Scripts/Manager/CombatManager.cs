@@ -54,7 +54,7 @@ namespace CardsAndDices
             _diceFactory = new DiceFactory();
             _combatDataLoaderService = new CombatDataLoaderService(combatScenarioRegistry);
             _waveGeneratorService = new WaveGeneratorService();
-            
+
             _commandBus.On<ProcessAllCreaturesCooldownCommand>(HandleCooldownProcessing);
         }
 
@@ -178,7 +178,7 @@ namespace CardsAndDices
             foreach (var slot in sortedSlots)
             {
                 var creature = _creatureManager.GetCreature(slot.PlacedCardId);
-                
+
                 Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
                 if (creature != null && creature.CurrentCooldown > 0)
                 {
@@ -187,7 +187,14 @@ namespace CardsAndDices
                     await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
                 }
             }
+
+            await CooldownZeroAttacks();
+            _commandBus.Emit(new DiceInletCountdownCompleteCommand(null));
             Debug.Log("<color=red>クールダウン処理終了</color>");
+        }
+        public async UniTask CooldownZeroAttacks()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
         }
     }
 }

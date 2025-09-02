@@ -36,6 +36,7 @@ namespace CardsAndDices
             _diceSlotManager = diceSlotManager;
             _uiActivationPolicy = uiActivationPolicy;
             _diceManager = diceManager;
+            IsDroppedSuccessfully = false;
 
             _commandBus.On<SpriteBeginDragCommand>(OnBeginDrag);
             _commandBus.On<SpriteHoverCommand>(OnHover);
