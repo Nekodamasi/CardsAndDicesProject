@@ -31,8 +31,62 @@ namespace CardsAndDices
             CurrentHealth = data.Health;
             CurrentShield = data.Shield;
             CurrentCooldown = data.Cooldown;
+
+            _commandBus.On<CreatureHealthChangedCommand>(OnHealthChanged);
+            _commandBus.On<CreatureShieldChangedCommand>(OnShieldChanged);
+            _commandBus.On<CreatureCooldownChangedCommand>(OnCooldownChanged);
+            _commandBus.On<CreatureAttackChangedCommand>(OnAttackChanged);
+            _commandBus.On<CreatureEnergyChangedCommand>(OnEnergyChanged);
+        }
+        public void Dispose()
+        {
+            // Unsubscribe from events to prevent memory leaks
+            _commandBus.Off<CreatureHealthChangedCommand>(OnHealthChanged);
+            _commandBus.Off<CreatureShieldChangedCommand>(OnShieldChanged);
+            _commandBus.Off<CreatureCooldownChangedCommand>(OnCooldownChanged);
+            _commandBus.Off<CreatureAttackChangedCommand>(OnAttackChanged);
+            _commandBus.Off<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
 
+        private void OnHealthChanged(CreatureHealthChangedCommand cmd)
+        {
+            if (cmd.TargetId == Id)
+            {
+//                _view.UpdateHealth(cmd.NewHealth, cmd.NewMaxHealth);
+            }
+        }
+
+        private void OnShieldChanged(CreatureShieldChangedCommand cmd)
+        {
+            if (cmd.TargetId == Id)
+            {
+//                _view.UpdateShield(cmd.NewShield, cmd.NewMaxShield);
+            }
+        }
+
+        private void OnCooldownChanged(CreatureCooldownChangedCommand cmd)
+        {
+            if (cmd.TargetId == Id)
+            {
+                CurrentCooldown = cmd.NewCooldown;
+            }
+        }
+
+        private void OnAttackChanged(CreatureAttackChangedCommand cmd)
+        {
+            if (cmd.TargetId == Id)
+            {
+//                _view.UpdateAttack(cmd.NewAttack);
+            }
+        }
+
+        private void OnEnergyChanged(CreatureEnergyChangedCommand cmd)
+        {
+            if (cmd.TargetId == Id)
+            {
+//                _view.UpdateEnergy(cmd.NewEnergy);
+            }
+        }
         public void TakeDamage(int amount)
         {
             int remainingDamage = amount;

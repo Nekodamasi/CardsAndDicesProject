@@ -48,7 +48,9 @@ namespace CardsAndDices
             // アニメーション完了後に実行したい処理をここに記述
             if (newValue > 0)
             {
-                _commandBus.Emit(new DiceInletCountdownCompleteCommand(_model.Id));
+//                _commandBus.Emit(new DiceInletCountdownCompleteCommand(_model.Id));
+                _commandBus.Emit(new ProcessAllCreaturesCooldownCommand());
+                
             }
         }
         public void Dispose()

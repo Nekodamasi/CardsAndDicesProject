@@ -178,6 +178,8 @@ namespace CardsAndDices
             foreach (var slot in sortedSlots)
             {
                 var creature = _creatureManager.GetCreature(slot.PlacedCardId);
+                
+                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
                 if (creature != null && creature.CurrentCooldown > 0)
                 {
                     _commandBus.Emit(new CreatureCooldownChangedCommand(creature.Id, creature.CurrentCooldown - 1, creature.BaseCooldown));
@@ -185,6 +187,7 @@ namespace CardsAndDices
                     await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
                 }
             }
+            Debug.Log("<color=red>クールダウン処理終了</color>");
         }
     }
 }

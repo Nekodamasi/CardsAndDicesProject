@@ -73,5 +73,10 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="effect">The effect instance to remove.</param>
         void RemoveEffect(EffectInstance effect);
+
+        /// <summary>
+        /// Dispose.
+        /// </summary>
+        void  Dispose();
     }
 }

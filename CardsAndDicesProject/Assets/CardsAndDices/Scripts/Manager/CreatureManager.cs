@@ -39,6 +39,10 @@ namespace CardsAndDices
             {
                 presenter.Dispose();
             }
+            foreach (var creature in _creatures.Values)
+            {
+                creature.Dispose();
+            }
             _presenters.Clear();
         }
 
@@ -87,6 +91,11 @@ namespace CardsAndDices
             {
                 presenter.Dispose();
                 _presenters.Remove(id);
+            }
+            var creatures = GetCreature(id);
+            if (creatures != null)
+            {
+                creatures.Dispose();
             }
             _creatures.Remove(id);
         }
