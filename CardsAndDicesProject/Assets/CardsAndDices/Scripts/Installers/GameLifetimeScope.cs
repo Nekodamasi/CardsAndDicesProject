@@ -25,6 +25,7 @@ namespace CardsAndDices
         [SerializeField] private AbilityManager _abilityManager;
         [SerializeField] private GameInitializer _gameInitializer;        
         [SerializeField] private VfxManager _vfxManager;
+        [SerializeField] private SoundManager _soundManager;
 
         [Header("ScriptableObject Repositories")]
         [SerializeField] private CardSlotStateRepository _cardSlotStateRepository;
@@ -97,6 +98,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_nameDatabase).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_nameService).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_vfxManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_soundManager).AsSelf().AsImplementedInterfaces();
 
             // DOTweenの初期化とTween容量の設定
             DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 100);
@@ -131,7 +133,8 @@ namespace CardsAndDices
             _effectManager.Initialize(_spriteCommandBus);
             _gameInitializer.Initialize(_creatureCardViews, _cardSlotViews, _diceSlotViews, _diceViews, _diceInletViews);
             _nameService.Initialize(_nameDatabase);
-            _vfxManager.Initialize();
+            _vfxManager.Initialize(_soundManager);
+            _soundManager.Initialize();
 
             foreach (var cardView in _creatureCardViews)
             {

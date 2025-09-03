@@ -17,14 +17,17 @@ namespace CardsAndDices
 
         // DIコンテナから注入される依存性
         private Transform _poolParent;
+        private SoundManager _soundManager;
+
 
         [Inject]
-        public void Initialize()
+        public void Initialize(SoundManager soundManager)
         {
             // プーリングしたVFXの親となるオブジェクトをシーンに作成
             var poolParentGo = new GameObject("VfxPool");
             DontDestroyOnLoad(poolParentGo);
             _poolParent = poolParentGo.transform;
+            _soundManager = soundManager;
 
             _pool.Clear();
             _activeInstances.Clear();
@@ -92,7 +95,7 @@ namespace CardsAndDices
             instance.transform.SetParent(_poolParent);
 
             VfxPlayer newPlayer = instance.AddComponent<VfxPlayer>();
-            newPlayer.Initialize(ReturnToPool);
+            newPlayer.Initialize(ReturnToPool, _soundManager);
             return newPlayer;
         }
 

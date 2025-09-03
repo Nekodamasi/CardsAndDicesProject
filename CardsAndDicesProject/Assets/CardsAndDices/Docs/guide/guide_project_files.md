@@ -219,6 +219,7 @@
 | SelectableSpriteSheet.cs | 選択可能なスプライトシートを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\SelectableSpriteSheet.cs |
 | StatusIconData.cs | ステータスアイコンのデータを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\StatusIconData.cs |
 | WaveData.cs | 敵のウェーブデータを定義するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\WaveData.cs |
+| SEData.cs | SEの再生データを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\SEData.cs |
 
 ### Scripts/Domain
 
@@ -234,6 +235,7 @@
 | DiceSlotData.cs | ダイススロットのドメインデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceSlotData.cs |
 | EffectInstance.cs | エフェクトのインスタンスを表現するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EffectInstance.cs |
 | EnemyPlacement.cs | 敵の配置情報を保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EnemyPlacement.cs |
+| SEPlayer.cs | SEを再生する汎用コンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\SEPlayer.cs |
 | VfxPlayer.cs | 個々のVFX再生を管理するコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxPlayer.cs |
 | VfxTrigger.cs | 特定のVFXを再生するトリガーコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxTrigger.cs |
 
@@ -268,6 +270,7 @@
 | DiceSlotInteractionHandler.cs | ダイススロットのインタラクションを処理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceSlotInteractionHandler.cs |
 | DiceSlotManager.cs | ダイススロット全体を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceSlotManager.cs |
 | EffectManager.cs | エフェクト全体を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\EffectManager.cs |
+| SoundManager.cs | サウンド設定を一元管理するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\SoundManager.cs |
 | ViewRegistry.cs | Viewのインスタンスを登録・管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\ViewRegistry.cs |
 
 ### Scripts/Orchestrator

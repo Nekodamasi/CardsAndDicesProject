@@ -15,9 +15,9 @@ namespace CardsAndDices
         [SerializeField]
         private GameObject _particlePrefab;
 
-        [Tooltip("再生するオーディオクリップ")]
+        [Tooltip("SEデータ")]
         [SerializeField]
-        private AudioClip _audioClip;
+        private SEData _seData;
 
         [Tooltip("エフェクトをループ再生するかどうか")]
         [SerializeField]
@@ -33,9 +33,12 @@ namespace CardsAndDices
         public GameObject ParticlePrefab => _particlePrefab;
 
         /// <summary>
-        /// 再生するオーディオクリップを取得します。
+        /// 再生するSEDataを取得します。
         /// </summary>
-        public AudioClip AudioClip => _audioClip;
+        public SEData SEData => _seData;
+
+        /// <summary>
+        /// AudioClip => _audioClip;
 
         /// <summary>
         /// エフェクトをループ再生するかどうかを取得します。

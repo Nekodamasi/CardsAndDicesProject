@@ -15,6 +15,9 @@ namespace CardsAndDices
         private AudioSource _audioSource;
         private Action<VfxPlayer> _onFinishedCallback;
         private Coroutine _playCoroutine;
+        private SoundManager _soundManager;
+
+
 
         /// <summary>
         /// 現在再生中のVFX定義を取得します。
@@ -25,11 +28,13 @@ namespace CardsAndDices
         /// このVFXプレイヤーを初期化します。
         /// </summary>
         /// <param name="onFinishedCallback">再生完了時に呼び出されるコールバック。</param>
-        public void Initialize(Action<VfxPlayer> onFinishedCallback)
+        public void Initialize(Action<VfxPlayer> onFinishedCallback, SoundManager soundManager)
         {
             _particleSystem = GetComponent<ParticleSystem>();
             _audioSource = GetComponent<AudioSource>();
             _onFinishedCallback = onFinishedCallback;
+            _soundManager = soundManager;
+            _audioSource.outputAudioMixerGroup = _soundManager.SEGroup;
         }
 
         /// <summary>
@@ -47,8 +52,8 @@ namespace CardsAndDices
             this.VfxDefinition = vfxDefinition;
 
             // AudioSourceの設定
-            _audioSource.clip = vfxDefinition.AudioClip;
-            _audioSource.loop = vfxDefinition.IsLooping;
+            _audioSource.clip = vfxDefinition.SEData.AudioClip;
+            _audioSource.loop = vfxDefinition.SEData.IsLoop;
             if (_audioSource.clip != null)
             {
                 _audioSource.Play();

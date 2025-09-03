@@ -65,6 +65,29 @@
 - R3 イベントチャネル（イベント駆動）
 - VContainer（DI）
 
+### 2. AudioMixer: パラメータの公開（Expose）手順
+
+`SoundManager` などのスクリプトからAudioMixerのVolumeなどを動的に制御するには、対象のパラメータを「公開（Expose）」して、スクリプトから参照できる名前を付ける必要があります。
+
+#### 手順
+
+1.  **AudioMixerウィンドウを開く:**
+    -   Unityのメニューバーから `Window > Audio > Audio Mixer` を選択します。
+
+2.  **対象のGroupを選択:**
+    -   AudioMixerウィンドウで、操作したいパラメータを持つ`AudioMixerGroup`（例: `SFXGroup`）を選択します。
+
+3.  **パラメータを公開する:**
+    -   インスペクターに表示されている`Volume`スライダーの**名前（"Volume"というラベル）を右クリック**します。
+    -   表示されたメニューから **"Expose 'Volume' to script"** を選択します。
+
+4.  **名前を変更する:**
+    -   AudioMixerウィンドウの右上にある **"Exposed Parameters"** ドロップダウンリストを開きます。
+    -   今公開したパラメータ（例: `MyExposedParam`）がリストに追加されています。
+    -   そのパラメータを右クリックして **"Rename"** を選択し、スクリプト側で使用する名前（例: `SEVolume`）に変更します。
+
+この手順により、`AudioMixer.SetFloat("SEVolume", ...)` のように、スクリプトからパラメータを名前で指定して操作できるようになります。
+
 ---
 
 ## 関連ファイル
