@@ -454,13 +454,12 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-クールダウンの処理を実装します
-以下の実装内容を元に、実装内容の詳細を提案してください
+gdd_combat_system.mdの「攻撃」機能のシステム設計書を作成します
 
 # タスク
 
     step1.参考設計書を良く読込、このプロジェクトの設計思想及び既存の実装内容を理解します
-    step2. 実装内容を確認し、実装すべき内容を考えます
+    step2.ユースケースを確認し、実装すべき内容を考えます
     step3.広く知られる一般的なベストプラクティスがあればできるそれを実装内容に反映させます
     step4.実装内容を提案します。クラスとその役割、簡単なフローを解説します
     step5.要件定義の段階です、ソースプログラムの出力は必要ありません
@@ -470,21 +469,9 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
     - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
     - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md
     - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_identity-and-name-management.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_initialization_flow.md
-
-# 実装内容
-
-    - クールダウンコマンドを作成します
-    - CombatManagerにクールダウンコマンドを購読させます
-    - 購読したクールダウンコマンドを受けて、すべてのクリーチャーにたいして、以下のクールダウン処理を行う
-    - このクールダウン処理は、EnemyのクリーチャーカードのSlotLocationがVanguard -> Center -> Rear -> PlayerのクリーチャーカードのSlotLocationがVanguard -> Center -> Rearの順に行い、Handのカードは対象外
-
-## クールダウン処理
-
-    - CreatureCooldownChangedCommandで、各クリーチャーのCooldownをマイナス１する
-    - CreatureCardUpdateDisplayCommandを発行して、CreatureCardViewに数値を反映させる
-    - 0.2fのウェイト
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_effect_management.md
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_cooldown_processing.md
+    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_inlet_management.md
 </Task>
 
 指示を書くには、次の指示に従ってください。
