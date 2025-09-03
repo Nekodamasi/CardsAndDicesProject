@@ -50,35 +50,12 @@
 
 ---
 
-## アニメーション機能の分離
+## アニメーション機能の設計
 
-DOTweenを用いたアニメーションの定義と実行ロジックを、`ScriptableObject`ベースの戦略パターンとして分離します。これにより、アニメーションの再利用性、柔軟性、およびデザイナーによる調整の容易性を高めます。
+`SpriteView`をはじめとするUI要素のアニメーションは、拡張性と保守性を高めるために**Strategyパターン**を用いて実装します。
+具体的な実装方法やクラス設計などの技術的な仕様については、以下のシステム設計書を参照してください。
 
-### 1. IAnimationStrategy
-
-- **役割:** すべてのアニメーション戦略が実装すべきインターフェースです。`PlayAnimation(GameObject targetObject, MultiRendererVisualController targetVisualController, Vector3 originalScale, Color originalColor, float duration, Vector3 targetPosition)`メソッドを定義します。`targetPosition`はアニメーションの目標位置を指定します。
-
-### 2. BaseAnimationSO
-
-- **役割:** `IAnimationStrategy`を実装する`ScriptableObject`の抽象基底クラスです。`PlayAnimation`メソッドは、`GameObject`、`MultiRendererVisualController`、`originalScale`、`originalColor`, `duration`, `targetPosition`を引数として受け取ります。共通の`_animationDuration`フィールドやヘルパーメソッド（例: `GetBrightenedColor`）も提供します。
-
-### 3. MultiRendererVisualController
-
-- **役割:** 
-    - 複数の`SpriteRenderer`と`TextMeshProUGUI`の視覚的プロパティ（透明度、色）を一括で制御するコンポーネントです。複雑なUI要素全体のフェードイン/アウトや色変更に利用します。インスペクターで対象となるレンダラーや子階層の`MultiRendererVisualController`を割り当てることができ、階層的なフェードや色変更に対応します。
-- **メソッド:**
-    - `FadeToAlpha(float alpha, float duration)`: 透明度をTweenします。
-    - `SetAlpha(float alpha)`: 現在の透明度を設定します。
-    - `ColorTo(Color targetColor, float duration)`: 色をTweenします。
-    - `SetColor(Color targetColor)`: 現在の色を設定します。
-
-### 4. 具体的なアニメーションScriptableObject
-
-`BaseAnimationSO`を継承し、特定のアニメーションロジックをカプセル化します。これらはUnityエディタでアセットとして作成され、`BaseSpriteView`やその派生クラスにインスペクターから割り当てられます。
-
-- **HoverAnimationSO / CardHoverAnimationSO:** ホバー時の拡大、明るさ変更、カード固有の回転・浮上アニメーション。
-- **NormalAnimationSO / CardNormalAnimationSO:** 通常状態への復帰アニメーション。
-- **DragAnimationSO / CardDragAnimationSO:** ドラッグ開始時の見た目変更アニメーション。
+- [sys_animation_system.md](../sys/sys_animation_system.md)
 
 ---
 

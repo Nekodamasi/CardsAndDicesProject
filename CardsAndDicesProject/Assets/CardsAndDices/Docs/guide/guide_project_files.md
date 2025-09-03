@@ -55,6 +55,7 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | sys_ability_management.md | アビリティ管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_ability_management.md |
+| sys_animation_system.md | アニメーションのStrategyパターンに関するシステム設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_animation_system.md |
 | sys_card_slot_manager.md | カードスロット管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_card_slot_manager.md |
 | sys_classes.md | プロジェクトで使用される主要なクラスの概要 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_classes.md |
 | sys_creature_card_lifecycle_design.md | クリーチャーカードのライフサイクル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_creature_card_lifecycle_design.md |
