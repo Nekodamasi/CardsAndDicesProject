@@ -20,10 +20,6 @@ namespace CardsAndDices
         [SerializeField] private SlotLocation _location;
         [SerializeField] private Team _team;
 
-        [Header("CardSlot Specific Animations")]
-        [SerializeField] private BaseAnimationSO _acceptableAnimation;
-        [SerializeField] private BaseAnimationSO _dropWaitingAnimation;
-
         private CardSlotData _slotData;
 
         public override void OnAwake()
@@ -47,7 +43,7 @@ namespace CardsAndDices
         {
             base.EnterNormalState();
             KillCurrentAnimation();
-            _currentAnimation = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//            _currentAnimation = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
             SetColliderEnabled(false);
         }
 
@@ -58,7 +54,7 @@ namespace CardsAndDices
         {
             base.EnterAcceptableState();
             KillCurrentAnimation();
-            _currentAnimation = _acceptableAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//            _currentAnimation = _acceptableAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
             SetColliderEnabled(true);
         }
 
@@ -69,7 +65,7 @@ namespace CardsAndDices
         {
             base.EnterHoveringState();
             KillCurrentAnimation();
-            _currentAnimation = _dropWaitingAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//            _currentAnimation = _dropWaitingAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
         }
 
         /// <summary>
@@ -79,7 +75,7 @@ namespace CardsAndDices
         {
             base.EnterInactiveState();
             KillCurrentAnimation();
-            _currentAnimation = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//            _currentAnimation = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
             SetColliderEnabled(false);
         }
 

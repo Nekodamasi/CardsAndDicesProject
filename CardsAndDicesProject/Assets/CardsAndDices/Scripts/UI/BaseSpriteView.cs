@@ -16,11 +16,6 @@ namespace CardsAndDices
         [Header("Animation Settings")]
         [SerializeField] protected float _animationDuration = 0.2f;
 
-        [Header("Animation Strategies")]
-        [SerializeField] protected BaseAnimationSO _hoverAnimation;
-        [SerializeField] protected BaseAnimationSO _normalAnimation;
-        [SerializeField] protected BaseAnimationSO _dragAnimation;
-
         [SerializeField] protected SpriteStatus _currentStatus = SpriteStatus.Normal;
         protected IUIInteractionOrchestrator _orchestrator;
 

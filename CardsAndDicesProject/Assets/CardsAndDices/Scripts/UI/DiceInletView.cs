@@ -20,9 +20,6 @@ namespace CardsAndDices
         [Header("Components")]
         [SerializeField] private SpriteSelector _faceSpriteSelector;
         [SerializeField] private TextMeshProUGUI _countdown;
-        [Header("Animations")]
-        [SerializeField] private BaseAnimationSO _acceptableAnimation;
-        [SerializeField] private BaseAnimationSO _dropWaitingAnimation;
 
         public override void OnAwake()
         {
@@ -55,7 +52,7 @@ namespace CardsAndDices
         {
             base.EnterAcceptableState();
             KillCurrentAnimation();
-            _currentAnimation = _acceptableAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//            _currentAnimation = _acceptableAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
             SetColliderEnabled(true);
         }
 
@@ -66,7 +63,7 @@ namespace CardsAndDices
         {
             base.EnterHoveringState();
             KillCurrentAnimation();
-            _currentAnimation = _dropWaitingAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//            _currentAnimation = _dropWaitingAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
         }
 
         /// <summary>
