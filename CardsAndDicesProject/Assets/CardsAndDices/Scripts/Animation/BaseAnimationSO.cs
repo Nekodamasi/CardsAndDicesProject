@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// アニメーション戦略の基底ScriptableObject。
     /// </summary>
-    public abstract class BaseAnimationSO : ScriptableObject, IAnimationStrategy
+    public abstract class BaseAnimationSO : ScriptableObject
     {
         [SerializeField] protected float _animationDuration = 0.2f; // デフォルトの期間
 

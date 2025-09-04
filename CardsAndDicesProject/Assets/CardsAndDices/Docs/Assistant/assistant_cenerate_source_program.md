@@ -5,7 +5,7 @@
   作業を開始する前に、以下のドキュメントを熟読してください。
 
   <design_doc>
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sound_system.md
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_animation_system.md
   </design_doc>
 
   <related_design_docs>

@@ -30,6 +30,14 @@ namespace CardsAndDices
         [SerializeField] private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
         [SerializeField] private List<StatusIconView> _statusIconViews = new List<StatusIconView>();
         [SerializeField] private CreatureAppearanceController _appearanceController;
+        [Header("Card Animation Settings")]
+        [SerializeField] private AnimationContext _animationContext;
+        [SerializeField] private HoverAnimationProfile _hoverAnimationProfile;
+        [SerializeField] private NormalAnimationProfile _normalAnimationProfile;
+        [SerializeField] private DragAnimationProfile _dragAnimationProfile;
+        private HoverAnimationStrategy _hoverAnimationStrategy;
+        private NormalAnimationStrategy _normalAnimationStrategy;
+        private DragAnimationStrategy _dragAnimationStrategy;
 
         public CreatureData CurrentCreatureData { get; private set; } // 追加
         public CreatureCardType CreatureCardType => _creatureCardType;
@@ -63,11 +71,9 @@ namespace CardsAndDices
         {
             base.OnAwake();
             SetSpawnedState(false);
-
-            foreach (var diceInletView in _diceInletViews)
-            {
-//                diceInletView.OnAwake();
-            }
+            _hoverAnimationStrategy = new HoverAnimationStrategy(_hoverAnimationProfile);
+            _normalAnimationStrategy = new NormalAnimationStrategy(_normalAnimationProfile);
+            _dragAnimationStrategy = new DragAnimationStrategy(_dragAnimationProfile);
 
             foreach (var statusIconView in _statusIconViews)
             {
@@ -175,16 +181,20 @@ namespace CardsAndDices
             switch (targetStatus)
             {
                 case SpriteStatus.Normal:
-                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _normalAnimationStrategy.ExecuteAsync(_animationContext);
                     break;
                 case SpriteStatus.Hover:
-                    animationSequence = _hoverAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//                    animationSequence = _hoverAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _hoverAnimationStrategy.ExecuteAsync(_animationContext);
                     break;
                 case SpriteStatus.DraggingStarted:
-                    animationSequence = _dragAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//                    animationSequence = _dragAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _dragAnimationStrategy.ExecuteAsync(_animationContext);
                     break;
                 case SpriteStatus.Inactive:
-                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _normalAnimationStrategy.ExecuteAsync(_animationContext);
+//                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
                     break;
                 case SpriteStatus.DraggingInProgress:
                     break;

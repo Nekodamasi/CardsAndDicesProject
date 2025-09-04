@@ -128,9 +128,11 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | BaseAnimationSO.cs | アニメーションの基本設定を定義するScriptableObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BaseAnimationSO.cs |
+| BaseAnimationProfile.cs | 全てのアニメーションプロファイルの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BaseAnimationProfile.cs |
 | DragAnimationSO.cs | ドラッグ中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DragAnimationSO.cs |
 | DropWaitingAnimationSO.cs | ドロップ待機中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DropWaitingAnimationSO.cs |
 | HoverAnimationSO.cs | ホバー中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\HoverAnimationSO.cs |
+| HoverAnimationProfile.cs | ホバーアニメーションのパラメータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\HoverAnimationProfile.cs |
 | NormalAnimationSO.cs | 通常時のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\NormalAnimationSO.cs |
 | ReturnToPositionAnimationSO.cs | 元の位置に戻るアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\ReturnToPositionAnimationSO.cs |
 
@@ -236,6 +238,7 @@
 | DiceSlotData.cs | ダイススロットのドメインデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceSlotData.cs |
 | EffectInstance.cs | エフェクトのインスタンスを表現するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EffectInstance.cs |
 | EnemyPlacement.cs | 敵の配置情報を保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EnemyPlacement.cs |
+| AnimationContext.cs | アニメーション実行に必要なコンポーネントを集約するコンテキストクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\AnimationContext.cs |
 | SEPlayer.cs | SEを再生する汎用コンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\SEPlayer.cs |
 | VfxPlayer.cs | 個々のVFX再生を管理するコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxPlayer.cs |
 | VfxTrigger.cs | 特定のVFXを再生するトリガーコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxTrigger.cs |
@@ -324,6 +327,7 @@
 | :--- | :--- | :--- |
 | CardInteractionStrategy.cs | カードのインタラクション戦略を定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\CardInteractionStrategy.cs |
 | DiceInteractionStrategy.cs | ダイスのインタラクション戦略を定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\DiceInteractionStrategy.cs |
+| HoverAnimationStrategy.cs | ホバーアニメーションの具体的な処理を実装する戦略クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\HoverAnimationStrategy.cs |
 
 ### Scripts/Systems
 

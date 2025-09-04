@@ -31,6 +31,14 @@ namespace CardsAndDices
         private bool _animationSkipped = false;
         private bool _playAnimation = false;
         private SpriteStatus _pendingStatus;
+        [Header("Dice Animation Settings")]
+        [SerializeField] private AnimationContext _animationContext;
+        [SerializeField] private HoverAnimationProfile _hoverAnimationProfile;
+        [SerializeField] private NormalAnimationProfile _normalAnimationProfile;
+        [SerializeField] private DragAnimationProfile _dragAnimationProfile;
+        private HoverAnimationStrategy _hoverAnimationStrategy;
+        private NormalAnimationStrategy _normalAnimationStrategy;
+        private DragAnimationStrategy _dragAnimationStrategy;
  
         /// <summary>
         /// 指定されたデータに基づいてダイスの表示を更新します。
@@ -45,8 +53,9 @@ namespace CardsAndDices
         {
             base.OnAwake();
             SetSpawnedState(false);
-//            Debug.Log($"[DiceView] {gameObject.name} (ID: {GetObjectId().UniqueId}) - Awake called. Orchestrator is null: {_orchestrator == null}");
-            // _orchestrator?.RegisterView(this); // BaseSpriteViewのAwakeで既に呼ばれているためコメントアウト
+            _hoverAnimationStrategy = new HoverAnimationStrategy(_hoverAnimationProfile);
+            _normalAnimationStrategy = new NormalAnimationStrategy(_normalAnimationProfile);
+            _dragAnimationStrategy = new DragAnimationStrategy(_dragAnimationProfile);
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
         }
 
@@ -156,16 +165,20 @@ namespace CardsAndDices
             switch (targetStatus)
             {
                 case SpriteStatus.Normal:
-                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _normalAnimationStrategy.ExecuteAsync(_animationContext);
                     break;
                 case SpriteStatus.Hover:
-                    animationSequence = _hoverAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//                    animationSequence = _hoverAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _hoverAnimationStrategy.ExecuteAsync(_animationContext);
                     break;
                 case SpriteStatus.DraggingStarted:
-                    animationSequence = _dragAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+//                    animationSequence = _dragAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _dragAnimationStrategy.ExecuteAsync(_animationContext);
                     break;
                 case SpriteStatus.Inactive:
-                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
+                    animationSequence = _normalAnimationStrategy.ExecuteAsync(_animationContext);
+//                    animationSequence = _normalAnimation?.PlayAnimation(gameObject, _multiRendererVisualController, _originalScale, _originalColor, _animationDuration, transform.position);
                     break;
                 case SpriteStatus.DraggingInProgress:
                     // ドラッグ中のアニメーションはOrchestratorが直接transformを操作するため、ここではアニメーションは不要
