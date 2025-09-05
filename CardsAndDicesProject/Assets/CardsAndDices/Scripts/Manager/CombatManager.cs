@@ -181,6 +181,7 @@ namespace CardsAndDices
                 .OrderBy(slot => slot.Team == Team.Enemy ? 0 : 1) // Enemy first
                 .ThenBy(slot => slot.Location);
 
+            // 配置されたすべてのクリーチャーカードからクールダウンを１つ減らす
             foreach (var slot in sortedSlots)
             {
                 var creature = _creatureManager.GetCreature(slot.PlacedCardId);
@@ -189,7 +190,7 @@ namespace CardsAndDices
                 if (creature != null && creature.CurrentCooldown > 0)
                 {
                     _commandBus.Emit(new CreatureCooldownChangedCommand(creature.Id, creature.CurrentCooldown - 1, creature.BaseCooldown));
-                    _commandBus.Emit(new CreatureCardUpdateDisplayCommand());
+                    _commandBus.Emit(new CreatureCardUpdateDisplayCommand(creature.Id));
                     await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
                 }
             }
@@ -200,11 +201,42 @@ namespace CardsAndDices
         }
         public async UniTask CooldownZeroAttacks()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            var sortedSlots = _cardSlotManager.GetAllSlots()
+                .Where(slot => slot.Line != LinePosition.Hand && slot.IsOccupied)
+                .OrderBy(slot => slot.Team == Team.Enemy ? 0 : 1) // Enemy first
+                .ThenBy(slot => slot.Location);
+
+            // クールダウン０のクリーチャーカードの攻撃
+            foreach (var slot in sortedSlots)
+            {
+                var creature = _creatureManager.GetCreature(slot.PlacedCardId);
+
+                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
+                if (creature != null && creature.CurrentCooldown == 0)
+                {
+                    _commandBus.Emit(new PerformAttackCommand(creature.Id, creature.MainAttackAoE, creature.MainAttack));
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                }
+            }
         }
         private async void OnPerformAttack(PerformAttackCommand command)
         {
+            Debug.Log("<color=red>OnPerformAttack</color>:" + command.AttackerId + "_" + command.AttackPoint + "_" + command.AttackAoE);
+            // ターゲットのリスト
+            List<CompositeObjectId> ids = _targetSelector.SelectTargets(command.AttackerId, command.AttackAoE);
+
+            // アタックアニメーション
+            _commandBus.Emit(new CreatureAttackedCommand(command.AttackerId));
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+
+            Debug.Log("<color=red>こうげきたーげっと:</color>:" + ids.Count);
+            foreach (var id in ids)
+            {
+                var creature = _creatureManager.GetCreature(id);
+                creature.TakeDamage(command.AttackPoint);
+                _commandBus.Emit(new CreatureCardUpdateDisplayCommand(id));
+            }
+
         }
     }
 }

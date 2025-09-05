@@ -454,24 +454,32 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-gdd_combat_system.mdの「攻撃」機能のシステム設計書を作成します
+クリーチャーカードが、右側に向かって体当たりするアニメーションを作成してください
+出力するソースプログラムは、guide_unity-cs.mdのガイドに従って生成してください
 
 # タスク
 
-    step1.参考設計書を良く読込、このプロジェクトの設計思想及び既存の実装内容を理解します
-    step2.ユースケースを確認し、実装すべき内容を考えます
-    step3.広く知られる一般的なベストプラクティスがあればできるそれを実装内容に反映させます
-    step4.実装内容を提案します。クラスとその役割、簡単なフローを解説します
-    step5.要件定義の段階です、ソースプログラムの出力は必要ありません
+step1. 「関連する設計書」を良く読んで、アニメーションの実装方法を理解します
+step2. 「関連する設計書」を元に、実装されているソースプログラムを読込、内容を把握します
+step3. 「アニメーションのイメージ」を実現するDOTweenの実装方式を考えます
+step4. guide_unity-cs.mdを読みこんで、出力するソースプログラムをガイドにそって作成します
+step5. ソースプログラムに適切な名前を与えて、適切なディレクトリに保存します
+step6. ファイル一覧を更新します
 
-# 参考設計書
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_design-principles.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_ui_interaction_design.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_unity-cs.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_effect_management.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_cooldown_processing.md
-    - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_dice_inlet_management.md
+# 生成するソースプログラム
+
+- AnimationProfile
+    - BaseAnimationProfileを継承した、体当たりアニメーションのAnimationProfile
+- AnimationStrategy
+    - IAnimationStrategyを継承した、体当たりアニメーションのAnimationStrategy
+
+# 関連する設計書
+
+- sys_animation_system.md
+
+# アニメーションのイメージ
+
+- 少し左に下がってから、右側に移動（体当たり）し、0.1fほど止まってから、すっと元の位置に戻ります
 </Task>
 
 指示を書くには、次の指示に従ってください。

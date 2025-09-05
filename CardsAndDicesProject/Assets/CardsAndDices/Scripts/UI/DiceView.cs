@@ -195,7 +195,7 @@ namespace CardsAndDices
             {
                 _currentAnimation = animationSequence;
                 await animationSequence.AsyncWaitForCompletion();
-            Debug.Log("<color=blue>カード：</color>" + _diceName + "->アニメーションえんど:" + targetStatus + "->前：" + _currentStatus);
+//            Debug.Log("<color=blue>カード：</color>" + _diceName + "->アニメーションえんど:" + targetStatus + "->前：" + _currentStatus);
                 HandleAnimationCompletion();
             }
             else

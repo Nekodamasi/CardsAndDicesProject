@@ -46,6 +46,10 @@ namespace CardsAndDices
         {
             return _slotDataMap.Values.FirstOrDefault(s => s.ReflowPlacedCardId == reflowPlacedCardId);
         }
+        public CardSlotData GetSlotDataByPlacedCardId(CompositeObjectId placedCardId)
+        {
+            return _slotDataMap.Values.FirstOrDefault(s => s.PlacedCardId == placedCardId);
+        }
 
         public CardSlotData FindSlotsByLocation(Team team, LinePosition line, SlotLocation location)
         {

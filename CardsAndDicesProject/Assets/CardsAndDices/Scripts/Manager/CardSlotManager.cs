@@ -53,6 +53,7 @@ namespace CardsAndDices
         public CardSlotData GetNextEmptyHandSlot() => _repository.GetNextEmptyHandSlot();
 
         public CardSlotData GetSlotDataByReflowPlacedCardId(CompositeObjectId reflowPlacedCardId) => _repository.GetSlotDataByReflowPlacedCardId(reflowPlacedCardId);
+        public CardSlotData GetSlotDataByPlacedCardId(CompositeObjectId placedCardId) => _repository.GetSlotDataByPlacedCardId(placedCardId);
 
         public CardSlotData FindSlotsByLocation(Team team, LinePosition line, SlotLocation location) => _repository.FindSlotsByLocation(team,  line, location);
 

@@ -25,79 +25,27 @@ namespace CardsAndDices
             ForceUpdateDisplay(); // Initial display update
         }
 
+        private void OnAllCreatureCardUpdateDisplay(AllCreatureCardUpdateDisplayCommand cmd)
+        {
+            ForceUpdateDisplay();
+        }
         private void OnCreatureCardUpdateDisplay(CreatureCardUpdateDisplayCommand cmd)
         {
+            if (cmd.UpdateId != _creature.Id) return;
             ForceUpdateDisplay();
         }
 
         private void SubscribeToEvents()
         {
+            _commandBus.On<AllCreatureCardUpdateDisplayCommand>(OnAllCreatureCardUpdateDisplay);
             _commandBus.On<CreatureCardUpdateDisplayCommand>(OnCreatureCardUpdateDisplay);
-
-            switch (_view.StatusIconData.TargetType)
-            {
-                case EffectTargetType.Health:
-                    _commandBus.On<CreatureHealthChangedCommand>(HandleHealthChange);
-                    break;
-                case EffectTargetType.Attack:
-                    _commandBus.On<CreatureAttackChangedCommand>(HandleAttackChange);
-                    break;
-                case EffectTargetType.Shield:
-                    _commandBus.On<CreatureShieldChangedCommand>(HandleShieldChange);
-                    break;
-                case EffectTargetType.Cooldown:
-                    _commandBus.On<CreatureCooldownChangedCommand>(HandleCooldownChange);
-                    break;
-                case EffectTargetType.Energy:
-                    _commandBus.On<CreatureEnergyChangedCommand>(HandleEnergyChange);
-                    break;
-            }
         }
 
         private void UnsubscribeFromEvents()
         {
-            switch (_view.StatusIconData.TargetType)
-            {
-                case EffectTargetType.Health:
-                    _commandBus.Off<CreatureHealthChangedCommand>(HandleHealthChange);
-                    break;
-                case EffectTargetType.Attack:
-                    _commandBus.Off<CreatureAttackChangedCommand>(HandleAttackChange);
-                    break;
-                case EffectTargetType.Shield:
-                    _commandBus.Off<CreatureShieldChangedCommand>(HandleShieldChange);
-                    break;
-                case EffectTargetType.Cooldown:
-                    _commandBus.Off<CreatureCooldownChangedCommand>(HandleCooldownChange);
-                    break;
-                case EffectTargetType.Energy:
-                    _commandBus.Off<CreatureEnergyChangedCommand>(HandleEnergyChange);
-                    break;
-            }
+            _commandBus.On<AllCreatureCardUpdateDisplayCommand>(OnAllCreatureCardUpdateDisplay);
+            _commandBus.On<CreatureCardUpdateDisplayCommand>(OnCreatureCardUpdateDisplay);
         }
-
-        // --- Event Handlers ---
-        private void HandleHealthChange(CreatureHealthChangedCommand cmd)
-        {
-            if (cmd.TargetId == _creature.Id) _currentValue = cmd.NewHealth;
-        }
-        private void HandleAttackChange(CreatureAttackChangedCommand cmd)
-        {
-            if (cmd.TargetId == _creature.Id) _currentValue = cmd.NewAttack;
-        }
-        private void HandleShieldChange(CreatureShieldChangedCommand cmd)
-        {
-            if (cmd.TargetId == _creature.Id) _currentValue = cmd.NewShield;
-        }
-        private void HandleCooldownChange(CreatureCooldownChangedCommand cmd)
-        {
-            if (cmd.TargetId == _creature.Id) _currentValue = cmd.NewCooldown;
-        }
-        private void HandleEnergyChange(CreatureEnergyChangedCommand cmd)
-        {
-            if (cmd.TargetId == _creature.Id) _currentValue = cmd.NewEnergy;
-        }
-
 
         /// <summary>
         /// Forces the view to update its display with the latest stored value.

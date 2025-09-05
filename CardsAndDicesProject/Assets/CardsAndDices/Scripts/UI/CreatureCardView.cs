@@ -35,9 +35,11 @@ namespace CardsAndDices
         [SerializeField] private HoverAnimationProfile _hoverAnimationProfile;
         [SerializeField] private NormalAnimationProfile _normalAnimationProfile;
         [SerializeField] private DragAnimationProfile _dragAnimationProfile;
+        [SerializeField] private BodySlamAnimationProfile _bodySlamAnimationProfile;
         private HoverAnimationStrategy _hoverAnimationStrategy;
         private NormalAnimationStrategy _normalAnimationStrategy;
         private DragAnimationStrategy _dragAnimationStrategy;
+        private BodySlamAnimationStrategy _bodySlamAnimationStrategy;
 
         public CreatureData CurrentCreatureData { get; private set; } // 追加
         public CreatureCardType CreatureCardType => _creatureCardType;
@@ -74,6 +76,7 @@ namespace CardsAndDices
             _hoverAnimationStrategy = new HoverAnimationStrategy(_hoverAnimationProfile);
             _normalAnimationStrategy = new NormalAnimationStrategy(_normalAnimationProfile);
             _dragAnimationStrategy = new DragAnimationStrategy(_dragAnimationProfile);
+            _bodySlamAnimationStrategy = new BodySlamAnimationStrategy(_bodySlamAnimationProfile);
 
             foreach (var statusIconView in _statusIconViews)
             {
@@ -96,6 +99,14 @@ namespace CardsAndDices
             _cardName.text = _nameService.GetDisplayName(creatureIdEntity);
         }
 
+        /// <summary>
+        /// 指定された外観プロファイルに基づいて、カードの見た目を更新します。
+        /// </summary>
+        /// <param name="profile">適用する外観プロファイル。</param>
+        public void PlayBodySlamAnimation()
+        {
+            _bodySlamAnimationStrategy.ExecuteAsync(_animationContext);
+        }
         public void SetGrayscale(bool enabled)
         {
             IsGrayscale = enabled;

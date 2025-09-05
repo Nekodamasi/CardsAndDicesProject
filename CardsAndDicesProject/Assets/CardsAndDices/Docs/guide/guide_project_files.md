@@ -127,12 +127,13 @@
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
-| BaseAnimationSO.cs | アニメーションの基本設定を定義するScriptableObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BaseAnimationSO.cs |
 | BaseAnimationProfile.cs | 全てのアニメーションプロファイルの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BaseAnimationProfile.cs |
+| BaseAnimationSO.cs | アニメーションの基本設定を定義するScriptableObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BaseAnimationSO.cs |
+| BodySlamAnimationProfile.cs | 体当たりアニメーションのパラメータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BodySlamAnimationProfile.cs |
 | DragAnimationSO.cs | ドラッグ中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DragAnimationSO.cs |
 | DropWaitingAnimationSO.cs | ドロップ待機中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DropWaitingAnimationSO.cs |
-| HoverAnimationSO.cs | ホバー中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\HoverAnimationSO.cs |
 | HoverAnimationProfile.cs | ホバーアニメーションのパラメータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\HoverAnimationProfile.cs |
+| HoverAnimationSO.cs | ホバー中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\HoverAnimationSO.cs |
 | NormalAnimationSO.cs | 通常時のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\NormalAnimationSO.cs |
 | ReturnToPositionAnimationSO.cs | 元の位置に戻るアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\ReturnToPositionAnimationSO.cs |
 
@@ -327,6 +328,7 @@
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
+| BodySlamAnimationStrategy.cs | 体当たりアニメーションの具体的な処理を実装する戦略クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\BodySlamAnimationStrategy.cs |
 | CardInteractionStrategy.cs | カードのインタラクション戦略を定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\CardInteractionStrategy.cs |
 | DiceInteractionStrategy.cs | ダイスのインタラクション戦略を定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\DiceInteractionStrategy.cs |
 | HoverAnimationStrategy.cs | ホバーアニメーションの具体的な処理を実装する戦略クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\HoverAnimationStrategy.cs |

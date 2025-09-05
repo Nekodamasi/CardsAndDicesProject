@@ -5,12 +5,10 @@ namespace CardsAndDices
     /// <summary>
     /// カードの値を最新に更新する
     /// </summary>
-    public class CreatureCardUpdateDisplayCommand : ICommand
+    public class AllCreatureCardUpdateDisplayCommand : ICommand
     {
-        public CompositeObjectId UpdateId { get; }
-        public CreatureCardUpdateDisplayCommand(CompositeObjectId updateId)
+        public AllCreatureCardUpdateDisplayCommand()
         {
-            UpdateId = updateId;
         }
 
         /// <summary>

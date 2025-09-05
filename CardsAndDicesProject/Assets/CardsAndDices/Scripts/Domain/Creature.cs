@@ -14,14 +14,44 @@ namespace CardsAndDices
         public int CurrentCooldown { get; private set; }
         public int BaseCooldown => _data.Cooldown + _effectManager.GetTotalEffectValue(Id, EffectTargetType.Cooldown);
         public int Energy => _data.Energy + _effectManager.GetTotalEffectValue(Id, EffectTargetType.Energy);
+        public SlotLocation Location { get { return _cardSlotManager.GetSlotDataByReflowPlacedCardId(Id).Location; } }
         public int CurrentHitsPerMainAttack { get; private set; }
-        public int MainAttack => _effectManager.GetTotalEffectValue(Id, _data.MainAttackScoresType);
+        public int MainAttack
+        {
+            get
+            {
+                int value = 0;
+                if (EffectTargetType.Attack == _data.MainAttackScoresType)
+                {
+                    value = Attack;
+                }
+                else if (EffectTargetType.Cooldown == _data.MainAttackScoresType)
+                {
+                    value = CurrentCooldown;
+                }
+                else if (EffectTargetType.Health == _data.MainAttackScoresType)
+                {
+                    value = CurrentHealth;
+                }
+                else if (EffectTargetType.Energy == _data.MainAttackScoresType)
+                {
+                    value = Energy;
+                }
+                else if (EffectTargetType.Shield == _data.MainAttackScoresType)
+                {
+                    value = CurrentShield;
+                }
+                return value;
+            }
+        }
         public AreaOfEffect MainAttackAoE => _data.MainAttackAoE;
         private readonly CreatureData _data;
         private readonly EffectManager _effectManager;
         private readonly SpriteCommandBus _commandBus;
         private readonly CardSlotManager _cardSlotManager;
         public bool IsCooldownFinished { get; private set; }
+        public bool IsDamage{ get; private set; }
+        public bool IsDeath{ get; private set; }
 
         public Creature(CompositeObjectId id, CreatureData data, EffectManager effectManager, SpriteCommandBus commandBus, CardSlotManager cardSlotManager)
         {
@@ -36,11 +66,12 @@ namespace CardsAndDices
             CurrentCooldown = data.Cooldown;
             CurrentHitsPerMainAttack = data.HitsPerMainAttack;
             IsCooldownFinished = false;
+            IsDamage = false;
+            IsDeath = false;
 
             _commandBus.On<CreatureHealthChangedCommand>(OnHealthChanged);
             _commandBus.On<CreatureShieldChangedCommand>(OnShieldChanged);
             _commandBus.On<CreatureCooldownChangedCommand>(OnCooldownChanged);
-            _commandBus.On<CreatureAttackChangedCommand>(OnAttackChanged);
             _commandBus.On<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
         public void Dispose()
@@ -49,7 +80,6 @@ namespace CardsAndDices
             _commandBus.Off<CreatureHealthChangedCommand>(OnHealthChanged);
             _commandBus.Off<CreatureShieldChangedCommand>(OnShieldChanged);
             _commandBus.Off<CreatureCooldownChangedCommand>(OnCooldownChanged);
-            _commandBus.Off<CreatureAttackChangedCommand>(OnAttackChanged);
             _commandBus.Off<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
 
@@ -74,14 +104,6 @@ namespace CardsAndDices
             if (cmd.TargetId == Id)
             {
                 CurrentCooldown = cmd.NewCooldown;
-            }
-        }
-
-        private void OnAttackChanged(CreatureAttackChangedCommand cmd)
-        {
-            if (cmd.TargetId == Id)
-            {
-//                _view.UpdateAttack(cmd.NewAttack);
             }
         }
 
@@ -111,14 +133,20 @@ namespace CardsAndDices
                 int shieldDamage = System.Math.Min(remainingDamage, CurrentShield);
                 CurrentShield -= shieldDamage;
                 remainingDamage -= shieldDamage;
-                _commandBus.Emit(new CreatureShieldChangedCommand(Id, CurrentShield, BaseShield));
             }
 
             // Remaining damage affects health
             if (remainingDamage > 0)
             {
                 CurrentHealth -= remainingDamage;
-                _commandBus.Emit(new CreatureHealthChangedCommand(Id, CurrentHealth, BaseHealth));
+            }
+            if (CurrentHealth <= 0)
+            {
+                IsDeath = true;
+            }
+            else
+            {
+                IsDamage = true;
             }
         }
 
@@ -133,8 +161,6 @@ namespace CardsAndDices
             _effectManager.RemoveEffect(effect);
             RecalculateStats();
         }
-        public SlotLocation Location { get { return _cardSlotManager.GetSlotDataByReflowPlacedCardId(Id).Location; } }
-
         private void RecalculateStats()
         {
             // Clamp current values to new base values if necessary

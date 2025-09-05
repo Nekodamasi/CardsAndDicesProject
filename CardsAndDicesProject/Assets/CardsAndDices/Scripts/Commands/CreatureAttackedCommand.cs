@@ -6,12 +6,9 @@ namespace CardsAndDices
     public class CreatureAttackedCommand : ICommand
     {
         public CompositeObjectId AttackerId { get; }
-        public CompositeObjectId TargetId { get; }
-
-        public CreatureAttackedCommand(CompositeObjectId attackerId, CompositeObjectId targetId)
+        public CreatureAttackedCommand(CompositeObjectId attackerId)
         {
             AttackerId = attackerId;
-            TargetId = targetId;
         }
 
         /// <summary>

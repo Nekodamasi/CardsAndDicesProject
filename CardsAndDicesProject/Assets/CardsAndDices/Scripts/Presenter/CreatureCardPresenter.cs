@@ -35,19 +35,17 @@ namespace CardsAndDices
             */
 
             // Subscribe to events
-            _commandBus.On<CreatureHealthChangedCommand>(OnHealthChanged);
+            _commandBus.On<CreatureAttackedCommand>(OnAttacked);
             _commandBus.On<CreatureShieldChangedCommand>(OnShieldChanged);
             _commandBus.On<CreatureCooldownChangedCommand>(OnCooldownChanged);
             _commandBus.On<CreatureAttackChangedCommand>(OnAttackChanged);
             _commandBus.On<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
 
-        private void OnHealthChanged(CreatureHealthChangedCommand cmd)
+        private void OnAttacked(CreatureAttackedCommand cmd)
         {
-            if (cmd.TargetId == _creature.Id)
-            {
-//                _view.UpdateHealth(cmd.NewHealth, cmd.NewMaxHealth);
-            }
+            if (cmd.AttackerId != _creature.Id) return;
+            _view.PlayBodySlamAnimation();
         }
 
         private void OnShieldChanged(CreatureShieldChangedCommand cmd)
@@ -85,7 +83,7 @@ namespace CardsAndDices
         public void Dispose()
         {
             // Unsubscribe from events to prevent memory leaks
-            _commandBus.Off<CreatureHealthChangedCommand>(OnHealthChanged);
+            _commandBus.Off<CreatureAttackedCommand>(OnAttacked);
             _commandBus.Off<CreatureShieldChangedCommand>(OnShieldChanged);
             _commandBus.Off<CreatureCooldownChangedCommand>(OnCooldownChanged);
             _commandBus.Off<CreatureAttackChangedCommand>(OnAttackChanged);

@@ -240,7 +240,7 @@ namespace CardsAndDices
             
             _commandBus.Emit(new UpdateEffectExpiredCommand(TriggerTiming.CardPlacement));
             _commandBus.Emit(new ExecuteAbilityEffectCommand(TriggerTiming.CardPlacement, null, null));
-            _commandBus.Emit(new CreatureCardUpdateDisplayCommand());
+            _commandBus.Emit(new AllCreatureCardUpdateDisplayCommand());
 
         }
 
