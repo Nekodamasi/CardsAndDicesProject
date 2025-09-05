@@ -56,8 +56,10 @@ namespace CardsAndDices
         SlotLocation Location { get; }
         int CurrentHitsPerMainAttack { get; }
         int MainAttack { get; }
-        public AreaOfEffect MainAttackAoE  { get; }
-
+        AreaOfEffect MainAttackAoE  { get; }
+        bool IsCooldownFinished { get; }
+        bool IsDamage { get; }
+        bool IsDeath { get; }
 
         /// <summary>
         /// Applies a specified amount of damage to the creature.

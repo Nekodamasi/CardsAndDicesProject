@@ -45,8 +45,14 @@ namespace CardsAndDices
         private void OnDamaged(CreatureDamagedCommand cmd)
         {
             if (cmd.TargetId != _creature.Id) return;
-            _view.PlayDeathAnimation();
-//            _view.PlayDamageAnimation();
+            if (_creature.IsDeath)
+            {
+                _view.PlayDeathAnimation();
+            }
+            else
+            {
+                _view.PlayDamageAnimation();
+            }
         }
         private void OnAttacked(CreatureAttackedCommand cmd)
         {
