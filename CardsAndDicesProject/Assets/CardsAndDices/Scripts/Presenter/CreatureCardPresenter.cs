@@ -36,24 +36,22 @@ namespace CardsAndDices
 
             // Subscribe to events
             _commandBus.On<CreatureAttackedCommand>(OnAttacked);
-            _commandBus.On<CreatureShieldChangedCommand>(OnShieldChanged);
+            _commandBus.On<CreatureDamagedCommand>(OnDamaged);
             _commandBus.On<CreatureCooldownChangedCommand>(OnCooldownChanged);
             _commandBus.On<CreatureAttackChangedCommand>(OnAttackChanged);
             _commandBus.On<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
 
+        private void OnDamaged(CreatureDamagedCommand cmd)
+        {
+            if (cmd.TargetId != _creature.Id) return;
+            _view.PlayDeathAnimation();
+//            _view.PlayDamageAnimation();
+        }
         private void OnAttacked(CreatureAttackedCommand cmd)
         {
             if (cmd.AttackerId != _creature.Id) return;
             _view.PlayBodySlamAnimation();
-        }
-
-        private void OnShieldChanged(CreatureShieldChangedCommand cmd)
-        {
-            if (cmd.TargetId == _creature.Id)
-            {
-//                _view.UpdateShield(cmd.NewShield, cmd.NewMaxShield);
-            }
         }
 
         private void OnCooldownChanged(CreatureCooldownChangedCommand cmd)
@@ -84,7 +82,7 @@ namespace CardsAndDices
         {
             // Unsubscribe from events to prevent memory leaks
             _commandBus.Off<CreatureAttackedCommand>(OnAttacked);
-            _commandBus.Off<CreatureShieldChangedCommand>(OnShieldChanged);
+            _commandBus.Off<CreatureDamagedCommand>(OnDamaged);
             _commandBus.Off<CreatureCooldownChangedCommand>(OnCooldownChanged);
             _commandBus.Off<CreatureAttackChangedCommand>(OnAttackChanged);
             _commandBus.Off<CreatureEnergyChangedCommand>(OnEnergyChanged);

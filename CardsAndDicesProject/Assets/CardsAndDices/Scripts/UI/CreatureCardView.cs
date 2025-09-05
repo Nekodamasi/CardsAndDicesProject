@@ -3,7 +3,8 @@ using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using VContainer;
 using System.Collections.Generic;
-using TMPro; // 追加
+using TMPro;
+using GameTemplate.Animations.AnimationImpls; // 追加
 
 namespace CardsAndDices
 {
@@ -36,11 +37,14 @@ namespace CardsAndDices
         [SerializeField] private NormalAnimationProfile _normalAnimationProfile;
         [SerializeField] private DragAnimationProfile _dragAnimationProfile;
         [SerializeField] private BodySlamAnimationProfile _bodySlamAnimationProfile;
+        [SerializeField] private DamageAnimationProfile _damageAnimationProfile;
+        [SerializeField] private DeathAnimationProfile _deathAnimationProfile;
         private HoverAnimationStrategy _hoverAnimationStrategy;
         private NormalAnimationStrategy _normalAnimationStrategy;
         private DragAnimationStrategy _dragAnimationStrategy;
         private BodySlamAnimationStrategy _bodySlamAnimationStrategy;
-
+        private DamageAnimationStrategy _damageAnimationStrategy;
+        private DeathAnimationStrategy _deathAnimationStrategy;
         public CreatureData CurrentCreatureData { get; private set; } // 追加
         public CreatureCardType CreatureCardType => _creatureCardType;
 
@@ -77,6 +81,9 @@ namespace CardsAndDices
             _normalAnimationStrategy = new NormalAnimationStrategy(_normalAnimationProfile);
             _dragAnimationStrategy = new DragAnimationStrategy(_dragAnimationProfile);
             _bodySlamAnimationStrategy = new BodySlamAnimationStrategy(_bodySlamAnimationProfile);
+            _damageAnimationStrategy = new DamageAnimationStrategy(_damageAnimationProfile);
+            _deathAnimationStrategy = new DeathAnimationStrategy(_deathAnimationProfile);
+
 
             foreach (var statusIconView in _statusIconViews)
             {
@@ -99,13 +106,17 @@ namespace CardsAndDices
             _cardName.text = _nameService.GetDisplayName(creatureIdEntity);
         }
 
-        /// <summary>
-        /// 指定された外観プロファイルに基づいて、カードの見た目を更新します。
-        /// </summary>
-        /// <param name="profile">適用する外観プロファイル。</param>
+        public void PlayDeathAnimation()
+        {
+            _deathAnimationStrategy.ExecuteAsync(_animationContext);
+        }
         public void PlayBodySlamAnimation()
         {
             _bodySlamAnimationStrategy.ExecuteAsync(_animationContext);
+        }
+        public void PlayDamageAnimation()
+        {
+            _damageAnimationStrategy.ExecuteAsync(_animationContext);
         }
         public void SetGrayscale(bool enabled)
         {

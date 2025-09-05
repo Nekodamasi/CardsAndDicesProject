@@ -32,11 +32,11 @@ namespace CardsAndDices
         [SerializeField] private BaseInletAbilitySO _inlet2Ability;
 
         [Header("Main Attack Data")]
-        [SerializeField] private EffectTargetType _mainAttackScoresType;
+        [SerializeField] private EffectTargetType _mainAttackScoresType = EffectTargetType.Attack;
 
-        [SerializeField] private int _hitsPerMainAttack;
+        [SerializeField] private int _hitsPerMainAttack = 1;
 
-        [SerializeField] private AreaOfEffect _mainAttackAoE;
+        [SerializeField] private AreaOfEffect _mainAttackAoE = AreaOfEffect.HostileCreature;
 
         /// <summary>
         /// インスペクターで設定されたデータに基づいてCardInitializationDataを生成します。

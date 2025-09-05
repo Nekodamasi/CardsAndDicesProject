@@ -20,20 +20,17 @@
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DragAnimationProfile.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\HoverAnimationProfile.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\NormalAnimationProfile.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BodySlamAnimationProfile.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IAnimationStrategy.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\DragAnimationStrategy.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\HoverAnimationStrategy.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\NormalAnimationStrategy.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\BodySlamAnimationStrategy.cs
   </existing_animation_code>
 
   <animation_description>
-  - 少し左に下がってから、右側に移動（体当たり）し、0.1fほど止まってから、すっと元の位置に戻ります
+  - 右側に素早く移動して、少し停止。その後、すっと元の位置に戻ります
   </animation_description>
 
-  最終的な出力を生成する前に、<scratchpad>タグの中にあなたの思考プロセスを段階的に記述してください。これにより、あなたがどのように結論に至ったかを理解することがで
-  きます。思考プロセスには以下を含めてください。
+  最終的な出力を生成する前に、<scratchpad>タグの中にあなたの思考プロセスを段階的に記述してください。これにより、あなたがどのように結論に至ったかを理解することができます。思考プロセスには以下を含めてください。
    1. 提供された設計書と既存のコードの分析。
    2. animation_descriptionで説明されているアニメーションをDOTweenで実装するための具体的な計画。
    3. 生成する2つのクラス（AnimationProfileとAnimationStrategy）のクラス名と、それらを保存するファイルパスの決定。
@@ -41,8 +38,7 @@
 
   思考プロセスが完了したら、以下の指示に従って成果物を出力してください。
 
-   1. 生成する各ソースコードは、以下の例のように<source_code>タグで囲み、file_path属性に完全なファイルパスを指定してください。ファイルパスはproject_files_guideのディ
-      レクトリ構造に従う必要があります。
+   1. 生成する各ソースコードは、以下の例のように<source_code>タグで囲み、file_path属性に完全なファイルパスを指定してください。ファイルパスはproject_files_guideのディレクトリ構造に従う必要があります。
 
   <example>
   <source_code file_path="D:\\Users\\ponki\\Unity\\CardsAndDicesProject\\Assets\\CardsAndDices\\Scripts\\Animation\\NewAnimationProfile.cs">
@@ -53,7 +49,4 @@
   </source_code>
   </example>
 
-   2. 更新後のファイル一覧は、<updated_file_list>タグの中に、ファイルの全内容を記述してください。既存の内容に新しいファイルのエントリをアルファベット順で追加する必要
-      があります。
-
-  提供された設計書、コーディング規約、ファイル構造に厳密に従ってください。前置きなしで、すぐに思考プロセスから始めてください。
+   2. 更新後のファイル一覧は、<updated_file_list>タグの中に、ファイルの全内容を記述してください。既存の内容に新しいファイルのエントリをアルファベット順で追加する必要があります。提供された設計書、コーディング規約、ファイル構造に厳密に従ってください。前置きなしで、すぐに思考プロセスから始めてください。

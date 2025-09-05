@@ -227,13 +227,15 @@ namespace CardsAndDices
 
             // アタックアニメーション
             _commandBus.Emit(new CreatureAttackedCommand(command.AttackerId));
-            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
 
             Debug.Log("<color=red>こうげきたーげっと:</color>:" + ids.Count);
             foreach (var id in ids)
             {
                 var creature = _creatureManager.GetCreature(id);
                 creature.TakeDamage(command.AttackPoint);
+                _commandBus.Emit(new CreatureDamagedCommand(id));
+                await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
                 _commandBus.Emit(new CreatureCardUpdateDisplayCommand(id));
             }
 
