@@ -45,6 +45,21 @@ namespace CardsAndDices
         public List<BaseAbilityDataSO> Abilities; // 仮の型。適切なAbilityData型に置き換える必要があるかもしれません。
 
         /// <summary>
+        /// 標準攻撃で使用する能力値のタイプ。
+        /// </summary>
+        public EffectTargetType MainAttackScoresType;
+
+        /// <summary>
+        /// 標準攻撃の攻撃回数。
+        /// </summary>
+        public int HitsPerMainAttack;
+
+        /// <summary>
+        /// 標準攻撃の効果範囲
+        /// </summary>
+        public AreaOfEffect MainAttackAoE;
+
+        /// <summary>
         /// CreatureDataの新しいインスタンスを初期化します。
         /// </summary>
         /// <param name="creatureId">クリーチャーを一意に識別するID。</param>
@@ -55,7 +70,7 @@ namespace CardsAndDices
         /// <param name="cooldown">クールダウンダイス数。</param>
         /// <param name="energy">特殊な能力値（エネルギーなど）。</param>
         /// <param name="abilities">固有能力のリスト。</param>
-        public CreatureData(CreatureIdEntity creatureId, int attack, int health, int shield, int cooldown, int energy, List<BaseAbilityDataSO> abilities)
+        public CreatureData(CreatureIdEntity creatureId, int attack, int health, int shield, int cooldown, int energy, List<BaseAbilityDataSO> abilities, EffectTargetType mainAttackScoresType, int hitsPerMainAttack, AreaOfEffect mainAttackAoE)
         {
             CreatureId = creatureId;
             Attack = attack;
@@ -64,6 +79,9 @@ namespace CardsAndDices
             Cooldown = cooldown;
             Energy = energy;
             Abilities = abilities;
+            MainAttackScoresType = mainAttackScoresType;
+            HitsPerMainAttack = hitsPerMainAttack;
+            MainAttackAoE = mainAttackAoE;
         }
     }
 }

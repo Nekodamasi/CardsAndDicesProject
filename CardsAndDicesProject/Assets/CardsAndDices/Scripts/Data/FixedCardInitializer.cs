@@ -31,6 +31,13 @@ namespace CardsAndDices
         [SerializeField] private DiceInletConditionSO _inlet2Condition;
         [SerializeField] private BaseInletAbilitySO _inlet2Ability;
 
+        [Header("Main Attack Data")]
+        [SerializeField] private EffectTargetType _mainAttackScoresType;
+
+        [SerializeField] private int _hitsPerMainAttack;
+
+        [SerializeField] private AreaOfEffect _mainAttackAoE;
+
         /// <summary>
         /// インスペクターで設定されたデータに基づいてCardInitializationDataを生成します。
         /// </summary>
@@ -45,7 +52,10 @@ namespace CardsAndDices
                 _shield,
                 _cooldown,
                 _energy,
-                _abilities
+                _abilities,
+                _mainAttackScoresType,
+                _hitsPerMainAttack,
+                _mainAttackAoE
             );
 
             // InletAbilityProfileのリストを生成

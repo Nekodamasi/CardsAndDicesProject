@@ -14,11 +14,14 @@ namespace CardsAndDices
         public int CurrentCooldown { get; private set; }
         public int BaseCooldown => _data.Cooldown + _effectManager.GetTotalEffectValue(Id, EffectTargetType.Cooldown);
         public int Energy => _data.Energy + _effectManager.GetTotalEffectValue(Id, EffectTargetType.Energy);
-
+        public int CurrentHitsPerMainAttack { get; private set; }
+        public int MainAttack => _effectManager.GetTotalEffectValue(Id, _data.MainAttackScoresType);
+        public AreaOfEffect MainAttackAoE => _data.MainAttackAoE;
         private readonly CreatureData _data;
         private readonly EffectManager _effectManager;
         private readonly SpriteCommandBus _commandBus;
         private readonly CardSlotManager _cardSlotManager;
+        public bool IsCooldownFinished { get; private set; }
 
         public Creature(CompositeObjectId id, CreatureData data, EffectManager effectManager, SpriteCommandBus commandBus, CardSlotManager cardSlotManager)
         {
@@ -31,6 +34,8 @@ namespace CardsAndDices
             CurrentHealth = data.Health;
             CurrentShield = data.Shield;
             CurrentCooldown = data.Cooldown;
+            CurrentHitsPerMainAttack = data.HitsPerMainAttack;
+            IsCooldownFinished = false;
 
             _commandBus.On<CreatureHealthChangedCommand>(OnHealthChanged);
             _commandBus.On<CreatureShieldChangedCommand>(OnShieldChanged);
@@ -85,6 +90,15 @@ namespace CardsAndDices
             if (cmd.TargetId == Id)
             {
 //                _view.UpdateEnergy(cmd.NewEnergy);
+            }
+        }
+        public void PlayMainAttack()
+        {
+            CurrentHitsPerMainAttack--;
+            if (CurrentHitsPerMainAttack == 0)
+            {
+                IsCooldownFinished = true;
+                CurrentHitsPerMainAttack = _data.HitsPerMainAttack;
             }
         }
         public void TakeDamage(int amount)

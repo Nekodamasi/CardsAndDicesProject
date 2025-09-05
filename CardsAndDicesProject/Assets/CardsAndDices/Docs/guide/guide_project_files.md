@@ -176,6 +176,7 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | AreaId.cs | エリアIDを定義するEnum | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\AreaId.cs |
+| AreaOfEffect.cs | 攻撃や固有能力の効果範囲を定義します。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\AreaOfEffect.cs |
 | BuffDebuffType.cs | バフ・デバフの種別を定義するEnum | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\BuffDebuffType.cs |
 | ChallengeRating.cs | 敵の強さを示すチャレンジレートを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\ChallengeRating.cs |
 | CompositeObjectId.cs | 複数のIDを組み合わせた複合IDを表現する構造体 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\CompositeObjectId.cs |
@@ -312,6 +313,7 @@
 | NameService.cs | エンティティの名称を解決するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\NameService.cs |
 | PlayerCardDataProvider.cs | プレイヤーカードのデータを提供するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\PlayerCardDataProvider.cs |
 | ReflowService.cs | UI要素の再配置（リフロー）を行うサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\ReflowService.cs |
+| TargetSelector.cs | 効果範囲に基づき、攻撃やスキルの対象を選択するサービスクラス。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\TargetSelector.cs |
 | WaveGeneratorService.cs | 敵のウェーブを生成するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\WaveGeneratorService.cs |
 
 ### Scripts/State

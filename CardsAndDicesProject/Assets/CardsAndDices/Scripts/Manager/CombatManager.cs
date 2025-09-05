@@ -30,6 +30,8 @@ namespace CardsAndDices
         private readonly List<DicePresenter> _dicePresenters = new();
         private CombatDataLoaderService _combatDataLoaderService;
         private WaveGeneratorService _waveGeneratorService;
+        private TargetSelector _targetSelector;
+
 
         /// <summary>
         /// CombatManagerを初期化します。
@@ -54,8 +56,12 @@ namespace CardsAndDices
             _diceFactory = new DiceFactory();
             _combatDataLoaderService = new CombatDataLoaderService(combatScenarioRegistry);
             _waveGeneratorService = new WaveGeneratorService();
+            _targetSelector = new TargetSelector(_cardSlotManager);
+
 
             _commandBus.On<ProcessAllCreaturesCooldownCommand>(HandleCooldownProcessing);
+            _commandBus.On<PerformAttackCommand>(OnPerformAttack);
+            
         }
 
         /// <summary>
@@ -193,6 +199,10 @@ namespace CardsAndDices
             Debug.Log("<color=red>クールダウン処理終了</color>");
         }
         public async UniTask CooldownZeroAttacks()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+        }
+        private async void OnPerformAttack(PerformAttackCommand command)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
         }
