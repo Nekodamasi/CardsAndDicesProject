@@ -186,7 +186,7 @@ namespace CardsAndDices
             {
                 var creature = _creatureManager.GetCreature(slot.PlacedCardId);
 
-                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
+//                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
                 if (creature != null && creature.CurrentCooldown > 0)
                 {
                     _commandBus.Emit(new CreatureCooldownChangedCommand(creature.Id, creature.CurrentCooldown - 1, creature.BaseCooldown));
@@ -211,34 +211,36 @@ namespace CardsAndDices
             {
                 var creature = _creatureManager.GetCreature(slot.PlacedCardId);
 
-                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
+//                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
                 if (creature != null && creature.CurrentCooldown == 0)
                 {
-                    _commandBus.Emit(new PerformAttackCommand(creature.Id, creature.MainAttackAoE, creature.MainAttack));
+                    _commandBus.Emit(new PerformAttackCommand(creature.Id, creature.MainAttackAoE, creature.MainAttack, creature.HitsPerMainAttack));
                     await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
                 }
             }
         }
         private async void OnPerformAttack(PerformAttackCommand command)
         {
-            Debug.Log("<color=red>OnPerformAttack</color>:" + command.AttackerId + "_" + command.AttackPoint + "_" + command.AttackAoE);
-            // ターゲットのリスト
-            List<CompositeObjectId> ids = _targetSelector.SelectTargets(command.AttackerId, command.AttackAoE);
-
-            // アタックアニメーション
-            _commandBus.Emit(new CreatureAttackedCommand(command.AttackerId));
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-
-            Debug.Log("<color=red>こうげきたーげっと:</color>:" + ids.Count);
-            foreach (var id in ids)
+            Debug.Log("<color=red>OnPerformAttack</color>:" + "_AttackerId:" + command.AttackerId + "_AttackPoint:" + command.AttackPoint + "_AttackAoE:" + command.AttackAoE + "HitsPerAttack:" + command.HitsPerAttack);
+            for (var i = 0; i < command.HitsPerAttack; i++)
             {
-                var creature = _creatureManager.GetCreature(id);
-                creature.TakeDamage(command.AttackPoint);
-                _commandBus.Emit(new CreatureDamagedCommand(id));
-                await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-                _commandBus.Emit(new CreatureCardUpdateDisplayCommand(id));
-            }
+                // ターゲットのリスト
+                List<CompositeObjectId> ids = _targetSelector.SelectTargets(command.AttackerId, command.AttackAoE);
 
+                // アタックアニメーション
+                _commandBus.Emit(new CreatureAttackedCommand(command.AttackerId));
+                await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+
+                Debug.Log("<color=red>こうげきたーげっと:</color>:" + ids.Count);
+                foreach (var id in ids)
+                {
+                    var creature = _creatureManager.GetCreature(id);
+                    creature.TakeDamage(command.AttackPoint);
+                    _commandBus.Emit(new CreatureDamagedCommand(id));
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+                    _commandBus.Emit(new CreatureCardUpdateDisplayCommand(id));
+                }
+            }
         }
     }
 }

@@ -146,7 +146,7 @@ namespace CardsAndDices
         {
             foreach (var diceInletView in _inletViews)
             {
-                Debug.Log("<color=Green>インレットビューリスト情報:</color>" + diceInletView.GetObjectId() + " IsSpawned:" + diceInletView.IsSpawned);
+//                Debug.Log("<color=Green>インレットビューリスト情報:</color>" + diceInletView.GetObjectId() + " IsSpawned:" + diceInletView.IsSpawned);
             }
         }
 

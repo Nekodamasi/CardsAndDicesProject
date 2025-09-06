@@ -76,7 +76,7 @@ namespace CardsAndDices
 
         private void OnHover(SpriteHoverCommand command)
         {
-            Debug.Log("<color=red>OnHoverここはきてる？</color>");
+//            Debug.Log("<color=red>OnHoverここはきてる？</color>");
             if (_diceInteractionStrategy.ChkDiceHover(command, this))
             {
                 // ホバーされたカードのViewを取得し、ホバー状態に遷移

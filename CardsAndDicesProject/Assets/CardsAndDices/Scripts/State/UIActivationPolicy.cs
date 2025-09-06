@@ -51,27 +51,27 @@ namespace CardsAndDices
         /// </summary>
         public void DraggingDiceToInletActivations(DiceInteractionOrchestrator orchestrator)
         {
-            Debug.Log("<color=red>DraggingDiceToInletActivations:</color>"+ orchestrator.UIStateMachine.CurrentState);
+//            Debug.Log("<color=red>DraggingDiceToInletActivations:</color>"+ orchestrator.UIStateMachine.CurrentState);
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingDice) return;
 
-            Debug.Log("<color=Green>DraggingDiceToInletActivations2:</color>"+ orchestrator.DraggedId);
+//            Debug.Log("<color=Green>DraggingDiceToInletActivations2:</color>"+ orchestrator.DraggedId);
             var draggedDice = _diceManager.GetDiceData(orchestrator.DraggedId);
             if (draggedDice == null) return;
 
-            Debug.Log("<color=Green>DraggingDiceToInletActivations3:</color>"+ orchestrator.DraggedId);
+//            Debug.Log("<color=Green>DraggingDiceToInletActivations3:</color>"+ orchestrator.DraggedId);
             orchestrator.ViewRegistry.DebugInletView();
             foreach (var inletView in orchestrator.ViewRegistry.GetAllInletViews())
             {
                 var diceInlet = _diceInletManager.GetInlet(inletView.GetObjectId());
-                Debug.Log("<color=red>DraggingDiceToInletActivations3:</color>");
+//                Debug.Log("<color=red>DraggingDiceToInletActivations3:</color>");
                 if (diceInlet.CanAccept(draggedDice))
                 {
-                    Debug.Log("<color=red>インレットActiveです</color>");
+//                    Debug.Log("<color=red>インレットActiveです</color>");
                     inletView.EnterAcceptableState();
                 }
                 else
                 {
-                    Debug.Log("<color=red>インレット非Activeです</color>");
+//                    Debug.Log("<color=red>インレット非Activeです</color>");
                     inletView.EnterInactiveState();
                 }
             }

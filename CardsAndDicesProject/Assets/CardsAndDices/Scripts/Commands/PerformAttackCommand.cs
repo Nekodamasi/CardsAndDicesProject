@@ -21,11 +21,18 @@ namespace CardsAndDices
         /// 攻撃ポイント
         /// </summary>
         public int AttackPoint;
-        public PerformAttackCommand(CompositeObjectId attackerId, AreaOfEffect attackAoE, int attackPoint)
+
+        /// <summary>
+        /// 攻撃回数
+        /// </summary>
+        public int HitsPerAttack;
+
+        public PerformAttackCommand(CompositeObjectId attackerId, AreaOfEffect attackAoE, int attackPoint, int hitsPerAttack)
         {
             AttackerId = attackerId;
             AttackAoE = attackAoE;
             AttackPoint = attackPoint;
+            HitsPerAttack = hitsPerAttack;
         }
        public void Execute() { }
         public void Undo() { }

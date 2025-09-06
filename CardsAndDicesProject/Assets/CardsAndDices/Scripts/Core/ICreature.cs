@@ -54,7 +54,7 @@ namespace CardsAndDices
         /// The current energy of the creature.
         /// </summary>
         SlotLocation Location { get; }
-        int CurrentHitsPerMainAttack { get; }
+        int HitsPerMainAttack { get; }
         int MainAttack { get; }
         AreaOfEffect MainAttackAoE  { get; }
         bool IsCooldownFinished { get; }

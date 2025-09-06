@@ -15,7 +15,7 @@ namespace CardsAndDices
         public int BaseCooldown => _data.Cooldown + _effectManager.GetTotalEffectValue(Id, EffectTargetType.Cooldown);
         public int Energy => _data.Energy + _effectManager.GetTotalEffectValue(Id, EffectTargetType.Energy);
         public SlotLocation Location { get { return _cardSlotManager.GetSlotDataByReflowPlacedCardId(Id).Location; } }
-        public int CurrentHitsPerMainAttack { get; private set; }
+        public int HitsPerMainAttack => _data.HitsPerMainAttack;
         public int MainAttack
         {
             get
@@ -64,7 +64,6 @@ namespace CardsAndDices
             CurrentHealth = data.Health;
             CurrentShield = data.Shield;
             CurrentCooldown = data.Cooldown;
-            CurrentHitsPerMainAttack = data.HitsPerMainAttack;
             IsCooldownFinished = false;
             IsDamage = false;
             IsDeath = false;
@@ -112,15 +111,6 @@ namespace CardsAndDices
             if (cmd.TargetId == Id)
             {
 //                _view.UpdateEnergy(cmd.NewEnergy);
-            }
-        }
-        public void PlayMainAttack()
-        {
-            CurrentHitsPerMainAttack--;
-            if (CurrentHitsPerMainAttack == 0)
-            {
-                IsCooldownFinished = true;
-                CurrentHitsPerMainAttack = _data.HitsPerMainAttack;
             }
         }
         public void TakeDamage(int amount)
