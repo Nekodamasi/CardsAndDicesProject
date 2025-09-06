@@ -1,3 +1,5 @@
+using Unity.VisualScripting;
+
 namespace CardsAndDices
 {
     /// <summary>
@@ -68,20 +70,37 @@ namespace CardsAndDices
             IsDamage = false;
             IsDeath = false;
 
+            _commandBus.On<PerformAttackedCommand>(OnPerformAttacked);
+            _commandBus.On<CreatureResetCoolDownZeroCommand>(OnCreatureResetCoolDownZero);
             _commandBus.On<CreatureHealthChangedCommand>(OnHealthChanged);
             _commandBus.On<CreatureShieldChangedCommand>(OnShieldChanged);
             _commandBus.On<CreatureCooldownChangedCommand>(OnCooldownChanged);
-            _commandBus.On<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
         public void Dispose()
         {
             // Unsubscribe from events to prevent memory leaks
+            _commandBus.Off<CreatureResetCoolDownZeroCommand>(OnCreatureResetCoolDownZero);
             _commandBus.Off<CreatureHealthChangedCommand>(OnHealthChanged);
             _commandBus.Off<CreatureShieldChangedCommand>(OnShieldChanged);
             _commandBus.Off<CreatureCooldownChangedCommand>(OnCooldownChanged);
-            _commandBus.Off<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
+        private void OnPerformAttacked(PerformAttackedCommand cmd)
+        {
+            if (cmd.AttackerId == Id)
+            {
+                OnCooldownFinished();
+            }
 
+            IsDamage = false;
+        }
+        private void OnCreatureResetCoolDownZero(CreatureResetCoolDownZeroCommand cmd)
+        {
+            if (!IsCooldownFinished) return;
+
+            IsCooldownFinished = false;
+            CurrentCooldown = _data.Cooldown;
+            CurrentShield = System.Math.Max(BaseShield, CurrentShield);
+        }
         private void OnHealthChanged(CreatureHealthChangedCommand cmd)
         {
             if (cmd.TargetId == Id)
@@ -106,13 +125,6 @@ namespace CardsAndDices
             }
         }
 
-        private void OnEnergyChanged(CreatureEnergyChangedCommand cmd)
-        {
-            if (cmd.TargetId == Id)
-            {
-//                _view.UpdateEnergy(cmd.NewEnergy);
-            }
-        }
         public void TakeDamage(int amount)
         {
             int remainingDamage = amount;
@@ -145,6 +157,10 @@ namespace CardsAndDices
             _effectManager.RegisterEffect(effect);
             RecalculateStats();
         }
+        private void OnCooldownFinished()
+        {
+            IsCooldownFinished = true;
+        }
 
         public void RemoveEffect(EffectInstance effect)
         {
@@ -163,7 +179,6 @@ namespace CardsAndDices
             _commandBus.Emit(new CreatureShieldChangedCommand(Id, CurrentShield, BaseShield));
             _commandBus.Emit(new CreatureCooldownChangedCommand(Id, CurrentCooldown, BaseCooldown));
             _commandBus.Emit(new CreatureAttackChangedCommand(Id, Attack));
-            _commandBus.Emit(new CreatureEnergyChangedCommand(Id, Energy));
         }
     }
 }

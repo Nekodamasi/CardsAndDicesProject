@@ -61,6 +61,7 @@ namespace CardsAndDices
 
             _commandBus.On<ProcessAllCreaturesCooldownCommand>(HandleCooldownProcessing);
             _commandBus.On<PerformAttackCommand>(OnPerformAttack);
+            _commandBus.On<CooldownZeroAttacksCommand>(OnCooldownZeroAttacks);
             
         }
 
@@ -195,11 +196,9 @@ namespace CardsAndDices
                 }
             }
 
-            await CooldownZeroAttacks();
-            _commandBus.Emit(new DiceInletCountdownCompleteCommand(null));
-            Debug.Log("<color=red>クールダウン処理終了</color>");
+            _commandBus.Emit(new CooldownZeroAttacksCommand(new DiceInletCountdownCompleteCommand(null)));
         }
-        public async UniTask CooldownZeroAttacks()
+        private async void OnCooldownZeroAttacks(CooldownZeroAttacksCommand command)
         {
             var sortedSlots = _cardSlotManager.GetAllSlots()
                 .Where(slot => slot.Line != LinePosition.Hand && slot.IsOccupied)
@@ -211,13 +210,17 @@ namespace CardsAndDices
             {
                 var creature = _creatureManager.GetCreature(slot.PlacedCardId);
 
-//                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
-                if (creature != null && creature.CurrentCooldown == 0)
+                //                Debug.Log("<color=red>クリーチャー：</color>" + creature.Id + "_" + creature.CurrentCooldown);
+                if (creature != null && creature.CurrentCooldown == 0 && creature.IsCooldownFinished == false)
                 {
-                    _commandBus.Emit(new PerformAttackCommand(creature.Id, creature.MainAttackAoE, creature.MainAttack, creature.HitsPerMainAttack));
-                    await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                    _commandBus.Emit(new PerformAttackCommand(creature.Id, creature.MainAttackAoE, creature.MainAttack, creature.HitsPerMainAttack, new CooldownZeroAttacksCommand(command.PostCommand)));
+                    return;
                 }
             }
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+
+            _commandBus.Emit(new CreatureResetCoolDownZeroCommand());
+            _commandBus.Emit(command.PostCommand);
         }
         private async void OnPerformAttack(PerformAttackCommand command)
         {
@@ -240,6 +243,13 @@ namespace CardsAndDices
                     await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
                     _commandBus.Emit(new CreatureCardUpdateDisplayCommand(id));
                 }
+            }
+
+            _commandBus.Emit(new PerformAttackedCommand(command.AttackerId));
+
+            if (command.PostAttackCommand != null)
+            {
+                _commandBus.Emit(command.PostAttackCommand);
             }
         }
     }
