@@ -48,8 +48,10 @@ namespace CardsAndDices
             // アニメーション完了後に実行したい処理をここに記述
             if (newValue > 0)
             {
-                _commandBus.Emit(new CooldownZeroAttacksCommand(new ProcessAllCreaturesCooldownCommand()));                
+                _commandBus.Emit(new CooldownZeroAttacksCommand(new ProcessAllCreaturesCooldownCommand()));
+                return;
             }
+            _commandBus.Emit(new InletExecuteAbilityEffectCommand(_model.Id, TriggerTiming.Inlet));
         }
         public void Dispose()
         {

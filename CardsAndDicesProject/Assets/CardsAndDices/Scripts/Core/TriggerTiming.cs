@@ -6,5 +6,6 @@ namespace CardsAndDices
     public enum TriggerTiming
     {
         CardPlacement, // カード配置
+        Inlet, // インレット発動
     }
 }

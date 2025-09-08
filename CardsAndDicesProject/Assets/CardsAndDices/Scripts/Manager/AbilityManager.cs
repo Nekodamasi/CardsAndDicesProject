@@ -32,6 +32,8 @@ namespace CardsAndDices
             // すべてのコマンドをサブスクライブします。より最適化されたアプローチとしては、専用のイベントタイプを使用するとよいでしょう
             _commandBus.On<ICommand>(OnCommandDispatched);
             _commandBus.On<ExecuteAbilityEffectCommand>(OnExecuteAbilityEffect);
+            _commandBus.On<InletExecuteAbilityEffectCommand>(OnInletExecuteAbilityEffect);
+            
         }
         private void ClearCollections()
         {
@@ -42,6 +44,7 @@ namespace CardsAndDices
         {
             _commandBus.Off<ICommand>(OnCommandDispatched);
             _commandBus.Off<ExecuteAbilityEffectCommand>(OnExecuteAbilityEffect);
+            _commandBus.Off<InletExecuteAbilityEffectCommand>(OnInletExecuteAbilityEffect);
         }
 
         /// <summary>
@@ -68,33 +71,44 @@ namespace CardsAndDices
                 Debug.Log("<color=Green>OnExecuteAbilityEffect：</color>" + instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming));
             }
         }
-        private void OnCommandDispatched(ICommand command)
+
+        private void OnInletExecuteAbilityEffect(InletExecuteAbilityEffectCommand command)
         {
-/*
-            // Handle ability triggering
             foreach (var instance in _abilities)
             {
-                if (instance.IsSuppressed || instance.Data.TriggerCondition == null) continue;
-
-                if (instance.Data.TriggerCondition.Check(command, instance))
+                if (instance.SubOwnerId == command.InletObjectId)
                 {
-                    // TODO: Check for cooldown and usage limits from instance.Data.Duration
-                    var context = new BaseAbilityEffectDefinitionSO.AbilityContext
-                    {
-                        SourceId = instance.OwnerId
-                        // TODO: Populate TargetId and other context from the command if available
-                    };
-                    instance.Data.EffectDefinition?.Execute(context, _commandBus);
-                    // TODO: Update duration state (e.g., decrement uses, set cooldown)
+                    Debug.Log("<color=Green>OnExecuteAbilityEffect：</color>" + instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming));
                 }
             }
+        }
+        private void OnCommandDispatched(ICommand command)
+        {
+            /*
+                        // Handle ability triggering
+                        foreach (var instance in _abilities)
+                        {
+                            if (instance.IsSuppressed || instance.Data.TriggerCondition == null) continue;
 
-            // Handle duration updates
-            foreach (var instance in _abilities)
-            {
-                instance.Data.Duration?.OnEvent(instance, command);
-            }
-*/
+                            if (instance.Data.TriggerCondition.Check(command, instance))
+                            {
+                                // TODO: Check for cooldown and usage limits from instance.Data.Duration
+                                var context = new BaseAbilityEffectDefinitionSO.AbilityContext
+                                {
+                                    SourceId = instance.OwnerId
+                                    // TODO: Populate TargetId and other context from the command if available
+                                };
+                                instance.Data.EffectDefinition?.Execute(context, _commandBus);
+                                // TODO: Update duration state (e.g., decrement uses, set cooldown)
+                            }
+                        }
+
+                        // Handle duration updates
+                        foreach (var instance in _abilities)
+                        {
+                            instance.Data.Duration?.OnEvent(instance, command);
+                        }
+            */
         }
     }
 }
