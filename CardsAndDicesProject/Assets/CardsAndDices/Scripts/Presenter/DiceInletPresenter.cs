@@ -20,9 +20,6 @@ namespace CardsAndDices
             _view = view;
             _commandBus = commandBus;
 
-            // TODO: モデルのイベントを購読し、Viewを更新する
-            // _model.OnCountdownChanged += UpdateView;
-
             // 初期表示を更新
             _view.InitializeDisplay(_model.Condition);
             _commandBus.On<DiceDropInInletCommand>(OnDiceDropInInlet);
@@ -48,13 +45,17 @@ namespace CardsAndDices
             // アニメーション完了後に実行したい処理をここに記述
             if (newValue > 0)
             {
+                // クールダウン処理
                 _commandBus.Emit(new CooldownZeroAttacksCommand(new ProcessAllCreaturesCooldownCommand()));
                 return;
             }
+
+            // インレット発動によるアビリティ実行
             _commandBus.Emit(new InletExecuteAbilityEffectCommand(_model.Id, TriggerTiming.Inlet));
         }
         public void Dispose()
         {
+            _commandBus.Off<DiceDropInInletCommand>(OnDiceDropInInlet);
         }
     }
 }

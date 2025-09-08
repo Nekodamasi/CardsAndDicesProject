@@ -3,7 +3,7 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// A trigger condition that is met when the owner creature is attacked.
+    /// 前衛に配置された場合
     /// </summary>
     [CreateAssetMenu(fileName = "OnPlacementCardTrigger", menuName = "CardsAndDices/Abilities/Triggers/OnPlacementCardTriggerCondition")]
     public class OnPlacementCardTriggerConditionSO : BaseAbilityTriggerConditionSO
@@ -14,7 +14,6 @@ namespace CardsAndDices
         protected override bool CheckCondition(CompositeObjectId ownerId, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager)
         {
             var creature = creatureManager.GetCreature(ownerId);
-            Debug.Log("ここはどうかなーーーーー：" + creature.Location);
             if (creature.Location == SlotLocation.Vanguard)
             {
                 return true;

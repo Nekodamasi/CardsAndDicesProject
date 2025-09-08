@@ -1,5 +1,4 @@
 using UnityEngine;
-using VContainer; // CreatureManagerをDIで受け取るため
 
 namespace CardsAndDices
 {
