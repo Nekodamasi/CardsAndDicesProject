@@ -11,7 +11,7 @@ namespace CardsAndDices
         /// <summary>
         /// Checks if the received command is a CreatureAttackedCommand targeting the owner.
         /// </summary>
-        public override bool Check(CompositeObjectId ownerId, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager)
+        protected override bool CheckCondition(CompositeObjectId ownerId, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager)
         {
             return false;
         }

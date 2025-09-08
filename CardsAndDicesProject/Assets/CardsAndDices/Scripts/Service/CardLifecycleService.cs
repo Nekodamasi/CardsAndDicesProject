@@ -1,5 +1,6 @@
 using UnityEngine;
 using VContainer;
+using System.Collections.Generic;
 
 namespace CardsAndDices
 {
@@ -12,15 +13,19 @@ namespace CardsAndDices
         private CreatureManager _creatureManager;
         private DiceInletManager _diceInletManager;
         private AbilityManager _abilityManager;
-        private ViewRegistry _viewRegistry;
+        private EffectManager _effectManager;
+        private SpriteCommandBus _commandBus;
 
         [Inject]
-        public void Initialize(CreatureManager creatureManager, DiceInletManager diceInletManager, AbilityManager abilityManager, ViewRegistry viewRegistry)
+        public void Initialize(CreatureManager creatureManager, DiceInletManager diceInletManager, AbilityManager abilityManager, SpriteCommandBus commandBus, EffectManager effectManager)
         {
             _creatureManager = creatureManager;
             _diceInletManager = diceInletManager;
             _abilityManager = abilityManager;
-            _viewRegistry = viewRegistry;
+            _commandBus = commandBus;
+            _effectManager = effectManager;
+
+            _commandBus.On<PerformAttackedCommand>(OnPerformAttacked);
         }
 
         /// <summary>
@@ -46,7 +51,7 @@ namespace CardsAndDices
             }
 
             // インレット能力をRegistryに登録
-                var inletViews = cardView.GetInletViews();
+            var inletViews = cardView.GetInletViews();
             if (inletViews.Count != initData.InletAbilityProfiles.Count)
             {
                 Debug.LogError($"CardLifecycleService: インレットの数({inletViews.Count})とプロファイルの数({initData.InletAbilityProfiles.Count})が一致しません。");
@@ -59,7 +64,7 @@ namespace CardsAndDices
                 inletViews[i].SetDisplayActive(true);
                 var profile = initData.InletAbilityProfiles[i];
                 _diceInletManager.CreateAndRegisterInlet(inletViews[i], cardView.GetObjectId(), profile);
-//                Debug.Log("<color=red>いんれっと；</color>" + cardView._cardName + "_" + profile.Condition.DiceInletConditionId);
+                //                Debug.Log("<color=red>いんれっと；</color>" + cardView._cardName + "_" + profile.Condition.DiceInletConditionId);
             }
         }
 
@@ -69,13 +74,46 @@ namespace CardsAndDices
         /// <param name="cardView">解除するカードのView。</param>
         public void TeardownCard(CreatureCardView cardView)
         {
-            var cardId = cardView.GetObjectId();
-            _creatureManager.RemoveCreature(cardId);
-
-            var inletViews = cardView.GetInletViews();
-            for (int i = 0; i < inletViews.Count; i++)
+            var creatureId = cardView.GetObjectId();
+            RemoveCreature(creatureId);
+        }
+        private void RemoveCreature(CompositeObjectId creatureId)
+        {
+            // クリーチャーインスタンスのRemove
+            var creature = _creatureManager.GetCreature(creatureId);
+            if (creature != null)
             {
-                _diceInletManager.RemoveDiceInlet(inletViews[i].GetObjectId());
+                _creatureManager.RemoveCreature(creatureId);
+            }
+
+            // インレットインスタンスのRemove
+            _diceInletManager.RemoveInletsByCreatureId(creatureId);
+
+            // abilityのRemove
+            _abilityManager.UnregisterAbilitiesForOwner(creatureId);
+
+            // effectのRemove
+            _effectManager.RemoveEffectsByCreatureId(creatureId);
+        }
+        private void OnPerformAttacked(PerformAttackedCommand command)
+        {
+            // 攻撃コマンドの完了を待つ（UniTaskなどで遅延を入れるか、コマンドの完了通知を待つ）
+            // この例では、簡略化のため即時実行
+
+            var deadCreatureIds = new List<CompositeObjectId>();
+            var allCreatures = _creatureManager.GetAllCreatures();
+
+            foreach (var creature in allCreatures)
+            {
+                if (creature.IsDeath)
+                {
+                    deadCreatureIds.Add(creature.Id);
+                }
+            }
+
+            foreach (var id in deadCreatureIds)
+            {
+                RemoveCreature(id);
             }
         }
     }

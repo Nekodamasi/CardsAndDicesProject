@@ -61,11 +61,11 @@ namespace CardsAndDices
             _abilities.RemoveAll(instance => instance.OwnerId == ownerId);
         }
 
-        private void OnExecuteAbilityEffect(ICommand command)
+        private void OnExecuteAbilityEffect(ExecuteAbilityEffectCommand command)
         {
             foreach (var instance in _abilities)
             {
-                Debug.Log("<color=Green>OnExecuteAbilityEffect：</color>" + instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus));
+                Debug.Log("<color=Green>OnExecuteAbilityEffect：</color>" + instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming));
             }
         }
         private void OnCommandDispatched(ICommand command)

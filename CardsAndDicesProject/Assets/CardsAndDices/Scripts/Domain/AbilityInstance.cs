@@ -36,13 +36,20 @@ namespace CardsAndDices
         public bool IsSuppressed { get; set; }
 
         /// <summary>
-        /// アビリティが実行できるかチェックします
+        /// アビリティの実行
         /// </summary>
-        public bool ExecuteAbility(CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager, SpriteCommandBus spriteCommandBus)
+        public bool ExecuteAbility(CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager, SpriteCommandBus spriteCommandBus, TriggerTiming triggerTiming)
         {
-            if (IsSuppressed) return false;
+            // スポーンフラグOFF
+            if (!IsSuppressed) return false;
+
+            // 使用回数が足りない
             if (RemainingUsages <= 0) return false;
-            if (!Data.TriggerCondition.Check(OwnerId, creatureManager, diceManager, abilityManager)) return false;
+
+            // 発動条件のチェック
+            if (!Data.TriggerCondition.Check(OwnerId, triggerTiming, creatureManager, diceManager, abilityManager)) return false;
+
+            // abilityの実行
             var abilityContext = new BaseAbilityEffectDefinitionSO.AbilityContext();
             abilityContext.SourceId = OwnerId;
             abilityContext.TargetIds = Data.TargetSelector.SelectTarget(OwnerId, creatureManager, diceManager);
@@ -55,7 +62,7 @@ namespace CardsAndDices
             OwnerId = ownerId;
             Data = data;
             SubOwnerId = subOwnerId;
-            IsSuppressed = false;
+            IsSuppressed = true;
             data.Duration?.OnReset(this);
         }
     }

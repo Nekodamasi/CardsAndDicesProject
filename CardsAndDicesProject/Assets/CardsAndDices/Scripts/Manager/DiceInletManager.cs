@@ -70,5 +70,26 @@ namespace CardsAndDices
             }
             _inlets.Remove(id);
         }
+
+        /// <summary>
+        /// 指定されたクリーチャーIDに紐づく全てのダイスインレットを削除します。
+        /// </summary>
+        /// <param name="creatureId">所有者であるクリーチャーのID</param>
+        public void RemoveInletsByCreatureId(CompositeObjectId creatureId)
+        {
+            var inletsToRemove = new List<CompositeObjectId>();
+            foreach (var inlet in _inlets.Values)
+            {
+                if (inlet.CardId == creatureId)
+                {
+                    inletsToRemove.Add(inlet.Id);
+                }
+            }
+
+            foreach (var id in inletsToRemove)
+            {
+                RemoveDiceInlet(id);
+            }
+        }
     }
 }

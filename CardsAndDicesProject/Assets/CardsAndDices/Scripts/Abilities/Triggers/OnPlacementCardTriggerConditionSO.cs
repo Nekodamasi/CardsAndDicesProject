@@ -11,7 +11,7 @@ namespace CardsAndDices
         /// <summary>
         /// 条件を満たしているかチェックします
         /// </summary>
-        public override bool Check(CompositeObjectId ownerId, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager)
+        protected override bool CheckCondition(CompositeObjectId ownerId, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager)
         {
             var creature = creatureManager.GetCreature(ownerId);
             Debug.Log("ここはどうかなーーーーー：" + creature.Location);

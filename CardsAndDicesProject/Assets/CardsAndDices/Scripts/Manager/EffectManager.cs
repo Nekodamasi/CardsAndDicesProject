@@ -94,5 +94,18 @@ namespace CardsAndDices
                 .Where(e => e.TargetObjectId.Equals(targetObjectId) && e.TargetType == targetType)
                 .Sum(e => e.CurrentValue);
         }
+
+        /// <summary>
+        /// 指定されたクリーチャーIDに紐づく全てのエフェクトを削除します。
+        /// </summary>
+        /// <param name="creatureId">所有者であるクリーチャーのID</param>
+        public void RemoveEffectsByCreatureId(CompositeObjectId creatureId)
+        {
+            var effectsToRemove = _activeEffects.Where(e => e.TargetObjectId == creatureId).ToList();
+            foreach (var effect in effectsToRemove)
+            {
+                RemoveEffect(effect);
+            }
+        }
     }
 }

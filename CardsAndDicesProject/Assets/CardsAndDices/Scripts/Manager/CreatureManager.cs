@@ -82,6 +82,15 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 全てのクリーチャーインスタンスを取得します。
+        /// </summary>
+        /// <returns>全てのクリーチャーインスタンスのコレクション</returns>
+        public IEnumerable<ICreature> GetAllCreatures()
+        {
+            return _creatures.Values;
+        }
+
+        /// <summary>
         /// Removes a creature from the game.
         /// </summary>
         /// <param name="id">The ID of the creature to remove.</param>
