@@ -39,7 +39,7 @@ namespace CardsAndDices
         }
         public void OnDiceDroppedOnInlet()
         {
-            Debug.Log("<color=Blue>OnDiceDroppedOnInlet-></color>");
+//            Debug.Log("<color=Blue>OnDiceDroppedOnInlet-></color>");
 
             //リフローの状態を確定する
             ReflowConfirm();

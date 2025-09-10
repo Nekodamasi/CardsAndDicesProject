@@ -90,6 +90,7 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | BaseAbilityDataSO.cs | アビリティの基本データを定義するScriptableObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\BaseAbilityDataSO.cs |
+| BaseAbilityTriggerConditionSO.cs | アビリティの発動条件を定義するScriptableObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\BaseAbilityTriggerConditionSO.cs |
 | BaseInletAbilitySO.cs | インレットアビリティの基本データを定義するScriptableObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\BaseInletAbilitySO.cs |
 | BuffDebuffAbilityDataSO.cs | バフ・デバフアビリティのデータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Abilities\BuffDebuffAbilityDataSO.cs |
 
@@ -130,6 +131,7 @@
 | BaseAnimationProfile.cs | 全てのアニメーションプロファイルの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BaseAnimationProfile.cs |
 | BaseAnimationSO.cs | アニメーションの基本設定を定義するScriptableObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BaseAnimationSO.cs |
 | BodySlamAnimationProfile.cs | 体当たりアニメーションのパラメータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BodySlamAnimationProfile.cs |
+| BuffAnimationProfile.cs | バフ効果を受けた際のアニメーションパラメータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\BuffAnimationProfile.cs |
 | DamageAnimationProfile.cs | ダメージアニメーションのパラメータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DamageAnimationProfile.cs |
 | DeathAnimationProfile.cs | 死亡時のアニメーションパラメータを定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DeathAnimationProfile.cs |
 | DragAnimationSO.cs | ドラッグ中のアニメーションを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animation\DragAnimationSO.cs |
@@ -149,15 +151,19 @@
 | CreatureAttackedCommand.cs | クリーチャーが攻撃されたことを通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureAttackedCommand.cs |
 | CreatureCardUpdateDisplayCommand.cs | クリーチャーカードの表示更新を指示するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureCardUpdateDisplayCommand.cs |
 | CreatureCooldownChangedCommand.cs | クリーチャーのクールダウン変更を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureCooldownChangedCommand.cs |
+| CreatureDamagedCommand.cs | クリーチャーがダメージを受けたことを通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureDamagedCommand.cs |
 | CreatureEnergyChangedCommand.cs | クリーチャーのエネルギー変更を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureEnergyChangedCommand.cs |
 | CreatureHealthChangedCommand.cs | クリーチャーの体力変更を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureHealthChangedCommand.cs |
+| CreatureResetCoolDownZeroCommand.cs | クリーチャーのクールダウンが0になったことを通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureResetCoolDownZeroCommand.cs |
 | CreatureShieldChangedCommand.cs | クリーチャーのシールド変更を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\CreatureShieldChangedCommand.cs |
+| DiceInletCountdownCompleteCommand.cs | ダイスインレットのカウントダウン完了を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\DiceInletCountdownCompleteCommand.cs |
 | DisableUIInteractionCommand.cs | UIインタラクションを無効化するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\DisableUIInteractionCommand.cs |
 | DragReflowCompletedCommand.cs | ドラッグによるリフロー完了を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\DragReflowCompletedCommand.cs |
 | EnableUIInteractionCommand.cs | UIインタラクションを有効化するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\EnableUIInteractionCommand.cs |
 | ExecuteAbilityEffectCommand.cs | アビリティ効果の発動を指示するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ExecuteAbilityEffectCommand.cs |
 | ExecuteFrontLoadCommand.cs | フロントロード処理の実行を指示するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ExecuteFrontLoadCommand.cs |
 | ICommand.cs | 全てのコマンドが実装するインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ICommand.cs |
+| PerformAttackCommand.cs | １回分の攻撃を行うコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\PerformAttackCommand.cs |
 | ProcessAllCreaturesCooldownCommand.cs | 全クリーチャーのクールダウン処理を開始するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ProcessAllCreaturesCooldownCommand.cs |
 | PlayerZoneStateChangedCommand.cs | プレイヤーゾーンの状態変更を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\PlayerZoneStateChangedCommand.cs |
 | ReflowCompletedCommand.cs | リフロー完了を通知するコマンド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Commands\ReflowCompletedCommand.cs |
@@ -233,16 +239,17 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | AbilityInstance.cs | アビリティのインスタンスを表現するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\AbilityInstance.cs |
+| AnimationContext.cs | アニメーション実行に必要なコンポーネントを集約するコンテキストクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\AnimationContext.cs |
 | CardInitializationData.cs | カード初期化用のデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CardInitializationData.cs |
 | CardSlotData.cs | カードスロットのドメインデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CardSlotData.cs |
 | Creature.cs | クリーチャーのドメインオブジェクト | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\Creature.cs |
 | CreatureData.cs | クリーチャーのドメインデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\CreatureData.cs |
+| Dice.cs | ダイスのドメインオブジェクト | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\Dice.cs |
 | DiceData.cs | ダイスのドメインデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceData.cs |
 | DiceInlet.cs | ダイスインレットのドメインオブジェクト | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceInlet.cs |
 | DiceSlotData.cs | ダイススロットのドメインデータを保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\DiceSlotData.cs |
 | EffectInstance.cs | エフェクトのインスタンスを表現するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EffectInstance.cs |
 | EnemyPlacement.cs | 敵の配置情報を保持するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\EnemyPlacement.cs |
-| AnimationContext.cs | アニメーション実行に必要なコンポーネントを集約するコンテキストクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\AnimationContext.cs |
 | SEPlayer.cs | SEを再生する汎用コンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\SEPlayer.cs |
 | VfxPlayer.cs | 個々のVFX再生を管理するコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxPlayer.cs |
 | VfxTrigger.cs | 特定のVFXを再生するトリガーコンポーネント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\VfxTrigger.cs |
@@ -331,6 +338,7 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | BodySlamAnimationStrategy.cs | 体当たりアニメーションの具体的な処理を実装する戦略クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\BodySlamAnimationStrategy.cs |
+| BuffAnimationStrategy.cs | バフ効果を受けた際のアニメーションを実装する戦略クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\BuffAnimationStrategy.cs |
 | CardInteractionStrategy.cs | カードのインタラクション戦略を定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\CardInteractionStrategy.cs |
 | DamageAnimationStrategy.cs | ダメージアニメーションの具体的な処理を実装する戦略クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\DamageAnimationStrategy.cs |
 | DeathAnimationStrategy.cs | 死亡時のアニメーションを実装する戦略クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Strategy\DeathAnimationStrategy.cs |
@@ -382,6 +390,7 @@
 
 ## 更新履歴
 
+- 2025-09-05: ファイルリストを更新 (Gemini)
 - 2025-08-27: ファイルリストを最新化し、全てのファイルの解説を追記 (Gemini)
 - 2025-08-21: ファイルリストを最新化 (Gemini)
 - 2025-08-19: ファイル一覧を最新化し、解説を追記 (Gemini)
@@ -390,4 +399,4 @@
 - 2025-08-14: ファイルリストを最新化 (Gemini)
 - 2025-08-13: ファイルリストを最新化 (Gemini)
 - 2025-08-08: ファイルリストを最新化 (Gemini)
-- 2025-07-30: プロジェクトルールへの準拠 (Gemini - Technical Writer for Game Development)me Development)
+- 2025-07-30: プロジェクトルールへの準拠 (Gemini - Technical Writer for Game Development)

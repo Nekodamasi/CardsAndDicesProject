@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CardsAndDices
 {
@@ -35,6 +36,7 @@ namespace CardsAndDices
             */
 
             // Subscribe to events
+            _commandBus.On<CreatureBUffEffectedCommand>(OnBUffEffected);
             _commandBus.On<CreatureAttackedCommand>(OnAttacked);
             _commandBus.On<CreatureDamagedCommand>(OnDamaged);
             _commandBus.On<CreatureCooldownChangedCommand>(OnCooldownChanged);
@@ -42,6 +44,12 @@ namespace CardsAndDices
             _commandBus.On<CreatureEnergyChangedCommand>(OnEnergyChanged);
         }
 
+        private void OnBUffEffected(CreatureBUffEffectedCommand cmd)
+        {
+            if (cmd.TargetId != _creature.Id) return;
+            Debug.Log("<color=Blue>ばふあにめーーーーーーしょーーーん</color>：");
+            _view.PlayBuffAnimation(cmd.VfxDefinition);
+        }
         private void OnDamaged(CreatureDamagedCommand cmd)
         {
             if (cmd.TargetId != _creature.Id) return;

@@ -64,7 +64,12 @@ namespace CardsAndDices
                 inletViews[i].SetDisplayActive(true);
                 var profile = initData.InletAbilityProfiles[i];
                 _diceInletManager.CreateAndRegisterInlet(inletViews[i], cardView.GetObjectId(), profile);
-                //                Debug.Log("<color=red>いんれっと；</color>" + cardView._cardName + "_" + profile.Condition.DiceInletConditionId);
+                Debug.Log("<color=Green>ぷろふぁいる：</color>" + profile.Abilities.Count);
+                for (int j = 0; j < profile.Abilities.Count; j++)
+                {
+                    Debug.Log("<color=Green>ぷろふぁいるあびりてぃ：</color>" + profile.Abilities[j].Id);
+                    _abilityManager.RegisterAbility(profile.Abilities[j], cardView.GetCurrentCardId(), inletViews[i].GetObjectId());
+                }
             }
         }
 

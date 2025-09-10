@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEditor.Search;
 using UnityEngine;
 using VContainer; // CreatureManagerをDIで受け取るため
@@ -20,7 +21,7 @@ namespace CardsAndDices
             public EffectTargetType EffectTargetType;
             public int Value;
         }
-        public override void Execute(AbilityContext context, SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager)
+        public override async UniTask Execute(AbilityContext context, SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager)
         {
             foreach (var targetId in context.TargetIds)
             {
@@ -30,6 +31,7 @@ namespace CardsAndDices
                     commandBus.Emit(new ApplyEffectCommand(targetId, _effectData, buffDebuff.EffectTargetType, buffDebuff.Value));
                 }
             }
+            await UniTask.CompletedTask;
         }
     }
 }

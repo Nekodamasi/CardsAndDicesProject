@@ -39,12 +39,14 @@ namespace CardsAndDices
         [SerializeField] private BodySlamAnimationProfile _bodySlamAnimationProfile;
         [SerializeField] private DamageAnimationProfile _damageAnimationProfile;
         [SerializeField] private DeathAnimationProfile _deathAnimationProfile;
+        [SerializeField] private BuffAnimationProfile _buffAnimationProfile;
         private HoverAnimationStrategy _hoverAnimationStrategy;
         private NormalAnimationStrategy _normalAnimationStrategy;
         private DragAnimationStrategy _dragAnimationStrategy;
         private BodySlamAnimationStrategy _bodySlamAnimationStrategy;
         private DamageAnimationStrategy _damageAnimationStrategy;
         private DeathAnimationStrategy _deathAnimationStrategy;
+        private BuffAnimationStrategy _buffAnimationStrategy;
         public CreatureData CurrentCreatureData { get; private set; } // 追加
         public CreatureCardType CreatureCardType => _creatureCardType;
 
@@ -83,7 +85,7 @@ namespace CardsAndDices
             _bodySlamAnimationStrategy = new BodySlamAnimationStrategy(_bodySlamAnimationProfile);
             _damageAnimationStrategy = new DamageAnimationStrategy(_damageAnimationProfile);
             _deathAnimationStrategy = new DeathAnimationStrategy(_deathAnimationProfile);
-
+            _buffAnimationStrategy = new BuffAnimationStrategy(_buffAnimationProfile);
 
             foreach (var statusIconView in _statusIconViews)
             {
@@ -91,6 +93,7 @@ namespace CardsAndDices
             }
 
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
+            _animationContext.SpriteCommandBus = _commandBus;
         }
 
         /// <summary>
@@ -106,6 +109,11 @@ namespace CardsAndDices
             _cardName.text = _nameService.GetDisplayName(creatureIdEntity);
         }
 
+        public void PlayBuffAnimation(VfxDefinition vfxDefinition)
+        {
+            _animationContext.VfxDefinition = vfxDefinition;
+            _buffAnimationStrategy.ExecuteAsync(_animationContext);
+        }
         public void PlayDeathAnimation()
         {
             _deathAnimationStrategy.ExecuteAsync(_animationContext);

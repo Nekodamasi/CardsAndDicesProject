@@ -35,6 +35,16 @@ namespace CardsAndDices
         [SerializeField] public Vector3 TargetPosition;
 
         /// <summary>
+        /// コマンドを発行するのに使用します
+        /// </summary>
+        [SerializeField] public SpriteCommandBus SpriteCommandBus;
+
+        /// <summary>
+        /// vfxデータ
+        /// </summary>
+        [SerializeField] public VfxDefinition VfxDefinition;
+
+        /// <summary>
         /// 指定された色の明るさを増加させた新しい色を取得します。
         /// </summary>
         /// <param name="baseColor">基準となる色</param>

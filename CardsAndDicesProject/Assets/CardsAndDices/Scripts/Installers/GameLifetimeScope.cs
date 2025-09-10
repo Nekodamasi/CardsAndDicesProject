@@ -133,7 +133,7 @@ namespace CardsAndDices
             _effectManager.Initialize(_spriteCommandBus);
             _gameInitializer.Initialize(_creatureCardViews, _cardSlotViews, _diceSlotViews, _diceViews, _diceInletViews);
             _nameService.Initialize(_nameDatabase);
-            _vfxManager.Initialize(_soundManager);
+            _vfxManager.Initialize(_soundManager, _spriteCommandBus);
             _soundManager.Initialize();
 
             foreach (var cardView in _creatureCardViews)

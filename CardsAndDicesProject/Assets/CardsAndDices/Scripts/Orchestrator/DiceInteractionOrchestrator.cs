@@ -148,7 +148,7 @@ namespace CardsAndDices
         /// <param name="command">ドラッグ終了コマンド。</param>
         private void OnEndDrag(SpriteEndDragCommand command)
         {
-            Debug.Log("<color=red>OnEndDragここはきてる？</color>");
+//            Debug.Log("<color=red>OnEndDragここはきてる？</color>");
             if (_diceInteractionStrategy.ChkDiceEndDrag(command, this))
             {
                 _commandBus.Emit(new DisableUIInteractionCommand());

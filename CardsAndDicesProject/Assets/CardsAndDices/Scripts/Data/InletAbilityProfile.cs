@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CardsAndDices
 {
@@ -9,6 +10,11 @@ namespace CardsAndDices
     public class InletAbilityProfile
     {
         /// <summary>
+        /// インレットプロフィールID
+        /// </summary>
+        public InletProfileIdEntity InletProfileId;
+
+        /// <summary>
         /// ダイス投入時の発動条件
         /// </summary>
         public DiceInletConditionSO Condition;
@@ -16,12 +22,13 @@ namespace CardsAndDices
         /// <summary>
         /// インレットが発動する能力
         /// </summary>
-        public BaseInletAbilitySO Ability;
+        public List<BaseAbilityDataSO> Abilities;
 
-        public InletAbilityProfile(DiceInletConditionSO condition, BaseInletAbilitySO ability)
+        public InletAbilityProfile(InletProfileIdEntity inletProfileId, DiceInletConditionSO condition, List<BaseAbilityDataSO> abilities)
         {
+            this.InletProfileId = inletProfileId;
             this.Condition = condition;
-            this.Ability = ability;
+            this.Abilities = abilities;
         }
     }
 }

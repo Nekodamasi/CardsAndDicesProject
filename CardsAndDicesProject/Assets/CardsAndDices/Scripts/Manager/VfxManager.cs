@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using VContainer;
 
@@ -18,20 +19,37 @@ namespace CardsAndDices
         // DIコンテナから注入される依存性
         private Transform _poolParent;
         private SoundManager _soundManager;
-
+        private SpriteCommandBus _commandBus;
 
         [Inject]
-        public void Initialize(SoundManager soundManager)
+        public void Initialize(SoundManager soundManager, SpriteCommandBus commandBus)
         {
+            ClearCollections();
             // プーリングしたVFXの親となるオブジェクトをシーンに作成
             var poolParentGo = new GameObject("VfxPool");
             DontDestroyOnLoad(poolParentGo);
             _poolParent = poolParentGo.transform;
             _soundManager = soundManager;
+            _commandBus = commandBus;
+            _commandBus.On<PlayVfxCommand>(OnPlayVfx);
+        }
+
+        private void ClearCollections()
+        {
 
             _pool.Clear();
             _activeInstances.Clear();
             _nextInstanceId = 0;
+        }
+
+        private void OnDisable()
+        {
+            _commandBus.Off<PlayVfxCommand>(OnPlayVfx);
+        }
+
+        private async void OnPlayVfx(PlayVfxCommand cmd)
+        {
+            await PlayVfxAsync(cmd.VfxDefinition, cmd.Position, cmd.Rotation);
         }
 
         /// <summary>

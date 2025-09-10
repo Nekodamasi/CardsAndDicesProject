@@ -31,7 +31,7 @@ namespace CardsAndDices
         private async void OnDiceDropInInlet(DiceDropInInletCommand cmd)
         {
             if (cmd.InletId != _model.Id) return;
-            Debug.Log("<color=Blue>インレットにドロップ：");
+//            Debug.Log("<color=Blue>インレットにドロップ：");
             int newValue = _model.OnDiceDropped(cmd.DiceValue);
             await UpdateCountdownValueAsync(newValue, 0.2f);
 

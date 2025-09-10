@@ -16,20 +16,22 @@ namespace CardsAndDices
         [SerializeField] private int _shield;
         [SerializeField] private int _cooldown;
         [SerializeField] private int _energy;
-        [SerializeField] private List<BaseAbilityDataSO> _abilities = new List<BaseAbilityDataSO>(); // 初期化
+        [SerializeField] private List<BaseAbilityDataSO> _abilities = new List<BaseAbilityDataSO>();
 
         [Header("Appearance")]
         [SerializeField] private AppearanceProfile _appearanceProfile;
 
         // ダイスインレット1のデータ
         [Header("Inlet 1 Data")]
+        [SerializeField] private InletProfileIdEntity _inlet1ProfileId;
         [SerializeField] private DiceInletConditionSO _inlet1Condition;
-        [SerializeField] private BaseInletAbilitySO _inlet1Ability;
+        [SerializeField] private List<BaseAbilityDataSO> _inlet1Abilities = new List<BaseAbilityDataSO>();
 
         // ダイスインレット2のデータ
         [Header("Inlet 2 Data")]
+        [SerializeField] private InletProfileIdEntity _inlet2ProfileId;
         [SerializeField] private DiceInletConditionSO _inlet2Condition;
-        [SerializeField] private BaseInletAbilitySO _inlet2Ability;
+       [SerializeField] private List<BaseAbilityDataSO> _inlet2Abilities = new List<BaseAbilityDataSO>();
 
         [Header("Main Attack Data")]
         [SerializeField] private EffectTargetType _mainAttackScoresType = EffectTargetType.Attack;
@@ -65,13 +67,14 @@ namespace CardsAndDices
             if (_inlet1Condition != null)
 //            if (_inlet1Condition != null && _inlet1Ability != null)
             {
-                inletAbilityProfiles.Add(new InletAbilityProfile(_inlet1Condition, _inlet1Ability));
+                inletAbilityProfiles.Add(new InletAbilityProfile(_inlet1ProfileId, _inlet1Condition, _inlet1Abilities));
             }
 
             // インレット2のデータが存在すればリストに追加
             if (_inlet2Condition != null)
             {
-                inletAbilityProfiles.Add(new InletAbilityProfile(_inlet2Condition, _inlet2Ability));
+                Debug.Log("ほげほげほげほ：" + _inlet2Abilities.Count);
+                inletAbilityProfiles.Add(new InletAbilityProfile(_inlet2ProfileId, _inlet2Condition, _inlet2Abilities));
             }
 //            Debug.Log("<color=Green>インレットプロフィール：</color>" + inletAbilityProfiles.Count);
             // CardInitializationDataのインスタンスを生成して返す

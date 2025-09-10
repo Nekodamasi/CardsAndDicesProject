@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace CardsAndDices
 {
@@ -8,6 +9,11 @@ namespace CardsAndDices
     /// </summary>
     public abstract class BaseAbilityEffectDefinitionSO : ScriptableObject
     {
+        [Header("VFX Settings")]
+        [Tooltip("再生するパーティクルのVfxDefinition")]
+        [SerializeField]
+        public VfxDefinition VfxDefinition;
+
         /// <summary>
         /// ソースやターゲットなど、アビリティ実行のコンテキストが含まれます。
         /// </summary>
@@ -24,6 +30,6 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="context">The context of the ability execution.</param>
         /// <param name="commandBus">The command bus to dispatch new commands if needed.</param>
-        public abstract void Execute(AbilityContext context, SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager);
+        public abstract UniTask Execute(AbilityContext context, SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager);
     }
 }

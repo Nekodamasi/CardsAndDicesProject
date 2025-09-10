@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using VContainer;
@@ -64,21 +65,23 @@ namespace CardsAndDices
             _abilities.RemoveAll(instance => instance.OwnerId == ownerId);
         }
 
-        private void OnExecuteAbilityEffect(ExecuteAbilityEffectCommand command)
+        private async void OnExecuteAbilityEffect(ExecuteAbilityEffectCommand command)
         {
             foreach (var instance in _abilities)
             {
-                Debug.Log("<color=Green>OnExecuteAbilityEffect：</color>" + instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming));
+                await instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming);
             }
         }
 
-        private void OnInletExecuteAbilityEffect(InletExecuteAbilityEffectCommand command)
+        private async void OnInletExecuteAbilityEffect(InletExecuteAbilityEffectCommand command)
         {
+            Debug.Log("<color=Green>OnInletExecuteAbilityEffect：</color>" + command.InletObjectId);
             foreach (var instance in _abilities)
             {
+                Debug.Log("<color=Green>アビリティ：</color>" + instance.SubOwnerId + "/" + command.InletObjectId);
                 if (instance.SubOwnerId == command.InletObjectId)
                 {
-                    Debug.Log("<color=Green>OnExecuteAbilityEffect：</color>" + instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming));
+                    await instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming);
                 }
             }
         }

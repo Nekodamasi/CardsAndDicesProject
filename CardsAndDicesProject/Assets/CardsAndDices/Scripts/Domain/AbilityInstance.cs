@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+
 namespace CardsAndDices
 {
     /// <summary>
@@ -38,7 +40,7 @@ namespace CardsAndDices
         /// <summary>
         /// アビリティの実行
         /// </summary>
-        public bool ExecuteAbility(CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager, SpriteCommandBus spriteCommandBus, TriggerTiming triggerTiming)
+        public async UniTask<bool> ExecuteAbility(CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager, SpriteCommandBus spriteCommandBus, TriggerTiming triggerTiming)
         {
             // スポーンフラグOFF
             if (!IsSuppressed) return false;
@@ -53,7 +55,7 @@ namespace CardsAndDices
             var abilityContext = new BaseAbilityEffectDefinitionSO.AbilityContext();
             abilityContext.SourceId = OwnerId;
             abilityContext.TargetIds = Data.TargetSelector.SelectTarget(OwnerId, creatureManager, diceManager);
-            Data.EffectDefinition.Execute(abilityContext, spriteCommandBus, creatureManager, diceManager, abilityManager, effectManager);
+            await Data.EffectDefinition.Execute(abilityContext, spriteCommandBus, creatureManager, diceManager, abilityManager, effectManager);
             Data.Duration.OnUse(this);
             return true;
         }

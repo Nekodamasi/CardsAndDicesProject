@@ -7,5 +7,7 @@ namespace CardsAndDices
     {
         CardPlacement, // カード配置
         Inlet, // インレット発動
+        TurnEnd, // ターンエンド
+        CoolDownEnd, // クールダウンエンド
     }
 }
