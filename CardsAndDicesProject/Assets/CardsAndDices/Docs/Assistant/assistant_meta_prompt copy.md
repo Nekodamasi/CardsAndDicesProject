@@ -454,32 +454,43 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-クリーチャーカードが、右側に向かって体当たりするアニメーションを作成してください
-出力するソースプログラムは、guide_unity-cs.mdのガイドに従って生成してください
+prefabをGameObjectとしてインスタンス化する際のルールを以下にまとめました
+この要件を推敲し、guideの設計書として生成してください
+設計書は、以下の設計書のガイドに従ってください
 
-# タスク
+# ガイド設計書
 
-step1. 「関連する設計書」を良く読んで、アニメーションの実装方法を理解します
-step2. 「関連する設計書」を元に、実装されているソースプログラムを読込、内容を把握します
-step3. 「アニメーションのイメージ」を実現するDOTweenの実装方式を考えます
-step4. guide_unity-cs.mdを読みこんで、出力するソースプログラムをガイドにそって作成します
-step5. ソースプログラムに適切な名前を与えて、適切なディレクトリに保存します
-step6. ファイル一覧を更新します
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_rules.md
+- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_files.md
 
-# 生成するソースプログラム
+---
 
-- AnimationProfile
-    - BaseAnimationProfileを継承した、体当たりアニメーションのAnimationProfile
-- AnimationStrategy
-    - IAnimationStrategyを継承した、体当たりアニメーションのAnimationStrategy
+# prefabのインスタンス化を行う方法
 
-# 関連する設計書
+## 概要
 
-- sys_animation_system.md
+LifetimeScopeの[SerializeField]でprefabを保持し、ConfigureでfactoryクラスにDIします
+prefabは、WithIdで明示的にIDを与えます
+※例：uilder.RegisterInstance(enemyPrefab1).As<GameObject>().WithId("Enemy1");
 
-# アニメーションのイメージ
+IStartableを継承しSpawnerにより、factoryクラスを通してprefabを生成します
 
-- 少し左に下がってから、右側に移動（体当たり）し、0.1fほど止まってから、すっと元の位置に戻ります
+## コンポーネント
+
+### 1. Factoryクラス
+
+- prefab１つにつき、１つ作成します
+- createメソッドを使用して、prefabを１つ生成します
+- 生成したゲームオブジェクトを返します
+- 生成したゲームオブジェクト内のクラスに対するDIは、resolver.Instantiate(prefab)で生成することで対応します
+
+### 2. Spawnerクラス
+
+- IStartableを継承します
+- prefab１つにつき、１つ作成します
+- 生成したゲームオブジェクトに個別の値を設定したい場合や、prefabから複数のゲームオブジェクトを生成したい場合は、factoryメソッドからかえってきたゲームオブジェクトに設定します
+- 生成する数や変更内容を保持したい場合、性的なクラスを１つ作ってそれを参照することで対応します
+- 生成したゲームオブジェクト内のクラスで、Iinitializeのクラスにたいして、初期化処理を行います
 </Task>
 
 指示を書くには、次の指示に従ってください。

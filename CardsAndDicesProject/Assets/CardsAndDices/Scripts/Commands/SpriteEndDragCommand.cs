@@ -3,7 +3,7 @@ namespace CardsAndDices
 	/// <summary>
 	/// SpriteUI要素のドラッグ操作が終了したことを通知するコマンド。
 	/// </summary>
-	public class SpriteEndDragCommand : ICommand
+	public class IdentifiableEndDragCommand : ICommand
 	{
 		/// <summary>
 		/// ドラッグ終了したオブジェクトのCompositeObjectId。
@@ -14,7 +14,7 @@ namespace CardsAndDices
 		/// SpriteEndDragCommandの新しいインスタンスを初期化します。
 		/// </summary>
 		/// <param name="targetObjectId">ドラッグ終了したオブジェクトのCompositeObjectId。</param>
-		public SpriteEndDragCommand(CompositeObjectId targetObjectId)
+		public IdentifiableEndDragCommand(CompositeObjectId targetObjectId)
 		{
 			TargetObjectId = targetObjectId;
 		}

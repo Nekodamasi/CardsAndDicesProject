@@ -4,7 +4,7 @@ namespace CardsAndDices
     /// SpriteUI要素がスロットに正常に配置されたことを通知するコマンド。
     /// または、ドラッグ操作が終了し、ドロップされたことを通知するコマンド。
     /// </summary>
-    public class SpriteDropCommand : ICommand
+    public class IdentifiableDropCommand : ICommand
     {
         /// <summary>
         /// ドロップされたSpriteUI要素のCompositeObjectId。
@@ -22,7 +22,7 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="droppedObjectId">ドロップされたSpriteUI要素のCompositeObjectId。</param>
         /// <param name="targetSlotObjectId">要素を受け入れたスロットのCompositeObjectId。ドロップターゲットがない場合はnull。</param>
-        public SpriteDropCommand(CompositeObjectId droppedObjectId, CompositeObjectId targetSlotObjectId = null)
+        public IdentifiableDropCommand(CompositeObjectId droppedObjectId, CompositeObjectId targetSlotObjectId = null)
         {
             DroppedObjectId = droppedObjectId;
             TargetSlotObjectId = targetSlotObjectId;

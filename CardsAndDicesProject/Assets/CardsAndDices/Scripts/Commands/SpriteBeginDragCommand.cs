@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// SpriteUI要素のドラッグ操作が開始された時のコマンド。
     /// </summary>
-    public class SpriteBeginDragCommand : ICommand
+    public class IdentifiableBeginDragCommand : ICommand
     {
         private readonly CompositeObjectId _targetObjectId;
 
@@ -13,7 +13,7 @@ namespace CardsAndDices
         /// SpriteBeginDragCommandを初期化します。
         /// </summary>
         /// <param name="targetObjectId">ドラッグ開始イベントが発生したCompositeObjectId</param>
-        public SpriteBeginDragCommand(CompositeObjectId targetObjectId)
+        public IdentifiableBeginDragCommand(CompositeObjectId targetObjectId)
         {
             _targetObjectId = targetObjectId;
         }

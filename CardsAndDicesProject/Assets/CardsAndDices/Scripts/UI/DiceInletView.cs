@@ -84,7 +84,7 @@ namespace CardsAndDices
                 var droppedView = eventData.pointerDrag.GetComponent<BaseSpriteView>();
                 if (droppedView != null)
                 {
-                    _commandBus.Emit(new SpriteDropCommand(droppedView.GetObjectId(), GetObjectId()));
+                    _commandBus.Emit(new IdentifiableDropCommand(droppedView.GetObjectId(), GetObjectId()));
                 }
             }
         }

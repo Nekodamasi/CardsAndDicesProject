@@ -38,12 +38,12 @@ namespace CardsAndDices
             _diceManager = diceManager;
             IsDroppedSuccessfully = false;
 
-            _commandBus.On<SpriteBeginDragCommand>(OnBeginDrag);
-            _commandBus.On<SpriteHoverCommand>(OnHover);
-            _commandBus.On<SpriteUnhoverCommand>(OnUnhover);
-            _commandBus.On<SpriteDropCommand>(OnDrop);
-            _commandBus.On<SpriteDragCommand>(OnDrag);
-            _commandBus.On<SpriteEndDragCommand>(OnEndDrag);
+            _commandBus.On<IdentifiableBeginDragCommand>(OnBeginDrag);
+            _commandBus.On<IdentifiableHoverCommand>(OnHover);
+            _commandBus.On<IdentifiableUnhoverCommand>(OnUnhover);
+            _commandBus.On<IdentifiableDropCommand>(OnDrop);
+            _commandBus.On<IdentifiableDragCommand>(OnDrag);
+            _commandBus.On<IdentifiableEndDragCommand>(OnEndDrag);
             _commandBus.On<DragReflowCompletedCommand>(OnDragReflowCompleted);
             _commandBus.On<ExecuteFrontLoadCommand>(OnExecuteFrontLoad);
             _commandBus.On<SpriteDragOperationCompletedCommand>(OnSpriteDragOperationCompleted);
@@ -53,12 +53,12 @@ namespace CardsAndDices
         public void Dispose()
         {
             if (_commandBus == null) return;
-            _commandBus.Off<SpriteBeginDragCommand>(OnBeginDrag);
-            _commandBus.Off<SpriteHoverCommand>(OnHover);
-            _commandBus.Off<SpriteUnhoverCommand>(OnUnhover);
-            _commandBus.Off<SpriteDropCommand>(OnDrop);
-            _commandBus.Off<SpriteDragCommand>(OnDrag);
-            _commandBus.Off<SpriteEndDragCommand>(OnEndDrag);
+            _commandBus.Off<IdentifiableBeginDragCommand>(OnBeginDrag);
+            _commandBus.Off<IdentifiableHoverCommand>(OnHover);
+            _commandBus.Off<IdentifiableUnhoverCommand>(OnUnhover);
+            _commandBus.Off<IdentifiableDropCommand>(OnDrop);
+            _commandBus.Off<IdentifiableDragCommand>(OnDrag);
+            _commandBus.Off<IdentifiableEndDragCommand>(OnEndDrag);
             _commandBus.Off<DragReflowCompletedCommand>(OnDragReflowCompleted);
             _commandBus.Off<ExecuteFrontLoadCommand>(OnExecuteFrontLoad);
             _commandBus.On<SpriteDragOperationCompletedCommand>(OnSpriteDragOperationCompleted);
@@ -74,7 +74,7 @@ namespace CardsAndDices
             _viewRegistry.Unregister(view);
         }
 
-        private void OnHover(SpriteHoverCommand command)
+        private void OnHover(IdentifiableHoverCommand command)
         {
 //            Debug.Log("<color=red>OnHoverここはきてる？</color>");
             if (_diceInteractionStrategy.ChkDiceHover(command, this))
@@ -85,7 +85,7 @@ namespace CardsAndDices
             }
         }
 
-        private void OnUnhover(SpriteUnhoverCommand command)
+        private void OnUnhover(IdentifiableUnhoverCommand command)
         {
             if (_diceInteractionStrategy.ChkDiceUnhover(command, this))
             {
@@ -95,7 +95,7 @@ namespace CardsAndDices
             }
         }
 
-        private void OnBeginDrag(SpriteBeginDragCommand command)
+        private void OnBeginDrag(IdentifiableBeginDragCommand command)
         {
             Debug.Log("<color=red>ここはきてる？</color>");
             if (_diceInteractionStrategy.ChkDiceBeginDrag(command, this))
@@ -115,7 +115,7 @@ namespace CardsAndDices
         /// ダイスをドロップしたときに呼び出されます。
         /// </summary>
         /// <param name="command">ドロップコマンド。</param>
-        private void OnDrop(SpriteDropCommand command)
+        private void OnDrop(IdentifiableDropCommand command)
         {
             if (_diceInteractionStrategy.ChkDiceDrop(command, this))
             {
@@ -129,7 +129,7 @@ namespace CardsAndDices
             }
         }
 
-        private void OnDrag(SpriteDragCommand command)
+        private void OnDrag(IdentifiableDragCommand command)
         {
             if (_diceInteractionStrategy.ChkDiceDrag(command, this))
             {
@@ -146,7 +146,7 @@ namespace CardsAndDices
         /// ダイスのドラッグが終了したときに呼び出されます。
         /// </summary>
         /// <param name="command">ドラッグ終了コマンド。</param>
-        private void OnEndDrag(SpriteEndDragCommand command)
+        private void OnEndDrag(IdentifiableEndDragCommand command)
         {
 //            Debug.Log("<color=red>OnEndDragここはきてる？</color>");
             if (_diceInteractionStrategy.ChkDiceEndDrag(command, this))
@@ -160,7 +160,7 @@ namespace CardsAndDices
         /// ドロップが成功しなかった場合、リフローを元に戻す処理を行います
         /// </summary>
         /// <param name="command">ドラッグ終了コマンド。</param>
-        public async void DiceEndDrag(SpriteEndDragCommand command)
+        public async void DiceEndDrag(IdentifiableEndDragCommand command)
         {
             Debug.Log("<color=red>Card_OnEndDrag-></color>" + UIStateMachine.CurrentState + " Flg:" + IsDroppedSuccessfully);
 

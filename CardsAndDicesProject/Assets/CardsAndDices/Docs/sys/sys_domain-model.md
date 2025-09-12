@@ -20,7 +20,7 @@
 
 -   **`UniqueId` (long):**
     -   実行時に採番される、オブジェクト固有のユニークID。
--   **`ObjectType` (string):**
+-   **`ObjectType` (CompositeObjectIdTypeEntity):**
     -   オブジェクトの種類を示す文字列です (例: "Card", "Slot")。これにより、IDだけでオブジェクトの種類を判別できます。
 -   **`Owner` (CompositeObjectId):**
     -   階層構造を表現するための、親オブジェクトのIDです。ルートオブジェクトの場合は `null` となります。
@@ -30,7 +30,7 @@
 -   **`IdentifiableGameObject`:**
     -   `CompositeObjectId` を保持する `MonoBehaviour` コンポーネント。全てのインタラクティブなPrefabにアタッチされます。
 -   **`CompositeObjectIdManager`:**
-    -   全ての `CompositeObjectId` の生成と追跡を担当するシングルトンクラスです。
+    -   全ての `CompositeObjectId` の生成と追跡を担当する `ScriptableObject` クラスです。
 
 ---
 
@@ -43,7 +43,7 @@
     -   どのカードが配置されているか (`PlacedCardId`)、スロットの場所 (`LinePosition`, `SlotLocation`) といった、ゲームロジックに必要な情報のみを保持します。
 
 -   **`CardSlotManager`:**
-    -   全てのスロットの状態を一元管理するシングルトンクラス（Controller）です。
+    -   全てのスロットの状態を一元管理する一意のマネージャークラス（Controller）です。
     -   どのスロットにどのカードがあるかという「信頼できる唯一の情報源」として機能し、カードの配置、リフローといったロジックを実行します。
 
 ### 場所の定義

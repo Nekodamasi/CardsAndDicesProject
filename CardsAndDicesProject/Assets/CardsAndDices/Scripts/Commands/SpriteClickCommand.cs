@@ -3,7 +3,7 @@ namespace CardsAndDices
 	/// <summary>
 	/// SpriteUI要素がクリックされたことを通知するコマンド。
 	/// </summary>
-	public class SpriteClickCommand : ICommand
+	public class IdentifiableClickCommand : ICommand
 	{
 		/// <summary>
 		/// クリックされたオブジェクトのCompositeObjectId。
@@ -14,7 +14,7 @@ namespace CardsAndDices
 		/// SpriteClickCommandの新しいインスタンスを初期化します。
 		/// </summary>
 		/// <param name="targetObjectId">クリックされたオブジェクトのCompositeObjectId。</param>
-		public SpriteClickCommand(CompositeObjectId targetObjectId)
+		public IdentifiableClickCommand(CompositeObjectId targetObjectId)
 		{
 			TargetObjectId = targetObjectId;
 		}

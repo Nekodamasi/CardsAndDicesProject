@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using VContainer;
 using System.Collections.Generic;
 using TMPro;
-using GameTemplate.Animations.AnimationImpls; // 追加
 
 namespace CardsAndDices
 {

@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// マウスカーソルがSpriteUI要素から離れた時のコマンド。
     /// </summary>
-    public class SpriteUnhoverCommand : ICommand
+    public class IdentifiableUnhoverCommand : ICommand
     {
         /// <summary>
         /// アンホバーされたオブジェクトのCompositeObjectId。
@@ -16,7 +16,7 @@ namespace CardsAndDices
         /// SpriteUnhoverCommandを初期化します。
         /// </summary>
         /// <param name="targetObjectId">アンホバーイベントが発生したCompositeObjectId。</param>
-        public SpriteUnhoverCommand(CompositeObjectId targetObjectId)
+        public IdentifiableUnhoverCommand(CompositeObjectId targetObjectId)
         {
             TargetObjectId = targetObjectId;
         }

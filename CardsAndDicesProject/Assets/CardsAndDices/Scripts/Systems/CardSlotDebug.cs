@@ -73,11 +73,11 @@ namespace CardsAndDices
             {
                 Debug.Log("<Color=red>debugログ</Color>" + slotData.Line + "_" + slotData.Location + " CID:" + slotData.PlacedCardId + "/" + slotData.ReflowPlacedCardId);
 
-                if (slotData.PlacedCardId != null && slotData.PlacedCardId.ObjectType != "Card")
+                if (slotData.PlacedCardId != null && slotData.PlacedCardId.ObjectType.Id != "Card")
                 {
                     Debug.Log("<Color=red>スロットが配置されている</Color>" + slotData.Line + "_" + slotData.Location + " CID:" + slotData.PlacedCardId);
                 }
-                if (slotData.ReflowPlacedCardId != null && slotData.ReflowPlacedCardId.ObjectType != "Card")
+                if (slotData.ReflowPlacedCardId != null && slotData.ReflowPlacedCardId.ObjectType.Id != "Card")
                 {
                     Debug.Log("<Color=red>スロットが配置されている</Color>" + slotData.Line + "_" + slotData.Location + " CID:" + slotData.ReflowPlacedCardId);
                 }

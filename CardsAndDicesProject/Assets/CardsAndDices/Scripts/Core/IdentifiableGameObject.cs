@@ -1,5 +1,5 @@
 using UnityEngine;
-// using VContainer; // VContainer.Inject を使用しないため削除
+using VContainer;
 
 namespace CardsAndDices
 {
@@ -7,7 +7,7 @@ namespace CardsAndDices
 	/// CompositeObjectIdを持つMonoBehaviourクラス。
 	/// インスペクターからObjectTypeを設定でき、自身のCompositeObjectIdを管理します。
 	/// </summary>
-	public class IdentifiableGameObject : MonoBehaviour
+	public class IdentifiableGameObject : MonoBehaviour, IGameInitializable
 	{
         [Header("Components")]
 		[SerializeField] private CompositeObjectIdManager _idManager;
@@ -16,21 +16,36 @@ namespace CardsAndDices
 		/// このオブジェクトのタイプを表す文字列。
 		/// インスペクターから設定します。
 		/// </summary>
-		[SerializeField] private string _objectType;
+		[SerializeField] private CompositeObjectIdTypeEntity _objectType;
 	
+		/// <summary>
+		/// このオブジェクトのタイプを表す文字列。
+		/// インスペクターから設定します。
+		/// </summary>
+		[SerializeField] private string _displayCompositeObjectId;
+
 		/// <summary>
 		/// このMonoBehaviourに割り当てられたCompositeObjectId。
 		/// </summary>
 		public CompositeObjectId ObjectId { get; private set; }
+
+		[Inject]
+		public void Construct(CompositeObjectIdManager idManager)
+		{
+			_idManager = idManager;
+        }
 
 		/// <summary>
 		/// コンポーネントの初期化を行います。
 		/// </summary>
 		public void OnAwake()
 		{
-			// 自身のCompositeObjectIdを生成
 			ObjectId = _idManager.CreateId(_objectType);
-//			Debug.Log($"Initialized {gameObject.name} with ObjectId: {ObjectId}");
+			_displayCompositeObjectId = ObjectId.ToString();
+		}
+
+		public void OnStart()
+		{
 		}
 
 		/// <summary>

@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using VContainer;
 
 namespace CardsAndDices
 {
     /// <summary>
     /// SpriteUIのマウスイベントを検知し、対応するコマンドを発行するハンドラー。
     /// </summary>
-    public class SpriteInputHandler : MonoBehaviour,
+    public class IdentifiableInputHandler : MonoBehaviour,
         IPointerEnterHandler,
         IPointerExitHandler,
         IPointerDownHandler,
@@ -14,28 +15,33 @@ namespace CardsAndDices
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,
-        IDropHandler
+        IDropHandler,
+        IGameInitializable
     {
         [Header("Components")]
-        [SerializeField] private SpriteCommandBus _commandBus;
         [SerializeField] private IdentifiableGameObject _identifiableGameObject;
         [SerializeField] private InteractionProfile _profile; // InteractionProfileへの参照を追加
 
+        private IdentifiableCommandBus _commandBus;
         private bool _isHovering = false;
         private bool _isDragging = false;
 
-        /// <summary>
-        /// コンポーネントの初期化を行います。
-        /// </summary>
-        private void Awake()
-        {
-            // _commandBus はインスペクターで設定されるため、ここでは初期化不要
-            // _identifiableGameObject もインスペクターで設定されるか、GetComponentで取得
-            if (_identifiableGameObject == null)
-            {
-                _identifiableGameObject = GetComponent<IdentifiableGameObject>();
-            }
+		[Inject]
+		public void Construct(IdentifiableCommandBus identifiableCommandBus)
+		{
+			_commandBus = identifiableCommandBus;
         }
+
+		/// <summary>
+		/// コンポーネントの初期化を行います。
+		/// </summary>
+		public void OnAwake()
+		{
+		}
+
+		public void OnStart()
+		{
+		}
 
         /// <summary>
         /// マウスポインターがUI要素に入った時の処理。

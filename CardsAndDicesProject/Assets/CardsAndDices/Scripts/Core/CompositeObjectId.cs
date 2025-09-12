@@ -17,7 +17,7 @@ namespace CardsAndDices
 		/// <summary>
 		/// このオブジェクトのタイプを表す文字列（例: "Card", "Dice", "Button"）。
 		/// </summary>
-		public string ObjectType { get; private set; }
+		public CompositeObjectIdTypeEntity ObjectType { get; private set; }
 
 		/// <summary>
 		/// このオブジェクトの親となるCompositeObjectId。
@@ -31,7 +31,7 @@ namespace CardsAndDices
 		/// <param name="uniqueId">このオブジェクトのユニークID。</param>
 		/// <param name="objectType">このオブジェクトのタイプ。</param>
 		/// <param name="owner">このオブジェクトのオーナーとなるCompositeObjectId。ルートの場合はnull。</param>
-		public CompositeObjectId(long uniqueId, string objectType, CompositeObjectId owner)
+		public CompositeObjectId(long uniqueId, CompositeObjectIdTypeEntity objectType, CompositeObjectId owner)
 		{
 			UniqueId = uniqueId;
 			ObjectType = objectType;
@@ -59,7 +59,7 @@ namespace CardsAndDices
 		{
 			unchecked
 			{
-				return (UniqueId.GetHashCode() * 397) ^ (ObjectType != null ? ObjectType.GetHashCode() : 0);
+				return (UniqueId.GetHashCode() * 397) ^ (ObjectType != null ? ObjectType.Id.GetHashCode() : 0);
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace CardsAndDices
 		/// <returns>CompositeObjectIdの文字列表現。</returns>
 		public override string ToString()
 		{
-			return $"[ID:{UniqueId}, Type:{ObjectType}, Owner:{(Owner != null ? Owner.UniqueId.ToString() : "None")}]";
+			return $"[ID:{UniqueId}, Type:{ObjectType.Id}, Owner:{(Owner != null ? Owner.UniqueId.ToString() : "None")}]";
 		}
 	}
 }

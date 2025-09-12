@@ -12,7 +12,7 @@ D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_
 </guide_rules_md>
 
 <document_to_update>
-D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_animation_system.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\gdd\gdd_composite_object_id.md
 </document_to_update>
 
 まず、思考のプロセスを<scratchpad>タグの中に書き出してください。

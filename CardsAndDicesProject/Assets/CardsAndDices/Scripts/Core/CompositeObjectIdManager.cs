@@ -7,7 +7,7 @@ namespace CardsAndDices
 	/// CompositeObjectIdを生成・管理するマネージャークラス。
 	/// ScriptableObjectとして実装され、ユニークIDの採番を永続化します。
 	/// </summary>
-	[CreateAssetMenu(fileName = "CompositeObjectIdManager", menuName = "CardsAndDices/Composite Object ID Manager")]
+	[CreateAssetMenu(fileName = "CompositeObjectIdManager", menuName = "CardsAndDices/Managers/CompositeObjectIdManager")]
 	public class CompositeObjectIdManager : ScriptableObject
 	{
 		/// <summary>
@@ -31,7 +31,7 @@ namespace CardsAndDices
 		/// <param name="objectType">オブジェクトのタイプ。</param>
 		/// <param name="owner">このオブジェクトのオーナーとなるCompositeObjectId。ルートの場合はnull。</param>
 		/// <returns>生成されたCompositeObjectId。</returns>
-		public CompositeObjectId CreateId(string objectType, CompositeObjectId owner = null)
+		public CompositeObjectId CreateId(CompositeObjectIdTypeEntity objectType, CompositeObjectId owner = null)
 		{
 			// ユニークIDを採番し、次のIDをインクリメントします。
 			long currentId = _nextUniqueId;

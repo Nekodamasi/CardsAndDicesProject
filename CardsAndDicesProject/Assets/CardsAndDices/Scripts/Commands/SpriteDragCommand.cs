@@ -5,7 +5,7 @@ namespace CardsAndDices
 	/// <summary>
 	/// SpriteUI要素がドラッグ中に移動したことを通知するコマンド。
 	/// </summary>
-	public class SpriteDragCommand : ICommand
+	public class IdentifiableDragCommand : ICommand
 	{
 		/// <summary>
 		/// ドラッグ中のオブジェクトのCompositeObjectId。
@@ -22,7 +22,7 @@ namespace CardsAndDices
 		/// </summary>
 		/// <param name="targetObjectId">ドラッグ中のオブジェクトのCompositeObjectId。</param>
 		/// <param name="newPosition">ドラッグ中の新しいワールド座標。</param>
-		public SpriteDragCommand(CompositeObjectId targetObjectId, Vector3 newPosition)
+		public IdentifiableDragCommand(CompositeObjectId targetObjectId, Vector3 newPosition)
 		{
 			TargetObjectId = targetObjectId;
 			NewPosition = newPosition;

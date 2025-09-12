@@ -15,7 +15,7 @@ namespace CardsAndDices
     {
         private enum ReflowState { Idle, InProgress }
         private ReflowState _currentReflowState = ReflowState.Idle;
-        private SpriteHoverCommand _nextHoverCommand = null;
+        private IdentifiableHoverCommand _nextHoverCommand = null;
 
         [Header("Dependencies")]
         [SerializeField] private UIStateMachine _uiStateMachine;
@@ -52,12 +52,12 @@ namespace CardsAndDices
             _currentReflowState = ReflowState.Idle;
             _nextHoverCommand = null;
 
-            _commandBus.On<SpriteBeginDragCommand>(OnBeginDrag);
-            _commandBus.On<SpriteHoverCommand>(OnHover);
-            _commandBus.On<SpriteUnhoverCommand>(OnUnhover);
-            _commandBus.On<SpriteDropCommand>(OnDrop);
-            _commandBus.On<SpriteDragCommand>(OnDrag);
-            _commandBus.On<SpriteEndDragCommand>(OnEndDrag);
+            _commandBus.On<IdentifiableBeginDragCommand>(OnBeginDrag);
+            _commandBus.On<IdentifiableHoverCommand>(OnHover);
+            _commandBus.On<IdentifiableUnhoverCommand>(OnUnhover);
+            _commandBus.On<IdentifiableDropCommand>(OnDrop);
+            _commandBus.On<IdentifiableDragCommand>(OnDrag);
+            _commandBus.On<IdentifiableEndDragCommand>(OnEndDrag);
             _commandBus.On<ReflowOperationCompletedCommand>(OnReflowOperationCompleted);
             _commandBus.On<SpriteDragOperationCompletedCommand>(OnSpriteDragOperationCompleted);
             _commandBus.On<ReflowCompletedCommand>(OnReflowCompleted);
@@ -68,12 +68,12 @@ namespace CardsAndDices
         public void Dispose()
         {
             if (_commandBus == null) return;
-            _commandBus.Off<SpriteBeginDragCommand>(OnBeginDrag);
-            _commandBus.Off<SpriteHoverCommand>(OnHover);
-            _commandBus.Off<SpriteUnhoverCommand>(OnUnhover);
-            _commandBus.Off<SpriteDropCommand>(OnDrop);
-            _commandBus.Off<SpriteDragCommand>(OnDrag);
-            _commandBus.Off<SpriteEndDragCommand>(OnEndDrag);
+            _commandBus.Off<IdentifiableBeginDragCommand>(OnBeginDrag);
+            _commandBus.Off<IdentifiableHoverCommand>(OnHover);
+            _commandBus.Off<IdentifiableUnhoverCommand>(OnUnhover);
+            _commandBus.Off<IdentifiableDropCommand>(OnDrop);
+            _commandBus.Off<IdentifiableDragCommand>(OnDrag);
+            _commandBus.Off<IdentifiableEndDragCommand>(OnEndDrag);
             _commandBus.Off<ReflowOperationCompletedCommand>(OnReflowOperationCompleted);
             _commandBus.Off<SpriteDragOperationCompletedCommand>(OnSpriteDragOperationCompleted);
             _commandBus.Off<ReflowCompletedCommand>(OnReflowCompleted);
@@ -91,7 +91,7 @@ namespace CardsAndDices
             _viewRegistry.Unregister(view);
         }
 
-        private void OnBeginDrag(SpriteBeginDragCommand command)
+        private void OnBeginDrag(IdentifiableBeginDragCommand command)
         {
             if (_cardInteractionStrategy.ChkCardBeginDrag(command, this))
             {
@@ -106,7 +106,7 @@ namespace CardsAndDices
             }
         }
 
-        private void OnHover(SpriteHoverCommand command)
+        private void OnHover(IdentifiableHoverCommand command)
         {
             if (_cardInteractionStrategy.ChkCardSlotHover(command, this))
             {
@@ -128,7 +128,7 @@ namespace CardsAndDices
             }
         }
 
-        private void ExecuteHover(SpriteHoverCommand command)
+        private void ExecuteHover(IdentifiableHoverCommand command)
         {
             _currentReflowState = ReflowState.InProgress;
 
@@ -137,7 +137,7 @@ namespace CardsAndDices
             
         }
 
-        private void OnUnhover(SpriteUnhoverCommand command)
+        private void OnUnhover(IdentifiableUnhoverCommand command)
         {
             if (_cardInteractionStrategy.ChkCardUnhover(command, this))
             {
@@ -147,7 +147,7 @@ namespace CardsAndDices
             }
         }
 
-        private void OnDrop(SpriteDropCommand command)
+        private void OnDrop(IdentifiableDropCommand command)
         {
             if (_cardInteractionStrategy.ChkCardDrop(command, this))
             {
@@ -164,7 +164,7 @@ namespace CardsAndDices
             }
         }
 
-        private void OnDrag(SpriteDragCommand command)
+        private void OnDrag(IdentifiableDragCommand command)
         {
             if (_cardInteractionStrategy.ChkCardDrag(command, this))
             {
@@ -176,7 +176,7 @@ namespace CardsAndDices
             }
         }
 
-        private void OnEndDrag(SpriteEndDragCommand command)
+        private void OnEndDrag(IdentifiableEndDragCommand command)
         {
             if (_cardInteractionStrategy.ChkCardEndDrag(command, this))
             {
@@ -190,7 +190,7 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="command">ドラッグ終了コマンド。</param>
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
-        public async void CardEndDrag(SpriteEndDragCommand command)
+        public async void CardEndDrag(IdentifiableEndDragCommand command)
         {
             Debug.Log("<color=red>Card_OnEndDrag-></color>" + UIStateMachine.CurrentState + " Flg:" + IsDroppedSuccessfully);
 

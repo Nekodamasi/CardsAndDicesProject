@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// マウスカーソルがSpriteUI要素上に入った時のコマンド。
     /// </summary>
-    public class SpriteHoverCommand : ICommand
+    public class IdentifiableHoverCommand : ICommand
     {
         /// <summary>
         /// ホバーされたオブジェクトのCompositeObjectId。
@@ -16,7 +16,7 @@ namespace CardsAndDices
         /// SpriteHoverCommandを初期化します。
         /// </summary>
         /// <param name="targetObjectId">ホバーイベントが発生したCompositeObjectId</param>
-        public SpriteHoverCommand(CompositeObjectId targetObjectId)
+        public IdentifiableHoverCommand(CompositeObjectId targetObjectId)
         {
             TargetObjectId = targetObjectId;
         }

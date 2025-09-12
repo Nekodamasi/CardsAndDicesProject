@@ -48,7 +48,8 @@
 | guide_developer-cookbook.md | 開発者向けのクックブック | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_developer-cookbook.md |
 | guide_file_management.md | ファイル一覧の管理方法を定めたガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_file_management.md |
 | guide_overview.md | プロジェクトの全体像を説明するドキュメント | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_overview.md |
-| # guide_project_files.md - プロジェクトファイル一覧
+| guide_prefab_instantiation.md | Prefabのインスタンス化に関するルールを定めたガイド | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_prefab_instantiation.md |
+| guide_project_files.md | プロジェクト内に存在する全てのドキュメントとソースコードのファイル一覧 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_project_files.md |
 
 ### Docs/sys
 
@@ -66,6 +67,7 @@
 | sys_domain-model.md | プロジェクトのドメインモデル設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_domain-model.md |
 | sys_effect_management.md | エフェクト管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_effect_management.md |
 | sys_identity-and-name-management.md | ID・名称管理システムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_identity-and-name-management.md |
+| sys_identifiable-views.md | 識別可能Viewシステムの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_identifiable-views.md |
 | sys_initialization_flow.md | ゲームの初期化フロー設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_initialization_flow.md |
 | sys_sprite_selector_design.md | スプライトセレクターの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sprite_selector_design.md |
 | sys_status_icon_design.md | ステータスアイコンの設計書 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_status_icon_design.md |
@@ -201,6 +203,7 @@
 | IdentifiableGameObject.cs | 一意なIDを持つGameObjectの基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IdentifiableGameObject.cs |
 | IDiceInlet.cs | ダイスインレットの基本機能を定義するインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IDiceInlet.cs |
 | IGameInitializable.cs | ゲーム初期化時に処理を実行するためのインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IGameInitializable.cs |
+| IIdentifiableView.cs | 識別可能なViewオブジェクトのインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\IIdentifiableView.cs |
 | INameService.cs | 名称解決サービスのインターフェース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\INameService.cs |
 | InletActivationViewType.cs | インレットのアクティベーション表示種別を定義するEnum | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\InletActivationViewType.cs |
 | InteractionProfile.cs | UIのインタラクションプロファイルを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\InteractionProfile.cs |
@@ -279,6 +282,7 @@
 | CardSlotInteractionHandler.cs | カードスロットのインタラクションを処理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CardSlotInteractionHandler.cs |
 | CardSlotManager.cs | カードスロット全体を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CardSlotManager.cs |
 | CombatManager.cs | 戦闘全体の進行を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CombatManager.cs |
+| CreatureCardSpawnInfoManager.cs | CreatureCardSpawnInfoのリストを保持するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CreatureCardSpawnInfoManager.cs |
 | CreatureManager.cs | クリーチャー全体を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\CreatureManager.cs |
 | DiceInletManager.cs | ダイスインレット全体を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceInletManager.cs |
 | DiceManager.cs | ダイス全体を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Manager\DiceManager.cs |
