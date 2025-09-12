@@ -14,5 +14,11 @@ namespace CardsAndDices
         /// このViewが現在、ゲームワールドに生成され、有効な状態であるかを取得します。
         /// </summary>
         bool IsSpawned { get; }
+
+        /// <summary>
+        /// このゲームオブジェクトのスポーン状態を設定します。
+        /// </summary>
+        /// <param name="state">trueの場合、ゲーム内で使用中。falseの場合、プールに戻された状態。</param>
+        void SetSpawnedState(bool state);
     }
 }

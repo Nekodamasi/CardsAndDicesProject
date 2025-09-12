@@ -59,7 +59,7 @@
  - `Scripts/Data/`: 純粋なデータ定義（ScriptableObject、構造体、クラス）
  - `Scripts/Domain/`: ゲームのコアロジック、データモデル、エンティティ
  - `Scripts/Factory/`: オブジェクトの生成ロジックをカプセル化
- - `Scripts/Installers/`: DIコンテナのインストールロジック
+ - `Scripts/Initializers/`: DIコンテナの初期化ロジック
  - `Scripts/Manager/`: 複数のコンポーネントやシステムを統括・管理する高レベルなロジック
  - `Scripts/Orchestrator/`: 複数のシステムやコンポーネント間の複雑な連携を調整
  - `Scripts/Presenter/`: ViewとModelの仲介役

@@ -222,6 +222,8 @@
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
 | AllowedDiceFacesSO.cs | 許容されるダイスの目を定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\AllowedDiceFacesSO.cs |
+| AnimationStrategyEntity.cs | アニメーション戦略を識別するエンティティ定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\AnimationStrategyEntity.cs |
+| AnimationStrategyRegistry.cs | アニメーション戦略を登録・管理するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\AnimationStrategyRegistry.cs |
 | CombatData.cs | 戦闘データを定義するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CombatData.cs |
 | CombatScenarioRegistry.cs | 戦闘シナリオを登録・管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\CombatScenarioRegistry.cs |
 | DiceInletConditionSO.cs | ダイスインレットの条件を定義するScriptableObject | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\DiceInletConditionSO.cs |
@@ -319,6 +321,7 @@
 
 | ファイル名 | 解説 | 格納場所 |
 | :--- | :--- | :--- |
+| AnimationExecutor.cs | アニメーション戦略を実行するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\AnimationExecutor.cs |
 | CardLifecycleService.cs | カードの生成から破棄までのライフサイクルを管理するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\CardLifecycleService.cs |
 | CardPlacementService.cs | カードの配置に関するロジックを提供するサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\CardPlacementService.cs |
 | CombatDataLoaderService.cs | 戦闘データのロードを行うサービスクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Service\CombatDataLoaderService.cs |

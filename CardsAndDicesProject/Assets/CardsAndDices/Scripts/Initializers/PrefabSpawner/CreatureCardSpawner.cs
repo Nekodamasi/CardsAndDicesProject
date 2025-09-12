@@ -12,6 +12,7 @@ namespace CardsAndDices
     {
         [Inject] private readonly Func<CreatureCardSpawnInfo, GameObject> _creatureCardFactory;
         [Inject] private readonly CreatureCardSpawnInfoManager _CreatureCardSpawnInfoManager;
+        [Inject] private readonly CombatInitializer _combatInitializer;
 
         public void Start()
         {
@@ -23,11 +24,7 @@ namespace CardsAndDices
                 creatureCard.transform.localScale = Vector3.one;
                 foreach(var initializer in creatureCard.GetComponentsInChildren<IGameInitializable>())
                 {
-                    initializer.OnAwake();
-                }
-                foreach(var initializer in creatureCard.GetComponentsInChildren<IGameInitializable>())
-                {
-                    initializer.OnStart();
+                    _combatInitializer.AddInitializables(initializer);
                 }
             }
         }

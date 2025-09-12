@@ -8,12 +8,6 @@ namespace CardsAndDices
 {
     public class CombatLifetimeScope : LifetimeScope
     {
-          public enum PrefabKey
-  {
-      PlayerCard,
-      EnemyCard,
-      SpellCard
-  }
         [Header("Prefab")]
         [SerializeField] private GameObject _creatureCardPrefab;
 
@@ -21,6 +15,7 @@ namespace CardsAndDices
         [SerializeField] private CompositeObjectIdManager _compositeObjectIdManager;
         [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
         [SerializeField] private IdentifiableCommandBus _identifiableCommandBus;
+        [SerializeField] private CombatInitializer _combatInitializer;
 
         [Header("MonoBehaviour")]
         [SerializeField] private CreatureCardSpawner _creatureCardSpawner;
@@ -33,20 +28,22 @@ namespace CardsAndDices
             // ScriptableObject Managers のバインド
             builder.RegisterInstance(_compositeObjectIdManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_identifiableCommandBus).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_combatInitializer).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
 
             // ScriptableObject Managers の初期化
             _compositeObjectIdManager.Initialize();
             _identifiableCommandBus.Initialize();
+            _combatInitializer.Initialize(_identifiableCommandBus);
 
-
+            // Factoryの登録
             builder.RegisterFactory<CreatureCardSpawnInfo, GameObject>(container => (info) =>
             {
                 var card = container.Instantiate(_creatureCardPrefab);
                 var IdentifiableGameObject = card.GetComponent<IdentifiableGameObject>();
                 var IdentifiableInputHandler = card.GetComponent<IdentifiableInputHandler>();
-                //                IdentifiableGameObject.Construct(_compositeObjectIdManager);
-                //                container.Inject(IdentifiableGameObject);
+                            //                IdentifiableGameObject.Construct(_compositeObjectIdManager);
+                            //                container.Inject(IdentifiableGameObject);
                 return card;
             },
             Lifetime.Singleton);

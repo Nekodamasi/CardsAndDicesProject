@@ -9,7 +9,6 @@ namespace CardsAndDices
     {
         [Header("Components")]
         [SerializeField] protected IdentifiableGameObject _identifiableGameObject;
-        [SerializeField] protected SpriteCommandBus _commandBus;
         [SerializeField] protected BoxCollider2D _boxCollider2D;
 
         [Header("Display Root")]

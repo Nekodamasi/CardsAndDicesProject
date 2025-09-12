@@ -6,15 +6,15 @@ namespace CardsAndDices
     /// <summary>
     /// バフ効果を受けた際のアニメーション戦略。
     /// </summary>
-    public class BuffAnimationStrategy : IAnimationStrategy
+    public class BuffAnimationStrategySO :  BaseAnimationStrategySO
     {
-        [SerializeField] private readonly BuffAnimationProfile _profile;
+        private readonly BuffAnimationProfile _profile;
 
         /// <summary>
         /// コンストラクタ。
         /// </summary>
         /// <param name="profile">アニメーションのパラメータを定義するプロファイル。</param>
-        public BuffAnimationStrategy(BuffAnimationProfile profile)
+        public BuffAnimationStrategySO(BuffAnimationProfile profile)
         {
             _profile = profile;
         }
@@ -24,7 +24,7 @@ namespace CardsAndDices
         /// </summary>
         /// <param name="context">アニメーションに必要なコンポーネントのコンテキスト。</param>
         /// <returns>生成されたDOTweenのSequence。</returns>
-        public Sequence ExecuteAsync(AnimationContext context)
+        public override Sequence ExecuteAsync(AnimationContext context)
         {
             if (context?.TargetTransform == null)
             {
