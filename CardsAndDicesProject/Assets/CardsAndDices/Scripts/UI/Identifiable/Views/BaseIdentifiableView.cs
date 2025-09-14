@@ -5,14 +5,17 @@ using VContainer;
 
 namespace CardsAndDices
 {
-    public abstract class BaseAnimationView : MonoBehaviour, IGameInitializable, IIdentifiableView
+    public abstract class BaseIdentifiableView : MonoBehaviour, IGameInitializable
     {
-        [Header("Components")]
+        [Header("Base Components")]
         [SerializeField] protected IdentifiableGameObject _identifiableGameObject;
-        [SerializeField] protected AnimationContext _animationContext;
-        [SerializeField] protected AnimationStrategyRegistry _animationStrategyRegistry;
+        private IdentifiableViewRegistry _identifiableViewRegistry;
 
-        private AnimationExecutor _animationExecutor = new AnimationExecutor();
+		[Inject]
+		public void Construct(IdentifiableViewRegistry identifiableViewRegistry)
+		{
+			_identifiableViewRegistry = identifiableViewRegistry;
+        }
 
         /// <summary>
         /// このViewインスタンスを識別するための一意なIDを取得します。
@@ -22,8 +25,10 @@ namespace CardsAndDices
         public virtual void OnAwake()
         {
         }
+
         public virtual void OnStart()
         {
+            _identifiableViewRegistry.Register(this);
         }
 
         /// <summary>
@@ -38,12 +43,6 @@ namespace CardsAndDices
         public void SetSpawnedState(bool state)
         {
             IsSpawned = state;
-        }
-        public Sequence AnimationExecute(AnimationStrategyEntity animationStrategyEntity)
-        {
-            var strategy = _animationStrategyRegistry.GetStrategy(animationStrategyEntity);
-            var sequence = _animationExecutor.Execute(strategy, _animationContext);
-            return sequence;
         }
     }
 }

@@ -1,39 +1,42 @@
+using UnityEngine;
+
 namespace CardsAndDices
 {
-	/// <summary>
-	/// SpriteUI要素がクリックされたことを通知するコマンド。
-	/// </summary>
-	public class IdentifiableClickCommand : ICommand
-	{
-		/// <summary>
-		/// クリックされたオブジェクトのCompositeObjectId。
-		/// </summary>
-		public CompositeObjectId TargetObjectId { get; private set; }
+    /// <summary>
+    /// クリック操作が開始された時のコマンド。
+    /// </summary>
+    public class IdentifiableClickCommand : ICommand
+    {
+        private readonly CompositeObjectId _executedObjectId;
 
-		/// <summary>
-		/// SpriteClickCommandの新しいインスタンスを初期化します。
-		/// </summary>
-		/// <param name="targetObjectId">クリックされたオブジェクトのCompositeObjectId。</param>
-		public IdentifiableClickCommand(CompositeObjectId targetObjectId)
-		{
-			TargetObjectId = targetObjectId;
-		}
+        /// <summary>
+        /// 初期化します。
+        /// </summary>
+        /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
+        public IdentifiableClickCommand(CompositeObjectId executedObjectId)
+        {
+            _executedObjectId = executedObjectId;
+        }
 
-		/// <summary>
-		/// コマンドを実行します。
-		/// </summary>
-		public void Execute()
-		{
-			// このコマンドは通知用のため、ここでは具体的な実行ロジックはありません。
-			// 購読側で処理されます。
-		}
+        /// <summary>
+        /// イベントの発生源のCompositeObjectIdを取得します。
+        /// </summary>
+        public CompositeObjectId ExecutedObjectId => _executedObjectId;
 
-		/// <summary>
-		/// コマンドを元に戻します。
-		/// </summary>
-		public void Undo()
-		{
-			// このコマンドは通知用のため、ここでは具体的なUndoロジックはありません。
-		}
-	}
-}
+        /// <summary>
+        /// 効果を実行します。
+        /// </summary>
+        public void Execute()
+        {
+            // BaseSpriteViewで実装
+        }
+
+        /// <summary>
+        /// 効果を元に戻します。
+        /// </summary>
+        public void Undo()
+        {
+            // BaseSpriteViewで実装
+        }
+    }
+} 

@@ -3,27 +3,28 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// マウスカーソルがSpriteUI要素から離れた時のコマンド。
+    /// マウスアンホバーした時のコマンド。
     /// </summary>
     public class IdentifiableUnhoverCommand : ICommand
     {
-        /// <summary>
-        /// アンホバーされたオブジェクトのCompositeObjectId。
-        /// </summary>
-        public CompositeObjectId TargetObjectId { get; private set; }
+        private readonly CompositeObjectId _executedObjectId;
 
         /// <summary>
-        /// SpriteUnhoverCommandを初期化します。
+        /// 初期化します。
         /// </summary>
-        /// <param name="targetObjectId">アンホバーイベントが発生したCompositeObjectId。</param>
-        public IdentifiableUnhoverCommand(CompositeObjectId targetObjectId)
+        /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
+        public IdentifiableUnhoverCommand(CompositeObjectId executedObjectId)
         {
-            TargetObjectId = targetObjectId;
+            _executedObjectId = executedObjectId;
         }
 
         /// <summary>
-        /// アンホバー効果を実行します。
-        /// BaseSpriteViewによって実装される予定の処理です。
+        /// イベントの発生源のCompositeObjectIdを取得します。
+        /// </summary>
+        public CompositeObjectId ExecutedObjectId => _executedObjectId;
+
+        /// <summary>
+        /// 効果を実行します。
         /// </summary>
         public void Execute()
         {
@@ -31,12 +32,11 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// アンホバー効果を元に戻します。
-        /// BaseSpriteViewによって実装される予定の処理です。
+        /// 効果を元に戻します。
         /// </summary>
         public void Undo()
         {
             // BaseSpriteViewで実装
         }
     }
-}
+} 

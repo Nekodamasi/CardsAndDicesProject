@@ -1,47 +1,50 @@
+using UnityEngine;
+
 namespace CardsAndDices
 {
     /// <summary>
-    /// SpriteUI要素がスロットに正常に配置されたことを通知するコマンド。
-    /// または、ドラッグ操作が終了し、ドロップされたことを通知するコマンド。
+    /// SpriteUI要素のドラッグ操作が開始された時のコマンド。
     /// </summary>
     public class IdentifiableDropCommand : ICommand
     {
-        /// <summary>
-        /// ドロップされたSpriteUI要素のCompositeObjectId。
-        /// </summary>
-        public CompositeObjectId DroppedObjectId { get; private set; }
+        private readonly CompositeObjectId _executedObjectId;
+        private readonly CompositeObjectId _targetObjectId;
 
         /// <summary>
-        /// 要素を受け入れたスロットのCompositeObjectId。
-        /// ドロップターゲットがない場合はnull。
+        /// SpriteBeginDragCommandを初期化します。
         /// </summary>
-        public CompositeObjectId TargetSlotObjectId { get; private set; }
-
-        /// <summary>
-        /// SpriteDropCommandの新しいインスタンスを初期化します。
-        /// </summary>
-        /// <param name="droppedObjectId">ドロップされたSpriteUI要素のCompositeObjectId。</param>
-        /// <param name="targetSlotObjectId">要素を受け入れたスロットのCompositeObjectId。ドロップターゲットがない場合はnull。</param>
-        public IdentifiableDropCommand(CompositeObjectId droppedObjectId, CompositeObjectId targetSlotObjectId = null)
+        /// <param name="executedObjectId">イベントが発生したCompositeObjectId</param>
+        /// <param name="targetObjectId">イベントの対象となったCompositeObjectId</param>
+        public IdentifiableDropCommand(CompositeObjectId executedObjectId, CompositeObjectId targetObjectId)
         {
-            DroppedObjectId = droppedObjectId;
-            TargetSlotObjectId = targetSlotObjectId;
+            _executedObjectId = executedObjectId;
+            _targetObjectId = targetObjectId;
         }
 
         /// <summary>
-        /// コマンドを実行します。（通知用のため、具体的なロジックは購読側で処理されます）
+        /// イベントの発生源のCompositeObjectIdを取得します。
+        /// </summary>
+        public CompositeObjectId ExecutedObjectId => _executedObjectId;
+
+        /// <summary>
+        /// イベント対象のCompositeObjectIdを取得します。
+        /// </summary>
+        public CompositeObjectId TargetObjectId => _targetObjectId;
+
+        /// <summary>
+        /// 効果を実行します。
         /// </summary>
         public void Execute()
         {
-            // 実装なし
+            // BaseSpriteViewで実装
         }
 
         /// <summary>
-        /// コマンドを元に戻します。（通知用のため、具体的なロジックは購読側で処理されます）
+        /// 効果を元に戻します。
         /// </summary>
         public void Undo()
         {
-            // 実装なし
+            // BaseSpriteViewで実装
         }
     }
-}
+} 

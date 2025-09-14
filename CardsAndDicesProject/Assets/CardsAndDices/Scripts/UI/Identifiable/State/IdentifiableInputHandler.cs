@@ -20,8 +20,8 @@ namespace CardsAndDices
     {
         [Header("Components")]
         [SerializeField] private IdentifiableGameObject _identifiableGameObject;
-        [SerializeField] private InteractionProfile _profile; // InteractionProfileへの参照を追加
-
+        [SerializeField] private InteractionProfile _profile;
+        [SerializeField] private BaseIdentifiableStateOperator _identifiableStateOperator;
         private IdentifiableCommandBus _commandBus;
         private bool _isHovering = false;
         private bool _isDragging = false;
@@ -39,8 +39,9 @@ namespace CardsAndDices
 		{
 		}
 
-		public void OnStart()
-		{
+        public void OnStart()
+        {
+            _identifiableStateOperator.RegisterTarget(_identifiableGameObject.ObjectId);
 		}
 
         /// <summary>

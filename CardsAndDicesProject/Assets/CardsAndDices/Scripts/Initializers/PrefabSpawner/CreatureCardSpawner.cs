@@ -12,7 +12,7 @@ namespace CardsAndDices
     {
         [Inject] private readonly Func<CreatureCardSpawnInfo, GameObject> _creatureCardFactory;
         [Inject] private readonly CreatureCardSpawnInfoManager _CreatureCardSpawnInfoManager;
-        [Inject] private readonly CombatInitializer _combatInitializer;
+        [Inject] private readonly SceneInitializer _combatInitializer;
 
         public void Start()
         {

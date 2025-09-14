@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "CombatInitializer", menuName = "CardsAndDices/initializers/CombatInitializer")]
-    public class CombatInitializer : ScriptableObject, IPostStartable
+    [CreateAssetMenu(fileName = "SceneInitializer", menuName = "CardsAndDices/initializers/SceneInitializers/SceneInitializer")]
+    public class SceneInitializer : ScriptableObject, IPostStartable
     {
         private IdentifiableCommandBus _identifiableCommandBus;
         private List<IGameInitializable> _gameInitializables = new List<IGameInitializable>();
@@ -33,6 +33,8 @@ namespace CardsAndDices
             {
                 initializable.OnStart();
             }
+            _identifiableCommandBus.Emit(new SceneLoadedCommand());
+            _identifiableCommandBus.Emit(new InstanceSetUpedCommand());
         }
     }
 }

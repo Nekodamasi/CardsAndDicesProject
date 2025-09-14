@@ -7,25 +7,24 @@ namespace CardsAndDices
     /// </summary>
     public class IdentifiableBeginDragCommand : ICommand
     {
-        private readonly CompositeObjectId _targetObjectId;
+        private readonly CompositeObjectId _executedObjectId;
 
         /// <summary>
-        /// SpriteBeginDragCommandを初期化します。
+        /// IdentifiableBeginDragCommandを初期化します。
         /// </summary>
-        /// <param name="targetObjectId">ドラッグ開始イベントが発生したCompositeObjectId</param>
-        public IdentifiableBeginDragCommand(CompositeObjectId targetObjectId)
+        /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
+        public IdentifiableBeginDragCommand(CompositeObjectId executedObjectId)
         {
-            _targetObjectId = targetObjectId;
+            _executedObjectId = executedObjectId;
         }
 
         /// <summary>
-        /// ドラッグ開始されたGameObjectを取得します。
+        /// イベントの発生源のCompositeObjectIdを取得します。
         /// </summary>
-        public CompositeObjectId TargetObjectId => _targetObjectId;
+        public CompositeObjectId ExecutedObjectId => _executedObjectId;
 
         /// <summary>
-        /// ドラッグ開始効果を実行します。
-        /// BaseSpriteViewによって実装される予定の処理です。
+        /// 効果を実行します。
         /// </summary>
         public void Execute()
         {
@@ -33,8 +32,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// ドラッグ開始効果を元に戻します。
-        /// BaseSpriteViewによって実装される予定の処理です。
+        /// 効果を元に戻します。
         /// </summary>
         public void Undo()
         {

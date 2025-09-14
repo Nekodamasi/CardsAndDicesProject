@@ -29,11 +29,11 @@ namespace CardsAndDices
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.DraggingCard)
             {
                 // ホバーされたスロットのViewを取得
-                var cardSlotView = orchestrator.ViewRegistry.GetView<CardSlotView>(command.TargetObjectId);
+                var cardSlotView = orchestrator.ViewRegistry.GetView<CardSlotView>(command.ExecutedObjectId);
                 if (cardSlotView != null)
                 {
                     // スロットのデータとリフロー配置カードIDを確認
-                    var slotData = orchestrator.CardSlotManager.GetSlotData(command.TargetObjectId);
+                    var slotData = orchestrator.CardSlotManager.GetSlotData(command.ExecutedObjectId);
                     Debug.Log("<color=green>ホバーされたカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
                     if (slotData.ReflowPlacedCardId == orchestrator.DraggedId) return false; // 同じカードが既にリフロー配置されている場合は何もしない
                     Debug.Log("<color=green>リフローに進んだカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
@@ -54,7 +54,7 @@ namespace CardsAndDices
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
                 // ホバーされたカードのViewを取得し、ホバー状態に遷移
-                var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
                 if (cardView != null) return true;
             }
             return false;
@@ -70,7 +70,7 @@ namespace CardsAndDices
             // UIがアイドルの場合
             Debug.Log("<color=red>ChkCardBeginDrag-></color>" + orchestrator.UIStateMachine.CurrentState);
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.Idle) return false;
-            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
             if (draggedCardView == null) return false;
             return true;
         }
@@ -82,7 +82,7 @@ namespace CardsAndDices
         /// <param name="orchestrator">UIインタラクションオーケストレーターのインスタンス。</param>
         public void OnBeginDrag(IdentifiableBeginDragCommand command, CardInteractionOrchestrator orchestrator)
         {
-            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+            var draggedCardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
             Debug.Log("<color=red>Card_OnBeginDrag-></color>" + draggedCardView._cardName + "->" + orchestrator.UIStateMachine.CurrentState + " Flg:" + orchestrator.IsDroppedSuccessfully);
 
             orchestrator.UIStateMachine.SetState(UIStateMachine.UIState.DraggingCard);
@@ -108,24 +108,24 @@ namespace CardsAndDices
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.DraggingCard)
             {
                 // ホバーされたスロットのViewを取得
-                var cardSlotView = orchestrator.ViewRegistry.GetView<CardSlotView>(command.TargetObjectId);
+                var cardSlotView = orchestrator.ViewRegistry.GetView<CardSlotView>(command.ExecutedObjectId);
                 if (cardSlotView != null)
                 {
                     // スロットのデータとリフロー配置カードIDを確認
-                    var slotData = orchestrator.CardSlotManager.GetSlotData(command.TargetObjectId);
+                    var slotData = orchestrator.CardSlotManager.GetSlotData(command.ExecutedObjectId);
                     Debug.Log("<color=green>ホバーされたカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
                     if (slotData.ReflowPlacedCardId == orchestrator.DraggedId) return; // 同じカードが既にリフロー配置されている場合は何もしない
                     Debug.Log("<color=green>リフローに進んだカードスロット：</color>" + slotData.Line + "_" + slotData.Location);
 
                     // ホバーリフローを実行
-                    orchestrator.CardSlotManager.OnCardHoveredOnSlot(orchestrator.DraggedId, command.TargetObjectId);
+                    orchestrator.CardSlotManager.OnCardHoveredOnSlot(orchestrator.DraggedId, command.ExecutedObjectId);
                 }
             }
             // UIがアイドル状態の場合
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
                 // ホバーされたカードのViewを取得し、ホバー状態に遷移
-                var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
                 if (cardView != null) cardView.EnterHoveringState();
             }
         }
@@ -143,7 +143,7 @@ namespace CardsAndDices
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
                 // アンホバーされたカードのViewを取得し、通常状態に遷移
-                var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                var cardView = orchestrator.ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
                 if (cardView != null) return true;
             }
             return false;
@@ -200,7 +200,7 @@ namespace CardsAndDices
                 orchestrator.UIStateMachine.SetState(UIStateMachine.UIState.DropedCard);
 
                 // カードスロットマネージャーにドロップ処理を依頼
-                orchestrator.CardSlotManager.OnCardDroppedOnSlot(command.DroppedObjectId, command.TargetSlotObjectId);
+                orchestrator.CardSlotManager.OnCardDroppedOnSlot(command.ExecutedObjectId, command.TargetObjectId);
                 // ドロップが成功したことを示すフラグを設定
                 orchestrator.IsDroppedSuccessfully = true;
             }

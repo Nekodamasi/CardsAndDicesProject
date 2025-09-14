@@ -69,6 +69,7 @@
  - `Scripts/Strategy/`: 特定の振る舞いをカプセル化し、交換可能なアルゴリズムを提供
  - `Scripts/Tester/`: テスト関連のスクリプト
  - `Scripts/UI/`: UIコンポーネント（MonoBehaviour）
+ - `Scripts/Registries/`: レジストリクラス
 
 ### 2. バージョン管理
 

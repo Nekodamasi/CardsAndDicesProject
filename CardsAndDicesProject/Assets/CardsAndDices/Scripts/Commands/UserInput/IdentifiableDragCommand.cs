@@ -2,47 +2,48 @@ using UnityEngine;
 
 namespace CardsAndDices
 {
-	/// <summary>
-	/// SpriteUI要素がドラッグ中に移動したことを通知するコマンド。
-	/// </summary>
-	public class IdentifiableDragCommand : ICommand
-	{
-		/// <summary>
-		/// ドラッグ中のオブジェクトのCompositeObjectId。
-		/// </summary>
-		public CompositeObjectId TargetObjectId { get; private set; }
+    /// <summary>
+    /// SpriteUI要素のドラッグ操作が開始された時のコマンド。
+    /// </summary>
+    public class IdentifiableDragCommand : ICommand
+    {
+        private readonly CompositeObjectId _executedObjectId;
+        private readonly Vector3 _newPosition;
 
-		/// <summary>
-		/// ドラッグ中の新しいワールド座標。
-		/// </summary>
-		public Vector3 NewPosition { get; private set; }
+        /// <summary>
+        /// 初期化します。
+        /// </summary>
+        /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
+        public IdentifiableDragCommand(CompositeObjectId executedObjectId, Vector3 newPosition)
+        {
+            _executedObjectId = executedObjectId;
+            _newPosition = newPosition;
+        }
 
-		/// <summary>
-		/// SpriteDragCommandの新しいインスタンスを初期化します。
-		/// </summary>
-		/// <param name="targetObjectId">ドラッグ中のオブジェクトのCompositeObjectId。</param>
-		/// <param name="newPosition">ドラッグ中の新しいワールド座標。</param>
-		public IdentifiableDragCommand(CompositeObjectId targetObjectId, Vector3 newPosition)
-		{
-			TargetObjectId = targetObjectId;
-			NewPosition = newPosition;
-		}
+        /// <summary>
+        /// イベントの発生源のCompositeObjectIdを取得します。
+        /// </summary>
+        public CompositeObjectId ExecutedObjectId => _executedObjectId;
 
-		/// <summary>
-		/// コマンドを実行します。
-		/// </summary>
-		public void Execute()
-		{
-			// このコマンドは通知用のため、ここでは具体的な実行ロジックはありません。
-			// 購読側で処理されます。
-		}
+        /// <summary>
+        /// 新しいPositionを取得します
+        /// </summary>
+        public Vector3 NewPosition => _newPosition;
 
-		/// <summary>
-		/// コマンドを元に戻します。
-		/// </summary>
-		public void Undo()
-		{
-			// このコマンドは通知用のため、ここでは具体的なUndoロジックはありません。
-		}
-	}
-}
+        /// <summary>
+        /// 効果を実行します。
+        /// </summary>
+        public void Execute()
+        {
+            // BaseSpriteViewで実装
+        }
+
+        /// <summary>
+        /// 効果を元に戻します。
+        /// </summary>
+        public void Undo()
+        {
+            // BaseSpriteViewで実装
+        }
+    }
+} 

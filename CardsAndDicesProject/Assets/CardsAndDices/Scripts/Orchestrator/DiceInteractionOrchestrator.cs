@@ -80,7 +80,7 @@ namespace CardsAndDices
             if (_diceInteractionStrategy.ChkDiceHover(command, this))
             {
                 // ホバーされたカードのViewを取得し、ホバー状態に遷移
-                var diceView = ViewRegistry.GetView<DiceView>(command.TargetObjectId);
+                var diceView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
                 diceView.EnterHoveringState();
             }
         }
@@ -90,7 +90,7 @@ namespace CardsAndDices
             if (_diceInteractionStrategy.ChkDiceUnhover(command, this))
             {
                 // アンホバーされたカードのViewを取得し、通常状態に遷移
-                var diceView = ViewRegistry.GetView<DiceView>(command.TargetObjectId);
+                var diceView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
                 diceView.EnterNormalState();
             }
         }
@@ -101,9 +101,9 @@ namespace CardsAndDices
             if (_diceInteractionStrategy.ChkDiceBeginDrag(command, this))
             {
                 UIStateMachine.SetState(UIStateMachine.UIState.DraggingDice);
-                _draggedId = command.TargetObjectId;
+                _draggedId = command.ExecutedObjectId;
 
-                var draggedView = ViewRegistry.GetView<DiceView>(command.TargetObjectId);
+                var draggedView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
                 draggedView.EnterDraggingState();
                 _uiActivationPolicy.DraggingDiceToDiceActivations(this);
                 _uiActivationPolicy.DraggingDiceToInletActivations(this);
@@ -123,7 +123,7 @@ namespace CardsAndDices
                 UIStateMachine.SetState(UIStateMachine.UIState.DropedDice);
 
                 // ダイススロットマネージャーにドロップ処理を依頼
-                _commandBus.Emit(new DiceDropInInletCommand(command.TargetSlotObjectId, DraggedId, _diceManager.GetDiceData(DraggedId).FaceValue));
+                _commandBus.Emit(new DiceDropInInletCommand(command.ExecutedObjectId, DraggedId, _diceManager.GetDiceData(DraggedId).FaceValue));
                 // ドロップが成功したことを示すフラグを設定
                 IsDroppedSuccessfully = true;
             }
@@ -134,7 +134,7 @@ namespace CardsAndDices
             if (_diceInteractionStrategy.ChkDiceDrag(command, this))
             {
                 // ドラッグ中のダイスのViewを取得し、ドラッグ中状態に移行
-                var draggedDiceView = ViewRegistry.GetView<DiceView>(command.TargetObjectId);
+                var draggedDiceView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
                 draggedDiceView.EnterDraggingInProgressState();
 
                 //カードを新しい位置へ移動

@@ -6,9 +6,10 @@ namespace CardsAndDices
     /// <summary>
     /// バフ効果を受けた際のアニメーション戦略。
     /// </summary>
+    [CreateAssetMenu(fileName = "BuffAnimationStrategySO", menuName = "CardsAndDices/Animations/AnimationStrategy/BuffAnimationStrategySO")]
     public class BuffAnimationStrategySO :  BaseAnimationStrategySO
     {
-        private readonly BuffAnimationProfile _profile;
+        [SerializeField] private BuffAnimationProfile _profile;
 
         /// <summary>
         /// コンストラクタ。

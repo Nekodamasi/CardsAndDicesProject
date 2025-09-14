@@ -233,6 +233,7 @@
 | EnemyProfile.cs | 敵のプロフィールデータを定義するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\EnemyProfile.cs |
 | FixedCardInitializer.cs | 固定カードの初期化を行うクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\FixedCardInitializer.cs |
 | InletAbilityProfile.cs | インレットアビリティのプロファイルを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\InletAbilityProfile.cs |
+| IdentifiableStatusData.cs | 識別可能オブジェクトの状態を保持するデータ構造体 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\IdentifiableStatusData.cs |
 | NameDatabase.cs | エンティティの名称を管理するデータベース | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\NameDatabase.cs |
 | SelectableSpriteSheet.cs | 選択可能なスプライトシートを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\SelectableSpriteSheet.cs |
 | StatusIconData.cs | ステータスアイコンのデータを定義 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\StatusIconData.cs |
@@ -381,6 +382,13 @@
 | SpriteSelector.cs | スプライトの選択を管理するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\SpriteSelector.cs |
 | StatusIconView.cs | ステータスアイコンの表示を管理するViewクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\StatusIconView.cs |
 
+### Scripts/UI/Identifiable/Operator
+
+| ファイル名 | 解説 | 格納場所 |
+| :--- | :--- | :--- |
+| BaseIdentifiableStateOperator.cs | 識別可能オブジェクトの状態変化を監視する基底クラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\Identifiable\Operator\BaseIdentifiableStateOperator.cs |
+| IdentifiableStateOperator.cs | 識別可能オブジェクトの状態変化を実装するクラス | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\UI\Identifiable\Operator\IdentifiableStateOperator.cs |
+
 ### Scripts/Utility
 
 | ファイル名 | 解説 | 格納場所 |
@@ -406,4 +414,4 @@
 - 2025-08-14: ファイルリストを最新化 (Gemini)
 - 2025-08-13: ファイルリストを最新化 (Gemini)
 - 2025-08-08: ファイルリストを最新化 (Gemini)
-- 2025-07-30: プロジェクトルールへの準拠 (Gemini - Technical Writer for Game Development)
+- 2025-07-30: プロジェクトルールへの準拠 (Gemini - Technical Writer for Game Development)velopment)

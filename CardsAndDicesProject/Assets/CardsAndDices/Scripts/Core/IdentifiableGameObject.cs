@@ -11,6 +11,7 @@ namespace CardsAndDices
 	{
         [Header("Components")]
 		[SerializeField] private CompositeObjectIdManager _idManager;
+		[SerializeField] private CompositeObjectRegistry _compositeObjectRegistry;
 
 		/// <summary>
 		/// このオブジェクトのタイプを表す文字列。
@@ -30,9 +31,10 @@ namespace CardsAndDices
 		public CompositeObjectId ObjectId { get; private set; }
 
 		[Inject]
-		public void Construct(CompositeObjectIdManager idManager)
+		public void Construct(CompositeObjectIdManager idManager, CompositeObjectRegistry compositeObjectRegistry)
 		{
 			_idManager = idManager;
+			_compositeObjectRegistry = compositeObjectRegistry;
         }
 
 		/// <summary>
@@ -42,6 +44,7 @@ namespace CardsAndDices
 		{
 			ObjectId = _idManager.CreateId(_objectType);
 			_displayCompositeObjectId = ObjectId.ToString();
+			_compositeObjectRegistry.Register(ObjectId);
 		}
 
 		public void OnStart()

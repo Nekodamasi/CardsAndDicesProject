@@ -43,10 +43,10 @@ namespace CardsAndDices
             // アニメーション完了後、IsSpawnedフラグをfalseに設定
             sequence.OnComplete(() =>
             {
-                if (context.SpriteView != null)
-                {
-                    context.SpriteView.SetSpawnedState(false);
-                }
+//                if (context.SpriteView != null)
+//                {
+//                    context.SpriteView.SetSpawnedState(false);
+//                }
             });
 
             return sequence;

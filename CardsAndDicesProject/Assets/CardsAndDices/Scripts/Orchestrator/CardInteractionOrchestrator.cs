@@ -96,9 +96,9 @@ namespace CardsAndDices
             if (_cardInteractionStrategy.ChkCardBeginDrag(command, this))
             {
                 UIStateMachine.SetState(UIStateMachine.UIState.DraggingCard);
-                _draggedId = command.TargetObjectId;
+                _draggedId = command.ExecutedObjectId;
 
-                var draggedCardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                var draggedCardView = ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
                 Debug.Log("<color=red>Card_OnBeginDrag-></color>" + draggedCardView._cardName + "->" + UIStateMachine.CurrentState + " Flg:" + IsDroppedSuccessfully);
                 draggedCardView.EnterDraggingState();
                 _uiActivationPolicy.DraggingCardToCardActivations(this);
@@ -123,7 +123,7 @@ namespace CardsAndDices
             if (_cardInteractionStrategy.ChkCardHover(command, this))
             {
                 // ホバーされたカードのViewを取得し、ホバー状態に遷移
-                var cardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                var cardView = ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
                 cardView.EnterHoveringState();
             }
         }
@@ -133,7 +133,7 @@ namespace CardsAndDices
             _currentReflowState = ReflowState.InProgress;
 
             // ホバーリフローを実行
-            CardSlotManager.OnCardHoveredOnSlot(DraggedId, command.TargetObjectId);
+            CardSlotManager.OnCardHoveredOnSlot(DraggedId, command.ExecutedObjectId);
             
         }
 
@@ -142,7 +142,7 @@ namespace CardsAndDices
             if (_cardInteractionStrategy.ChkCardUnhover(command, this))
             {
                 // アンホバーされたカードのViewを取得し、通常状態に遷移
-                var cardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                var cardView = ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
                 cardView.EnterNormalState();
             }
         }
@@ -158,7 +158,7 @@ namespace CardsAndDices
                 UIStateMachine.SetState(UIStateMachine.UIState.DropedCard);
 
                 // カードスロットマネージャーにドロップ処理を依頼
-                CardSlotManager.OnCardDroppedOnSlot(command.DroppedObjectId, command.TargetSlotObjectId);
+                CardSlotManager.OnCardDroppedOnSlot(command.ExecutedObjectId, command.TargetObjectId);
                 // ドロップが成功したことを示すフラグを設定
                 IsDroppedSuccessfully = true;
             }
@@ -169,7 +169,7 @@ namespace CardsAndDices
             if (_cardInteractionStrategy.ChkCardDrag(command, this))
             {
                 // アンホバーされたカードのViewを取得し、通常状態に遷移
-                var draggedCardView = ViewRegistry.GetView<CreatureCardView>(command.TargetObjectId);
+                var draggedCardView = ViewRegistry.GetView<CreatureCardView>(command.ExecutedObjectId);
                 // ドラッグ中状態に遷移し、カードを新しい位置へ移動
                 draggedCardView.EnterDraggingInProgressState();
                 draggedCardView.MoveTo(command.NewPosition);

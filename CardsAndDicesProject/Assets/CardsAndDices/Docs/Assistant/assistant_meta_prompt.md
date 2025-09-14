@@ -454,25 +454,30 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-Oracle Cloudの無料版を利用して、学習・教育向けのパワーポイント資料を作りたいです
-以下の章立てで作り、１章２～３ページのパワポに纏めます
-MarkDown形式で内容をまとめたあと、HTML形式で図解などを交えて最終的にパワポにします
-章ごとに、以下の生成方法で進めて下さい
-注意：章ごとのため、生成方法は、1～5の計５回実行される
+以下の仕様を元に設計書を作成してください
+生成する設計書は、guide_files.mdとguide_rules.mdのガイドに従って作成してください
+gdd_composite_object_id.mdにIdentifiableGameObjectクラスの記述を追加してください
+CompositeObjectRegistryに登録する責務とManagerからCompositeObjectIdを取得する責務を記載してください
 
-# 章立て
-1. ゼロから学ぶcloud：Oracle Cloudで始めるインフラ入門
-2. Cloudで学ぶLinux：Oracle Cloud上でコマンドライン演習
-3. Oracle Cloud上でCI／CDを体験：GitHub Actionsと連携した自動デプロイ
-4. CloudDB入門：Oracle Aotonomous Databaseを使ってSQLを学ぶ
-5. セキュリティを学ぶ：Oracle CloudでファイアーウォールとIAM設定体験
+# 識別可能オブジェクトの状態管理
 
-# 生成方法
-step1. 必要な情報を出来る限り集め下さい
-step2. 集めた情報をパワポで２～３ページになるように初心者でもわかりやすい形に纏めて下さい
-step3. 纏めた情報を、１ページごとの情報や構成として、MarkDown形式で、D:\Users\ponki\CardsAndDices\Assets\CardsAndDices\Docs\Assistant直下に保存してください
-step4. 出力したMarkDown形式のまとめを元に、パワポに変換できるHTML形式でD:\Users\ponki\CardsAndDices\Assets\CardsAndDices\Docs\Assistant直下に保存してください
-注意：HTMLで用意したい画像があった場合、仮置きで名称を付けておいてください
+## 概要
+
+識別可能オブジェクトの現在の状態を保持するインスタンスとそれを管理するManagerクラスを実装します
+
+### 1. 識別可能オブジェクトステータス
+
+- 以下のデータを持つ
+    - enumのStatus識別子
+    - CompositeObjectId
+
+### 2. 識別可能オブジェクトステータスインスタンス
+
+- 識別可能オブジェクトステータスの現在値を持つ
+
+### 3. 識別可能オブジェクトステータスマネージャー
+
+- CompositeObjectRegistryからCompositeObjectIdの一覧を取得し、インスタンスを生成します
 </Task>
 
 指示を書くには、次の指示に従ってください。

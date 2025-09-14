@@ -20,11 +20,6 @@ namespace CardsAndDices
         [SerializeField] public Transform TargetTransform;
 
         /// <summary>
-        /// アニメーション対象のSpriteRenderer。
-        /// </summary>
-        [SerializeField] public BaseSpriteView SpriteView;
-
-        /// <summary>
         /// シェーダープロパティを効率的に変更するためのMaterialPropertyBlock。
         /// </summary>
         [SerializeField] public MaterialPropertyBlock MaterialPropertyBlock;
@@ -32,7 +27,7 @@ namespace CardsAndDices
         /// <summary>
         /// アニメーションのターゲット位置。主に移動アニメーションで使用されます。
         /// </summary>
-        [SerializeField] public Vector3 TargetPosition;
+        public Vector3 TargetPosition;
 
         /// <summary>
         /// コマンドを発行するのに使用します
@@ -42,7 +37,7 @@ namespace CardsAndDices
         /// <summary>
         /// vfxデータ
         /// </summary>
-        [SerializeField] public VfxDefinition VfxDefinition;
+        public VfxDefinition VfxDefinition;
 
         /// <summary>
         /// 指定された色の明るさを増加させた新しい色を取得します。

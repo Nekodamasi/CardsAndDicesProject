@@ -3,27 +3,28 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// マウスカーソルがSpriteUI要素上に入った時のコマンド。
+    /// マウスホバーした時のコマンド。
     /// </summary>
     public class IdentifiableHoverCommand : ICommand
     {
-        /// <summary>
-        /// ホバーされたオブジェクトのCompositeObjectId。
-        /// </summary>
-        public CompositeObjectId TargetObjectId { get; private set; }
+        private readonly CompositeObjectId _executedObjectId;
 
         /// <summary>
-        /// SpriteHoverCommandを初期化します。
+        /// 初期化します。
         /// </summary>
-        /// <param name="targetObjectId">ホバーイベントが発生したCompositeObjectId</param>
-        public IdentifiableHoverCommand(CompositeObjectId targetObjectId)
+        /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
+        public IdentifiableHoverCommand(CompositeObjectId executedObjectId)
         {
-            TargetObjectId = targetObjectId;
+            _executedObjectId = executedObjectId;
         }
 
         /// <summary>
-        /// ホバー効果を実行します。
-        /// BaseSpriteViewによって実装される予定の処理です。
+        /// イベントの発生源のCompositeObjectIdを取得します。
+        /// </summary>
+        public CompositeObjectId ExecutedObjectId => _executedObjectId;
+
+        /// <summary>
+        /// 効果を実行します。
         /// </summary>
         public void Execute()
         {
@@ -31,12 +32,11 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// ホバー効果を元に戻します。
-        /// BaseSpriteViewによって実装される予定の処理です。
+        /// 効果を元に戻します。
         /// </summary>
         public void Undo()
         {
             // BaseSpriteViewで実装
         }
     }
-}
+} 
