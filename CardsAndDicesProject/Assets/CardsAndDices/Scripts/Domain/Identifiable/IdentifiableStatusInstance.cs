@@ -31,7 +31,7 @@ namespace CardsAndDices
             _identifiableCommandBus.On<IdentifiableChangeStatusCommand>(OnIdentifiableChangeStatus);
         }
 
-         /// <summary>
+        /// <summary>
         /// ステータスの変更コマンド。
         /// </summary>
         private void OnIdentifiableChangeStatus(IdentifiableChangeStatusCommand cmd)

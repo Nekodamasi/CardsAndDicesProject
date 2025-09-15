@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace CardsAndDices
 {
@@ -10,8 +11,7 @@ namespace CardsAndDices
     /// </summary>
     public abstract class BaseIdentifiableStateOperator : ScriptableObject
     {
-        [Header("監視対象のID")]
-        [SerializeField]
+        [SerializeField] private List<string> _ids = new();
         private List<CompositeObjectId> _targetIds = new();
 
         protected IdentifiableCommandBus _commandBus;
@@ -22,6 +22,7 @@ namespace CardsAndDices
         public void RegisterTarget(CompositeObjectId targetId)
         {
             _targetIds.Add(targetId);
+            _ids.Add(targetId.ToString());
         }
 
         /// <summary>
@@ -30,6 +31,7 @@ namespace CardsAndDices
         public void UnregisterTarget(CompositeObjectId targetId)
         {
             _targetIds.Remove(targetId);
+            _ids.Remove(targetId.ToString());
         }
 
         /// <summary>
@@ -37,6 +39,8 @@ namespace CardsAndDices
         /// </summary>
         protected void OnEnable()
         {
+            _targetIds.Clear();
+            _ids.Clear();
             if (_commandBus == null) return;
 
             _commandBus.On<IdentifiableStateHoverCommand>(HandleStateHover);
@@ -90,7 +94,6 @@ namespace CardsAndDices
         /// </summary>
         private void ExecuteIfTarget(CompositeObjectId executedId, System.Action action)
         {
-            Debug.Log("オペレーターの判定：" + executedId);
             if (_targetIds.Any(id => id.Equals(executedId)))
             {
                 action?.Invoke();

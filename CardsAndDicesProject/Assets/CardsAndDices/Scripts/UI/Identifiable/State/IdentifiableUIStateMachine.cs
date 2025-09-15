@@ -100,7 +100,6 @@ namespace CardsAndDices
 
 		private void SetCurrentState(IdentifiableUIState state, CompositeObjectId id, CompositeObjectId targetId)
 		{
-			Debug.Log("すてーとましんせっとすてーたす:" + state + "_" + id + "_" + targetId);
 			CurrentState = state;
 			StateObjectId = id;
 			TargetObjectId = targetId;
@@ -111,11 +110,11 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableHover(IdentifiableHoverCommand cmd)
 		{
-            Debug.Log("すてーとましん（ホバー）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Idle:
 				case IdentifiableUIState.Hovered:
+            		Debug.Log("すてーとましん（ホバー）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 					SetCurrentState(IdentifiableUIState.Hover, cmd.ExecutedObjectId, null);
 
 					// アンホバーコマンド
@@ -131,12 +130,12 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableHovered(IdentifiableHoveredCommand cmd)
 		{
-            Debug.Log("すてーとましん（ホバー完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Hover:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（ホバー完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Hovered, cmd.ExecutedObjectId, null);
 						_identifiableCommandBus.Emit(new IdentifiableStateHoveredCommand(cmd.ExecutedObjectId));
 					}
@@ -151,7 +150,6 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableUnhover(IdentifiableUnhoverCommand cmd)
 		{
-            Debug.Log("すてーとましん（あんホバー）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Idle:
@@ -161,6 +159,7 @@ namespace CardsAndDices
 				case IdentifiableUIState.Hovered:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（あんホバー）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Idle, null, null);
 						// アンホバーコマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateUnhoverCommand(cmd.ExecutedObjectId));
@@ -184,12 +183,12 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableEndDrag(IdentifiableEndDragCommand cmd)
 		{
-            Debug.Log("すてーとましん（ドラッグ終了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Dragging:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（ドラッグ終了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.EndDrag, cmd.ExecutedObjectId, null);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateEndDragCommand(cmd.ExecutedObjectId));
@@ -205,12 +204,12 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableEndDraged(IdentifiableEndDragedCommand cmd)
 		{
-            Debug.Log("すてーとましん（ドラッグ終了完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.EndDrag:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（ドラッグ終了完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Idle, null, null);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateEndDragedCommand(cmd.ExecutedObjectId));
@@ -226,15 +225,16 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableDrag(IdentifiableDragCommand cmd)
 		{
-            Debug.Log("すてーとましん（ドラッグ中）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.BiginDrag:
+				case IdentifiableUIState.Dragging:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（ドラッグ中）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Dragging, cmd.ExecutedObjectId, null);
 						// ドラッグ中コマンド
-						_identifiableCommandBus.Emit(new IdentifiableStateDragCommand(cmd.ExecutedObjectId));
+						_identifiableCommandBus.Emit(new IdentifiableStateDragCommand(cmd.ExecutedObjectId, cmd.NewPosition));
 					}
 					break;
 				default:
@@ -247,12 +247,12 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableDrop(IdentifiableDropCommand cmd)
 		{
-            Debug.Log("すてーとましん（ドロップ）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Dragging:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（ドロップ）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Drop, cmd.ExecutedObjectId, cmd.TargetObjectId);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateDropCommand(cmd.ExecutedObjectId, cmd.TargetObjectId));
@@ -268,12 +268,12 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableDroped(IdentifiableDropedCommand cmd)
 		{
-            Debug.Log("すてーとましん（ドロップ完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Drop:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（ドロップ完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Idle, null, null);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateDropedCommand(cmd.ExecutedObjectId, cmd.TargetObjectId));
@@ -289,10 +289,10 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableClick(IdentifiableClickCommand cmd)
 		{
-            Debug.Log("すてーとましん（クリック）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Idle:
+            		Debug.Log("すてーとましん（クリック）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 					SetCurrentState(IdentifiableUIState.BiginClick, cmd.ExecutedObjectId, null);
 					// ドラッグ開始コマンド
 					_identifiableCommandBus.Emit(new IdentifiableStateClickCommand(cmd.ExecutedObjectId));
@@ -300,6 +300,7 @@ namespace CardsAndDices
 				case IdentifiableUIState.Hovered:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（クリック）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.BiginClick, cmd.ExecutedObjectId, null);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateClickCommand(cmd.ExecutedObjectId));
@@ -315,12 +316,12 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableClicked(IdentifiableClickedCommand cmd)
 		{
-            Debug.Log("すてーとましん（クリック完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.BiginClick:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（クリック完了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Idle, null, null);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateClickedCommand(cmd.ExecutedObjectId));
@@ -336,10 +337,10 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableBeginDrag(IdentifiableBeginDragCommand cmd)
 		{
-            Debug.Log("すてーとましん（ドラッグ開始）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Idle:
+            		Debug.Log("すてーとましん（ドラッグ開始）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 					SetCurrentState(IdentifiableUIState.BiginDrag, cmd.ExecutedObjectId, null);
 					// ドラッグ開始コマンド
 					_identifiableCommandBus.Emit(new IdentifiableStateBeginDragCommand(cmd.ExecutedObjectId));
@@ -347,6 +348,7 @@ namespace CardsAndDices
 				case IdentifiableUIState.Hovered:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
+            			Debug.Log("すてーとましん（ドラッグ開始）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.BiginDrag, cmd.ExecutedObjectId, null);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateBeginDragCommand(cmd.ExecutedObjectId));

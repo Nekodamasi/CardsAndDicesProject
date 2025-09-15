@@ -6,7 +6,7 @@
 
 この設計書は、プレイヤーの操作対象や、ゲーム内で個別に識別する必要がある全てのゲームオブジェクトを一意に管理するための「複合オブジェクト識別子（Composite Object ID）」システムのゲームデザインを定義します。
 
-本システムは、オブジェクトに一意のIDを付与するだけでなく、オブジェクトの**生成**、**登録**、**検索**、**登録解除**という一連のライフサイクルと、それらのオブジェクトの**状態管理**を行う仕組みを提供します。
+本システムは、オブジェクトのID管理（**生成**、**登録**、**検索**）だけでなく、それらのオブジェクトに対するユーザーの入力（クリック、ドラッグ等）をハンドリングし、状態を管理する仕組みまでを提供します。
 
 ---
 
@@ -14,82 +14,41 @@
 
 本システムは、責務が明確に分離された以下のコンポーネントから構成されます。
 
-### 2.1. CompositeObjectId （データ構造）
+### 2.1. ID管理コンポーネント
 
--   **役割:** 「IDそのもの」を表現するデータクラス。
--   **責務:**
-    -   `UniqueId`: ゲーム実行中に決して重複しない一意なIDを保持します。
-    -   `ObjectType`: オブジェクトの種類（カード、ダイスなど）を示す `CompositeObjectIdTypeEntity` を保持します。
-    -   `Owner`: 親オブジェクトのIDを保持し、階層構造を表現します。
+-   **CompositeObjectId （データ構造）:** 「IDそのもの」を表現するデータクラス。
+-   **CompositeObjectIdManager （ID製造工場）:** `CompositeObjectId` を **生成** することに特化した `ScriptableObject`。
+-   **CompositeObjectRegistry （ID登録名簿）:** シーン上に **存在する** `CompositeObjectId` を **登録・管理** する `ScriptableObject`。
 
-### 2.2. CompositeObjectIdManager （ID製造工場）
+### 2.2. 相互作用（インタラクション）コンポーネント
 
--   **役割:** `CompositeObjectId` を **生成（Create）** することに特化した `ScriptableObject`。
--   **責務:**
-    -   ゲーム全体でユニークな `UniqueId` を採番し、新しい `CompositeObjectId` を生成して返します。
-    -   このクラスは、IDが「現在使われているか」については関知しません。あくまでIDを発行するだけの役割です。
-
-### 2.3. CompositeObjectRegistry （ID登録名簿）
-
--   **役割:** シーン上に **存在する（アクティブな）** `CompositeObjectId` を **登録・管理** する `ScriptableObject`。
--   **責務:**
-    -   `Register(id)`: オブジェクトが生成・有効化された際に、そのIDを台帳に登録します。
-    -   `Unregister(id)`: オブジェクトが破壊・無効化された際に、IDを台帳から削除します。
-    -   `GetIdsByType(type)`: 特定のタイプのオブジェクトIDリストを検索・取得する機能を提供します。
-
-### 2.4. IIdentifiableView （識別可能なオブジェクト）
-
--   **役割:** `CompositeObjectId` を持ち、自身が識別可能であることを示すインターフェース。
--   **責務:**
-    -   自身の `CompositeObjectId` を公開します。
-    -   `SetSpawnedState(bool)` メソッドを持ち、自身の状態（有効/無効）を管理します。
-    -   このインターフェースを実装したオブジェクト（例: `CreatureCardView`）が、自身のライフサイクルに応じて `CompositeObjectRegistry` への登録・登録解除を行います。
-
-### 2.5. IdentifiableGameObject （責務実装の基底クラス）
-
--   **役割:** `IIdentifiableView` が要求する責務の多くを実装した、具体的な `MonoBehaviour` の基底クラス。
--   **責務:**
-    -   **IDの取得:** `OnAwake()` ライフサイクルメソッド内で、DIコンテナから注入された `CompositeObjectIdManager` を通じて自身の `CompositeObjectId` を取得します。
-    -   **IDの登録:** ID取得後、同じく注入された `CompositeObjectRegistry` に自身のIDを `Register` します。
--   **目的:** このクラスを継承することで、各ViewコンポーネントがIDの取得と登録に関する定型的な処理を毎回実装する手間を省きます。
+-   **IIdentifiableView （識別可能なオブジェクト）:** `CompositeObjectId` を持ち、自身が識別可能であることを示すインターフェース。
+-   **IdentifiableInputHandler （入力受付）:** `IIdentifiableView` を持つGameObjectにアタッチされ、Unityの入力イベント（`OnPointerEnter`など）を検知し、`IdentifiableCommandBus` へ具体的なコマンド（`IdentifiableHoverCommand`など）を発行します。
+-   **IdentifiableUIStateMachine （交通整理役）:** UI全体のインタラクション状態（`Idle`, `Dragging`など）を管理するステートマシン。`IdentifiableCommandBus` を流れるコマンドを監視し、状態の競合（例: ドラッグ中に別のオブジェクトをクリック）が起きないように、発行されるコマンドを制御します。
+-   **BaseIdentifiableStateOperator （専門の処理実行役）:** 特定の `CompositeObjectId` に対する状態変化コマンド（`IdentifiableStateHoverCommand`など）を購読する `ScriptableObject`。コマンドを受け取ると、具体的なリアクション（例: アニメーション再生、エフェクト表示）を実行します。
 
 ---
 
 ## 3. IDのライフサイクル
 
-1.  **生成 (Creation):**
-    -   `IIdentifiableView` を実装したオブジェクトが生成される際、`CompositeObjectIdManager` にIDの発行を要求します。
-
-2.  **登録 (Registration):**
-    -   オブジェクトは、生成されたIDを自身の `CompositeObjectId` として保持します。
-    -   オブジェクトが有効化される（例: `OnEnable`）と、自身のIDを `CompositeObjectRegistry` に `Register` します。
-
-3.  **利用 (Utilization):**
-    -   他のシステムは `CompositeObjectRegistry` を参照し、「現在存在するカード一覧」や「特定の敵オブジェクト」などをIDベースで安全に検索・操作します。
-
-4.  **登録解除 (Unregistration):**
-    -   オブジェクトが無効化・破壊される（例: `OnDisable`, `OnDestroy`）と、自身のIDを `CompositeObjectRegistry` から `Unregister` します。
-
-このライフサイクルにより、常に「シーンに実際に存在するオブジェクトのID」だけが `CompositeObjectRegistry` に登録されている状態が保証され、無効なオブジェクトへのアクセス（NullReferenceException）を防ぎます。
+1.  **生成 (Creation):** `IIdentifiableView` を持つオブジェクトが生成される際、`CompositeObjectIdManager` にIDの発行を要求します。
+2.  **登録 (Registration):** オブジェクトは有効化されると、自身のIDを `CompositeObjectRegistry` に登録します。
+3.  **利用 (Utilization):** 他のシステムは `CompositeObjectRegistry` を通じて、現在アクティブなオブジェクトのIDを安全に検索・利用します。
+4.  **登録解除 (Unregistration):** オブジェクトが無効化・破壊されると、自身のIDを `CompositeObjectRegistry` から登録解除します。
 
 ---
 
-## 4. 状態管理 (State Management)
+## 4. イベント駆動による相互作用フロー
 
-識別可能オブジェクトの現在の状態（例: `Hovered`, `Selected`など）を管理するための仕組みです。
+ユーザーの入力からオブジェクトの反応までは、以下のイベント駆動フローで処理されます。
 
-### 4.1. 識別可能オブジェクトステータスインスタンス
+1.  **入力検知:** ユーザーがマウスカーソルをオブジェクトに乗せると、そのオブジェクトの `IdentifiableInputHandler` が `OnPointerEnter` イベントを検知します。
+2.  **コマンド発行（入力）:** `IdentifiableInputHandler` は、自身の `CompositeObjectId` を含んだ `IdentifiableHoverCommand` を `IdentifiableCommandBus` に発行します。
+3.  **状態判定:** `IdentifiableUIStateMachine` が `IdentifiableHoverCommand` を受信します。現在のUI状態が `Idle` であれば、状態を `Hover` に遷移させ、新たな状態変化コマンド `IdentifiableStateHoverCommand` を発行することを許可します。
+4.  **コマンド発行（状態変化）:** `IdentifiableUIStateMachine` は `IdentifiableStateHoverCommand` を発行します。
+5.  **処理実行:** `BaseIdentifiableStateOperator` が `IdentifiableStateHoverCommand` を受信します。コマンド内の `CompositeObjectId` が自身の監視対象であれば、`OnStateHover` メソッドを実行し、オブジェクトをハイライトさせるなどの具体的な処理を行います。
 
--   **役割:** `識別可能オブジェクトステータス` の現在値を保持するインスタンス。
--   **責務:**
-    -   特定の `CompositeObjectId` に紐付き、そのオブジェクトの現在の `Status` を保持・更新します。
-
-### 4.2. 識別可能オブジェクトステータスマネージャー
-
--   **役割:** 全ての識別可能オブジェクトの「ステータスインスタンス」を管理するマネージャークラス。
--   **責務:**
-    -   ゲーム開始時などに `CompositeObjectRegistry` から現在アクティブな `CompositeObjectId` の一覧を取得します。
-    -   取得したIDごとに `識別可能オブジェクトステータスインスタンス` を生成し、一元管理します。
+このフローにより、入力、状態管理、具体的な処理が疎結合に保たれ、拡張性の高いインタラクションを実現します。
 
 ---
 
@@ -102,6 +61,7 @@
 
 ## 6. 更新履歴
 
+-   2025-09-14: インタラクション関連クラス（InputHandler, StateMachine, Operator）の役割とフローを追記 (Gemini)
 -   2025-09-13: 状態管理（State Management）に関するセクションを追加 (Gemini)
 -   2025-09-13: `IdentifiableGameObject` の記述を現状に合わせて追加 (Gemini)
 -   2025-09-13: `CompositeObjectRegistry` の追加とライフサイクルの明確化など、現状のソースコードに合わせて全面更新 (Gemini)

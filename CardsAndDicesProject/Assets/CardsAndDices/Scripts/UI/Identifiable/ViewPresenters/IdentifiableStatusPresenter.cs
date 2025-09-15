@@ -19,10 +19,23 @@ namespace CardsAndDices
             _identifiableCommandBus = commandBus;
 
             _identifiableCommandBus.On<DisplayIdentifiableStatusCommand>(OnDisplayIdentifiableStatus);
+            _identifiableCommandBus.On<MoveToIdentifiableCommand>(OnMoveToIdentifiable);
         }
         public void Dispose()
         {
             _identifiableCommandBus.Off<DisplayIdentifiableStatusCommand>(OnDisplayIdentifiableStatus);
+            _identifiableCommandBus.Off<MoveToIdentifiableCommand>(OnMoveToIdentifiable);
+        }
+
+        /// <summary>
+        /// 現在の状態をViewに反映します。
+        /// </summary>
+        private void OnMoveToIdentifiable(MoveToIdentifiableCommand cmd)
+        {
+            Debug.Log("ぷれぜんたー(移動中):" + cmd.ExecutedObjectId + " TargetPosition:" + cmd.TargetPosition);
+            // 自分以外は処理しない
+            if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
+            _view.MoveTo(cmd.TargetPosition);
         }
 
         /// <summary>
@@ -30,7 +43,9 @@ namespace CardsAndDices
         /// </summary>
         private void OnDisplayIdentifiableStatus(DisplayIdentifiableStatusCommand cmd)
         {
-                Debug.Log("ぷれぜんたー:" + cmd.ExecutedObjectId);
+            Debug.Log("ぷれぜんたー:" + cmd.ExecutedObjectId);
+
+            // 自分以外は処理しない
             if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
 
             // ホバー状態
@@ -38,9 +53,15 @@ namespace CardsAndDices
             {
                 _view.DisplayHoverStatus();
             }
+            // ノーマル状態
             else if (_status.CurrentStatus == IdentifiableStatus.Normal)
             {
                 _view.DisplayNormalStatus();
+            }
+            // ドラッグ開始状態
+            else if (_status.CurrentStatus == IdentifiableStatus.DraggingStarted)
+            {
+                _view.DisplayDragStatus();
             }
         }
     }

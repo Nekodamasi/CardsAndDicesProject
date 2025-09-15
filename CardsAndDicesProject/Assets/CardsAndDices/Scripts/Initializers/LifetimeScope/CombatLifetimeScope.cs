@@ -29,7 +29,8 @@ namespace CardsAndDices
         [SerializeField] private CreatureCardSpawner _creatureCardSpawner;
 
         [Header("StateOperator")]
-        [SerializeField] private HoverOnlyStateOperator _hoverOnlyStateOperator;        
+        [SerializeField] private HoverOnlyStateOperator _hoverOnlyStateOperator;
+        [SerializeField] private DragStateOperator _dragStateOperator;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -51,6 +52,7 @@ namespace CardsAndDices
 
             // ScriptableObject StateOperator のバインド
             builder.RegisterInstance(_hoverOnlyStateOperator).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_dragStateOperator).AsSelf().AsImplementedInterfaces();
 
             // ScriptableObject Managers の初期化
             _compositeObjectIdManager.Initialize();
@@ -66,6 +68,7 @@ namespace CardsAndDices
 
             // ScriptableObject StateOperator の初期化
             _hoverOnlyStateOperator.Initialize(_identifiableCommandBus);
+            _dragStateOperator.Initialize(_identifiableCommandBus);
 
             // Factoryの登録
             builder.RegisterFactory<CreatureCardSpawnInfo, GameObject>(container => (info) =>

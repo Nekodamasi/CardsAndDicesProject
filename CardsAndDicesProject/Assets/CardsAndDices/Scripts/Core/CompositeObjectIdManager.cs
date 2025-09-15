@@ -22,6 +22,7 @@ namespace CardsAndDices
         [Inject]
         public void Initialize()
         {
+			_nextUniqueId = 1;
             ResetManager();
         }
 

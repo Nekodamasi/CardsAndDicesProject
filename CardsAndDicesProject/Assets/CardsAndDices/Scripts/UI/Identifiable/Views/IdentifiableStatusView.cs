@@ -8,10 +8,12 @@ namespace CardsAndDices
     public class IdentifiableStatusView : BaseIdentifiableView
     {
         [Header("Components")]
+        [SerializeField] private Transform _moveTransform;
         [SerializeField] private AnimationContext _animationContext;
         [SerializeField] private AnimationStrategyRegistry _animationStrategyRegistry;
         [SerializeField] private AnimationStrategyEntity _hoverAnimationStrategyEntity;
         [SerializeField] private AnimationStrategyEntity _normalAnimationStrategyEntity;
+        [SerializeField] private AnimationStrategyEntity _dragAnimationStrategyEntity;
 
         private AnimationExecutor _animationExecutor = new AnimationExecutor();
 
@@ -41,6 +43,23 @@ namespace CardsAndDices
         {
             
             return AnimationExecute(_normalAnimationStrategyEntity);
+        }
+        /// <summary>
+        /// ドラッグ状態にします
+        /// </summary>
+        public Sequence DisplayDragStatus()
+        {
+            
+            return AnimationExecute(_dragAnimationStrategyEntity);
+        }
+
+        /// <summary>
+        /// ドラッグ中の移動を行います
+        /// </summary>
+        public void MoveTo(Vector3 targetPosition)
+        {
+            Debug.Log("とらんすふぉーむぽじしょん：" + targetPosition);
+            _moveTransform.position = targetPosition;
         }
     }
 }
