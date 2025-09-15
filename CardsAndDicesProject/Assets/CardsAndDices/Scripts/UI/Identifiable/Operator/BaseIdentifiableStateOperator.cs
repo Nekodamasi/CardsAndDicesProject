@@ -11,6 +11,10 @@ namespace CardsAndDices
     /// </summary>
     public abstract class BaseIdentifiableStateOperator : ScriptableObject
     {
+        [Header("Setting")]
+        [SerializeField] protected float _hoveredTime = 0.2f;
+
+        [Header("監視対象")]
         [SerializeField] private List<string> _ids = new();
         private List<CompositeObjectId> _targetIds = new();
 

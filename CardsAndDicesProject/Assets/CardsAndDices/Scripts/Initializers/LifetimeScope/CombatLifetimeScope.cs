@@ -29,7 +29,6 @@ namespace CardsAndDices
         [SerializeField] private CreatureCardSpawner _creatureCardSpawner;
 
         [Header("StateOperator")]
-        [SerializeField] private HoverOnlyStateOperator _hoverOnlyStateOperator;
         [SerializeField] private DragStateOperator _dragStateOperator;
 
         protected override void Configure(IContainerBuilder builder)
@@ -51,14 +50,13 @@ namespace CardsAndDices
             builder.RegisterInstance(_identifiableViewRegistry).AsSelf().AsImplementedInterfaces();
 
             // ScriptableObject StateOperator のバインド
-            builder.RegisterInstance(_hoverOnlyStateOperator).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_dragStateOperator).AsSelf().AsImplementedInterfaces();
 
             // ScriptableObject Managers の初期化
             _compositeObjectIdManager.Initialize();
             _identifiableCommandBus.Initialize();
             _combatInitializer.Initialize(_identifiableCommandBus);
-            _identifiableStatusManager.Initialize(_compositeObjectRegistry, _identifiableCommandBus);
+            _identifiableStatusManager.Initialize(_compositeObjectRegistry, _identifiableCommandBus, _identifiableUIStateMachine);
             _identifiableStatusViewManager.Initialize(_identifiableViewRegistry, _identifiableStatusManager, _identifiableCommandBus);
             _identifiableUIStateMachine.Initialize(_identifiableCommandBus);
 
@@ -67,7 +65,6 @@ namespace CardsAndDices
             _identifiableViewRegistry.Initialize();
 
             // ScriptableObject StateOperator の初期化
-            _hoverOnlyStateOperator.Initialize(_identifiableCommandBus);
             _dragStateOperator.Initialize(_identifiableCommandBus);
 
             // Factoryの登録

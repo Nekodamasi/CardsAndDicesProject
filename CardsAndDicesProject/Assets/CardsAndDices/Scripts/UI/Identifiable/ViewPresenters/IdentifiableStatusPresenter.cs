@@ -1,6 +1,7 @@
 using System;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using DG.Tweening;
 
 namespace CardsAndDices
 {
@@ -20,6 +21,8 @@ namespace CardsAndDices
 
             _identifiableCommandBus.On<DisplayIdentifiableStatusCommand>(OnDisplayIdentifiableStatus);
             _identifiableCommandBus.On<MoveToIdentifiableCommand>(OnMoveToIdentifiable);
+            _identifiableCommandBus.On<IdentifiableReturnHomePositionCommand>(OnIdentifiableReturnHomePosition);
+
         }
         public void Dispose()
         {
@@ -28,13 +31,31 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// HomePositionへのreturn
+        /// </summary>
+        private async void OnIdentifiableReturnHomePosition(IdentifiableReturnHomePositionCommand cmd)
+        {
+            // 自分以外は処理しない
+            if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
+            Debug.Log("ぷれぜんたー(ほーむぽじしょｎ):" + cmd.ExecutedObjectId + " TargetPosition:" + _status.HomePosition);
+
+            var _currentMoveAnimation = _view.MoveToAnimated(_status.HomePosition, 0.2f);
+            await _currentMoveAnimation.AsyncWaitForCompletion();
+            _status.UpdateStatus(_status.CurrentHomeStatus);
+            Debug.Log("ほげほげほげほげほげほげほ：" + _status.CurrentHomeStatus);
+            DisplayCurrentStatus();
+            
+            _identifiableCommandBus.Emit(new IdentifiableEndDragedCommand(cmd.ExecutedObjectId));
+        }
+
+        /// <summary>
         /// 現在の状態をViewに反映します。
         /// </summary>
         private void OnMoveToIdentifiable(MoveToIdentifiableCommand cmd)
         {
-            Debug.Log("ぷれぜんたー(移動中):" + cmd.ExecutedObjectId + " TargetPosition:" + cmd.TargetPosition);
             // 自分以外は処理しない
             if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
+            Debug.Log("ぷれぜんたー(移動中):" + cmd.ExecutedObjectId + " TargetPosition:" + cmd.TargetPosition);
             _view.MoveTo(cmd.TargetPosition);
         }
 
@@ -43,11 +64,13 @@ namespace CardsAndDices
         /// </summary>
         private void OnDisplayIdentifiableStatus(DisplayIdentifiableStatusCommand cmd)
         {
-            Debug.Log("ぷれぜんたー:" + cmd.ExecutedObjectId);
-
             // 自分以外は処理しない
             if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
+            DisplayCurrentStatus();
+        }
 
+        private void DisplayCurrentStatus()
+        {
             // ホバー状態
             if (_status.CurrentStatus == IdentifiableStatus.Hover)
             {
@@ -58,10 +81,20 @@ namespace CardsAndDices
             {
                 _view.DisplayNormalStatus();
             }
+            // グレイアウト状態
+            else if (_status.CurrentStatus == IdentifiableStatus.Grayout)
+            {
+                _view.DisplayGrayoutStatus();
+            }
             // ドラッグ開始状態
             else if (_status.CurrentStatus == IdentifiableStatus.DraggingStarted)
             {
                 _view.DisplayDragStatus();
+            }
+            // ハイド状態
+            else if (_status.CurrentStatus == IdentifiableStatus.Hide)
+            {
+                _view.DisplayHideStatus();
             }
         }
     }

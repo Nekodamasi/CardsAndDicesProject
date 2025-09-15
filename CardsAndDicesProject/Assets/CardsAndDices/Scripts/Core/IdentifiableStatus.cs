@@ -11,6 +11,11 @@ namespace CardsAndDices
         Normal,
 
         /// <summary>
+        /// グレイアウト状態。
+        /// </summary>
+        Grayout,
+
+        /// <summary>
         /// ホバー状態。
         /// </summary>
         Hover,

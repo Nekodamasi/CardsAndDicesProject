@@ -12,13 +12,15 @@ namespace CardsAndDices
     {
         private CompositeObjectRegistry _registry;
         private IdentifiableCommandBus _identifiableCommandBus;
+        private IdentifiableUIStateMachine _identifiableUIStateMachine;
         private readonly Dictionary<CompositeObjectId, IdentifiableStatusInstance> _statusInstances = new();
 
         [Inject]
-        public void Initialize(CompositeObjectRegistry registry, IdentifiableCommandBus identifiableCommandBus)
+        public void Initialize(CompositeObjectRegistry registry, IdentifiableCommandBus identifiableCommandBus, IdentifiableUIStateMachine identifiableUIStateMachine)
         {
             _registry = registry;
             _identifiableCommandBus = identifiableCommandBus;
+            _identifiableUIStateMachine = identifiableUIStateMachine;
             _identifiableCommandBus.On<SceneLoadedCommand>(OnSceneLoaded);
         }
 

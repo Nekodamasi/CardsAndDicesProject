@@ -1,5 +1,7 @@
 using UnityEngine;
 using VContainer; // VContainer.Inject を使用するために追加
+using Cysharp.Threading.Tasks;
+using System;
 
 namespace CardsAndDices
 {
@@ -14,67 +16,6 @@ namespace CardsAndDices
 		public IdentifiableCommandBus _identifiableCommandBus;
 
 		/// <summary>
-		/// UIのインタラクション状態を表す列挙型。
-		/// </summary>
-		public enum IdentifiableUIState
-		{
-			/// <summary>
-			/// アイドル状態。ユーザーによる主要な操作（ドラッグなど）が行われていない。
-			/// </summary>
-			Idle,
-
-			/// <summary>
-			/// ホバー状態。
-			/// </summary>
-			Hover,
-
-			/// <summary>
-			/// ホバー完了状態。
-			/// </summary>
-			Hovered,
-
-			/// <summary>
-			/// ドラッグ開始の状態。
-			/// </summary>
-			BiginDrag,
-
-			/// <summary>
-			/// ドラッグ中の状態。
-			/// </summary>
-			Dragging,
-
-			/// <summary>
-			/// ドロップ状態
-			/// </summary>
-			Drop,
-
-			/// <summary>
-			/// ドロップ完了状態
-			/// </summary>
-			Droped,
-
-			/// <summary>
-			/// ドラッグ終了状態
-			/// </summary>
-			EndDrag,
-
-			/// <summary>
-			/// ドラッグ終了完了状態
-			/// </summary>
-			EndDraged,
-
-			/// <summary>
-			/// クリック開始
-			/// </summary>
-			BiginClick,
-
-			/// <summary>
-			/// クリック完了
-			/// </summary>
-			Clicked,
-		}
-
-        /// <summary>
 		/// ScriptableObjectが初期化される時の処理。
 		/// VContainerによって呼び出されます。
 		/// </summary>
@@ -85,24 +26,46 @@ namespace CardsAndDices
 			CurrentState = IdentifiableUIState.Idle;
 			StateObjectId = null;
 			TargetObjectId = null;
-            _identifiableCommandBus.On<IdentifiableBeginDragCommand>(OnIdentifiableBeginDrag);
-            _identifiableCommandBus.On<IdentifiableClickCommand>(OnIdentifiableClick);
-            _identifiableCommandBus.On<IdentifiableClickedCommand>(OnIdentifiableClicked);
-            _identifiableCommandBus.On<IdentifiableDropCommand>(OnIdentifiableDrop);
-            _identifiableCommandBus.On<IdentifiableDropedCommand>(OnIdentifiableDroped);
-            _identifiableCommandBus.On<IdentifiableDragCommand>(OnIdentifiableDrag);
-            _identifiableCommandBus.On<IdentifiableEndDragCommand>(OnIdentifiableEndDrag);
-            _identifiableCommandBus.On<IdentifiableEndDragedCommand>(OnIdentifiableEndDraged);
-            _identifiableCommandBus.On<IdentifiableUnhoverCommand>(OnIdentifiableUnhover);
-            _identifiableCommandBus.On<IdentifiableHoverCommand>(OnIdentifiableHover);
-            _identifiableCommandBus.On<IdentifiableHoveredCommand>(OnIdentifiableHovered);
+			_identifiableCommandBus.On<IdentifiableBeginDragCommand>(OnIdentifiableBeginDrag);
+			_identifiableCommandBus.On<IdentifiableClickCommand>(OnIdentifiableClick);
+			_identifiableCommandBus.On<IdentifiableClickedCommand>(OnIdentifiableClicked);
+			_identifiableCommandBus.On<IdentifiableDropCommand>(OnIdentifiableDrop);
+			_identifiableCommandBus.On<IdentifiableDropedCommand>(OnIdentifiableDroped);
+			_identifiableCommandBus.On<IdentifiableDragCommand>(OnIdentifiableDrag);
+			_identifiableCommandBus.On<IdentifiableEndDragCommand>(OnIdentifiableEndDrag);
+			_identifiableCommandBus.On<IdentifiableEndDragedCommand>(OnIdentifiableEndDraged);
+			_identifiableCommandBus.On<IdentifiableUnhoverCommand>(OnIdentifiableUnhover);
+			_identifiableCommandBus.On<IdentifiableHoverCommand>(OnIdentifiableHover);
+			_identifiableCommandBus.On<IdentifiableHoveredCommand>(OnIdentifiableHovered);
+			_identifiableCommandBus.On<DisableUIInteractionCommand>(OnDisableUIInteraction);
+			_identifiableCommandBus.On<EnableUIInteractionCommand>(OnEnableUIInteraction);
+			
 		}
 
+		/// <summary>
+		/// 現在STATEを設定します
+		/// </summary>
 		private void SetCurrentState(IdentifiableUIState state, CompositeObjectId id, CompositeObjectId targetId)
 		{
 			CurrentState = state;
 			StateObjectId = id;
 			TargetObjectId = targetId;
+		}
+
+		/// <summary>
+		/// UI操作制限モードを有効にします
+		/// </summary>
+		private void OnDisableUIInteraction(DisableUIInteractionCommand cmd)
+		{
+			SetCurrentState(IdentifiableUIState.NonResponse, null, null);
+		}
+
+		/// <summary>
+		/// UI操作制限モードを解除します
+		/// </summary>
+		private void OnEnableUIInteraction(EnableUIInteractionCommand cmd)
+		{
+			SetCurrentState(IdentifiableUIState.Idle, null, null);
 		}
 
 		/// <summary>
@@ -114,7 +77,7 @@ namespace CardsAndDices
 			{
 				case IdentifiableUIState.Idle:
 				case IdentifiableUIState.Hovered:
-            		Debug.Log("すてーとましん（ホバー）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
+					Debug.Log("すてーとましん（ホバー）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 					SetCurrentState(IdentifiableUIState.Hover, cmd.ExecutedObjectId, null);
 
 					// アンホバーコマンド
@@ -152,10 +115,6 @@ namespace CardsAndDices
 		{
 			switch (CurrentState)
 			{
-				case IdentifiableUIState.Idle:
-					break;
-				case IdentifiableUIState.Hover:
-					break;
 				case IdentifiableUIState.Hovered:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
@@ -165,14 +124,6 @@ namespace CardsAndDices
 						_identifiableCommandBus.Emit(new IdentifiableStateUnhoverCommand(cmd.ExecutedObjectId));
 					}
 					break;
-				case IdentifiableUIState.BiginDrag:
-					break;
-				case IdentifiableUIState.Dragging:
-					break;
-				case IdentifiableUIState.Drop:
-					break;
-				case IdentifiableUIState.EndDrag:
-					break;
 				default:
 					break;
 			}
@@ -181,14 +132,17 @@ namespace CardsAndDices
         /// <summary>
 		/// ドラッグ終了
 		/// </summary>
-		private void OnIdentifiableEndDrag(IdentifiableEndDragCommand cmd)
+		private async void OnIdentifiableEndDrag(IdentifiableEndDragCommand cmd)
 		{
+            // 遅延処理でドロップの成否を判定
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Dragging:
 					if (StateObjectId == cmd.ExecutedObjectId)
 					{
-            			Debug.Log("すてーとましん（ドラッグ終了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
+						Debug.Log("すてーとましん（ドラッグ終了）:" + cmd.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.EndDrag, cmd.ExecutedObjectId, null);
 						// ドラッグ開始コマンド
 						_identifiableCommandBus.Emit(new IdentifiableStateEndDragCommand(cmd.ExecutedObjectId));
