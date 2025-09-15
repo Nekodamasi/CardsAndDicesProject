@@ -43,7 +43,7 @@ namespace CardsAndDices
             {
                 if (id != null && !_statusInstances.ContainsKey(id))
                 {
-                    _statusInstances.Add(id, new IdentifiableStatusInstance(id, _identifiableCommandBus));
+                    _statusInstances.Add(id, new IdentifiableStatusInstance(id, _identifiableCommandBus, _identifiableUIStateMachine));
                 }
             }
         }
