@@ -11,7 +11,7 @@ namespace CardsAndDices
         [Header("ScriptableObject Managers")]
         [SerializeField] private CardSlotManager _cardSlotManager;
         [SerializeField] private DiceInletManager _diceInletManager;
-        [SerializeField] private DiceSlotManager _diceSlotManager;
+        [SerializeField] private Old_DiceSlotManager _diceSlotManager;
         [SerializeField] private CreatureManager _creatureManager;
         [SerializeField] private EffectManager _effectManager;
         [SerializeField] private DiceManager _diceManager;

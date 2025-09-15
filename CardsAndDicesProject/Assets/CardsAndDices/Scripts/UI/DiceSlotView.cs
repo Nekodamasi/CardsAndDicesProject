@@ -16,7 +16,7 @@ namespace CardsAndDices
         }
 
         [Header("Components")]
-        [SerializeField] private DiceSlotManager _diceSlotManager;
+        [SerializeField] private Old_DiceSlotManager _diceSlotManager;
 
         [Header("Slot Definition")]
         [SerializeField] private DiceSlotLocation _location;

@@ -53,14 +53,14 @@
 - `Docs/class/`: 各クラスの詳細設計に関するドキュメント。
 - `Docs/ui/`: 各UIのトインタラクション設計に関するドキュメント。 
  - `Scripts/Abilities/`: ScriptableObjectベースのアビリティ定義
- - `Scripts/Animation/`: アニメーション関連のScriptableObject
+ - `Scripts/Animations/`: アニメーション関連のScriptableObject
  - `Scripts/Commands/`: コマンドパターンで使用されるコマンド定義
  - `Scripts/Core/`: プロジェクト全体で共通の基盤コード（インターフェース、抽象クラス、汎用ユーティリティ）
  - `Scripts/Data/`: 純粋なデータ定義（ScriptableObject、構造体、クラス）
  - `Scripts/Domain/`: ゲームのコアロジック、データモデル、エンティティ
  - `Scripts/Factory/`: オブジェクトの生成ロジックをカプセル化
  - `Scripts/Initializers/`: DIコンテナの初期化ロジック
- - `Scripts/Manager/`: 複数のコンポーネントやシステムを統括・管理する高レベルなロジック
+ - `Scripts/Managers/`: 複数のコンポーネントやシステムを統括・管理する高レベルなロジック
  - `Scripts/Orchestrator/`: 複数のシステムやコンポーネント間の複雑な連携を調整
  - `Scripts/Presenter/`: ViewとModelの仲介役
  - `Scripts/Repository/`: データの永続化や取得を担当

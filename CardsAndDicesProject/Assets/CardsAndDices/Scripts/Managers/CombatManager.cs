@@ -24,7 +24,7 @@ namespace CardsAndDices
         [Inject] private DiceFactory _diceFactory;
         [Inject] private CreatureManager _creatureManager;
         [Inject] private DiceInletManager _diceInletManager;
-        [Inject] private DiceSlotManager _diceSlotManager;
+        [Inject] private Old_DiceSlotManager _diceSlotManager;
         [Inject] private SpriteCommandBus _commandBus;
 
         private readonly List<DicePresenter> _dicePresenters = new();
@@ -41,7 +41,7 @@ namespace CardsAndDices
                                PlayerCardDataProvider playerCardDataProvider, EnemyCardDataProvider enemyCardDataProvider,
                                ViewRegistry viewRegistry, DiceManager diceManager, CreatureManager creatureManager,
                                DiceInletManager diceInletManager, CombatScenarioRegistry combatScenarioRegistry,
-                               DiceSlotManager diceSlotManager, SpriteCommandBus commandBus)
+                               Old_DiceSlotManager diceSlotManager, SpriteCommandBus commandBus)
         {
             _cardLifecycleService = cardLifecycleService;
             _cardSlotManager = cardSlotManager;

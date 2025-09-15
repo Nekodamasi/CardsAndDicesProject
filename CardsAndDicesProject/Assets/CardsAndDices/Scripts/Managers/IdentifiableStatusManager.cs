@@ -37,7 +37,7 @@ namespace CardsAndDices
         /// </summary>
         private void SetUpStatusInstances()
         {
-            _statusInstances.Clear();
+            DisposeInstances();
             var allIds = _registry.GetAllCompositeObjectIds();
             foreach (var id in allIds)
             {
@@ -46,6 +46,23 @@ namespace CardsAndDices
                     _statusInstances.Add(id, new IdentifiableStatusInstance(id, _identifiableCommandBus, _identifiableUIStateMachine));
                 }
             }
+        }
+
+        /// <summary>
+        /// インスタンスをDisposeします
+        /// </summary>
+        private void DisposeInstances()
+        {
+            foreach (var instance in _statusInstances.Values)
+            {
+                instance.Dispose();
+            }
+            _statusInstances.Clear();
+        }
+
+        public void Dispose()
+        {
+            DisposeInstances();
         }
 
         /// <summary>

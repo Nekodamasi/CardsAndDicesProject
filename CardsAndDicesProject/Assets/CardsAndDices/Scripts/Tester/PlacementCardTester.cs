@@ -13,7 +13,7 @@ namespace CardsAndDices
         [Header("System References")]
         [Tooltip("カードスロットを管理するCardSlotManager")]
         [SerializeField] private CardSlotManager _cardSlotManager;
-        [SerializeField] private DiceSlotManager _diceSlotManager;
+        [SerializeField] private Old_DiceSlotManager _diceSlotManager;
         [SerializeField] private SpriteCommandBus _commandBus;
         [SerializeField] private CardLifecycleService _cardLifecycleService;
         [SerializeField] private CombatManager _combatManager; // CombatManagerを追加

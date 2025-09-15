@@ -11,7 +11,7 @@ namespace CardsAndDices
     {
         [Header("Dependencies")]
         [SerializeField] private UIStateMachine _uiStateMachine;
-        [SerializeField] private DiceSlotManager _diceSlotManager;
+        [SerializeField] private Old_DiceSlotManager _diceSlotManager;
         [SerializeField] private SpriteCommandBus _commandBus;
         [SerializeField] private UIActivationPolicy _uiActivationPolicy;
         [SerializeField] private DiceInteractionStrategy _diceInteractionStrategy;
@@ -21,13 +21,13 @@ namespace CardsAndDices
         private CompositeObjectId _draggedId;
         public ViewRegistry ViewRegistry => _viewRegistry;
         public UIStateMachine UIStateMachine => _uiStateMachine;
-        public DiceSlotManager DiceSlotManager => _diceSlotManager;
+        public Old_DiceSlotManager DiceSlotManager => _diceSlotManager;
         public CompositeObjectId DraggedId => _draggedId;
         private bool _isDroppedSuccessfully;
         public bool IsDroppedSuccessfully { get => _isDroppedSuccessfully; set => _isDroppedSuccessfully = value; }
 
         [Inject]
-        public void Initialize(UIStateMachine uiStateMachine, DiceSlotManager diceSlotManager, SpriteCommandBus commandBus, UIActivationPolicy uiActivationPolicy, DiceInteractionStrategy diceInteractionStrategy, ViewRegistry viewRegistry, DiceManager diceManager)
+        public void Initialize(UIStateMachine uiStateMachine, Old_DiceSlotManager diceSlotManager, SpriteCommandBus commandBus, UIActivationPolicy uiActivationPolicy, DiceInteractionStrategy diceInteractionStrategy, ViewRegistry viewRegistry, DiceManager diceManager)
         {
             _uiStateMachine = uiStateMachine;
             _commandBus = commandBus;
