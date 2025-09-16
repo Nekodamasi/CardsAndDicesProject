@@ -8,7 +8,10 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "DiStPo_", menuName = "CardsAndDices/Data/EntityDefinition/DiceSlotPositionEntity")]
     public class DiceSlotPositionEntity : BaseEntityDefinition
     {
-        [SerializeField] DiceSlotLocation DiceSlotLocation;
-        [SerializeField] Vector3 Position;
+        [SerializeField] DiceSlotLocation _diceSlotLocation;
+        [SerializeField] Vector3 _position;
+
+        public DiceSlotLocation DiceSlotLocation => _diceSlotLocation;
+        public Vector3 Position => _position;
     }
 }

@@ -55,8 +55,8 @@ namespace CardsAndDices
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingDice) return;
 
 //            Debug.Log("<color=Green>DraggingDiceToInletActivations2:</color>"+ orchestrator.DraggedId);
-            var draggedDice = _diceManager.GetDiceData(orchestrator.DraggedId);
-            if (draggedDice == null) return;
+//            var draggedDice = _diceManager.GetDiceData(orchestrator.DraggedId);
+//            if (draggedDice == null) return;
 
 //            Debug.Log("<color=Green>DraggingDiceToInletActivations3:</color>"+ orchestrator.DraggedId);
             orchestrator.ViewRegistry.DebugInletView();
@@ -64,16 +64,16 @@ namespace CardsAndDices
             {
                 var diceInlet = _diceInletManager.GetInlet(inletView.GetObjectId());
 //                Debug.Log("<color=red>DraggingDiceToInletActivations3:</color>");
-                if (diceInlet.CanAccept(draggedDice))
-                {
+//                if (diceInlet.CanAccept(draggedDice))
+//                {
 //                    Debug.Log("<color=red>インレットActiveです</color>");
-                    inletView.EnterAcceptableState();
-                }
-                else
-                {
+//                    inletView.EnterAcceptableState();
+//                }
+//                else
+//                {
 //                    Debug.Log("<color=red>インレット非Activeです</color>");
-                    inletView.EnterInactiveState();
-                }
+//                    inletView.EnterInactiveState();
+//                }
             }
         }
 

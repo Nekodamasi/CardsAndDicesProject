@@ -14,6 +14,7 @@ namespace CardsAndDices
         [Header("System Components")]
         [SerializeField] private List<DiceSlotPositionEntity> _diceSlotPositionEntities;
         private readonly List<DiceSlotInstance> _diceSlotInstances = new();
+        private readonly List<DiceSlotController> _iceSlotControllers = new();
         private IdentifiableCommandBus _identifiableCommandBus;
 
         [Inject]
@@ -28,10 +29,12 @@ namespace CardsAndDices
         /// </summary>
         private void OnSceneLoaded(SceneLoadedCommand cmd)
         {
-            DisposeInstances();
+            Dispose();
             foreach (var diceSlotPositionEntity in _diceSlotPositionEntities)
             {
-                _diceSlotInstances.Add(new DiceSlotInstance(diceSlotPositionEntity, _identifiableCommandBus));
+                var instance = new DiceSlotInstance(diceSlotPositionEntity, _identifiableCommandBus);
+                _diceSlotInstances.Add(instance);
+                _iceSlotControllers.Add(new DiceSlotController(instance, _identifiableCommandBus));
             }
         }
         /// <summary>
@@ -45,9 +48,23 @@ namespace CardsAndDices
             }
             _diceSlotInstances.Clear();
         }
+        /// <summary>
+        /// コントローラーをDisposeします
+        /// </summary>
+        private void DisposeControllers()
+        {
+            foreach (var controller in _iceSlotControllers)
+            {
+                controller.Dispose();
+            }
+            _iceSlotControllers.Clear();
+        }
+
         public void Dispose()
         {
             DisposeInstances();
+            DisposeControllers();
+            _identifiableCommandBus.Off<SceneLoadedCommand>(OnSceneLoaded);
         }
     }
 }

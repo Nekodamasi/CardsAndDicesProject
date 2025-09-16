@@ -22,12 +22,24 @@ namespace CardsAndDices
             _identifiableCommandBus.On<DisplayIdentifiableStatusCommand>(OnDisplayIdentifiableStatus);
             _identifiableCommandBus.On<MoveToIdentifiableCommand>(OnMoveToIdentifiable);
             _identifiableCommandBus.On<IdentifiableReturnHomePositionCommand>(OnIdentifiableReturnHomePosition);
+            _identifiableCommandBus.On<MoveToAnimationIdentifiableCommand>(OnMoveToAnimationIdentifiable);
 
         }
         public void Dispose()
         {
             _identifiableCommandBus.Off<DisplayIdentifiableStatusCommand>(OnDisplayIdentifiableStatus);
             _identifiableCommandBus.Off<MoveToIdentifiableCommand>(OnMoveToIdentifiable);
+            _identifiableCommandBus.Off<IdentifiableReturnHomePositionCommand>(OnIdentifiableReturnHomePosition);
+        }
+
+        /// <summary>
+        /// Animation移動の実行
+        /// </summary>
+        private void OnMoveToAnimationIdentifiable(MoveToAnimationIdentifiableCommand cmd)
+        {
+            // 自分以外は処理しない
+            if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
+            _view.MoveToAnimated(cmd.TargetPosition, 0.2f);
         }
 
         /// <summary>
@@ -44,7 +56,7 @@ namespace CardsAndDices
             _status.UpdateStatus(_status.CurrentHomeStatus);
             Debug.Log("ほげほげほげほげほげほげほ：" + _status.CurrentHomeStatus);
             DisplayCurrentStatus();
-            
+
             _identifiableCommandBus.Emit(new IdentifiableEndDragedCommand(cmd.ExecutedObjectId));
         }
 

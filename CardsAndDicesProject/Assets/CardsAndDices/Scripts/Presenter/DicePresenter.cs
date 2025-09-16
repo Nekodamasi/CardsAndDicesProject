@@ -7,57 +7,33 @@ namespace CardsAndDices
     /// </summary>
     public class DicePresenter : IDisposable
     {
-        private readonly DiceData _data;
+        private readonly DiceInstance _instance;
         private readonly DiceView _view;
-        private readonly DiceManager _diceManager;
-        private readonly ViewRegistry _viewRegistry;
-        private readonly SpriteCommandBus _commandBus;
+        private readonly IdentifiableCommandBus _commandBus;
 
 
-        public DicePresenter(DiceData data, DiceView view, DiceManager diceManager, ViewRegistry viewRegistry, SpriteCommandBus commandBus)
+        public DicePresenter(DiceInstance instance, DiceView view, IdentifiableCommandBus commandBus)
         {
-            _data = data;
+            Dispose();
+            _instance = instance;
             _view = view;
-            _diceManager = diceManager;
-            _viewRegistry = viewRegistry;
             _commandBus = commandBus;
-
-            // Modelの変更をViewに反映
-            _data.OnFaceValueChanged += _view.UpdateFace;
-            // Viewの破棄イベントを購読
-            _view.OnDestroyed += Dispose;
-
-            _view.UpdateFace(_data.FaceValue); // 初期表示
             _commandBus.On<DiceDropInInletCommand>(OnDiceDropInInlet);
         }
-        /// <summary>
-        /// ダイスがインレットにドロップされたとき
-        /// </summary>
-        private void OnDiceDropInInlet(DiceDropInInletCommand cmd)
-        {
-            if (cmd.DiceId != _data.Id) return;
-
-            //エフェクトを実行
-            _view.DropVfxPlay();
-            Dispose();
-        }
-
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
         /// </summary>
         public void Dispose()
         {
-            if (_data == null) return; // すでにDisposeされている
-
             _commandBus.Off<DiceDropInInletCommand>(OnDiceDropInInlet);
-            _diceManager.RemoveDice(_data.Id);
-
-            // イベント購読を解除
-            _data.OnFaceValueChanged -= _view.UpdateFace;
-            _view.OnDestroyed -= Dispose;
-
-            // Viewを非アクティブ化してプールに戻す
-            _view.SetSpawnedState(false);
         }
+
+        /// <summary>
+        /// ダイスがインレットにドロップされたとき
+        /// </summary>
+        private void OnDiceDropInInlet(DiceDropInInletCommand cmd)
+        {
+        }
+
     }
 }

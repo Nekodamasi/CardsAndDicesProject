@@ -125,10 +125,10 @@ namespace CardsAndDices
                 {
                     var diceId = diceView.GetObjectId();
                     var diceData = _diceFactory.Create(diceId);
-                    _diceManager.AddDice(diceData);
+//                    _diceManager.AddDice(diceData);
                     diceView.SetDisplayActive(true);
-                    var dicePresenter = new DicePresenter(diceData, diceView, _diceManager, _viewRegistry, _commandBus);
-                    _dicePresenters.Add(dicePresenter);
+//                    var dicePresenter = new DicePresenter(diceData, diceView, _diceManager, _viewRegistry, _commandBus);
+//                    _dicePresenters.Add(dicePresenter);
                     _diceSlotManager.PlaceDiceAsSystem(diceView.GetObjectId(), _diceSlotManager.GetNextEmptyHandSlot().SlotId, true);
                 }
                 else

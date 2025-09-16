@@ -123,7 +123,7 @@ namespace CardsAndDices
                 UIStateMachine.SetState(UIStateMachine.UIState.DropedDice);
 
                 // ダイススロットマネージャーにドロップ処理を依頼
-                _commandBus.Emit(new DiceDropInInletCommand(command.ExecutedObjectId, DraggedId, _diceManager.GetDiceData(DraggedId).FaceValue));
+//                _commandBus.Emit(new DiceDropInInletCommand(command.ExecutedObjectId, DraggedId, _diceManager.GetDiceData(DraggedId).FaceValue));
                 // ドロップが成功したことを示すフラグを設定
                 IsDroppedSuccessfully = true;
             }

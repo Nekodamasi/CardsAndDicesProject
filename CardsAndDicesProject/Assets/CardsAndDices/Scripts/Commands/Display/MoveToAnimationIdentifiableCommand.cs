@@ -3,7 +3,7 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// 現在のステータスをViewに反映するコマンドです
+    /// ムーブアニメーションを実行するコマンドです
     /// </summary>
     public class MoveToAnimationIdentifiableCommand : ICommand
     {

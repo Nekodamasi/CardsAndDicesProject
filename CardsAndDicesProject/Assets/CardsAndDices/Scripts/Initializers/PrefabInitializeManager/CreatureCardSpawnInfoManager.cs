@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// CreatureCardSpawnInfoのリストを管理するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "CreatureCardSpawnInfoManager", menuName = "CardsAndDices/InitializeManager/CreatureCardSpawnInfoManager")]
+    [CreateAssetMenu(fileName = "CreatureCardSpawnInfoManager", menuName = "CardsAndDices/Initializes/PrefabInitializeManager/CreatureCardSpawnInfoManager")]
     public class CreatureCardSpawnInfoManager : ScriptableObject
     {
         /// <summary>

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CardsAndDices
@@ -5,10 +6,13 @@ namespace CardsAndDices
     /// <summary>
     /// ダイススロットを管理するインスタンス。
     /// </summary>
-    public class DiceSlotInstance
+    public class DiceSlotInstance : IDisposable
     {
         private DiceSlotPositionEntity _diceSlotPositionEntity;
         private IdentifiableCommandBus _identifiableCommandBus;
+        private CompositeObjectId _placedDiceId;
+        private CompositeObjectId _reflowPlacedDiceId;
+
 
         /// <summary>
         /// コンストラクタ
@@ -19,6 +23,44 @@ namespace CardsAndDices
             _identifiableCommandBus = identifiableCommandBus;
         }
 
+        /// <summary>
+        /// ダイススロットポジション
+        /// </summary>
+        public Vector3 DiceSlotPosition => _diceSlotPositionEntity.Position;
+
+        /// <summary>
+        /// ダイススロットの位置
+        /// </summary>
+        public DiceSlotLocation DiceSlotLocation => _diceSlotPositionEntity.DiceSlotLocation;
+
+        /// <summary>
+        /// ダイスの配置
+        /// </summary>
+        public void PlacedDice(CompositeObjectId diceId)
+        {
+            _placedDiceId = diceId;
+        }
+
+        /// <summary>
+        /// ダイスのリフロー配置
+        /// </summary>
+        public void ReflowPlacedDice(CompositeObjectId diceId)
+        {
+            _reflowPlacedDiceId = diceId;
+        }
+
+        /// <summary>
+        /// ダイスのリムーブ
+        /// </summary>
+        public void RemoveDice()
+        {
+            _placedDiceId = null;
+            _reflowPlacedDiceId = null;
+        }
+
+        /// <summary>
+        /// Disposeします
+        /// </summary>
         public void Dispose()
         {
         }
@@ -27,12 +69,13 @@ namespace CardsAndDices
         /// このスロットに配置されているダイスのID。
         /// 配置されていない場合はnull。
         /// </summary>
-        public CompositeObjectId PlacedDiceId { get; set; }
+        public CompositeObjectId PlacedDiceId => _placedDiceId;
+
         /// <summary>
         /// リフロー時に、このスロットに配置されているダイスのID。
         /// 配置されていない場合はnull。
         /// </summary>
-        public CompositeObjectId ReflowPlacedDiceId { get; set; }
+        public CompositeObjectId ReflowPlacedDiceId => _reflowPlacedDiceId;
 
         /// <summary>
         /// このスロットにダイスが配置されているかどうか。

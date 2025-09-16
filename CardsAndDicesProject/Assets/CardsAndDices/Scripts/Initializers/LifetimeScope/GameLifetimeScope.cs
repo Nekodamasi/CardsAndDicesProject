@@ -123,7 +123,7 @@ namespace CardsAndDices
             _systemReflowController.Initialize(_spriteCommandBus, _cardInteractionOrchestrator, _diceInteractionOrchestrator);
             _viewRegistry.Initialize();
             _cardLifecycleService.Initialize(_creatureManager, _diceInletManager, _abilityManager, _spriteCommandBus, _effectManager);
-            _diceManager.Initialize(_compositeObjectIdManager, _viewRegistry);
+//            _diceManager.Initialize(_compositeObjectIdManager, _viewRegistry);
             _combatManager.Initialize(_cardLifecycleService, _cardSlotManager, _playerCardDataProvider, _enemyCardDataProvider, _viewRegistry, _diceManager, _creatureManager, _diceInletManager, _combatScenarioRegistry, _diceSlotManager, _spriteCommandBus);
             _playerCardDataProvider.Initialize();
             _enemyCardDataProvider.Initialize();
