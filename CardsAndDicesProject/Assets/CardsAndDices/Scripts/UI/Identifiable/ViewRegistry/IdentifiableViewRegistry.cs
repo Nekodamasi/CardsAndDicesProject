@@ -12,8 +12,9 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "IdentifiableViewRegistry", menuName = "CardsAndDices/UI/Identifiable/ViewRegistry/IdentifiableViewRegistry")]
     public class IdentifiableViewRegistry : ScriptableObject
     {
-        private readonly Dictionary<CompositeObjectId, BaseIdentifiableView> _views = new();
+        private readonly List<BaseIdentifiableView> _views = new();
         private readonly List<IdentifiableStatusView> _statusViews = new();
+        private readonly List<DiceView> _diceViews = new();
 
         [Inject]
         public void Initialize()
@@ -29,7 +30,6 @@ namespace CardsAndDices
         {
             if (view == null || view.CompositeObjectId == null) return;
 
-            _views[view.CompositeObjectId] = view;
             if (view is IdentifiableStatusView statusView)
             {
                 _statusViews.Add(statusView);
@@ -39,28 +39,26 @@ namespace CardsAndDices
         /// <summary>
         /// Viewをレジストリから登録解除します。
         /// </summary>
-        public void Unregister(BaseSpriteView view)
+        public void Unregister(BaseIdentifiableView view)
         {
-            if (view == null || view.GetObjectId() == null) return;
-
-            _views.Remove(view.GetObjectId());
         }
 
         /// <summary>
         /// 指定されたIDを持つViewを取得します。
         /// </summary>
-        public T GetView<T>(CompositeObjectId id) where T : BaseSpriteView
+        public T GetView<T>(CompositeObjectId id) where T : BaseIdentifiableView
         {
-            if (id != null && _views.TryGetValue(id, out var view))
-            {
-                return view as T;
-            }
             return null;
         }
 
         /// <summary>
-        /// 登録されている全てのCreatureCardViewを取得します。
+        /// 登録されている全てのIdentifiableStatusViewを取得します。
         /// </summary>
         public IReadOnlyList<IdentifiableStatusView> GetAllStatusViews() => _statusViews;
+
+        /// <summary>
+        /// 登録されている全てのDiceViewを取得します。
+        /// </summary>
+        public IReadOnlyList<DiceView> GetAllDiceViews() => _diceViews;
     }
 }

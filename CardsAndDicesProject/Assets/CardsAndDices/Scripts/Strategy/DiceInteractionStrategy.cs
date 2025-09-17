@@ -11,7 +11,7 @@ namespace CardsAndDices
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
                 // ホバーされたダイスのViewを取得し、ホバー状態に遷移
-                var diceView = orchestrator.ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
+                var diceView = orchestrator.ViewRegistry.GetView<Old_DiceView>(command.ExecutedObjectId);
                 if (diceView != null) return true;
             }
             return false;
@@ -30,7 +30,7 @@ namespace CardsAndDices
             if (orchestrator.UIStateMachine.CurrentState == UIStateMachine.UIState.Idle)
             {
                 // ホバーされたダイスのViewを取得し、通常状態に遷移
-                var diceView = orchestrator.ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
+                var diceView = orchestrator.ViewRegistry.GetView<Old_DiceView>(command.ExecutedObjectId);
                 if (diceView != null) return true;
             }
             return false;
@@ -40,7 +40,7 @@ namespace CardsAndDices
         {
             // UIがアイドルの場合
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.Idle) return false;
-            var draggedDiceView = orchestrator.ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
+            var draggedDiceView = orchestrator.ViewRegistry.GetView<Old_DiceView>(command.ExecutedObjectId);
             if (draggedDiceView == null) return false;
             return true;
         }
@@ -60,7 +60,7 @@ namespace CardsAndDices
         public bool ChkDiceDrag(IdentifiableDragCommand command, DiceInteractionOrchestrator orchestrator)
         {
             if (orchestrator.UIStateMachine.CurrentState != UIStateMachine.UIState.DraggingDice) return false;
-            var draggedView = orchestrator.ViewRegistry.GetView<DiceView>(orchestrator.DraggedId);
+            var draggedView = orchestrator.ViewRegistry.GetView<Old_DiceView>(orchestrator.DraggedId);
             if (draggedView == null) return false;
             return true;
         }

@@ -8,11 +8,11 @@ namespace CardsAndDices
     public class DicePresenter : IDisposable
     {
         private readonly DiceInstance _instance;
-        private readonly DiceView _view;
+        private readonly Old_DiceView _view;
         private readonly IdentifiableCommandBus _commandBus;
 
 
-        public DicePresenter(DiceInstance instance, DiceView view, IdentifiableCommandBus commandBus)
+        public DicePresenter(DiceInstance instance, Old_DiceView view, IdentifiableCommandBus commandBus)
         {
             Dispose();
             _instance = instance;

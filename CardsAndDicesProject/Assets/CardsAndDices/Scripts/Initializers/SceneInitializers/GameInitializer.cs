@@ -12,14 +12,14 @@ namespace CardsAndDices
         private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
         private List<CardSlotView> _cardSlotViews = new List<CardSlotView>();
         private List<DiceSlotView> _diceSlotViews = new List<DiceSlotView>();
-        private List<DiceView> _diceViews = new List<DiceView>();
+        private List<Old_DiceView> _diceViews = new List<Old_DiceView>();
         private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
 
         [Header("initialize Objects")]
         [SerializeField] private CombatManager _CombatManager;
 
         [Inject]
-        public void Initialize(List<CreatureCardView> creatureCardViews, List<CardSlotView> cardSlotViews, List<DiceSlotView> diceSlotViews, List<DiceView> diceViews, List<DiceInletView> diceInletViews)
+        public void Initialize(List<CreatureCardView> creatureCardViews, List<CardSlotView> cardSlotViews, List<DiceSlotView> diceSlotViews, List<Old_DiceView> diceViews, List<DiceInletView> diceInletViews)
         {
             _creatureCardViews = creatureCardViews;
             _cardSlotViews = cardSlotViews;

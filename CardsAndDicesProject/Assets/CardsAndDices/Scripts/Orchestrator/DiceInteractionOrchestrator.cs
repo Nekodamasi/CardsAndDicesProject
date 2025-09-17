@@ -80,7 +80,7 @@ namespace CardsAndDices
             if (_diceInteractionStrategy.ChkDiceHover(command, this))
             {
                 // ホバーされたカードのViewを取得し、ホバー状態に遷移
-                var diceView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
+                var diceView = ViewRegistry.GetView<Old_DiceView>(command.ExecutedObjectId);
                 diceView.EnterHoveringState();
             }
         }
@@ -90,7 +90,7 @@ namespace CardsAndDices
             if (_diceInteractionStrategy.ChkDiceUnhover(command, this))
             {
                 // アンホバーされたカードのViewを取得し、通常状態に遷移
-                var diceView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
+                var diceView = ViewRegistry.GetView<Old_DiceView>(command.ExecutedObjectId);
                 diceView.EnterNormalState();
             }
         }
@@ -103,7 +103,7 @@ namespace CardsAndDices
                 UIStateMachine.SetState(UIStateMachine.UIState.DraggingDice);
                 _draggedId = command.ExecutedObjectId;
 
-                var draggedView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
+                var draggedView = ViewRegistry.GetView<Old_DiceView>(command.ExecutedObjectId);
                 draggedView.EnterDraggingState();
                 _uiActivationPolicy.DraggingDiceToDiceActivations(this);
                 _uiActivationPolicy.DraggingDiceToInletActivations(this);
@@ -134,7 +134,7 @@ namespace CardsAndDices
             if (_diceInteractionStrategy.ChkDiceDrag(command, this))
             {
                 // ドラッグ中のダイスのViewを取得し、ドラッグ中状態に移行
-                var draggedDiceView = ViewRegistry.GetView<DiceView>(command.ExecutedObjectId);
+                var draggedDiceView = ViewRegistry.GetView<Old_DiceView>(command.ExecutedObjectId);
                 draggedDiceView.EnterDraggingInProgressState();
 
                 //カードを新しい位置へ移動
@@ -191,7 +191,7 @@ namespace CardsAndDices
             var animationTasks = new List<UniTask>();
             foreach (var movement in command.Movements)
             {
-                var diceView = _viewRegistry.GetView<DiceView>(movement.Key);
+                var diceView = _viewRegistry.GetView<Old_DiceView>(movement.Key);
                 if (diceView != null)
                 {
                     animationTasks.Add(diceView.MoveToAnimated(movement.Value));

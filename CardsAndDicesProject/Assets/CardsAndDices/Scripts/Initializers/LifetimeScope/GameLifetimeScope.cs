@@ -57,7 +57,7 @@ namespace CardsAndDices
         [SerializeField] private List<CreatureCardView> _creatureCardViews = new List<CreatureCardView>();
         [SerializeField] private List<CardSlotView> _cardSlotViews = new List<CardSlotView>();
         [SerializeField] private List<DiceSlotView> _diceSlotViews = new List<DiceSlotView>();
-        [SerializeField] private List<DiceView> _diceViews = new List<DiceView>();
+        [SerializeField] private List<Old_DiceView> _diceViews = new List<Old_DiceView>();
         [SerializeField] private List<DiceInletView> _diceInletViews = new List<DiceInletView>();
 
         protected override void Configure(IContainerBuilder builder)

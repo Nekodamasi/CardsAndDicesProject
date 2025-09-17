@@ -78,7 +78,7 @@ namespace CardsAndDices
 
             foreach (var movement in command.DiceMovements)
             {
-                var diceView = _diceorchestrator.ViewRegistry.GetView<DiceView>(movement.Key);
+                var diceView = _diceorchestrator.ViewRegistry.GetView<Old_DiceView>(movement.Key);
 //                    Debug.LogWarning("<color=Yellow>むーぶまえ</color>" + movement.Key);
                 if (diceView != null)
                 {

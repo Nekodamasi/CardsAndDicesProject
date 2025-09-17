@@ -15,7 +15,7 @@ namespace CardsAndDices
         private readonly Dictionary<CompositeObjectId, BaseSpriteView> _views = new();
         private readonly List<CardSlotView> _slotViews = new();
         private readonly List<CreatureCardView> _creatureCardViews = new();
-        private readonly List<DiceView> _diceViews = new();
+        private readonly List<Old_DiceView> _diceViews = new();
         private readonly List<DiceSlotView> _diceSlotViews = new();
         private readonly List<DiceInletView> _inletViews = new();
 
@@ -46,7 +46,7 @@ namespace CardsAndDices
             {
                 _creatureCardViews.Add(creatureCardView);
             }
-            else if (view is DiceView diceView)
+            else if (view is Old_DiceView diceView)
             {
                 _diceViews.Add(diceView);
             }
@@ -103,7 +103,7 @@ namespace CardsAndDices
         /// 登録されている全てのCreatureCardViewを取得します。
         /// </summary>
         public IReadOnlyList<CreatureCardView> GetAllCreatureCardViews() => _creatureCardViews;
-        public IReadOnlyList<DiceView> GetAllDiceViews() => _diceViews;
+        public IReadOnlyList<Old_DiceView> GetAllDiceViews() => _diceViews;
         public IReadOnlyList<DiceSlotView> GetAllDiceSlotViews() => _diceSlotViews;
         public IReadOnlyList<DiceInletView> GetAllInletViews() => _inletViews.Where(view => view.IsSpawned).ToList();
 
@@ -130,7 +130,7 @@ namespace CardsAndDices
         /// まだデータが適用されていない（初期化されていない）DiceViewを取得します。
         /// </summary>
         /// <returns>利用可能なDiceView、または見つからない場合はnull。</returns>
-        public DiceView GetNextAvailableDiceView()
+        public Old_DiceView GetNextAvailableDiceView()
         {
             foreach (var diceView in _diceViews)
             {

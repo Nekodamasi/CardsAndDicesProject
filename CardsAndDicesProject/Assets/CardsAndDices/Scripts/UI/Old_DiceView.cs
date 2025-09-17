@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// <summary>
     /// ダイスの視覚的な表示と状態遷移を管理するコンポーネント。
     /// </summary>
-    public class DiceView : BaseSpriteView
+    public class Old_DiceView : BaseSpriteView
     {
         [Inject]
         public void Construct(DiceInteractionOrchestrator orchestrator)
