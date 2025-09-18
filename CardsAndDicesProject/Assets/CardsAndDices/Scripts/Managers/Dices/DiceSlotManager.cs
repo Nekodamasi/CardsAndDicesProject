@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VContainer;
+using System;
 
 namespace CardsAndDices
 {
@@ -9,7 +10,7 @@ namespace CardsAndDices
     /// 全てのダイススロットの状態を管理し、ダイスの配置などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "DiceSlotManager", menuName = "CardsAndDices/Managers/Dices/DiceSlotManager")]
-    public class DiceSlotManager : ScriptableObject
+    public class DiceSlotManager : ScriptableObject, IDisposable
     {
         [Header("System Components")]
         [SerializeField] private List<DiceSlotPositionEntity> _diceSlotPositionEntities;
@@ -22,6 +23,46 @@ namespace CardsAndDices
         {
             _identifiableCommandBus = identifiableCommandBus;
             _identifiableCommandBus.On<SceneLoadedCommand>(OnSceneLoaded);
+            _identifiableCommandBus.On<ReflowDiceSlotsCommand>(OnReflowDiceSlots);
+        }
+
+        public void Dispose()
+        {
+            DisposeInstances();
+            DisposeControllers();
+            _identifiableCommandBus.Off<SceneLoadedCommand>(OnSceneLoaded);
+            _identifiableCommandBus.Off<ReflowDiceSlotsCommand>(OnReflowDiceSlots);
+        }
+
+        /// <summary>
+        /// ダイススロットを前詰めでリフローします。
+        /// </summary>
+        public void ReflowDiceSlots()
+        {
+            var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
+            var occupiedSlots = sortedSlots.Where(s => s.IsOccupied).ToList();
+            var diceIds = occupiedSlots.Select(s => s.PlacedDiceId).ToList();
+
+            // すべてのサイコロを削除するコマンドを発行する
+            foreach (var slot in occupiedSlots)
+            {
+                _identifiableCommandBus.Emit(new RemoveDiceCommand(slot.DiceSlotLocation, slot.PlacedDiceId));
+            }
+
+            // サイコロを前積み順に並べるコマンドを発行する
+            for (int i = 0; i < diceIds.Count; i++)
+            {
+                _identifiableCommandBus.Emit(new PlacedDiceCommand(sortedSlots[i].DiceSlotLocation, diceIds[i]));
+                _identifiableCommandBus.Emit(new MoveToAnimationReflowDiceCommand(sortedSlots[i].DiceSlotLocation));   
+            }
+        }
+
+        /// <summary>
+        /// ダイスのリフローを行う
+        /// </summary>
+        private void OnReflowDiceSlots(ReflowDiceSlotsCommand cmd)
+        {            
+            ReflowDiceSlots();
         }
 
         /// <summary>
@@ -29,7 +70,6 @@ namespace CardsAndDices
         /// </summary>
         private void OnSceneLoaded(SceneLoadedCommand cmd)
         {
-            Dispose();
             foreach (var diceSlotPositionEntity in _diceSlotPositionEntities)
             {
                 var instance = new DiceSlotInstance(diceSlotPositionEntity, _identifiableCommandBus);
@@ -58,13 +98,6 @@ namespace CardsAndDices
                 controller.Dispose();
             }
             _iceSlotControllers.Clear();
-        }
-
-        public void Dispose()
-        {
-            DisposeInstances();
-            DisposeControllers();
-            _identifiableCommandBus.Off<SceneLoadedCommand>(OnSceneLoaded);
         }
     }
 }

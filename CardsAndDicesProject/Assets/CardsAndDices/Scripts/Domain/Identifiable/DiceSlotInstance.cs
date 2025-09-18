@@ -39,6 +39,7 @@ namespace CardsAndDices
         public void PlacedDice(CompositeObjectId diceId)
         {
             _placedDiceId = diceId;
+            _reflowPlacedDiceId = diceId;
         }
 
         /// <summary>

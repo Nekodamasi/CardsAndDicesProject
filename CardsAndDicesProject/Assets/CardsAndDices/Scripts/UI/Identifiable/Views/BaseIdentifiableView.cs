@@ -34,15 +34,15 @@ namespace CardsAndDices
         /// <summary>
         /// このゲームオブジェクトが現在プールから取り出され、ゲーム内で使用中であるかを示します。
         /// </summary>
-        public bool IsSpawned { get; private set; }
+        public bool IsBound { get; private set; }
 
         /// <summary>
         /// このゲームオブジェクトのスポーン状態を設定します。
         /// </summary>
         /// <param name="state">trueの場合、ゲーム内で使用中。falseの場合、プールに戻された状態。</param>
-        public void SetSpawnedState(bool state)
+        public void SetBoundState(bool state)
         {
-            IsSpawned = state;
+            IsBound = state;
         }
     }
 }

@@ -8,32 +8,63 @@ namespace CardsAndDices
     public class DicePresenter : IDisposable
     {
         private readonly DiceInstance _instance;
-        private readonly Old_DiceView _view;
+        private readonly DiceView _view;
         private readonly IdentifiableCommandBus _commandBus;
 
 
-        public DicePresenter(DiceInstance instance, Old_DiceView view, IdentifiableCommandBus commandBus)
+        public DicePresenter(DiceInstance instance, DiceView view, IdentifiableCommandBus commandBus)
         {
-            Dispose();
             _instance = instance;
             _view = view;
             _commandBus = commandBus;
-            _commandBus.On<DiceDropInInletCommand>(OnDiceDropInInlet);
+            _commandBus.On<DisplayOnScreenCommand>(OnDisplayOnScreen);
+            _commandBus.On<DisplayOffScreenCommand>(OnDisplayOffScreen);
+            _commandBus.On<IdentifiableDropCommand>(OnIdentifiableDrop);
+            
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
         /// </summary>
         public void Dispose()
         {
-            _commandBus.Off<DiceDropInInletCommand>(OnDiceDropInInlet);
+            _commandBus.Off<DisplayOnScreenCommand>(OnDisplayOnScreen);
+            _commandBus.Off<DisplayOffScreenCommand>(OnDisplayOffScreen);
+            _commandBus.Off<IdentifiableDropCommand>(OnIdentifiableDrop);
         }
 
         /// <summary>
-        /// ダイスがインレットにドロップされたとき
+        /// オブジェクトをドロップ
         /// </summary>
-        private void OnDiceDropInInlet(DiceDropInInletCommand cmd)
+        private void OnIdentifiableDrop(IdentifiableDropCommand cmd)
         {
+            if (cmd.TargetObjectId != _view.CompositeObjectId) return;
+            _commandBus.Emit(new DiceDropInInletCommand(cmd.ExecutedObjectId, cmd.TargetObjectId, _instance.FaceValue));
+            _instance.IsAlive = false;
+            _commandBus.Emit(new IdentifiableChangeStatusCommand(_view.CompositeObjectId, IdentifiableStatus.Hide));
+            _commandBus.Emit(new DisplayIdentifiableStatusCommand(_view.CompositeObjectId));
         }
 
+        /// <summary>
+        /// ダイスを画面に投げ入れる
+        /// </summary>
+        private void OnDisplayOnScreen(DisplayOnScreenCommand cmd)
+        {
+            if (cmd.ExecutedObjectId != _view.CompositeObjectId) return;
+            if (!_instance.IsOnScreen) return;
+            _instance.IsOnScreen = true;
+            _view.DisplayOnScreen();
+        }
+
+        /// <summary>
+        /// ダイスを画面から退場させる
+        /// </summary>
+        private void OnDisplayOffScreen(DisplayOffScreenCommand cmd)
+        {
+            if (cmd.ExecutedObjectId != _view.CompositeObjectId) return;
+            if (_instance.IsOnScreen) return;
+            _instance.IsOnScreen = false;
+            _view.DisplayOffScreen();
+            _instance.IsAlive = false;
+        }
     }
 }

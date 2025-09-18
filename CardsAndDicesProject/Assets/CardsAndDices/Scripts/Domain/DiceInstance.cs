@@ -20,6 +20,9 @@ namespace CardsAndDices
         /// </summary>
         public int FaceValue => _faceValue;
 
+        public bool IsOnScreen;
+        public bool IsAlive;
+
         /// <summary>
         /// コンストラクタ。
         /// </summary>
@@ -27,10 +30,12 @@ namespace CardsAndDices
         {
             Id = id;
             _faceValue = faceValue;
+            IsAlive = true;
             if (_faceValue < 1 || _faceValue > 6)
             {
                 Roll();
             }
+            IsOnScreen = false;
         }
 
         /// <summary>

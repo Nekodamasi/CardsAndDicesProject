@@ -22,6 +22,7 @@ namespace CardsAndDices
         [SerializeField] private IdentifiableStatusViewManager _identifiableStatusViewManager;
         [SerializeField] private IdentifiableUIStateMachine _identifiableUIStateMachine;
         [SerializeField] private DiceSlotManager _diceSlotManager;
+        [SerializeField] private DiceManager _diceManager;
         
 
         [Header("ScriptableObject Registries")]
@@ -50,6 +51,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_identifiableStatusViewManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_identifiableUIStateMachine).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceSlotManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_diceManager).AsSelf().AsImplementedInterfaces();
 
             // ScriptableObject Registries のバインド
             builder.RegisterInstance(_compositeObjectRegistry).AsSelf().AsImplementedInterfaces();
@@ -66,6 +68,7 @@ namespace CardsAndDices
             _identifiableStatusViewManager.Initialize(_identifiableViewRegistry, _identifiableStatusManager, _identifiableCommandBus);
             _identifiableUIStateMachine.Initialize(_identifiableCommandBus);
             _diceSlotManager.Initialize(_identifiableCommandBus);
+            _diceManager.Initialize(_identifiableCommandBus, _identifiableViewRegistry);
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();

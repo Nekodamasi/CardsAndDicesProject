@@ -21,6 +21,7 @@ namespace CardsAndDices
         {
             _views.Clear();
             _statusViews.Clear();
+            _diceViews.Clear();
         }
 
         /// <summary>
@@ -30,9 +31,16 @@ namespace CardsAndDices
         {
             if (view == null || view.CompositeObjectId == null) return;
 
+            _views.Add(view);
+
             if (view is IdentifiableStatusView statusView)
             {
                 _statusViews.Add(statusView);
+            }
+            else if (view is DiceView diceView)
+            {
+                Debug.Log("だいすびゅーとうろく");
+                _diceViews.Add(diceView);
             }
         }
 
@@ -41,14 +49,34 @@ namespace CardsAndDices
         /// </summary>
         public void Unregister(BaseIdentifiableView view)
         {
+            if (view == null) return;
+
+            _views.Remove(view);
+
+            if (view is IdentifiableStatusView statusView)
+            {
+                _statusViews.Remove(statusView);
+            }
+            else if (view is DiceView diceView)
+            {
+                _diceViews.Remove(diceView);
+            }
         }
 
         /// <summary>
-        /// 指定されたIDを持つViewを取得します。
+        /// 指定されたIDと型に一致するViewを取得します。
         /// </summary>
         public T GetView<T>(CompositeObjectId id) where T : BaseIdentifiableView
         {
-            return null;
+            return _views.FirstOrDefault(v => v.CompositeObjectId == id && v is T) as T;
+        }
+
+        /// <summary>
+        /// 型に一致するバインドされていないViewを取得します。
+        /// </summary>
+        public T GetNonBoundView<T>() where T : BaseIdentifiableView
+        {
+            return _views.FirstOrDefault(v => v.IsBound == false && v is T) as T;
         }
 
         /// <summary>
