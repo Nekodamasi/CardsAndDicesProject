@@ -142,9 +142,9 @@ namespace CardsAndDices
                 if (targetSlot != null)
                 {
                     // カードをスロットに配置するロジックを呼び出し
-                    _cardSlotManager.PlaceCardAsSystem(placement.CreatureCard.ObjectId, targetSlot.SlotId, true);
+                    _cardSlotManager.PlaceCardAsSystem(placement.CreatureCard.CompositeObjectId, targetSlot.SlotId, true);
 
-                    Debug.Log($"カード {placement.CreatureCard.ObjectId} をスロット {targetSlot.SlotId} に配置しました。");
+                    Debug.Log($"カード {placement.CreatureCard.CompositeObjectId} をスロット {targetSlot.SlotId} に配置しました。");
                 }
                 else
                 {
@@ -185,7 +185,7 @@ namespace CardsAndDices
 
                     // カードをスロットに配置するロジックを呼び出し
 //                    Debug.LogWarning("<color=Yellow>すろっと？:</color>" + slots.Count);
-                    _diceSlotManager.PlaceDiceAsSystem(diceplacement.CreatureDice.ObjectId, targetSlot.SlotId, true);
+                    _diceSlotManager.PlaceDiceAsSystem(diceplacement.CreatureDice.CompositeObjectId, targetSlot.SlotId, true);
                 }
             }
         }

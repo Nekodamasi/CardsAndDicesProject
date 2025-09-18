@@ -88,7 +88,7 @@ namespace CardsAndDices
 
 ## チェックリスト
 
-- [ ] Namespace が `CardsAndDice` になっている
+- [ ] Namespace が `CardsAndDices` になっている
 - [ ] クラス／メソッド／プロパティに `<summary>` がある
 - [ ] 引数・戻り値に `<param>`・`<returns>` がある
 - [ ] 命名規則に沿っている

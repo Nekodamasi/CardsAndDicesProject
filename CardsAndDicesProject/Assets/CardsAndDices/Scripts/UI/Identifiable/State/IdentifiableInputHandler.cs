@@ -41,7 +41,7 @@ namespace CardsAndDices
 
         public void OnStart()
         {
-            _identifiableStateOperator.RegisterTarget(_identifiableGameObject.ObjectId);
+            _identifiableStateOperator.RegisterTarget(_identifiableGameObject.CompositeObjectId);
 		}
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace CardsAndDices
             if (!_isDragging)
             {
                 _isHovering = true;
-                _commandBus.Emit(new IdentifiableHoverCommand(_identifiableGameObject.ObjectId));
+                _commandBus.Emit(new IdentifiableHoverCommand(_identifiableGameObject.CompositeObjectId));
             }
         }
 
@@ -73,7 +73,7 @@ namespace CardsAndDices
             if (_isHovering && !_isDragging)
             {
                 _isHovering = false;
-                _commandBus.Emit(new IdentifiableUnhoverCommand(_identifiableGameObject.ObjectId));
+                _commandBus.Emit(new IdentifiableUnhoverCommand(_identifiableGameObject.CompositeObjectId));
             }
         }
 
@@ -96,7 +96,7 @@ namespace CardsAndDices
             if (!_isDragging)
             {
                 // ドラッグ中でなければクリックとみなす
-                _commandBus.Emit(new IdentifiableClickCommand(_identifiableGameObject.ObjectId));
+                _commandBus.Emit(new IdentifiableClickCommand(_identifiableGameObject.CompositeObjectId));
             }
             // OnEndDragでドロップ処理を行うため、ここでは特別な処理は不要
         }
@@ -110,7 +110,7 @@ namespace CardsAndDices
             Debug.Log("<color=red>OnBeginDrag元：</color>" + gameObject.name + "_" + _profile.name);
             if (_profile != null && !_profile.CanDrag) return; // ガード節を追加
             _isDragging = true;
-            _commandBus.Emit(new IdentifiableBeginDragCommand(_identifiableGameObject.ObjectId));
+            _commandBus.Emit(new IdentifiableBeginDragCommand(_identifiableGameObject.CompositeObjectId));
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace CardsAndDices
                 Vector3 newPosition = Camera.main.ScreenToWorldPoint(eventData.position);
                 newPosition.z = transform.position.z; // Z座標は変更しない
 
-                _commandBus.Emit(new IdentifiableDragCommand(_identifiableGameObject.ObjectId, newPosition));
+                _commandBus.Emit(new IdentifiableDragCommand(_identifiableGameObject.CompositeObjectId, newPosition));
             }
         }
 
@@ -138,7 +138,7 @@ namespace CardsAndDices
             if (_isDragging)
             {
                 _isDragging = false;
-                _commandBus.Emit(new IdentifiableEndDragCommand(_identifiableGameObject.ObjectId));
+                _commandBus.Emit(new IdentifiableEndDragCommand(_identifiableGameObject.CompositeObjectId));
             }
         }
 
@@ -155,7 +155,7 @@ namespace CardsAndDices
             IdentifiableGameObject droppedObjectIdentifiable = eventData.pointerDrag.GetComponent<IdentifiableGameObject>();
             IdentifiableGameObject targetObjectIdentifiable = GetComponent<IdentifiableGameObject>(); // このオブジェクト自身がターゲット
 
-            _commandBus.Emit(new IdentifiableDropCommand(droppedObjectIdentifiable.ObjectId, targetObjectIdentifiable.ObjectId));
+            _commandBus.Emit(new IdentifiableDropCommand(droppedObjectIdentifiable.CompositeObjectId, targetObjectIdentifiable.CompositeObjectId));
         }
     }
 }

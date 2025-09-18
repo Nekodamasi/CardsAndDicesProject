@@ -153,7 +153,7 @@ namespace CardsAndDices
         public abstract UniTask MoveToAnimated(Vector3 targetPosition);
 
         // --- Helper Methods ---
-        public CompositeObjectId GetObjectId() => _identifiableGameObject.ObjectId;
+        public CompositeObjectId GetObjectId() => _identifiableGameObject.CompositeObjectId;
 
         public void SetColliderEnabled(bool enable)
         {

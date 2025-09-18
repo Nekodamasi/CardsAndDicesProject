@@ -28,7 +28,7 @@ namespace CardsAndDices
 		/// <summary>
 		/// このMonoBehaviourに割り当てられたCompositeObjectId。
 		/// </summary>
-		public CompositeObjectId ObjectId { get; private set; }
+		public CompositeObjectId CompositeObjectId { get; private set; }
 
 		[Inject]
 		public void Construct(CompositeObjectIdManager idManager, CompositeObjectRegistry compositeObjectRegistry)
@@ -42,9 +42,9 @@ namespace CardsAndDices
 		/// </summary>
 		public void OnAwake()
 		{
-			ObjectId = _idManager.CreateId(_objectType);
-			_displayCompositeObjectId = ObjectId.ToString();
-			_compositeObjectRegistry.Register(ObjectId);
+			CompositeObjectId = _idManager.CreateId(_objectType);
+			_displayCompositeObjectId = CompositeObjectId.ToString();
+			_compositeObjectRegistry.Register(CompositeObjectId);
 		}
 
 		public void OnStart()
@@ -57,10 +57,10 @@ namespace CardsAndDices
 		/// <param name="ownerId">親となるCompositeObjectId。</param>
 		public void SetOwner(CompositeObjectId ownerId)
 		{
-			if (ObjectId != null)
+			if (CompositeObjectId != null)
 			{
-				ObjectId.Owner = ownerId;
-				Debug.Log($"Set owner for {gameObject.name} ({ObjectId.UniqueId}) to {ownerId.UniqueId}");
+				CompositeObjectId.Owner = ownerId;
+				Debug.Log($"Set owner for {gameObject.name} ({CompositeObjectId.UniqueId}) to {ownerId.UniqueId}");
 			}
 			else
 			{

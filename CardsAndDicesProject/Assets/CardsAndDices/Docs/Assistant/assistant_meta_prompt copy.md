@@ -454,43 +454,29 @@ get_ticker_symbol関数とget_current_stock_price関数が提供されている�
 これで例は終わりです。さて、ここに私が指示を書いてほしいタスクがあります：
 
 <Task>
-prefabをGameObjectとしてインスタンス化する際のルールを以下にまとめました
-この要件を推敲し、guideの設計書として生成してください
-設計書は、以下の設計書のガイドに従ってください
+ソースファイルを元に、システムマネージメント設計書を作成します
+以下のソースファイルを読込、「例：ドキュメント」をフォーマットとして作成してください
 
-# ガイド設計書
+# 該当のソースファイル
 
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_rules.md
-- D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\guide\guide_files.md
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\AnimationExecutor.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\AnimationStrategyRegistry.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\BaseAnimationStrategySO.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\BuffAnimationStrategySO.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\DragAnimationStrategySO.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\BaseAnimationProfile.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\BodySlamAnimationProfile.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\BuffAnimationProfile.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\EntityDefinition\AnimationStrategyEntity.cs
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\AnimationContext.cs
 
----
+# 例：ドキュメント
 
-# prefabのインスタンス化を行う方法
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\Example\example_system_management_document.md
 
-## 概要
+# 出力ファイル
 
-LifetimeScopeの[SerializeField]でprefabを保持し、ConfigureでfactoryクラスにDIします
-prefabは、WithIdで明示的にIDを与えます
-※例：uilder.RegisterInstance(enemyPrefab1).As<GameObject>().WithId("Enemy1");
-
-IStartableを継承しSpawnerにより、factoryクラスを通してprefabを生成します
-
-## コンポーネント
-
-### 1. Factoryクラス
-
-- prefab１つにつき、１つ作成します
-- createメソッドを使用して、prefabを１つ生成します
-- 生成したゲームオブジェクトを返します
-- 生成したゲームオブジェクト内のクラスに対するDIは、resolver.Instantiate(prefab)で生成することで対応します
-
-### 2. Spawnerクラス
-
-- IStartableを継承します
-- prefab１つにつき、１つ作成します
-- 生成したゲームオブジェクトに個別の値を設定したい場合や、prefabから複数のゲームオブジェクトを生成したい場合は、factoryメソッドからかえってきたゲームオブジェクトに設定します
-- 生成する数や変更内容を保持したい場合、性的なクラスを１つ作ってそれを参照することで対応します
-- 生成したゲームオブジェクト内のクラスで、Iinitializeのクラスにたいして、初期化処理を行います
+D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_animation_system.md
 </Task>
 
 指示を書くには、次の指示に従ってください。

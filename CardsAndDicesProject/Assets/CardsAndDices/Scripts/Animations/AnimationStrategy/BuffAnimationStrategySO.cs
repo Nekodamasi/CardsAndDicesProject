@@ -55,7 +55,7 @@ namespace CardsAndDices
             // 4. コマンド発行
             sequence.OnComplete(() =>
             {
-                context.SpriteCommandBus.Emit(new PlayVfxCommand(context.VfxDefinition, transform.position, transform.rotation));
+                context.IdentifiableCommandBus.Emit(new PlayVfxCommand(context.VfxDefinition, transform.position, transform.rotation));
             });
             return sequence;
         }

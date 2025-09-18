@@ -25,14 +25,24 @@ namespace CardsAndDices
         [SerializeField] public MaterialPropertyBlock MaterialPropertyBlock;
 
         /// <summary>
+        /// CompositeObjectIdを取得するのに使用します
+        /// </summary>
+        [SerializeField] public IdentifiableGameObject IdentifiableGameObject;
+
+        /// <summary>
         /// アニメーションのターゲット位置。主に移動アニメーションで使用されます。
         /// </summary>
         public Vector3 TargetPosition;
 
         /// <summary>
+        /// アニメーションのホーム位置。主に移動アニメーションで使用されます。
+        /// </summary>
+        public Vector3 HomePosition;
+
+        /// <summary>
         /// コマンドを発行するのに使用します
         /// </summary>
-        [SerializeField] public SpriteCommandBus SpriteCommandBus;
+        [SerializeField] public IdentifiableCommandBus IdentifiableCommandBus;
 
         /// <summary>
         /// vfxデータ

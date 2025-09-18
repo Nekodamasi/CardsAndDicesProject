@@ -163,8 +163,10 @@
 | BuffAnimationProfile.cs | バフ効果を受けた際のアニメーションパラメータを定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\BuffAnimationProfile.cs |
 | DamageAnimationProfile.cs | ダメージを受けた際のアニメーションパラメータを定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\DamageAnimationProfile.cs |
 | DeathAnimationProfile.cs | 死亡時のアニメーションパラメータを定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\DeathAnimationProfile.cs |
+| DiceJumpInAnimationProfile.cs | ダイスのジャンプインアニメーション用のパラメータを定義する。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\DiceJumpInAnimationProfile.cs |
 | DragAnimationProfile.cs | ドラッグ中のアニメーションパラメータを定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\DragAnimationProfile.cs |
 | HoverAnimationProfile.cs | ホバー時のアニメーションパラメータを定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\HoverAnimationProfile.cs |
+| MoveRightAnimationProfile.cs | 右方向への移動アニメーションのパラメータを定義するプロファイル。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\MoveRightAnimationProfile.cs |
 | NormalAnimationProfile.cs | 通常状態のアニメーションパラメータを定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\NormalAnimationProfile.cs |
 
 ### Scripts/Animations/AnimationStrategy
@@ -175,8 +177,10 @@
 | AnimationStrategyRegistry.cs | `AnimationStrategyEntity`と`BaseAnimationStrategySO`のマッピングを管理するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\AnimationStrategyRegistry.cs |
 | BaseAnimationStrategySO.cs | 全てのアニメーション戦略の基底クラスとなるScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\BaseAnimationStrategySO.cs |
 | BuffAnimationStrategySO.cs | バフ効果を受けた際のアニメーション戦略を定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\BuffAnimationStrategySO.cs |
+| DiceJumpInAnimationStrategySO.cs | `DiceJumpInAnimationProfile` を使用して、ダイスのジャンプインアニメーションをDOTweenで実行する。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\DiceJumpInAnimationStrategySO.cs |
 | DragAnimationStrategySO.cs | ドラッグ中のアニメーション戦略を定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\DragAnimationStrategySO.cs |
 | HoverAnimationStrategySO.cs | ホバー時のアニメーション戦略を定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\HoverAnimationStrategySO.cs |
+| MoveRightAnimationStrategySO.cs | 右方向へ移動するアニメーションを実行する戦略。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\MoveRightAnimationStrategySO.cs |
 | NormalAnimationStrategySO.cs | 通常状態のアニメーション戦略を定義するScriptableObject。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\AnimationStrategy\NormalAnimationStrategySO.cs |
 
 ### Scripts/Commands

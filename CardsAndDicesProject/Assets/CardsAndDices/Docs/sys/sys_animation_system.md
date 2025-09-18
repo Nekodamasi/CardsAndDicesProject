@@ -4,82 +4,130 @@
 
 ## 概要
 
-本ドキュメントは、UI要素（特に`SpriteView`やそれに類するコンポーネント）のアニメーション機能を、拡張性・保守性の高い形で実装するためのシステム設計を定義します。
-アニメーションの振る舞いを「戦略（Strategy）」としてカプセル化し、データ駆動で管理することを基本方針とします。
+本設計は、「Cards and Dices」プロジェクトにおけるアニメーション再生システムの技術的な実装を定義します。
+このシステムは、**ストラテジーパターン**と**ScriptableObject**を全面的に活用することで、アニメーションのロジックとパラメータを分離し、高い再利用性とメンテナンス性を実現することを目的とします。
+
+- **データ駆動設計**: アニメーションの種類や詳細なパラメータ（時間、動きの大きさなど）はすべて`ScriptableObject`として定義され、エンジニア以外の担当者でも調整が可能です。
+- **関心の分離**: アニメーションの「実行タイミングを決定する部分」、「具体的な動きを実装する部分（戦略）」、「動きのパラメータを定義する部分」が明確に分離されています。
 
 ---
 
-## 設計方針
+## クラスおよびコンポーネント設計
 
-### 1. Strategyパターンの採用
-「どのアニメーションを再生するか」という決定と、「どのようにアニメーションを再生するか」という具体的な処理を分離するため、Strategyパターンを採用します。
-これにより、呼び出し元のクラス（`SpriteView`など）を変更することなく、新しいアニメーション（ホバー、ドラッグ、通常状態など）を容易に追加できます。
+### 1. 管理・実行クラス
 
-### 2. データ駆動
-アニメーションのパラメータ（再生時間、拡縮率、色など）は、すべて`ScriptableObject`として定義します。これにより、プログラマ以外（デザイナー、プランナー）でも、コードに触れることなくアニメーションの調整が可能になります。
+- **`AnimationExecutor`**:
+    - **継承**: `Pure C# Class`
+    - アニメーション戦略(`BaseAnimationStrategySO`)を受け取り、実行する責務を持つサービスクラスです。
+    - **プロパティ**: なし
+    - **責務**: 特定のアニメーション戦略を実行し、その結果として生成されたDOTweenの`Sequence`を返却します。
+    - **メソッド `Execute(...)`**: `BaseAnimationStrategySO`と`AnimationContext`を引数に取り、戦略の`ExecuteAsync`を呼び出してアニメーションを開始させます。戦略がnullの場合は空のシーケンスを返します。
 
-### 3. 責務の分離
-- **呼び出し元 (`SpriteView`など):** アニメーションの再生をトリガーし、各戦略に必要なコンポーネント群（コンテキスト）を提供する責務を持ちます。
-- **Strategy (`HoverAnimationStrategy`など):** `ScriptableObject`からパラメータを読み取り、具体的なアニメーション処理（DOTweenのSequence生成）を実行する責務を持ちます。
-- **Profile (`HoverAnimationProfile`など):** 個々のアニメーションのパラメータを保持するデータコンテナとしての責務を持ちます。
-- **Context (`AnimationContext`):** アニメーションの実行に必要なコンポーネントへの参照を集約し、Strategyに渡す責務を持ちます。
+- **`AnimationStrategyRegistry`**:
+    - **継承**: `ScriptableObject`
+    - `AnimationStrategyEntity` (ID) と `BaseAnimationStrategySO` (戦略) のマッピングを管理するレジストリです。
+    - **プロパティ**: `_strategyMappings` (Inspector設定用), `_registry` (実行時参照用Dictionary)
+    - **責務**: `AnimationStrategyEntity`をキーとして、対応するアニメーション戦略(`BaseAnimationStrategySO`)を提供します。
+    - **メソッド `GetStrategy(...)`**: `AnimationStrategyEntity`を引数に取り、辞書から対応する`BaseAnimationStrategySO`を検索して返します。
+
+- **`AnimationContext`**:
+    - **継承**: `MonoBehaviour`
+    - アニメーションの実行に必要なコンテキスト情報（対象オブジェクト、コマンドバスなど）を集約し、各戦略クラスに渡すためのコンテナです。
+    - **プロパティ**: `TargetTransform`, `SpriteCommandBus`, `VfxDefinition`, `MultiRendererVisualController`など、アニメーションに必要な各種コンポーネントへの参照を保持します。
+    - **責務**: アニメーション戦略が必要とする外部のコンポーネントやデータへのアクセスを提供します。
+
+### 2. 戦略クラス (Strategy)
+
+- **`BaseAnimationStrategySO`**:
+    - **継承**: `ScriptableObject` (抽象クラス)
+    - 全てのアニメーション戦略クラスが継承する抽象基底クラスです。
+    - **プロパティ**: なし
+    - **責務**: 全ての戦略クラスに`ExecuteAsync`メソッドの実装を強制します。
+    - **メソッド `ExecuteAsync(...)`**: `AnimationContext`を引数に取り、具体的なアニメーションのDOTween `Sequence`を返す抽象メソッドです。
+
+- **`BuffAnimationStrategySO`**:
+    - **継承**: `BaseAnimationStrategySO`
+    - バフ効果が付与された際のアニメーションを実装する具体的な戦略クラスです。
+    - **プロパティ**: `_profile` (`BuffAnimationProfile`への参照)
+    - **責務**: `BuffAnimationProfile`に定義されたパラメータに基づき、対象オブジェクトが「つぶれて伸びる」といった具体的なアニメーションシーケンスを構築します。
+    - **メソッド `ExecuteAsync(...)`**: `AnimationContext`から対象Transformを取得し、`_profile`のパラメータを使ってDOTweenシーケンスを構築して返します。アニメーション完了後にはVFX再生コマンドを発行します。
+
+- **`DragAnimationStrategySO`**:
+    - **継承**: `BaseAnimationStrategySO`
+    - ドラッグ操作中のようなアニメーションを実装する具体的な戦略クラスです。
+    - **プロパティ**: `_profile` (`DragAnimationProfile`への参照)
+    - **責務**: `DragAnimationProfile`に基づき、対象オブジェクトのフェードやスケール変更のアニメーションシーケンスを構築します。
+    - **メソッド `ExecuteAsync(...)`**: `AnimationContext`から`MultiRendererVisualController`などを取得し、フェードとスケール変更のDOTweenシーケンスを構築して返します。
+
+### 3. データ定義 (Data)
+
+- **`AnimationStrategyEntity`**:
+    - **継承**: `BaseEntityDefinition` -> `ScriptableObject`
+    - アニメーション戦略の種類を一意に識別するためのIDとして機能する`ScriptableObject`です。
+    - **プロパティ**: `Id` (基底クラスから継承)
+    - **責務**: アニメーション戦略の種別を定義し、`AnimationStrategyRegistry`での検索キーとして使用されます。
+
+- **`BaseAnimationProfile`**:
+    - **継承**: `ScriptableObject` (抽象クラス)
+    - 全てのアニメーションパラメータ定義の基底クラスです。
+    - **プロパティ**: `_duration` (アニメーションの基本再生時間)
+    - **責務**: 全てのアニメーションプロファイルに共通のプロパティを提供します。
+
+- **`BuffAnimationProfile` / `BodySlamAnimationProfile`**:
+    - **継承**: `BaseAnimationProfile`
+    - 特定のアニメーション（バフ、体当たりなど）に関する詳細なパラメータを定義するデータクラスです。
+    - **プロパティ**: `_squashScale`, `_lungeDistance`など、各アニメーションに固有の調整値を保持します。
+    - **責務**: アニメーションの見た目や挙動に関する具体的な数値を定義し、エンジニア以外でも調整可能にします。
 
 ---
 
-## 主要コンポーネント
+## 主要な処理フロー
 
-### 1. `AnimationContext` (MonoBehaviour)
-アニメーションの実行に必要なコンポーネントへの参照を集約したコンテキストクラスです。Strategyはこのクラスを介して対象のGameObjectや関連コンポーネントを操作します。`MonoBehaviour`を継承しており、自身がアタッチされたGameObjectに紐づくコンポーネントを管理します。
+### アニメーションの実行シーケンス
 
-| プロパティ名 | 型 | 解説 |
-| :--- | :--- | :--- |
-| `MultiRendererVisualController` | `MultiRendererVisualController` | 複数のRendererの色や透明度を一括で制御するコントローラー |
-| `TargetTransform` | `Transform` | アニメーション対象のTransform |
-| `SpriteView` | `BaseSpriteView` | アニメーションの起点となるViewコンポーネント |
-| `MaterialPropertyBlock` | `MaterialPropertyBlock` | シェーダーパラメータを変更するためのブロック |
-| `TargetPosition` | `Vector3` | 主に移動アニメーションで利用される目標座標 |
+1.  外部の呼び出し元（例: `CardEffect`の処理など）が、特定のアニメーションを実行したいと考えます。
+2.  呼び出し元は`AnimationStrategyRegistry`に対し、`AnimationStrategyEntity`（例: "Buff"のID）を渡して`GetStrategy()`を呼び出し、対応する`BaseAnimationStrategySO`（この場合は`BuffAnimationStrategySO`のインスタンス）を取得します。
+3.  呼び出し元は、アニメーションに必要な情報を詰めた`AnimationContext`を準備します。
+4.  呼び出し元は`AnimationExecutor.Execute()`を呼び出し、取得した戦略（`BuffAnimationStrategySO`）と`AnimationContext`を渡します。
+5.  `AnimationExecutor`は、渡された戦略の`ExecuteAsync()`メソッドを実行します。
+6.  `BuffAnimationStrategySO`は、`AnimationContext`からターゲットの`Transform`などを取得し、自身の`_profile`（`BuffAnimationProfile`）に定義されたパラメータを基に、DOTweenを使ってアニメーションシーケンスを構築します。
+7.  構築された`Sequence`が`AnimationExecutor`を経由して呼び出し元に返却され、再生されます。
+8.  （オプション）戦略クラスは、`Sequence.OnComplete()`などを用いて、アニメーション完了時に`SpriteCommandBus`経由でVFX再生コマンドなどを発行することができます。
 
-### 2. `IAnimationStrategy` (インターフェース)
-すべてのアニメーション戦略クラスが実装する共通のインターフェースです。
+```mermaid
+sequenceDiagram
+    participant Caller as 外部の呼び出し元
+    participant Registry as AnimationStrategyRegistry
+    participant Executor as AnimationExecutor
+    participant Strategy as BaseAnimationStrategySO
+    participant Context as AnimationContext
 
-| メソッド名 | 戻り値 | 引数 | 解説 |
-| :--- | :--- | :--- | :--- |
-| `ExecuteAsync` | `Sequence` | `AnimationContext` | DOTweenの`Sequence`オブジェクトを生成して返す |
-
-### 3. `BaseAnimationProfile` (ScriptableObject)
-各アニメーションのパラメータを定義する`ScriptableObject`の抽象基底クラスです。具体的なアニメーションごとにこのクラスを継承したプロファイルを作成します。
-
-**主な派生クラス:**
-- `NormalAnimationProfile`: 通常状態のアニメーション設定
-- `HoverAnimationProfile`: ホバー状態のアニメーション設定
-- `DragAnimationProfile`: ドラッグ状態のアニメーション設定
-
-### 4. 具体的な戦略クラス
-`IAnimationStrategy`を実装し、特定の`AnimationProfile`と組み合わせてアニメーションの`Sequence`を生成します。
-
-- `NormalAnimationStrategy`: 通常状態（例：非ホバー時）に戻すアニメーションを定義します。
-- `HoverAnimationStrategy`: ホバー時の拡大や発光などのアニメーションを定義します。
-- `DragAnimationStrategy`: ドラッグ中の拡縮やフェードなどのアニメーションを定義します。
+    Caller->>Registry: GetStrategy(entity)
+    Registry-->>Caller: strategy (e.g., BuffAnimationStrategySO)
+    Caller->>Context: 必要な情報を設定
+    Caller->>Executor: Execute(strategy, context)
+    Executor->>Strategy: ExecuteAsync(context)
+    Strategy->>Context: 情報を取得 (e.g., TargetTransform)
+    Note right of Strategy: DOTweenシーケンスを構築
+    Strategy-->>Executor: return sequence
+    Executor-->>Caller: return sequence
+```
 
 ---
 
-## 処理フロー例：ホバーアニメーション
+## 既存システムとの連携
 
-1. `SpriteView`がユーザーのホバーイベントを検知します。
-2. `SpriteView`は、インスペクターに設定された`HoverAnimationProfile`を元に`HoverAnimationStrategy`のインスタンスを生成します。
-3. `SpriteView`は、自身が持つ`AnimationContext`（または関連する`AnimationContext`）を引数として、`HoverAnimationStrategy`の`ExecuteAsync`メソッドを呼び出します。
-4. `HoverAnimationStrategy`は、コンストラクタで受け取った`HoverAnimationProfile`から再生時間、拡縮率、目標色などのパラメータを読み取ります。
-5. `HoverAnimationStrategy`は、`AnimationContext`を通じて`TargetTransform`や`MultiRendererVisualController`を操作し、DOTweenのAPIを用いてアニメーションの`Sequence`を構築します。
-6. `ExecuteAsync`メソッドは、構築した`Sequence`オブジェクトを呼び出し元（`SpriteView`）に返却します。呼び出し元は、返された`Sequence`を再生します。
+- **コマンドバスシステム**: `AnimationContext`が`SpriteCommandBus`の参照を保持しています。これにより、各アニメーション戦略はアニメーションの完了時などに`PlayVfxCommand`のような新しいコマンドを発行でき、VFXシステムなど他のシステムと疎結合に連携します。
+- **カード・エフェクトシステム**: このアニメーションシステムは、カード効果の視覚表現として利用されることを想定しています。カード効果を処理するクラスが、このシステムの「外部の呼び出し元(Caller)」として機能します。
 
 ---
 
 ## 関連ファイル
-- [gdd_sprite_ui_design.md](../gdd/gdd_sprite_ui_design.md)
-- [guide_design-principles.md](../guide/guide_design-principles.md)
+
+- [guide_design-principles.md](../../guide/guide_design-principles.md)
 
 ---
 
 ## 更新履歴
-- 2025-09-04: 現行ソースコードとの同期 (Gemini)
-- 2025-09-03: 初版 (Gemini)
+
+- 2025-09-18: 初版作成 (Gemini)

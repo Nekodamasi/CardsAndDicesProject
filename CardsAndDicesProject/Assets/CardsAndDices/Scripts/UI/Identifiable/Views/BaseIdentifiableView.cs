@@ -20,7 +20,7 @@ namespace CardsAndDices
         /// <summary>
         /// このViewインスタンスを識別するための一意なIDを取得します。
         /// </summary>
-        public CompositeObjectId CompositeObjectId { get { return _identifiableGameObject.ObjectId; } }
+        public CompositeObjectId CompositeObjectId { get { return _identifiableGameObject.CompositeObjectId; } }
 
         public virtual void OnAwake()
         {

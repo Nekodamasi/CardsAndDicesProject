@@ -92,7 +92,7 @@ namespace CardsAndDices
             }
 
             _spriteInputHandler = GetComponent<SpriteInputHandler>();
-            _animationContext.SpriteCommandBus = _commandBus;
+//            _animationContext.IdentifiableCommandBus = _commandBus;
         }
 
         /// <summary>
