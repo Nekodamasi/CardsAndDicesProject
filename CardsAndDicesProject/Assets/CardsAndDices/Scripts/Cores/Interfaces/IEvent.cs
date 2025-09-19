@@ -7,14 +7,5 @@ namespace CardsAndDices
     /// </summary>
     public interface IEvent
     {
-        /// <summary>
-        /// コマンドを実行します。
-        /// </summary>
-        void Execute();
-
-        /// <summary>
-        /// コマンドを元に戻します。
-        /// </summary>
-        void Undo();
     }
 } 

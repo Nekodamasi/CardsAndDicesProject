@@ -42,7 +42,7 @@ namespace CardsAndDices
             if (_diceSlotInstance.DiceSlotLocation != cmd.DiceSlotLocation) return;
             if (_diceSlotInstance.ReflowPlacedDiceId == null) return;
 
-            _commandBus.Emit(new MoveToAnimationIdentifiableCommand(_diceSlotInstance.ReflowPlacedDiceId, _diceSlotInstance.DiceSlotPosition));
+            _commandBus.Emit(new MoveToAnimationIdentifiableEvent(_diceSlotInstance.ReflowPlacedDiceId, _diceSlotInstance.DiceSlotPosition));
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace CardsAndDices
                 _diceSlotInstance.RemoveDice();
             }
             _diceSlotInstance.PlacedDice(cmd.DiceId);
-            _commandBus.Emit(new IdentifiableChangeHomePositionCommand(cmd.DiceId, _diceSlotInstance.DiceSlotPosition));
+            _commandBus.Emit(new ChangeHomePositionStatusViewEvent(cmd.DiceId, _diceSlotInstance.DiceSlotPosition));
         }
 
         /// <summary>

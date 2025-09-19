@@ -3,21 +3,21 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ステータス変更イベント
+    /// 現在のステータスをViewに反映するコマンドです
     /// </summary>
-    public class IdentifiableChangeStatusEvent : IEvent
+    public class MoveToIdentifiableEvent : IEvent
     {
         private readonly CompositeObjectId _executedObjectId;
-        private readonly IdentifiableStatus _newStatus;
+        private readonly Vector3 _targetPosition;
 
         /// <summary>
-        /// 初期化します。
+        /// IdentifiableBeginDragCommandを初期化します。
         /// </summary>
         /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
-        public IdentifiableChangeStatusEvent(CompositeObjectId executedObjectId, IdentifiableStatus newStatus)
+        public MoveToIdentifiableEvent(CompositeObjectId executedObjectId, Vector3 targetPosition)
         {
             _executedObjectId = executedObjectId;
-            _newStatus = newStatus;
+            _targetPosition = targetPosition;
         }
 
         /// <summary>
@@ -26,9 +26,11 @@ namespace CardsAndDices
         public CompositeObjectId ExecutedObjectId => _executedObjectId;
 
         /// <summary>
-        /// 変更先のステータスを取得します。
+        /// 移動先のPositionを取得します
         /// </summary>
-        public IdentifiableStatus NewStatus => _newStatus;
+        public Vector3 TargetPosition => _targetPosition;
+
+        /// => _executedObjectId;
 
         /// <summary>
         /// 効果を実行します。

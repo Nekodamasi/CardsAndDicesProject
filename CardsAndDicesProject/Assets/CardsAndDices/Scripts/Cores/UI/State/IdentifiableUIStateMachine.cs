@@ -36,7 +36,7 @@ namespace CardsAndDices
 			_identifiableEventBus.On<IdentifiableHoveredEvent>(OnIdentifiableHovered);
 			_identifiableEventBus.On<DisableUIInteractionEvent>(OnDisableUIInteraction);
 			_identifiableEventBus.On<EnableUIInteractionEvent>(OnEnableUIInteraction);
-			
+			_identifiableEventBus.On<ResetUIStatusEvent>(OnResetUIStatus);			
 		}
 
 		/// <summary>
@@ -47,6 +47,14 @@ namespace CardsAndDices
 			CurrentState = state;
 			StateObjectId = id;
 			TargetObjectId = targetId;
+		}
+
+		/// <summary>
+		/// UIStatusをリセットします
+		/// </summary>
+		private void OnResetUIStatus(ResetUIStatusEvent evt)
+		{
+			SetCurrentState(IdentifiableUIState.Idle, null, null);
 		}
 
 		/// <summary>

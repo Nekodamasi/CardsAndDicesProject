@@ -40,7 +40,7 @@ namespace CardsAndDices
             if (cmd.TargetObjectId != _view.CompositeObjectId) return;
             _commandBus.Emit(new DiceDropInInletCommand(cmd.ExecutedObjectId, cmd.TargetObjectId, _instance.FaceValue));
             _instance.IsAlive = false;
-            _commandBus.Emit(new IdentifiableChangeStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
+            _commandBus.Emit(new ChangeViewStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
             _commandBus.Emit(new DisplayStatusViewEvent(_view.CompositeObjectId));
         }
 

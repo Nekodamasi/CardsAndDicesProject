@@ -3,18 +3,18 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ムーブアニメーションを実行するコマンドです
+    /// ホームポジション変更コマンド
     /// </summary>
-    public class MoveToAnimationIdentifiableCommand : IEvent
+    public class ChangeHomePositionStatusViewEvent : IEvent
     {
         private readonly CompositeObjectId _executedObjectId;
         private readonly Vector3 _targetPosition;
 
         /// <summary>
-        /// IdentifiableBeginDragCommandを初期化します。
+        /// 初期化します。
         /// </summary>
         /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
-        public MoveToAnimationIdentifiableCommand(CompositeObjectId executedObjectId, Vector3 targetPosition)
+        public ChangeHomePositionStatusViewEvent(CompositeObjectId executedObjectId, Vector3 targetPosition)
         {
             _executedObjectId = executedObjectId;
             _targetPosition = targetPosition;
@@ -26,11 +26,9 @@ namespace CardsAndDices
         public CompositeObjectId ExecutedObjectId => _executedObjectId;
 
         /// <summary>
-        /// 移動先のPositionを取得します
+        /// 変更先のポジションを取得します。
         /// </summary>
         public Vector3 TargetPosition => _targetPosition;
-
-        /// => _executedObjectId;
 
         /// <summary>
         /// 効果を実行します。

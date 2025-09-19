@@ -20,35 +20,55 @@ namespace CardsAndDices
             _identifiableCommandBus = commandBus;
 
             _identifiableCommandBus.On<DisplayStatusViewEvent>(OnDisplayIdentifiableStatus);
-            _identifiableCommandBus.On<MoveToIdentifiableCommand>(OnMoveToIdentifiable);
-            _identifiableCommandBus.On<IdentifiableReturnHomePositionCommand>(OnIdentifiableReturnHomePosition);
-            _identifiableCommandBus.On<MoveToAnimationIdentifiableCommand>(OnMoveToAnimationIdentifiable);
+            _identifiableCommandBus.On<MoveToIdentifiableEvent>(OnMoveToIdentifiable);
+            _identifiableCommandBus.On<ReturnHomePositionStatusViewEvent>(OnIdentifiableReturnHomePosition);
+            _identifiableCommandBus.On<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
+            _identifiableCommandBus.On<ResetUIStatusEvent>(OnResetUIStatus);
+            _identifiableCommandBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
 
         }
         public void Dispose()
         {
             _identifiableCommandBus.Off<DisplayStatusViewEvent>(OnDisplayIdentifiableStatus);
-            _identifiableCommandBus.Off<MoveToIdentifiableCommand>(OnMoveToIdentifiable);
-            _identifiableCommandBus.Off<IdentifiableReturnHomePositionCommand>(OnIdentifiableReturnHomePosition);
+            _identifiableCommandBus.Off<MoveToIdentifiableEvent>(OnMoveToIdentifiable);
+            _identifiableCommandBus.Off<ReturnHomePositionStatusViewEvent>(OnIdentifiableReturnHomePosition);
+            _identifiableCommandBus.Off<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
+            _identifiableCommandBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
+            _identifiableCommandBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+        }
+        /// <summary>
+        /// 現在のUIステートをViewに反映させるコマンド
+        /// </summary>
+        private void OnDisplayUIStatus(DisplayUIStatusEvent evt)
+        {
+            DisplayCurrentStatus();
+        }
+
+        /// <summary>
+        /// UIStatusのreset
+        /// </summary>
+        private void OnResetUIStatus(ResetUIStatusEvent evt)
+        {
+            _status.UpdateStatus(_status.CurrentHomeStatus);
         }
 
         /// <summary>
         /// Animation移動の実行
         /// </summary>
-        private void OnMoveToAnimationIdentifiable(MoveToAnimationIdentifiableCommand cmd)
+        private void OnMoveToAnimationIdentifiable(MoveToAnimationIdentifiableEvent evt)
         {
             // 自分以外は処理しない
-            if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
-            _view.MoveToAnimated(cmd.TargetPosition, 0.2f);
+            if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
+            _view.MoveToAnimated(evt.TargetPosition, 0.2f);
         }
 
         /// <summary>
         /// HomePositionへのreturn
         /// </summary>
-        private async void OnIdentifiableReturnHomePosition(IdentifiableReturnHomePositionCommand cmd)
+        private async void OnIdentifiableReturnHomePosition(ReturnHomePositionStatusViewEvent evt)
         {
             // 自分以外は処理しない
-            if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
+            if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
             var _currentMoveAnimation = _view.MoveToAnimated(_status.HomePosition, 0.2f);
             await _currentMoveAnimation.AsyncWaitForCompletion();
             _status.UpdateStatus(_status.CurrentHomeStatus);
@@ -58,20 +78,20 @@ namespace CardsAndDices
         /// <summary>
         /// 現在の状態をViewに反映します。
         /// </summary>
-        private void OnMoveToIdentifiable(MoveToIdentifiableCommand cmd)
+        private void OnMoveToIdentifiable(MoveToIdentifiableEvent evt)
         {
             // 自分以外は処理しない
-            if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
-            _view.MoveTo(cmd.TargetPosition);
+            if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
+            _view.MoveTo(evt.TargetPosition);
         }
 
         /// <summary>
         /// 現在の状態をViewに反映します。
         /// </summary>
-        private void OnDisplayIdentifiableStatus(DisplayStatusViewEvent cmd)
+        private void OnDisplayIdentifiableStatus(DisplayStatusViewEvent evt)
         {
             // 自分以外は処理しない
-            if (_view.CompositeObjectId != cmd.ExecutedObjectId) return;
+            if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
             DisplayCurrentStatus();
         }
 

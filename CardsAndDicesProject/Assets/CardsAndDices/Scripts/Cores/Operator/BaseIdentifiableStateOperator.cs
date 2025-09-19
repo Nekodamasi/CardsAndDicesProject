@@ -12,7 +12,7 @@ namespace CardsAndDices
     public abstract class BaseIdentifiableStateOperator : ScriptableObject
     {
         [Header("Setting")]
-        [SerializeField] protected float _hoveredTime = 0.2f;
+        [SerializeField] protected float _hoveredTime = 0.0f;
 
         [Header("監視対象")]
         [SerializeField] private List<string> _ids = new();
@@ -72,14 +72,14 @@ namespace CardsAndDices
             _eventBus.Off<IdentifiableStateBeginDragEvent>(HandleStateBeginDrag);
         }
 
-        // --- Command Handlers ---
-        private void HandleStateHover(IdentifiableStateHoverEvent command) => ExecuteIfTarget(command.ExecutedObjectId, () => OnStateHover(command));
-        private void HandleStateUnhover(IdentifiableStateUnhoverEvent command) => ExecuteIfTarget(command.ExecutedObjectId, () => OnStateUnhover(command));
-        private void HandleStateEndDrag(IdentifiableStateEndDragEvent command) => ExecuteIfTarget(command.ExecutedObjectId, () => OnStateEndDrag(command));
-        private void HandleStateDrag(IdentifiableStateDragEvent command) => ExecuteIfTarget(command.ExecutedObjectId, () => OnStateDrag(command));
-        private void HandleStateDrop(IdentifiableStateDropEvent command) => ExecuteIfTarget(command.ExecutedObjectId, () => OnStateDrop(command));
-        private void HandleStateClick(IdentifiableStateClickEvent command) => ExecuteIfTarget(command.ExecutedObjectId, () => OnStateClick(command));
-        private void HandleStateBeginDrag(IdentifiableStateBeginDragEvent command) => ExecuteIfTarget(command.ExecutedObjectId, () => OnStateBeginDrag(command));
+        // --- event Handlers ---
+        private void HandleStateHover(IdentifiableStateHoverEvent evt) => ExecuteIfTarget(evt.ExecutedObjectId, () => OnStateHover(evt));
+        private void HandleStateUnhover(IdentifiableStateUnhoverEvent evt) => ExecuteIfTarget(evt.ExecutedObjectId, () => OnStateUnhover(evt));
+        private void HandleStateEndDrag(IdentifiableStateEndDragEvent evt) => ExecuteIfTarget(evt.ExecutedObjectId, () => OnStateEndDrag(evt));
+        private void HandleStateDrag(IdentifiableStateDragEvent evt) => ExecuteIfTarget(evt.ExecutedObjectId, () => OnStateDrag(evt));
+        private void HandleStateDrop(IdentifiableStateDropEvent evt) => ExecuteIfTarget(evt.ExecutedObjectId, () => OnStateDrop(evt));
+        private void HandleStateClick(IdentifiableStateClickEvent evt) => ExecuteIfTarget(evt.ExecutedObjectId, () => OnStateClick(evt));
+        private void HandleStateBeginDrag(IdentifiableStateBeginDragEvent evt) => ExecuteIfTarget(evt.ExecutedObjectId, () => OnStateBeginDrag(evt));
 
         /// <summary>
         /// コマンドの実行対象IDが監視対象リストに含まれている場合のみ、指定されたアクションを実行します。
@@ -93,12 +93,12 @@ namespace CardsAndDices
         }
 
         // --- Abstract Methods for Subclasses ---
-        protected virtual void OnStateHover(IdentifiableStateHoverEvent command) { }
-        protected virtual void OnStateUnhover(IdentifiableStateUnhoverEvent command) { }
-        protected virtual void OnStateEndDrag(IdentifiableStateEndDragEvent command) { }
-        protected virtual void OnStateDrag(IdentifiableStateDragEvent command) { }
-        protected virtual void OnStateDrop(IdentifiableStateDropEvent command) { }
-        protected virtual void OnStateClick(IdentifiableStateClickEvent command) { }
-        protected virtual void OnStateBeginDrag(IdentifiableStateBeginDragEvent command) { }
+        protected virtual void OnStateHover(IdentifiableStateHoverEvent evt) { }
+        protected virtual void OnStateUnhover(IdentifiableStateUnhoverEvent evt) { }
+        protected virtual void OnStateEndDrag(IdentifiableStateEndDragEvent evt) { }
+        protected virtual void OnStateDrag(IdentifiableStateDragEvent evt) { }
+        protected virtual void OnStateDrop(IdentifiableStateDropEvent evt) { }
+        protected virtual void OnStateClick(IdentifiableStateClickEvent evt) { }
+        protected virtual void OnStateBeginDrag(IdentifiableStateBeginDragEvent evt) { }
     }
 }

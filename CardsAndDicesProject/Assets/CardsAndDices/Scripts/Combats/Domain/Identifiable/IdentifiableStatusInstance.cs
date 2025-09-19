@@ -73,19 +73,19 @@ namespace CardsAndDices
             _homePosition = Vector3.zero;
             _identifiableCommandBus = identifiableCommandBus;
             _identifiableUIStateMachine = identifiableUIStateMachine;
-            _identifiableCommandBus.On<IdentifiableChangeStatusEvent>(OnIdentifiableChangeStatus);
-            _identifiableCommandBus.On<IdentifiableChangeHomePositionCommand>(OnIdentifiableChangeHomePosition);
+            _identifiableCommandBus.On<ChangeViewStatusEvent>(OnIdentifiableChangeStatus);
+            _identifiableCommandBus.On<ChangeHomePositionStatusViewEvent>(OnIdentifiableChangeHomePosition);
         }
 
         public void Dispose()
         {
-            _identifiableCommandBus.Off<IdentifiableChangeStatusEvent>(OnIdentifiableChangeStatus);
+            _identifiableCommandBus.Off<ChangeViewStatusEvent>(OnIdentifiableChangeStatus);
         }
 
         /// <summary>
         /// ポジションの変更コマンド。
         /// </summary>
-        private void OnIdentifiableChangeHomePosition(IdentifiableChangeHomePositionCommand cmd)
+        private void OnIdentifiableChangeHomePosition(ChangeHomePositionStatusViewEvent cmd)
         {
             if (_objectId != cmd.ExecutedObjectId) return;
 
@@ -95,7 +95,7 @@ namespace CardsAndDices
         /// <summary>
         /// ステータスの変更コマンド。
         /// </summary>
-        private void OnIdentifiableChangeStatus(IdentifiableChangeStatusEvent cmd)
+        private void OnIdentifiableChangeStatus(ChangeViewStatusEvent cmd)
         {
             if (_objectId != cmd.ExecutedObjectId) return;
 

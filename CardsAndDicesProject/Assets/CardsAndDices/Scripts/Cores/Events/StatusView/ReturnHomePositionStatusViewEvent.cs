@@ -3,34 +3,25 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// 現在のステータスをViewに反映するコマンドです
+    /// ステータス変更コマンド
     /// </summary>
-    public class MoveToIdentifiableCommand : IEvent
+    public class ReturnHomePositionStatusViewEvent : IEvent
     {
         private readonly CompositeObjectId _executedObjectId;
-        private readonly Vector3 _targetPosition;
 
         /// <summary>
-        /// IdentifiableBeginDragCommandを初期化します。
+        /// 初期化します。
         /// </summary>
         /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
-        public MoveToIdentifiableCommand(CompositeObjectId executedObjectId, Vector3 targetPosition)
+        public ReturnHomePositionStatusViewEvent(CompositeObjectId executedObjectId)
         {
             _executedObjectId = executedObjectId;
-            _targetPosition = targetPosition;
         }
 
         /// <summary>
         /// イベントの発生源のCompositeObjectIdを取得します。
         /// </summary>
         public CompositeObjectId ExecutedObjectId => _executedObjectId;
-
-        /// <summary>
-        /// 移動先のPositionを取得します
-        /// </summary>
-        public Vector3 TargetPosition => _targetPosition;
-
-        /// => _executedObjectId;
 
         /// <summary>
         /// 効果を実行します。
