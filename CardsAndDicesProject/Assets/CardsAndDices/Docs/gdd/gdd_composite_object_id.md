@@ -23,6 +23,7 @@
 ### 2.2. 相互作用（インタラクション）コンポーネント
 
 -   **IIdentifiableView （識別可能なオブジェクト）:** `CompositeObjectId` を持ち、自身が識別可能であることを示すインターフェース。
+-   **IdentifiableGameObject （識別可能なMonoBehaviour）:** `IIdentifiableView` を実装したMonoBehaviourのクラス。自身の `OnAwake()` メソッドで `CompositeObjectIdManager` からIDを自動的に取得し、`CompositeObjectRegistry` への登録を行います。ゲーム内で一意に識別される必要のある全てGameObject（カード、ダイス、スロット等）は、このクラスをインスペクター上でアタッチすることでGameObjectを１つの識別可能なオブジェクトに設定できます。
 -   **IdentifiableInputHandler （入力受付）:** `IIdentifiableView` を持つGameObjectにアタッチされ、Unityの入力イベント（`OnPointerEnter`など）を検知し、`IdentifiableCommandBus` へ具体的なコマンド（`IdentifiableHoverCommand`など）を発行します。
 -   **IdentifiableUIStateMachine （交通整理役）:** UI全体のインタラクション状態（`Idle`, `Dragging`など）を管理するステートマシン。`IdentifiableCommandBus` を流れるコマンドを監視し、状態の競合（例: ドラッグ中に別のオブジェクトをクリック）が起きないように、発行されるコマンドを制御します。
 -   **BaseIdentifiableStateOperator （専門の処理実行役）:** 特定の `CompositeObjectId` に対する状態変化コマンド（`IdentifiableStateHoverCommand`など）を購読する `ScriptableObject`。コマンドを受け取ると、具体的なリアクション（例: アニメーション再生、エフェクト表示）を実行します。
@@ -31,7 +32,7 @@
 
 ## 3. IDのライフサイクル
 
-1.  **生成 (Creation):** `IIdentifiableView` を持つオブジェクトが生成される際、`CompositeObjectIdManager` にIDの発行を要求します。
+1.  **生成 (Creation):** `IdentifiableGameObject` を継承したオブジェクトが生成される際、その `Awake` メソッド内で `CompositeObjectIdManager` にIDの発行を要求します。
 2.  **登録 (Registration):** オブジェクトは有効化されると、自身のIDを `CompositeObjectRegistry` に登録します。
 3.  **利用 (Utilization):** 他のシステムは `CompositeObjectRegistry` を通じて、現在アクティブなオブジェクトのIDを安全に検索・利用します。
 4.  **登録解除 (Unregistration):** オブジェクトが無効化・破壊されると、自身のIDを `CompositeObjectRegistry` から登録解除します。
