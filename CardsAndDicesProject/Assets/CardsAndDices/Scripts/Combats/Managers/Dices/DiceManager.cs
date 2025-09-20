@@ -32,7 +32,7 @@ namespace CardsAndDices
         private readonly List<DiceInstance> _diceInstances = new();
         private readonly List<DicePresenter> _dicePresenters = new();
         private readonly List<AddDice> _addDices = new();
-        private int _incrementId;
+//        private int _incrementId;
 
         /// <summary>
         /// DiceManagerを初期化します。
@@ -43,7 +43,7 @@ namespace CardsAndDices
             _identifiableCommandBus = identifiableCommandBus;
             _compositeObjectIdManager = compositeObjectIdManager;
             _viewRegistry = viewRegistry;
-            _incrementId = 1;
+            //_incrementId = 1;
             _identifiableCommandBus.On<SceneLoadedCommand>(OnSceneLoaded);
         }
         /// <summary>

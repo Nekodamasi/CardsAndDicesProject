@@ -19,10 +19,7 @@ namespace CardsAndDices
         public void Construct(SoundManager soundManager)
         {
             _soundManager = soundManager;
-        }
 
-        private void Awake()
-        {
             _audioSource = GetComponent<AudioSource>();
             if (_soundManager != null)
             {

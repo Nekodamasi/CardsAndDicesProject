@@ -9,16 +9,7 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "DragAnimationStrategySO", menuName = "CardsAndDices/Animations/AnimationStrategy/DragAnimationStrategySO")]
     public class DragAnimationStrategySO :  BaseAnimationStrategySO
     {
-        [SerializeField] private DragAnimationProfile _profile;
-
-        /// <summary>
-        /// コンストラクタ。
-        /// </summary>
-        /// <param name="profile">アニメーションのパラメータを定義するプロファイル。</param>
-        public DragAnimationStrategySO(DragAnimationProfile profile)
-        {
-            _profile = profile;
-        }
+        private DragAnimationProfile _profile;
 
         /// <summary>
         /// アニメーションを実行します。

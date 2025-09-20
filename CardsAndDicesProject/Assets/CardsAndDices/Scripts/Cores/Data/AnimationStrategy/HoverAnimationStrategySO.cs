@@ -12,15 +12,6 @@ namespace CardsAndDices
         [SerializeField] private HoverAnimationProfile _profile;
 
         /// <summary>
-        /// コンストラクタ。
-        /// </summary>
-        /// <param name="profile">アニメーションのパラメータを定義するプロファイル。</param>
-        public HoverAnimationStrategySO(HoverAnimationProfile profile)
-        {
-            _profile = profile;
-        }
-
-        /// <summary>
         /// アニメーションを実行します。
         /// </summary>
         /// <param name="context">アニメーションに必要なコンポーネントのコンテキスト。</param>

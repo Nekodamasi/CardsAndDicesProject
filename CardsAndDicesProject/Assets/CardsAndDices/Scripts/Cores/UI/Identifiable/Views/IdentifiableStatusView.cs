@@ -17,6 +17,11 @@ namespace CardsAndDices
         [SerializeField] private AnimationStrategyEntity _normalAnimationStrategyEntity;
         [SerializeField] private AnimationStrategyEntity _grayoutAnimationStrategyEntity;
         [SerializeField] private AnimationStrategyEntity _dragAnimationStrategyEntity;
+        [SerializeField] private SEPlayer _sEPlayer;
+
+        [Header("SEData Components")]
+        [SerializeField] private SEData _hoverSeData;
+        [SerializeField] private SEData _clickSeData;
 
         private AnimationExecutor _animationExecutor = new AnimationExecutor();
         private Sequence _currentMoveAnimation;
@@ -36,7 +41,7 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayHoverStatus()
         {
-
+            _sEPlayer.PlayOneShot(_hoverSeData);
             return AnimationExecute(_hoverAnimationStrategyEntity);
         }
 
@@ -62,7 +67,6 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayGrayoutStatus()
         {
-
             return AnimationExecute(_grayoutAnimationStrategyEntity);
         }
 

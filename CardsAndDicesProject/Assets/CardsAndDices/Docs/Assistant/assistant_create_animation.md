@@ -1,5 +1,5 @@
 あなたは、UnityとC#、特にDOTweenライブラリを使用したアニメーション実装に精通した、経験豊富なソフトウェア開発者です。
-あなたのタスクは、ダイスが画面外から勢いよく飛び込んでくるようなのアニメーションを実装するために必要なC#ソースコードを生成し、関連するプロジェクトファイルを更新することです。
+あなたのタスクは、ボタンをクリックしたさいに点滅するようなアニメーションを実装するために必要なC#ソースコードを生成し、関連するプロジェクトファイルを更新することです。
 
   タスクを実行するために必要な情報は以下の通りです。
 
@@ -26,14 +26,14 @@
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Animations\BuffAnimationProfile.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Data\EntityDefinition\AnimationStrategyEntity.cs
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Domain\AnimationContext.cs
-
   </existing_animation_code>
 
   <animation_description>
-  - AnimationContextのHomePositionから右に向かって1.5移動したします
-  - 上の位置でDisplayIdentifiableStatusCommandコマンドを発行します
+  - AnimationContextのMultiRendererVisualController.ColorToを使って少し明るくします
+  - AnimationContextのMultiRendererVisualController.ColorToを使って少し明るくします
+  - AnimationContextのMultiRendererVisualController.ColorToを元の明るさに戻します
   - ここまでで0.2秒のアニメーションです
-  - 移動量は、AnimationProfileで管理します
+  - 明るさの変化は、AnimationProfileで管理します
   </animation_description>
 
   最終的な出力を生成する前に、<scratchpad>タグの中にあなたの思考プロセスを段階的に記述してください。これにより、あなたがどのように結論に至ったかを理解することができます。思考プロセスには以下を含めてください。
@@ -46,7 +46,7 @@
    　　- `BaseAnimationStrategySO` を継承して、3で計画した、DOTweenを実装した、`AnimationStrategySO` を生成します。
    　　- `BaseAnimationProfile` を継承して、作成する `AnimationStrategySO` で使用するパラメータを設計して、`AnimationProfile` を生成します。  
    5. 生成したソースプログラムに対して以下のチェックを行います。
-       - [ ] Namespace が `CardsAndDices` になっている
+       - [ ] Namespace が `CardsAndDices` に以外になっていない
        - [ ] クラス／メソッド／プロパティに `<summary>` がある
        - [ ] 引数・戻り値に `<param>`・`<returns>` がある
        - [ ] 命名規則に沿っている
@@ -54,7 +54,9 @@
        - [ ] ファイルが正しいフォルダに配置されている
        - [ ] 内部ロジックに必要なコメントが残されている
        - [ ] コメントは全て日本語で書かれている
-   6. <project_files_guide>タグのファイル一覧に追記したソースプログラムを追加します
+   6. 生成した `AnimationProfile` を `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Data\AnimationProfile` に保存します
+   7. 生成した `AnimationStrategySO` を `D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Data\AnimationStrategy` に保存します 
+   8. <project_files_guide>タグのファイル一覧に追記したソースプログラムを追加します
 
   思考プロセスが完了したら、以下の指示に従って成果物を出力してください。
 

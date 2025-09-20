@@ -23,6 +23,7 @@ namespace CardsAndDices
         [SerializeField] private IdentifiableUIStateMachine _identifiableUIStateMachine;
         [SerializeField] private DiceSlotManager _diceSlotManager;
         [SerializeField] private DiceManager _diceManager;
+        [SerializeField] private SoundManager _soundManager;
         
 
         [Header("ScriptableObject Registries")]
@@ -52,6 +53,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_identifiableUIStateMachine).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceSlotManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_soundManager).AsSelf().AsImplementedInterfaces();
 
             // ScriptableObject Registries のバインド
             builder.RegisterInstance(_compositeObjectRegistry).AsSelf().AsImplementedInterfaces();
@@ -69,6 +71,7 @@ namespace CardsAndDices
             _identifiableUIStateMachine.Initialize(_gameEventBus);
             _diceSlotManager.Initialize(_gameEventBus);
             _diceManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
+            _soundManager.Initialize();
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();
@@ -84,6 +87,7 @@ namespace CardsAndDices
                 var IdentifiableGameObject = card.GetComponent<IdentifiableGameObject>();
                 var IdentifiableInputHandler = card.GetComponent<IdentifiableInputHandler>();
                 var BaseIdentifiableView = card.GetComponent<BaseIdentifiableView>();
+                var SEPlayer = card.GetComponent<SEPlayer>();
                 return card;
             },
             Lifetime.Singleton);

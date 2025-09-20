@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// サウンド設定を一元管理するScriptableObject。
     /// AudioMixerの音量制御や、ユーザー設定の永続化を担当します。
     /// </summary>
-    [CreateAssetMenu(fileName = "SoundManager", menuName = "CardsAndDices/Managers/SoundManager")]
+    [CreateAssetMenu(fileName = "SoundManager", menuName = "CardsAndDices/Core/Managers/SoundManager")]
     public class SoundManager : ScriptableObject
     {
         [SerializeField]
