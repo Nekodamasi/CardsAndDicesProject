@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// バフ効果を受けた際のアニメーション戦略。
     /// </summary>
-    [CreateAssetMenu(fileName = "NormalAnimationStrategySO", menuName = "CardsAndDices/Animations/AnimationStrategy/NormalAnimationStrategySO")]
+    [CreateAssetMenu(fileName = "NormalAnimationStrategySO", menuName = "CardsAndDices/Core/Data/AnimationStrategy/AnimationStrategy/NormalAnimationStrategySO")]
     public class NormalAnimationStrategySO :  BaseAnimationStrategySO
     {
         [SerializeField] private NormalAnimationProfile _profile;

@@ -35,7 +35,7 @@ namespace CardsAndDices
 //        [SerializeField] private DiceSpawner _diceSpawner;
 
         [Header("StateOperator")]
-        [SerializeField] private DragStateOperator _dragStateOperator;
+        [SerializeField] private CoreOperator _dragStateOperator;
 
         protected override void Configure(IContainerBuilder builder)
         {

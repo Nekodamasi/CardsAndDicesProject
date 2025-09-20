@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// ホバーアニメーションのパラメータを定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "NormalAnimationProfile", menuName = "CardsAndDices/AnimationProfile/NormalProfile")]
+    [CreateAssetMenu(fileName = "NormalAnimationProfile", menuName = "CardsAndDices/Core/Data/AnimationProfile/NormalAnimationProfile")]
     public class NormalAnimationProfile : BaseAnimationProfile
     {
         [SerializeField]

@@ -48,6 +48,11 @@ namespace CardsAndDices
         /// <summary>
         /// 非表示状態。
         /// </summary>
-        Hide
+        Hide,
+
+        /// <summary>
+        /// クリック状態。
+        /// </summary>
+        Click
     }
 }

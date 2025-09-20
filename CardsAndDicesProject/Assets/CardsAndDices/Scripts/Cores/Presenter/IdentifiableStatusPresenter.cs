@@ -25,6 +25,8 @@ namespace CardsAndDices
             _identifiableCommandBus.On<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
             _identifiableCommandBus.On<ResetUIStatusEvent>(OnResetUIStatus);
             _identifiableCommandBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _identifiableCommandBus.On<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
+            
 
         }
         public void Dispose()
@@ -35,6 +37,7 @@ namespace CardsAndDices
             _identifiableCommandBus.Off<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
             _identifiableCommandBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
             _identifiableCommandBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _identifiableCommandBus.Off<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
         }
         /// <summary>
         /// 現在のUIステートをViewに反映させるコマンド
@@ -86,6 +89,17 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// クリックされた
+        /// </summary>
+        private void OnIdentifiableStateClick(IdentifiableStateClickEvent evt)
+        {
+            // 自分以外は処理しない
+            if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
+            _status.UpdateStatus(IdentifiableStatus.Click);
+            DisplayCurrentStatus();
+        }
+
+        /// <summary>
         /// 現在の状態をViewに反映します。
         /// </summary>
         private void OnDisplayIdentifiableStatus(DisplayStatusViewEvent evt)
@@ -121,6 +135,11 @@ namespace CardsAndDices
             else if (_status.CurrentStatus == IdentifiableStatus.Hide)
             {
                 _view.DisplayHideStatus();
+            }
+            // クリック状態
+            else if (_status.CurrentStatus == IdentifiableStatus.Click)
+            {
+                _view.DisplayClickStatus();
             }
         }
     }

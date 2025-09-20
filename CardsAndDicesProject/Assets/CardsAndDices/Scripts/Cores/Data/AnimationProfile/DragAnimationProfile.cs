@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// ホバーアニメーションのパラメータを定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "DragAnimationProfile", menuName = "CardsAndDices/AnimationProfile/DragProfile")]
+    [CreateAssetMenu(fileName = "DragAnimationProfile", menuName = "CardsAndDices/Core/Data/AnimationProfile/DragAnimationProfile")]
     public class DragAnimationProfile : BaseAnimationProfile
     {
         [SerializeField]

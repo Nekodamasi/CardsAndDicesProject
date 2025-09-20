@@ -17,6 +17,7 @@ namespace CardsAndDices
         [SerializeField] private AnimationStrategyEntity _normalAnimationStrategyEntity;
         [SerializeField] private AnimationStrategyEntity _grayoutAnimationStrategyEntity;
         [SerializeField] private AnimationStrategyEntity _dragAnimationStrategyEntity;
+        [SerializeField] private AnimationStrategyEntity _clickAnimationStrategyEntity;
         [SerializeField] private SEPlayer _sEPlayer;
 
         [Header("SEData Components")]
@@ -77,6 +78,15 @@ namespace CardsAndDices
         {
 
             return AnimationExecute(_dragAnimationStrategyEntity);
+        }
+
+        /// <summary>
+        /// クリック状態にします
+        /// </summary>
+        public Sequence DisplayClickStatus()
+        {
+            _sEPlayer.PlayOneShot(_clickSeData);
+            return AnimationExecute(_clickAnimationStrategyEntity);
         }
 
         /// <summary>

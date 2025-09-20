@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// ゲームオブジェクトのインタラクションの振る舞いを定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "InteractionProfile", menuName = "CardsAndDices/Interaction Profile")]
+    [CreateAssetMenu(fileName = "InPro_", menuName = "CardsAndDices/Core/Data/InteractionProfile")]
     public class InteractionProfile : ScriptableObject
     {
         [Header("Interaction Flags")]

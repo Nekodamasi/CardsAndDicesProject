@@ -258,6 +258,7 @@ namespace CardsAndDices
 					_identifiableEventBus.Emit(new IdentifiableStateClickEvent(evt.ExecutedObjectId));
 					break;
 				case IdentifiableUIState.Hovered:
+				case IdentifiableUIState.Hover:
 					if (StateObjectId == evt.ExecutedObjectId)
 					{
             			Debug.Log("すてーとましん（クリック）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);

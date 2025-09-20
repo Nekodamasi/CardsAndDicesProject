@@ -9,8 +9,8 @@ namespace CardsAndDices
     /// 識別可能オブジェクトの状態変化コマンドを監視し、具体的な処理を実装するためのクラス。
     /// BaseIdentifiableStateOperatorを継承し、各コマンドに対応するメソッドをオーバーライドして使用する。
     /// </summary>
-    [CreateAssetMenu(fileName = "DragStateOperator", menuName = "CardsAndDices/UI/Identifiable/Operator/DragStateOperator")]
-    public class DragStateOperator : BaseIdentifiableStateOperator
+    [CreateAssetMenu(fileName = "CoreOperator", menuName = "CardsAndDices/Core/Operator/CoreOperator")]
+    public class CoreOperator : BaseIdentifiableStateOperator
     {
         /// <summary>
         /// DIコンテナから依存性を注入するための初期化メソッド。
@@ -89,14 +89,29 @@ namespace CardsAndDices
             // HomePositionへのReturnを実行います
             _eventBus.Emit(new ReturnHomePositionStatusViewEvent(evt.ExecutedObjectId));
 
-            // 0.2秒待機
+            // 待機
             await UniTask.Delay(TimeSpan.FromSeconds(_hoveredTime));
 
             // Statusをリセットします
             _eventBus.Emit(new ResetUIStatusEvent());
 
             // resetしたStatusでViewを更新します
-            _eventBus.Emit(new DisplayUIStatusEvent());   
+            _eventBus.Emit(new DisplayUIStatusEvent());
+        }
+
+        /// <summary>
+        /// StateClickが発生したさいのコマンドを処理します。
+        /// </summary>
+        protected override async void OnStateClick(IdentifiableStateClickEvent evt)
+        {
+            // 待機
+            await UniTask.Delay(TimeSpan.FromSeconds(_clickTime));
+
+            // Statusをリセットします
+            _eventBus.Emit(new ResetUIStatusEvent());
+
+            // resetしたStatusでViewを更新します
+            _eventBus.Emit(new DisplayUIStatusEvent());
         }
     }
 }

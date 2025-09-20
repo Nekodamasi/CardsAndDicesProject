@@ -6,10 +6,10 @@ namespace CardsAndDices
     /// <summary>
     /// バフ効果を受けた際のアニメーション戦略。
     /// </summary>
-    [CreateAssetMenu(fileName = "DragAnimationStrategySO", menuName = "CardsAndDices/Animations/AnimationStrategy/DragAnimationStrategySO")]
+    [CreateAssetMenu(fileName = "DragAnimationStrategySO", menuName = "CardsAndDices/Core/Data/AnimationStrategy/DragAnimationStrategySO")]
     public class DragAnimationStrategySO :  BaseAnimationStrategySO
     {
-        private DragAnimationProfile _profile;
+        [SerializeField] private DragAnimationProfile _profile;
 
         /// <summary>
         /// アニメーションを実行します。

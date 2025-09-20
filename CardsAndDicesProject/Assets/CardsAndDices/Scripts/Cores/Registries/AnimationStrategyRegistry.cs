@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// AnimationStrategyEntityとBaseAnimationStrategySOのマッピングを管理し、登録するためのScriptableObjectです。
     /// </summary>
-    [CreateAssetMenu(fileName = "AnimationStrategyRegistry", menuName = "CardsAndDices/Animations/AnimationStrategyRegistry")]
+    [CreateAssetMenu(fileName = "AnimationStrategyRegistry", menuName = "CardsAndDices/Core/Registries/AnimationStrategyRegistry")]
     public class AnimationStrategyRegistry : ScriptableObject
     {
         /// <summary>
