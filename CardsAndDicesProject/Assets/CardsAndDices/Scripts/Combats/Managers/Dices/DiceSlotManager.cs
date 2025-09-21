@@ -9,19 +9,22 @@ namespace CardsAndDices
     /// <summary>
     /// 全てのダイススロットの状態を管理し、ダイスの配置などを担当するマネージャークラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceSlotManager", menuName = "CardsAndDices/Managers/Dices/DiceSlotManager")]
+    [CreateAssetMenu(fileName = "DiceSlotManager", menuName = "CardsAndDices/Combats/Managers/Dices/DiceSlotManager")]
     public class DiceSlotManager : ScriptableObject, IDisposable
     {
-        [Header("System Components")]
+        [Header("Components")]
         [SerializeField] private List<DiceSlotPositionEntity> _diceSlotPositionEntities;
+        [SerializeField] private CompositeObjectIdTypeEntity _objectType;
         private readonly List<DiceSlotInstance> _diceSlotInstances = new();
         private readonly List<DiceSlotController> _iceSlotControllers = new();
         private GameEventBus _identifiableCommandBus;
+        private CompositeObjectIdManager _compositeObjectIdManager;
 
         [Inject]
-        public void Initialize(GameEventBus identifiableCommandBus)
+        public void Initialize(GameEventBus identifiableCommandBus, CompositeObjectIdManager compositeObjectIdManager)
         {
             _identifiableCommandBus = identifiableCommandBus;
+            _compositeObjectIdManager = compositeObjectIdManager;
             _identifiableCommandBus.On<SceneLoadedCommand>(OnSceneLoaded);
             _identifiableCommandBus.On<ReflowDiceSlotsCommand>(OnReflowDiceSlots);
         }
@@ -72,7 +75,7 @@ namespace CardsAndDices
         {
             foreach (var diceSlotPositionEntity in _diceSlotPositionEntities)
             {
-                var instance = new DiceSlotInstance(diceSlotPositionEntity, _identifiableCommandBus);
+                var instance = new DiceSlotInstance(_compositeObjectIdManager.CreateId(_objectType, null), diceSlotPositionEntity, _identifiableCommandBus);
                 _diceSlotInstances.Add(instance);
                 _iceSlotControllers.Add(new DiceSlotController(instance, _identifiableCommandBus));
             }

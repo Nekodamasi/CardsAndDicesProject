@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// 全てのダイスの生成、状態管理、リロールなどを一元的に行うマネージャークラス。
     /// ScriptableObjectとして、ダイスのデータ管理に特化します。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceManager", menuName = "CardsAndDices/Managers/DiceManager")]
+    [CreateAssetMenu(fileName = "DiceManager", menuName = "CardsAndDices/Combats/Managers/Dices/DiceManager")]
     public class DiceManager : ScriptableObject, IDisposable
     {
         private class AddDice
@@ -27,7 +27,7 @@ namespace CardsAndDices
         [Header("Components")]
         [SerializeField] private CompositeObjectIdTypeEntity _objectType;
         private IdentifiableViewRegistry _viewRegistry;
-        private GameEventBus _identifiableCommandBus;
+        private GameEventBus _eventBus;
         private CompositeObjectIdManager _compositeObjectIdManager;
         private readonly List<DiceInstance> _diceInstances = new();
         private readonly List<DicePresenter> _dicePresenters = new();
@@ -38,13 +38,13 @@ namespace CardsAndDices
         /// DiceManagerを初期化します。
         /// </summary>
         [Inject]
-        public void Initialize(GameEventBus identifiableCommandBus, CompositeObjectIdManager compositeObjectIdManager, IdentifiableViewRegistry viewRegistry)
+        public void Initialize(GameEventBus eventBus, CompositeObjectIdManager compositeObjectIdManager, IdentifiableViewRegistry viewRegistry)
         {
-            _identifiableCommandBus = identifiableCommandBus;
+            _eventBus = eventBus;
             _compositeObjectIdManager = compositeObjectIdManager;
             _viewRegistry = viewRegistry;
             //_incrementId = 1;
-            _identifiableCommandBus.On<SceneLoadedCommand>(OnSceneLoaded);
+            _eventBus.On<SceneLoadedCommand>(OnSceneLoaded);
         }
         /// <summary>
         /// インスタンスをDisposeします
@@ -74,7 +74,7 @@ namespace CardsAndDices
         {
             DisposeInstances();
             DisposePresenters();
-            _identifiableCommandBus.Off<SceneLoadedCommand>(OnSceneLoaded);
+            _eventBus.Off<SceneLoadedCommand>(OnSceneLoaded);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace CardsAndDices
         {
             for (var i = 0; i < 2; i++)
             {
-//                _addDices.Add(new AddDice(_compositeObjectIdManager.CreateId(_objectType, null), -1));
+                _addDices.Add(new AddDice(_compositeObjectIdManager.CreateId(_objectType, null), -1));
             }
         }
 
@@ -131,7 +131,7 @@ namespace CardsAndDices
             var view = _viewRegistry.GetNonBoundView<DiceView>();
             Debug.Log("CreateDicePresenter:" + "view->" + view.CompositeObjectId + " diceInstance->" + diceInstance.FaceValue);
             view.SetBoundState(true);
-            var presenter = new DicePresenter(diceInstance, view, _identifiableCommandBus);
+            var presenter = new DicePresenter(diceInstance, view, _eventBus);
             _dicePresenters.Add(presenter);
             return presenter;
         }

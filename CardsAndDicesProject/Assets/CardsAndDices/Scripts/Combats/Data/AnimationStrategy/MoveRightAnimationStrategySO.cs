@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// 右方向へ移動するアニメーションを実行する戦略。
     /// </summary>
-    [CreateAssetMenu(fileName = "MoveRightAnimationStrategySO", menuName = "CardsAndDices/Core/Data/AnimationStrategy/MoveRightAnimationStrategySO")]
+    [CreateAssetMenu(fileName = "MoveRightAnimationStrategySO", menuName = "CardsAndDices/Combats/Data/AnimationStrategy/MoveRightAnimationStrategySO")]
     public class MoveRightAnimationStrategySO : BaseAnimationStrategySO
     {
         [SerializeField] private MoveRightAnimationProfile _profile;

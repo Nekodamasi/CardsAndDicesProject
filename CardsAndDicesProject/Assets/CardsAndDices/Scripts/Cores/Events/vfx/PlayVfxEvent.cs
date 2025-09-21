@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// VFXの再生を要求するコマンド。
     /// </summary>
-    public struct PlayVfxCommand : IEvent
+    public struct PlayVfxEvent : IEvent
     {
         /// <summary>
         /// 再生するVFXの定義。
@@ -22,7 +22,7 @@ namespace CardsAndDices
         /// </summary>
         public Quaternion Rotation;
 
-        public PlayVfxCommand(VfxDefinition vfxDefinition, Vector3 position, Quaternion rotation)
+        public PlayVfxEvent(VfxDefinition vfxDefinition, Vector3 position, Quaternion rotation)
         {
             VfxDefinition = vfxDefinition;
             Position = position;

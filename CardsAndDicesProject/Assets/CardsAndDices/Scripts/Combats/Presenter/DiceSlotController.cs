@@ -5,10 +5,15 @@ namespace CardsAndDices
     /// <summary>
     /// DiceSlotInstanceを管理し、の変更をコマンドで通知します
     /// </summary>
-    public class DiceSlotController : IDisposable
+    public class DiceSlotController : IDisposable, IIdentifiableController
     {
         private readonly DiceSlotInstance _diceSlotInstance;
         private readonly GameEventBus _commandBus;
+
+        /// <summary>
+        /// インスタンス側のID
+        /// </summary>
+        public CompositeObjectId InstanceId => _diceSlotInstance.CompositeObjectId;
 
         /// <summary>
         /// コンストラクタ

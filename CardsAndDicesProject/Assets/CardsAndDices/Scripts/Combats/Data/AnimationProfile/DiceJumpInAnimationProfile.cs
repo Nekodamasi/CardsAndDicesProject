@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// ダイスのジャンプインアニメーションのパラメータを定義するプロファイル。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceJumpInAnimationProfile", menuName = "CardsAndDice/Animation/Profile/DiceJumpInAnimationProfile")]
+    [CreateAssetMenu(fileName = "DiceJumpInAnimationProfile", menuName = "CardsAndDices/Combats/Data/AnimationProfile/DiceJumpInAnimationProfile")]
     public class DiceJumpInAnimationProfile : BaseAnimationProfile
     {
         /// <summary>

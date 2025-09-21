@@ -32,7 +32,7 @@ namespace CardsAndDices
 
         [Header("MonoBehaviour")]
         [SerializeField] private CreatureCardSpawner _creatureCardSpawner;
-//        [SerializeField] private DiceSpawner _diceSpawner;
+        [SerializeField] private DiceSpawner _diceSpawner;
 
         [Header("StateOperator")]
         [SerializeField] private CoreOperator _dragStateOperator;
@@ -69,7 +69,7 @@ namespace CardsAndDices
             _identifiableStatusManager.Initialize(_compositeObjectRegistry, _gameEventBus, _identifiableUIStateMachine);
             _identifiableStatusViewManager.Initialize(_identifiableViewRegistry, _identifiableStatusManager, _gameEventBus);
             _identifiableUIStateMachine.Initialize(_gameEventBus);
-            _diceSlotManager.Initialize(_gameEventBus);
+            _diceSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager);
             _diceManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
             _soundManager.Initialize();
 
@@ -92,7 +92,7 @@ namespace CardsAndDices
             },
             Lifetime.Singleton);
             builder.RegisterComponent(_creatureCardSpawner);
-/*
+
             // Factoryの登録
             builder.RegisterFactory<DiceSpawnInfo, GameObject>(container => (diceinfo) =>
             {
@@ -104,7 +104,6 @@ namespace CardsAndDices
             },
             Lifetime.Singleton);
             builder.RegisterComponent(_diceSpawner);
-*/
         }
     }
 }

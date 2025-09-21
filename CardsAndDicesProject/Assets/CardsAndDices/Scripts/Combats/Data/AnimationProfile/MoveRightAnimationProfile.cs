@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// 右方向への移動アニメーションのパラメータを定義するプロファイル。
     /// </summary>
-    [CreateAssetMenu(fileName = "MoveRightAnimationProfile", menuName = "CardsAndDices/Core/Data/AnimationProfile/MoveRightAnimationProfile")]
+    [CreateAssetMenu(fileName = "MoveRightAnimationProfile", menuName = "CardsAndDices/Combats/Data/AnimationProfile/MoveRightAnimationProfile")]
     public class MoveRightAnimationProfile : BaseAnimationProfile
     {
         /// <summary>

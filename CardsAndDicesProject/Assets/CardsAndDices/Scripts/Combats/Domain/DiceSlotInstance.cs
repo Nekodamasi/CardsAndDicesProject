@@ -6,8 +6,13 @@ namespace CardsAndDices
     /// <summary>
     /// ダイススロットを管理するインスタンス。
     /// </summary>
-    public class DiceSlotInstance : IDisposable
+    public class DiceSlotInstance : IDisposable, IIdentifiableInstance
     {
+        private CompositeObjectId _compositeObjectId;
+        /// <summary>
+        /// ダイスを一意に識別するID。
+        /// </summary>
+        public CompositeObjectId CompositeObjectId => _compositeObjectId;
         private DiceSlotPositionEntity _diceSlotPositionEntity;
         private GameEventBus _identifiableCommandBus;
         private CompositeObjectId _placedDiceId;
@@ -17,8 +22,9 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DiceSlotInstance(DiceSlotPositionEntity diceSlotPositionEntity, GameEventBus identifiableCommandBus)
+        public DiceSlotInstance(CompositeObjectId compositeObjectId, DiceSlotPositionEntity diceSlotPositionEntity, GameEventBus identifiableCommandBus)
         {
+            _compositeObjectId = compositeObjectId;
             _diceSlotPositionEntity = diceSlotPositionEntity;
             _identifiableCommandBus = identifiableCommandBus;
         }

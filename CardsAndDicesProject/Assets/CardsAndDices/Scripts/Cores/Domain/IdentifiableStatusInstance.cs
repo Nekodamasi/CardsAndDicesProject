@@ -1,23 +1,25 @@
 using UnityEngine;
+using System;
 
 namespace CardsAndDices
 {
     /// <summary>
     /// 個々の識別可能オブジェクトの現在の状態を保持・管理するインスタンス。
     /// </summary>
-    public class IdentifiableStatusInstance
+    public class IdentifiableStatusInstance : IDisposable, IIdentifiableInstance
     {
-        private CompositeObjectId _objectId;
+       private CompositeObjectId _compositeObjectId;
+
         private IdentifiableStatus _currentStatus;
         private Vector3 _homePosition;
         private bool _isDragDisabled;
-        private GameEventBus _identifiableCommandBus;
+        private GameEventBus _eventBus;
         private IdentifiableUIStateMachine _identifiableUIStateMachine;
 
         /// <summary>
-        /// このインスタンスが追跡するオブジェクトのID。
+        /// ダイスを一意に識別するID。
         /// </summary>
-        public CompositeObjectId ObjectId => _objectId;
+        public CompositeObjectId CompositeObjectId => _compositeObjectId;
 
         /// <summary>
         /// オブジェクトの現在の状態。
@@ -64,42 +66,42 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="objectId">追跡対象のオブジェクトID。</param>
-        public IdentifiableStatusInstance(CompositeObjectId objectId, GameEventBus identifiableCommandBus, IdentifiableUIStateMachine identifiableUIStateMachine)
+        /// <param name="compositeObjectId">追跡対象のオブジェクトID。</param>
+        public IdentifiableStatusInstance(CompositeObjectId compositeObjectId, GameEventBus identifiableCommandBus, IdentifiableUIStateMachine identifiableUIStateMachine)
         {
             _isDragDisabled = false;
-            _objectId = objectId;
+            _compositeObjectId = compositeObjectId;
             _currentStatus = IdentifiableStatus.Hide;
             _homePosition = Vector3.zero;
-            _identifiableCommandBus = identifiableCommandBus;
+            _eventBus = identifiableCommandBus;
             _identifiableUIStateMachine = identifiableUIStateMachine;
-            _identifiableCommandBus.On<ChangeViewStatusEvent>(OnIdentifiableChangeStatus);
-            _identifiableCommandBus.On<ChangeHomePositionStatusViewEvent>(OnIdentifiableChangeHomePosition);
+            _eventBus.On<ChangeViewStatusEvent>(OnIdentifiableChangeStatus);
+            _eventBus.On<ChangeHomePositionStatusViewEvent>(OnIdentifiableChangeHomePosition);
         }
 
         public void Dispose()
         {
-            _identifiableCommandBus.Off<ChangeViewStatusEvent>(OnIdentifiableChangeStatus);
+            _eventBus.Off<ChangeViewStatusEvent>(OnIdentifiableChangeStatus);
         }
 
         /// <summary>
         /// ポジションの変更コマンド。
         /// </summary>
-        private void OnIdentifiableChangeHomePosition(ChangeHomePositionStatusViewEvent cmd)
+        private void OnIdentifiableChangeHomePosition(ChangeHomePositionStatusViewEvent evt)
         {
-            if (_objectId != cmd.ExecutedObjectId) return;
+            if (_compositeObjectId != evt.ExecutedObjectId) return;
 
-            _homePosition = cmd.TargetPosition;
+            _homePosition = evt.TargetPosition;
         }
 
         /// <summary>
         /// ステータスの変更コマンド。
         /// </summary>
-        private void OnIdentifiableChangeStatus(ChangeViewStatusEvent cmd)
+        private void OnIdentifiableChangeStatus(ChangeViewStatusEvent evt)
         {
-            if (_objectId != cmd.ExecutedObjectId) return;
+            if (_compositeObjectId != evt.ExecutedObjectId) return;
 
-            UpdateStatus(cmd.NewStatus);
+            UpdateStatus(evt.NewStatus);
         }
 
        /// <summary>

@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// VFXのIDと設定データを兼ねるScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "VfxDefinition", menuName = "CardsAndDices/VFX/VfxDefinition")]
+    [CreateAssetMenu(fileName = "VfxDefinition", menuName = "CardsAndDices/Core/Data/Vfx/VfxDefinition")]
     public class VfxDefinition : BaseEntityDefinition
     {
         [Header("VFX Settings")]

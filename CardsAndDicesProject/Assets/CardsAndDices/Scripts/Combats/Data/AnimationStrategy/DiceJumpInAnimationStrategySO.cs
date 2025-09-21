@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// ダイスが画面外から飛び込んでくるアニメーションを実行する戦略。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceJumpInAnimationStrategySO", menuName = "CardsAndDices/Animations/AnimationStrategy/DiceJumpInAnimationStrategySO")]
+    [CreateAssetMenu(fileName = "DiceJumpInAnimationStrategySO", menuName = "CardsAndDices/Combats/Data/AnimationStrategy/DiceJumpInAnimationStrategySO")]
     public class DiceJumpInAnimationStrategySO : BaseAnimationStrategySO
     {
         [SerializeField] private DiceJumpInAnimationProfile _profile;

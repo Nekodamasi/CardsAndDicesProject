@@ -5,12 +5,21 @@ namespace CardsAndDices
     /// <summary>
     /// DiceData(Model)とDiceView(View)を1対1で紐づけ、両者の状態を同期させる責務を持つ仲介役。
     /// </summary>
-    public class DicePresenter : IDisposable
+    public class DicePresenter : IDisposable, IIdentifiablePresenter
     {
         private readonly DiceInstance _instance;
         private readonly DiceView _view;
         private readonly GameEventBus _commandBus;
 
+        /// <summary>
+        /// インスタンス側のID
+        /// </summary>
+        public CompositeObjectId InstanceId => _instance.CompositeObjectId;
+
+        /// <summary>
+        /// ビュー側のID
+        /// </summary>
+        public CompositeObjectId ViewId => _view.CompositeObjectId;
 
         public DicePresenter(DiceInstance instance, DiceView view, GameEventBus commandBus)
         {
