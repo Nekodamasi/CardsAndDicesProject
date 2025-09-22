@@ -47,7 +47,7 @@ namespace CardsAndDices
         private void OnIdentifiableDrop(IdentifiableDropEvent evt)
         {
             if (evt.TargetObjectId != _view.CompositeObjectId) return;
-            _eventBus.Emit(new DiceDropInInletCommand(evt.ExecutedObjectId, evt.TargetObjectId, _instance.FaceValue));
+            _eventBus.Emit(new DiceDropInInletEvent(evt.ExecutedObjectId, evt.TargetObjectId, _instance.FaceValue));
             _instance.IsAlive = false;
             _eventBus.Emit(new ChangeViewStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
             _eventBus.Emit(new DisplayStatusViewEvent(_view.CompositeObjectId));

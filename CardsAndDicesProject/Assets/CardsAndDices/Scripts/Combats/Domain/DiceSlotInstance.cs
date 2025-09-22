@@ -14,7 +14,6 @@ namespace CardsAndDices
         /// </summary>
         public CompositeObjectId CompositeObjectId => _compositeObjectId;
         private DiceSlotPositionEntity _diceSlotPositionEntity;
-        private GameEventBus _eventBus;
         private CompositeObjectId _placedDiceId;
         private CompositeObjectId _reflowPlacedDiceId;
 
@@ -22,11 +21,10 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DiceSlotInstance(CompositeObjectId compositeObjectId, DiceSlotPositionEntity diceSlotPositionEntity, GameEventBus identifiableCommandBus)
+        public DiceSlotInstance(CompositeObjectId compositeObjectId, DiceSlotPositionEntity diceSlotPositionEntity)
         {
             _compositeObjectId = compositeObjectId;
             _diceSlotPositionEntity = diceSlotPositionEntity;
-            _eventBus = identifiableCommandBus;
         }
 
         /// <summary>

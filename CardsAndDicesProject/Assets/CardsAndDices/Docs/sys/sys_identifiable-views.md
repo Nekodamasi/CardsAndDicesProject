@@ -42,7 +42,7 @@
 
 -   **役割:** **特定のデータモデルに直接紐付かない**イベント（例: ユーザー入力、アニメーション完了通知）を処理し、`IIdentifiableView` の振る舞いを制御する。
 -   **責務:**
-    -   Command Busから発行されるシステムワイドなイベントを購読する。
+    -   Event Busから発行されるシステムワイドなイベントを購読する。
     -   イベントの内容に応じて、対象となるViewのメソッド（例: アニメーションの再生、ハイライトの表示）を呼び出す。
 
 ---
@@ -52,10 +52,10 @@
 本システムは、MVP (Model-View-Presenter) パターンとイベント駆動アーキテクチャを組み合わせた設計を採用する。
 
 -   **Model:** ゲームの純粋なデータとビジネスロジック。
--   **View (`IIdentifiableView`):** `MonoBehaviour` を継承し、UnityのGameObjectとして表示を担当。自身のロジックは最小限に留め、状態を持たない。
+-   **View (`BaseIdentifiableView`):** `MonoBehaviour` を継承し、UnityのGameObjectとして表示を担当。自身のロジックは最小限に留め、状態を持たない。
 -   **Presenter:** Modelの変更をViewに反映する。
 -   **Controller:** Modelに依存しないイベントを処理し、Viewを操作する。
--   **Command Bus:** 各コンポーネント間の疎結合な通信を実現するイベントバス。
+-   **Event Bus:** 各コンポーネント間の疎結合な通信を実現するイベントバス。
 
 この構成により、「どのオブジェクトか (`CompositeObjectId`)」「何のデータか (Model)」「どう見せるか (View)」「いつ更新するか (Presenter/Controller)」が明確に分離される。
 
@@ -81,14 +81,14 @@
 -   **Presenter:**
     -   `CreatureHealthPresenter`: `CreatureModel` の `OnHpChanged` イベントを購読。イベント受信時、対応する `HealthView` の `UpdateHealth` メソッドを呼び出す。
 -   **Controller:**
-    -   `CreatureEffectController`: Command Busから `DamageAppliedEvent` を購読。イベント受信時、`CompositeObjectId` をキーにして対象の `DamageEffectView` を特定し、`PlayDamageEffect` メソッドを呼び出す。
+    -   `CreatureEffectController`: Event Busから `DamageAppliedEvent` を購読。イベント受信時、`CompositeObjectId` をキーにして対象の `DamageEffectView` を特定し、`PlayDamageEffect` メソッドを呼び出す。
 
 ### 4.3. 処理フロー
 
 1.  何らかのアクションにより、特定の `CreatureModel` のHPが減少する。
 2.  `CreatureModel` が `OnHpChanged` イベントを発行する。
 3.  `CreatureHealthPresenter` がイベントを検知し、担当する `HealthView` の `UpdateHealth` メソッドを呼び出してHPバーの表示を更新する。
-4.  同時に、システムが `DamageAppliedEvent` をCommand Busに発行する。このイベントには、対象の `CompositeObjectId` が含まれる。
+4.  同時に、システムが `DamageAppliedEvent` をEvent Busに発行する。このイベントには、対象の `CompositeObjectId` が含まれる。
 5.  `CreatureEffectController` がイベントを検知し、`CompositeObjectId` を使って `DamageEffectView` を探し、その `PlayDamageEffect` メソッドを呼び出してエフェクトを再生する。
 
 ---

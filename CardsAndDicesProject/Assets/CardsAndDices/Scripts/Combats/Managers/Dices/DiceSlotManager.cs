@@ -76,7 +76,7 @@ namespace CardsAndDices
         {
             foreach (var diceSlotPositionEntity in _diceSlotPositionEntities)
             {
-                var instance = new DiceSlotInstance(_compositeObjectIdManager.CreateId(_objectType, null), diceSlotPositionEntity, _eventBus);
+                var instance = new DiceSlotInstance(_compositeObjectIdManager.CreateId(_objectType, null), diceSlotPositionEntity);
                 _diceSlotInstances.Add(instance);
                 _iceSlotControllers.Add(new DiceSlotController(instance, _eventBus));
             }
