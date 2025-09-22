@@ -28,9 +28,9 @@ namespace CardsAndDices
         /// <summary>
         /// ダイスを画面に投げ入れる
         /// </summary>
-        public Sequence DisplayOnScreen()
+        public Sequence DisplayOnScreen(Vector3 homePosition)
         {
-
+            _animationContext.HomePosition = homePosition;
             return AnimationExecute(_diceOnScreenAnimationStrategyEntity);
         }
 
@@ -39,7 +39,6 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayOffScreen()
         {
-
             return AnimationExecute(_diceOffScreenAnimationStrategyEntity);
         }
     }

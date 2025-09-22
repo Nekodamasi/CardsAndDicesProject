@@ -23,6 +23,7 @@ namespace CardsAndDices
             var homePosition = context.HomePosition;
             var startPosition = homePosition + new Vector3(_profile.StartOffset, 0, 0);
             var overshootPosition = homePosition + new Vector3(_profile.OvershootDistance, 0, 0);
+            Debug.Log("ほーむぽじしょん：" + homePosition + "->StartPosition：" + startPosition + " ->おーば：" + overshootPosition);
 
             // アニメーションの各フェーズの時間
             var durationPhase1 = _profile.Duration * 0.75f;
@@ -32,6 +33,7 @@ namespace CardsAndDices
             targetTransform.position = startPosition;
 
             var sequence = DOTween.Sequence();
+/*
             sequence.SetTarget(targetTransform);
 
             // アニメーション開始時にステータス表示コマンドを発行
@@ -42,7 +44,7 @@ namespace CardsAndDices
                     context.IdentifiableCommandBus.Emit(new DisplayStatusViewEvent(context.IdentifiableGameObject.CompositeObjectId));
                 }
             });
-
+*/
             // 1. 勢いよく飛び出し、HomePositionを少し通り過ぎる
             sequence.Append(targetTransform.DOMove(overshootPosition, durationPhase1).SetEase(Ease.OutQuad));
 

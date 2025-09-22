@@ -70,7 +70,7 @@ namespace CardsAndDices
             _identifiableStatusViewManager.Initialize(_identifiableViewRegistry, _identifiableStatusManager, _gameEventBus);
             _identifiableUIStateMachine.Initialize(_gameEventBus);
             _diceSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager);
-            _diceManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
+            _diceManager.Initialize(_gameEventBus, _identifiableViewRegistry, _diceSlotManager);
             _soundManager.Initialize();
 
             // ScriptableObject Managers の初期化

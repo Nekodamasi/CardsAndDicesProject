@@ -11,7 +11,7 @@ namespace CardsAndDices
         private readonly Vector3 _targetPosition;
 
         /// <summary>
-        /// IdentifiableBeginDragCommandを初期化します。
+        /// コンストラクタ
         /// </summary>
         /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
         public MoveToIdentifiableEvent(CompositeObjectId executedObjectId, Vector3 targetPosition)

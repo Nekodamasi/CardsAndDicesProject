@@ -3,9 +3,9 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ステータス変更コマンド
+    /// HomePositionにアニメーションで移動する
     /// </summary>
-    public class ReturnHomePositionStatusViewEvent : IEvent
+    public class ReturnHomePositionAnimationEvent : IEvent
     {
         private readonly CompositeObjectId _executedObjectId;
 
@@ -13,7 +13,7 @@ namespace CardsAndDices
         /// 初期化します。
         /// </summary>
         /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
-        public ReturnHomePositionStatusViewEvent(CompositeObjectId executedObjectId)
+        public ReturnHomePositionAnimationEvent(CompositeObjectId executedObjectId)
         {
             _executedObjectId = executedObjectId;
         }

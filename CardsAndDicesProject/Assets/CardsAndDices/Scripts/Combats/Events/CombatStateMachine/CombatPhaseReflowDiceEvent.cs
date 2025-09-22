@@ -5,12 +5,12 @@ namespace CardsAndDices
     /// <summary>
     /// ダイススロットのリフロー配置処理
     /// </summary>
-    public class ReflowDiceSlotsCommand : IEvent
+    public class CombatPhaseReflowDiceEvent : IEvent
     {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public ReflowDiceSlotsCommand()
+        public CombatPhaseReflowDiceEvent()
         {
         }
 

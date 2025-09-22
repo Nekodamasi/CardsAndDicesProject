@@ -17,9 +17,8 @@ namespace CardsAndDices
         {
             public CompositeObjectId DiceId;
             public int FaceValue;
-            public AddDice(CompositeObjectId id, int Value)
+            public AddDice(int Value)
             {
-                DiceId = id;
                 FaceValue = Value;
             }
         }
@@ -28,23 +27,26 @@ namespace CardsAndDices
         [SerializeField] private CompositeObjectIdTypeEntity _objectType;
         private IdentifiableViewRegistry _viewRegistry;
         private GameEventBus _eventBus;
-        private CompositeObjectIdManager _compositeObjectIdManager;
+        private DiceSlotManager _diceSlotManager;
         private readonly List<DiceInstance> _diceInstances = new();
         private readonly List<DicePresenter> _dicePresenters = new();
         private readonly List<AddDice> _addDices = new();
-//        private int _incrementId;
+        //        private int _incrementId;
 
         /// <summary>
         /// DiceManagerを初期化します。
         /// </summary>
         [Inject]
-        public void Initialize(GameEventBus eventBus, CompositeObjectIdManager compositeObjectIdManager, IdentifiableViewRegistry viewRegistry)
+        public void Initialize(GameEventBus eventBus, IdentifiableViewRegistry viewRegistry, DiceSlotManager diceSlotManager)
         {
+            Dispose();
             _eventBus = eventBus;
-            _compositeObjectIdManager = compositeObjectIdManager;
             _viewRegistry = viewRegistry;
+            _diceSlotManager = diceSlotManager;
             //_incrementId = 1;
-            _eventBus.On<SceneLoadedCommand>(OnSceneLoaded);
+            _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
+            _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
+            
         }
         /// <summary>
         /// インスタンスをDisposeします
@@ -74,15 +76,23 @@ namespace CardsAndDices
         {
             DisposeInstances();
             DisposePresenters();
-            _eventBus.Off<SceneLoadedCommand>(OnSceneLoaded);
+            _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
+            _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
         }
 
         /// <summary>
         /// ダイススロットポジションエンティティからインスタンスを生成します。
         /// </summary>
-        private void OnSceneLoaded(SceneLoadedCommand cmd)
+        private void OnSceneLoaded(SceneLoadedEvent evt)
         {
             SetUpAddDices();
+        }
+
+        /// <summary>
+        /// ダイススロットポジションエンティティからインスタンスを生成します。
+        /// </summary>
+        private void OnCombatPhaseDiceRoll(CombatPhaseDiceRollEvent evt)
+        {
             DiceRoll();
         }
 
@@ -93,8 +103,12 @@ namespace CardsAndDices
         {
             foreach (var dice in _addDices)
             {
-                var instance = CreateDiceInstance(dice.DiceId, dice.FaceValue);
-                CreateDicePresenter(instance);
+                var view = _viewRegistry.GetNonBoundView<DiceView>();
+                var instance = CreateDiceInstance(view.CompositeObjectId, dice.FaceValue);
+                var Presenter = CreateDicePresenter(instance, view);
+                _diceSlotManager.PlacedDice(Presenter.CompositeObjectId);
+                _eventBus.Emit(new DisplayOnScreenEvent(view.CompositeObjectId));
+                
             }
             _addDices.Clear();
         }
@@ -106,7 +120,7 @@ namespace CardsAndDices
         {
             for (var i = 0; i < 2; i++)
             {
-                _addDices.Add(new AddDice(_compositeObjectIdManager.CreateId(_objectType, null), -1));
+                _addDices.Add(new AddDice(-1));
             }
         }
 
@@ -117,7 +131,7 @@ namespace CardsAndDices
         /// <param name="faceValue">追加するダイスの目。</param>
         public DiceInstance CreateDiceInstance(CompositeObjectId diceId, int faceValue)
         {
-            var diceInstance = new DiceInstance(diceId, faceValue);
+            var diceInstance = new DiceInstance(diceId, faceValue, _diceSlotManager);
             _diceInstances.Add(diceInstance);
             return diceInstance;
         }
@@ -126,10 +140,8 @@ namespace CardsAndDices
         /// 新しいDicePresenterを生成して管理リストに追加します
         /// </summary>
         /// <param name="diceInstance">追加するDiceInstance。</param>
-        private DicePresenter CreateDicePresenter(DiceInstance diceInstance)
+        private DicePresenter CreateDicePresenter(DiceInstance diceInstance, DiceView view)
         {
-            var view = _viewRegistry.GetNonBoundView<DiceView>();
-            Debug.Log("CreateDicePresenter:" + "view->" + view.CompositeObjectId + " diceInstance->" + diceInstance.FaceValue);
             view.SetBoundState(true);
             var presenter = new DicePresenter(diceInstance, view, _eventBus);
             _dicePresenters.Add(presenter);

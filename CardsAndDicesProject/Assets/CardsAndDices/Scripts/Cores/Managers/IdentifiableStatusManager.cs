@@ -11,7 +11,7 @@ namespace CardsAndDices
     public class IdentifiableStatusManager : ScriptableObject
     {
         private CompositeObjectRegistry _registry;
-        private GameEventBus _identifiableCommandBus;
+        private GameEventBus _eventBus;
         private IdentifiableUIStateMachine _identifiableUIStateMachine;
         private readonly Dictionary<CompositeObjectId, IdentifiableStatusInstance> _statusInstances = new();
 
@@ -19,15 +19,15 @@ namespace CardsAndDices
         public void Initialize(CompositeObjectRegistry registry, GameEventBus identifiableCommandBus, IdentifiableUIStateMachine identifiableUIStateMachine)
         {
             _registry = registry;
-            _identifiableCommandBus = identifiableCommandBus;
+            _eventBus = identifiableCommandBus;
             _identifiableUIStateMachine = identifiableUIStateMachine;
-            _identifiableCommandBus.On<SceneLoadedCommand>(OnSceneLoaded);
+            _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
         }
 
         /// <summary>
         /// レジストリに登録された情報からインスタンスを生成します。
         /// </summary>
-        private void OnSceneLoaded(SceneLoadedCommand cmd)
+        private void OnSceneLoaded(SceneLoadedEvent cmd)
         {
             SetUpStatusInstances();
         }
@@ -43,7 +43,7 @@ namespace CardsAndDices
             {
                 if (id != null && !_statusInstances.ContainsKey(id))
                 {
-                    _statusInstances.Add(id, new IdentifiableStatusInstance(id, _identifiableCommandBus, _identifiableUIStateMachine));
+                    _statusInstances.Add(id, new IdentifiableStatusInstance(id, _eventBus, _identifiableUIStateMachine));
                 }
             }
         }

@@ -3,9 +3,9 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ダイスの配置コマンド
+    /// リフローダイスの配置イベント
     /// </summary>
-    public class PlacedDiceCommand : IEvent
+    public class ReflowPlacedDiceEvent : IEvent
     {
         private readonly DiceSlotLocation _diceSlotLocation;
         private readonly CompositeObjectId _diceId;
@@ -14,7 +14,7 @@ namespace CardsAndDices
         /// コンストラクタ
         /// </summary>
         /// <param name="diceId">対象のダイスID</param>
-        public PlacedDiceCommand(DiceSlotLocation diceSlotLocation, CompositeObjectId diceId)
+        public ReflowPlacedDiceEvent(DiceSlotLocation diceSlotLocation, CompositeObjectId diceId)
         {
             _diceSlotLocation = diceSlotLocation;
             _diceId = diceId;

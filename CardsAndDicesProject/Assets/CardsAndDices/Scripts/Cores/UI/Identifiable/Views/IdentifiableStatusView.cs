@@ -94,7 +94,6 @@ namespace CardsAndDices
         /// </summary>
         public void MoveTo(Vector3 targetPosition)
         {
-            Debug.Log("とらんすふぉーむぽじしょん：" + targetPosition);
             _moveTransform.position = targetPosition;
         }
 

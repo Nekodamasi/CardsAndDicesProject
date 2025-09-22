@@ -55,7 +55,6 @@ namespace CardsAndDices
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("ほばーきてる？");
             if (_profile != null && !_profile.CanHover) return; // ガード節を追加
             if (!_isDragging)
             {

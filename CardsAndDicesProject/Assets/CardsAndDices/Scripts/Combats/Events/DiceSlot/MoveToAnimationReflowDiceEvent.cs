@@ -3,32 +3,25 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// リムーブダイスコマンド
+    /// リフロー配置へのアニメーション移動移動
     /// </summary>
-    public class RemoveDiceCommand : IEvent
+    public class MoveToAnimationReflowDiceEvent : IEvent
     {
-        private readonly DiceSlotLocation _diceSlotLocation;
-        private readonly CompositeObjectId _diceId;
+        private readonly CompositeObjectId _diceSlotId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="diceId">対象のダイスID</param>
-        public RemoveDiceCommand(DiceSlotLocation diceSlotLocation, CompositeObjectId diceId)
+        public MoveToAnimationReflowDiceEvent(CompositeObjectId diceSlotId)
         {
-            _diceSlotLocation = diceSlotLocation;
-            _diceId = diceId;
+            _diceSlotId = diceSlotId;
         }
 
         /// <summary>
         /// ダイススロットポジションを取得します
         /// </summary>
-        public DiceSlotLocation DiceSlotLocation => _diceSlotLocation;
-
-        /// <summary>
-        /// ダイスIDを取得します
-        /// </summary>
-        public CompositeObjectId DiceId => _diceId;
+        public CompositeObjectId DiceSlotId => _diceSlotId;
 
         /// <summary>
         /// 効果を実行します。

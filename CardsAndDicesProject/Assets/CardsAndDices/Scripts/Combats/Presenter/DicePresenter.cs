@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
@@ -9,7 +9,7 @@ namespace CardsAndDices
     {
         private readonly DiceInstance _instance;
         private readonly DiceView _view;
-        private readonly GameEventBus _commandBus;
+        private readonly GameEventBus _eventBus;
 
         /// <summary>
         /// インスタンス側のID
@@ -19,16 +19,16 @@ namespace CardsAndDices
         /// <summary>
         /// ビュー側のID
         /// </summary>
-        public CompositeObjectId ViewId => _view.CompositeObjectId;
+        public CompositeObjectId CompositeObjectId => _view.CompositeObjectId;
 
-        public DicePresenter(DiceInstance instance, DiceView view, GameEventBus commandBus)
+        public DicePresenter(DiceInstance instance, DiceView view, GameEventBus eventBus)
         {
             _instance = instance;
             _view = view;
-            _commandBus = commandBus;
-            _commandBus.On<DisplayOnScreenCommand>(OnDisplayOnScreen);
-            _commandBus.On<DisplayOffScreenCommand>(OnDisplayOffScreen);
-            _commandBus.On<IdentifiableDropEvent>(OnIdentifiableDrop);
+            _eventBus = eventBus;
+            _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
+            _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
+            _eventBus.On<IdentifiableDropEvent>(OnIdentifiableDrop);
             
         }
         /// <summary>
@@ -36,41 +36,42 @@ namespace CardsAndDices
         /// </summary>
         public void Dispose()
         {
-            _commandBus.Off<DisplayOnScreenCommand>(OnDisplayOnScreen);
-            _commandBus.Off<DisplayOffScreenCommand>(OnDisplayOffScreen);
-            _commandBus.Off<IdentifiableDropEvent>(OnIdentifiableDrop);
+            _eventBus.Off<DisplayOnScreenEvent>(OnDisplayOnScreen);
+            _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
+            _eventBus.Off<IdentifiableDropEvent>(OnIdentifiableDrop);
         }
 
         /// <summary>
         /// オブジェクトをドロップ
         /// </summary>
-        private void OnIdentifiableDrop(IdentifiableDropEvent cmd)
+        private void OnIdentifiableDrop(IdentifiableDropEvent evt)
         {
-            if (cmd.TargetObjectId != _view.CompositeObjectId) return;
-            _commandBus.Emit(new DiceDropInInletCommand(cmd.ExecutedObjectId, cmd.TargetObjectId, _instance.FaceValue));
+            if (evt.TargetObjectId != _view.CompositeObjectId) return;
+            _eventBus.Emit(new DiceDropInInletCommand(evt.ExecutedObjectId, evt.TargetObjectId, _instance.FaceValue));
             _instance.IsAlive = false;
-            _commandBus.Emit(new ChangeViewStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
-            _commandBus.Emit(new DisplayStatusViewEvent(_view.CompositeObjectId));
+            _eventBus.Emit(new ChangeViewStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
+            _eventBus.Emit(new DisplayStatusViewEvent(_view.CompositeObjectId));
         }
 
         /// <summary>
         /// ダイスを画面に投げ入れる
         /// </summary>
-        private void OnDisplayOnScreen(DisplayOnScreenCommand cmd)
+        private void OnDisplayOnScreen(DisplayOnScreenEvent evt)
         {
-            if (cmd.ExecutedObjectId != _view.CompositeObjectId) return;
-            if (!_instance.IsOnScreen) return;
+            if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
+            if (_instance.IsOnScreen) return;
             _instance.IsOnScreen = true;
-            _view.DisplayOnScreen();
+            Debug.Log("ほーむぽじしょんはなぜこうしんされているの？->" + _instance.DiceHomePosition);
+            _view.DisplayOnScreen(_instance.DiceHomePosition);
         }
 
         /// <summary>
         /// ダイスを画面から退場させる
         /// </summary>
-        private void OnDisplayOffScreen(DisplayOffScreenCommand cmd)
+        private void OnDisplayOffScreen(DisplayOffScreenEvent evt)
         {
-            if (cmd.ExecutedObjectId != _view.CompositeObjectId) return;
-            if (_instance.IsOnScreen) return;
+            if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
+            if (!_instance.IsOnScreen) return;
             _instance.IsOnScreen = false;
             _view.DisplayOffScreen();
             _instance.IsAlive = false;

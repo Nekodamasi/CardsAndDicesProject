@@ -1,11 +1,11 @@
 namespace CardsAndDices
 {
 	/// <summary>
-	/// シーンがloadされた時に呼ばれるコマンドです。
+	/// シーンがloadされた時に呼ばれるEventです。
 	/// </summary>
-	public class SceneLoadedCommand : IEvent
+	public class InstanceSetUpedEvent : IEvent
 	{
-		public SceneLoadedCommand()
+		public InstanceSetUpedEvent()
 		{
 		}
 

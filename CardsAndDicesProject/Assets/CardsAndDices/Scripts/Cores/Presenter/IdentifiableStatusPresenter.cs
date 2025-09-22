@@ -12,32 +12,34 @@ namespace CardsAndDices
     {
         private readonly IdentifiableStatusInstance _status;
         private readonly IdentifiableStatusView _view;
-        private readonly GameEventBus _identifiableCommandBus;
-        public IdentifiableStatusPresenter(IdentifiableStatusInstance status, IdentifiableStatusView view, GameEventBus commandBus)
+        private readonly GameEventBus _eventBus;
+        public IdentifiableStatusPresenter(IdentifiableStatusInstance status, IdentifiableStatusView view, GameEventBus eventBus)
         {
             _status = status;
             _view = view;
-            _identifiableCommandBus = commandBus;
+            _eventBus = eventBus;
 
-            _identifiableCommandBus.On<DisplayStatusViewEvent>(OnDisplayIdentifiableStatus);
-            _identifiableCommandBus.On<MoveToIdentifiableEvent>(OnMoveToIdentifiable);
-            _identifiableCommandBus.On<ReturnHomePositionStatusViewEvent>(OnIdentifiableReturnHomePosition);
-            _identifiableCommandBus.On<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
-            _identifiableCommandBus.On<ResetUIStatusEvent>(OnResetUIStatus);
-            _identifiableCommandBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
-            _identifiableCommandBus.On<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
+            _eventBus.On<DisplayStatusViewEvent>(OnDisplayIdentifiableStatus);
+            _eventBus.On<MoveToIdentifiableEvent>(OnMoveToIdentifiable);
+            _eventBus.On<ReturnHomePositionAnimationEvent>(OnReturnHomePositionAnimation);
+            _eventBus.On<ReturnHomePositionEvent>(OnReturnHomePosition);            
+            _eventBus.On<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
+            _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.On<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
             
 
         }
         public void Dispose()
         {
-            _identifiableCommandBus.Off<DisplayStatusViewEvent>(OnDisplayIdentifiableStatus);
-            _identifiableCommandBus.Off<MoveToIdentifiableEvent>(OnMoveToIdentifiable);
-            _identifiableCommandBus.Off<ReturnHomePositionStatusViewEvent>(OnIdentifiableReturnHomePosition);
-            _identifiableCommandBus.Off<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
-            _identifiableCommandBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
-            _identifiableCommandBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
-            _identifiableCommandBus.Off<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
+            _eventBus.Off<DisplayStatusViewEvent>(OnDisplayIdentifiableStatus);
+            _eventBus.Off<MoveToIdentifiableEvent>(OnMoveToIdentifiable);
+            _eventBus.Off<ReturnHomePositionAnimationEvent>(OnReturnHomePositionAnimation);
+            _eventBus.Off<ReturnHomePositionEvent>(OnReturnHomePosition);            
+            _eventBus.Off<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
+            _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.Off<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
         }
         /// <summary>
         /// 現在のUIステートをViewに反映させるコマンド
@@ -60,15 +62,16 @@ namespace CardsAndDices
         /// </summary>
         private void OnMoveToAnimationIdentifiable(MoveToAnimationIdentifiableEvent evt)
         {
+            Debug.Log("すてーたすの移動処理Animation>：" + evt.ExecutedObjectId);
             // 自分以外は処理しない
             if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
             _view.MoveToAnimated(evt.TargetPosition, 0.2f);
         }
 
         /// <summary>
-        /// HomePositionへのreturn
+        /// HomePositionへのreturnアニメーション
         /// </summary>
-        private async void OnIdentifiableReturnHomePosition(ReturnHomePositionStatusViewEvent evt)
+        private async void OnReturnHomePositionAnimation(ReturnHomePositionAnimationEvent evt)
         {
             // 自分以外は処理しない
             if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
@@ -76,6 +79,16 @@ namespace CardsAndDices
             await _currentMoveAnimation.AsyncWaitForCompletion();
             _status.UpdateStatus(_status.CurrentHomeStatus);
             DisplayCurrentStatus();
+        }
+
+        /// <summary>
+        /// HomePositionへのreturn
+        /// </summary>
+        private void OnReturnHomePosition(ReturnHomePositionEvent evt)
+        {
+            // 自分以外は処理しない
+            if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
+            _view.MoveTo(_status.HomePosition);
         }
 
         /// <summary>

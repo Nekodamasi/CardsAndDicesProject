@@ -9,13 +9,13 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "SceneInitializer", menuName = "CardsAndDices/initializers/SceneInitializers/SceneInitializer")]
     public class SceneInitializer : ScriptableObject, IPostStartable
     {
-        private GameEventBus _identifiableCommandBus;
+        private GameEventBus _eventBus;
         private List<IGameInitializable> _gameInitializables = new List<IGameInitializable>();
 
         [Inject]
-        public void Initialize(GameEventBus identifiableCommandBus)
+        public void Initialize(GameEventBus eventBus)
         {
-            _identifiableCommandBus = identifiableCommandBus;
+            _eventBus = eventBus;
         }
 
         public void AddInitializables(IGameInitializable initializables)
@@ -33,8 +33,9 @@ namespace CardsAndDices
             {
                 initializable.OnStart();
             }
-            _identifiableCommandBus.Emit(new SceneLoadedCommand());
-            _identifiableCommandBus.Emit(new InstanceSetUpedCommand());
+            _eventBus.Emit(new SceneLoadedEvent());
+            _eventBus.Emit(new InstanceSetUpedEvent());
+            _eventBus.Emit(new CombatPhaseDiceRollEvent());
         }
     }
 }

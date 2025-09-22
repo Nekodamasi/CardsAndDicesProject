@@ -1,11 +1,11 @@
 namespace CardsAndDices
 {
 	/// <summary>
-	/// シーンがloadされた時に呼ばれるコマンドです。
+	/// ダイスロールフェーズ
 	/// </summary>
-	public class InstanceSetUpedCommand : IEvent
+	public class CombatPhaseDiceRollEvent : IEvent
 	{
-		public InstanceSetUpedCommand()
+		public CombatPhaseDiceRollEvent()
 		{
 		}
 

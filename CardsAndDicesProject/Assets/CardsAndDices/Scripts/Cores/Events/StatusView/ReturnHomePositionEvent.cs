@@ -3,22 +3,22 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ダイスロールコマンド
+    /// HomePositionに移動
     /// </summary>
-    public class DisplayOnScreenCommand : IEvent
+    public class ReturnHomePositionEvent : IEvent
     {
         private readonly CompositeObjectId _executedObjectId;
 
         /// <summary>
-        /// コンストラクタ
+        /// 初期化します。
         /// </summary>
         /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
-        public DisplayOnScreenCommand(CompositeObjectId executedObjectId)
+        public ReturnHomePositionEvent(CompositeObjectId executedObjectId)
         {
             _executedObjectId = executedObjectId;
         }
 
-       /// <summary>
+        /// <summary>
         /// イベントの発生源のCompositeObjectIdを取得します。
         /// </summary>
         public CompositeObjectId ExecutedObjectId => _executedObjectId;

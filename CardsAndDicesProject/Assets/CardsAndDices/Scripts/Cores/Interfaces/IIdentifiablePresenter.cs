@@ -6,13 +6,8 @@ namespace CardsAndDices
     public interface IIdentifiablePresenter
     {
         /// <summary>
-        /// インスタンス側のID
+        /// 識別ID
         /// </summary>
-        CompositeObjectId InstanceId { get; }
-
-        /// <summary>
-        /// ビュー側のID
-        /// </summary>
-        CompositeObjectId ViewId { get; }
+        CompositeObjectId CompositeObjectId { get; }
     }
 }

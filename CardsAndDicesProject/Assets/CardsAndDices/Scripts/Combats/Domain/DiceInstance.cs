@@ -9,11 +9,14 @@ namespace CardsAndDices
     public class DiceInstance : IDisposable, IIdentifiableInstance
     {
         private CompositeObjectId _compositeObjectId;
+        private IDiceSlotPosition _IDiceSlotPosition;
 
         /// <summary>
         /// ダイスを一意に識別するID。
         /// </summary>
         public CompositeObjectId CompositeObjectId => _compositeObjectId;
+
+        public Vector3 DiceHomePosition => _IDiceSlotPosition.GetDiceHomePosition(CompositeObjectId);
 
         private int _faceValue;
 
@@ -28,9 +31,10 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ。
         /// </summary>
-        public DiceInstance(CompositeObjectId compositeObjectId, int faceValue)
+        public DiceInstance(CompositeObjectId compositeObjectId, int faceValue, IDiceSlotPosition iDiceSlotPosition)
         {
             _compositeObjectId = compositeObjectId;
+            _IDiceSlotPosition = iDiceSlotPosition;
             _faceValue = faceValue;
             IsAlive = true;
             if (_faceValue < 1 || _faceValue > 6)

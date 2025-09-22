@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
@@ -8,7 +8,7 @@ namespace CardsAndDices
     public class DiceSlotController : IDisposable, IIdentifiableController
     {
         private readonly DiceSlotInstance _diceSlotInstance;
-        private readonly GameEventBus _commandBus;
+        private readonly GameEventBus _eventBus;
 
         /// <summary>
         /// インスタンス側のID
@@ -18,14 +18,14 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DiceSlotController(DiceSlotInstance diceSlotInstance, GameEventBus commandBus)
+        public DiceSlotController(DiceSlotInstance diceSlotInstance, GameEventBus eventBus)
         {
             _diceSlotInstance = diceSlotInstance;
-            _commandBus = commandBus;
-            _commandBus.On<PlacedDiceCommand>(OnPlacedDice);
-            _commandBus.On<ReflowPlacedDiceCommand>(OnReflowPlacedDice);
-            _commandBus.On<RemoveDiceCommand>(OnRemoveDice);
-            _commandBus.On<MoveToAnimationReflowDiceCommand>(OnMoveToAnimationReflowDice);
+            _eventBus = eventBus;
+            _eventBus.On<PlacedDiceEvent>(OnPlacedDice);
+            _eventBus.On<ReflowPlacedDiceEvent>(OnReflowPlacedDice);
+            _eventBus.On<RemoveDiceEvent>(OnRemoveDice);
+            _eventBus.On<MoveToAnimationReflowDiceEvent>(OnMoveToAnimationReflowDice);
         }
 
         /// <summary>
@@ -33,50 +33,52 @@ namespace CardsAndDices
         /// </summary>
         public void Dispose()
         {
-            _commandBus.Off<PlacedDiceCommand>(OnPlacedDice);
-            _commandBus.Off<ReflowPlacedDiceCommand>(OnReflowPlacedDice);
-            _commandBus.Off<RemoveDiceCommand>(OnRemoveDice);
-            _commandBus.Off<MoveToAnimationReflowDiceCommand>(OnMoveToAnimationReflowDice);
+            _eventBus.Off<PlacedDiceEvent>(OnPlacedDice);
+            _eventBus.Off<ReflowPlacedDiceEvent>(OnReflowPlacedDice);
+            _eventBus.Off<RemoveDiceEvent>(OnRemoveDice);
+            _eventBus.Off<MoveToAnimationReflowDiceEvent>(OnMoveToAnimationReflowDice);
         }
 
         /// <summary>
         /// リフロー位置へのダイスAnimation移動
         /// </summary>
-        private void OnMoveToAnimationReflowDice(MoveToAnimationReflowDiceCommand cmd)
+        private void OnMoveToAnimationReflowDice(MoveToAnimationReflowDiceEvent evt)
         {
-            if (_diceSlotInstance.DiceSlotLocation != cmd.DiceSlotLocation) return;
+            if (_diceSlotInstance.CompositeObjectId != evt.DiceSlotId) return;
             if (_diceSlotInstance.ReflowPlacedDiceId == null) return;
 
-            _commandBus.Emit(new MoveToAnimationIdentifiableEvent(_diceSlotInstance.ReflowPlacedDiceId, _diceSlotInstance.DiceSlotPosition));
+            Debug.Log("だいすすろっとこんとろーらー：" + _diceSlotInstance.CompositeObjectId + "/リフローダイス：" + _diceSlotInstance.ReflowPlacedDiceId + " /Position:" + _diceSlotInstance.DiceSlotPosition);
+            _eventBus.Emit(new MoveToIdentifiableEvent(_diceSlotInstance.ReflowPlacedDiceId, _diceSlotInstance.DiceSlotPosition));
         }
 
         /// <summary>
         /// ダイスの配置処理
         /// </summary>
-        private void OnPlacedDice(PlacedDiceCommand cmd)
+        private void OnPlacedDice(PlacedDiceEvent evt)
         {
-            if (cmd.DiceSlotLocation != _diceSlotInstance.DiceSlotLocation) return;
+//            Debug.Log("おんぷらいすだいす１：" + _diceSlotInstance.CompositeObjectId + "/" + evt.DiceSlotId + "/リフローダイス：" + _diceSlotInstance.ReflowPlacedDiceId + " Position:" + _diceSlotInstance.DiceSlotPosition);
+            if (evt.DiceSlotId != _diceSlotInstance.CompositeObjectId) return;
             if (_diceSlotInstance.IsOccupied)
             {
                 _diceSlotInstance.RemoveDice();
             }
-            _diceSlotInstance.PlacedDice(cmd.DiceId);
-            _commandBus.Emit(new ChangeHomePositionStatusViewEvent(cmd.DiceId, _diceSlotInstance.DiceSlotPosition));
+            _diceSlotInstance.PlacedDice(evt.DiceId);
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.DiceId, _diceSlotInstance.DiceSlotPosition));
         }
 
         /// <summary>
         /// ダイスリフロー配置処理
         /// </summary>
-        private void OnReflowPlacedDice(ReflowPlacedDiceCommand cmd)
+        private void OnReflowPlacedDice(ReflowPlacedDiceEvent evt)
         {
-            if(cmd.DiceSlotLocation != _diceSlotInstance.DiceSlotLocation) return;
-            _diceSlotInstance.ReflowPlacedDice(cmd.DiceId);
+            if(evt.DiceSlotLocation != _diceSlotInstance.DiceSlotLocation) return;
+            _diceSlotInstance.ReflowPlacedDice(evt.DiceId);
         }
 
         /// <summary>
         /// ダイスのリムーブ処理
         /// </summary>
-        private void OnRemoveDice(RemoveDiceCommand cmd)
+        private void OnRemoveDice(RemoveDiceEvent evt)
         {
             _diceSlotInstance.RemoveDice();
         }

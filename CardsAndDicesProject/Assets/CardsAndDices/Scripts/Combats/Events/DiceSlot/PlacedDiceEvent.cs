@@ -3,25 +3,32 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// リフロー配置へのアニメーション移動コマンド
+    /// ダイスの配置イベント
     /// </summary>
-    public class MoveToAnimationReflowDiceCommand : IEvent
+    public class PlacedDiceEvent : IEvent
     {
-        private readonly DiceSlotLocation _diceSlotLocation;
+        private readonly CompositeObjectId _diceSlotId;
+        private readonly CompositeObjectId _diceId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="diceId">対象のダイスID</param>
-        public MoveToAnimationReflowDiceCommand(DiceSlotLocation diceSlotLocation)
+        public PlacedDiceEvent(CompositeObjectId diceSlotId, CompositeObjectId diceId)
         {
-            _diceSlotLocation = diceSlotLocation;
+            _diceSlotId = diceSlotId;
+            _diceId = diceId;
         }
 
         /// <summary>
         /// ダイススロットポジションを取得します
         /// </summary>
-        public DiceSlotLocation DiceSlotLocation => _diceSlotLocation;
+        public CompositeObjectId DiceSlotId => _diceSlotId;
+
+        /// <summary>
+        /// ダイスIDを取得します
+        /// </summary>
+        public CompositeObjectId DiceId => _diceId;
 
         /// <summary>
         /// 効果を実行します。

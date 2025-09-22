@@ -27,7 +27,6 @@ namespace CardsAndDices
         /// </summary>
         protected override async void OnStateHover(IdentifiableStateHoverEvent evt)
         {
-            Debug.Log("おぺれーたー（ほばー）：" + evt.ExecutedObjectId);
             // Statusの変更を通知する
             _eventBus.Emit(new ChangeViewStatusEvent(evt.ExecutedObjectId, IdentifiableStatus.Hover));
 
@@ -87,7 +86,7 @@ namespace CardsAndDices
             Debug.Log("おぺれーたー（ドラッグ終了）：" + evt.ExecutedObjectId);
 
             // HomePositionへのReturnを実行います
-            _eventBus.Emit(new ReturnHomePositionStatusViewEvent(evt.ExecutedObjectId));
+            _eventBus.Emit(new ReturnHomePositionAnimationEvent(evt.ExecutedObjectId));
 
             // 待機
             await UniTask.Delay(TimeSpan.FromSeconds(_hoveredTime));

@@ -39,7 +39,6 @@ namespace CardsAndDices
             }
             else if (view is DiceView diceView)
             {
-                Debug.Log("だいすびゅーとうろく");
                 _diceViews.Add(diceView);
             }
         }

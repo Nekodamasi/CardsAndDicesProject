@@ -14,7 +14,7 @@ namespace CardsAndDices
         /// </summary>
         public CompositeObjectId CompositeObjectId => _compositeObjectId;
         private DiceSlotPositionEntity _diceSlotPositionEntity;
-        private GameEventBus _identifiableCommandBus;
+        private GameEventBus _eventBus;
         private CompositeObjectId _placedDiceId;
         private CompositeObjectId _reflowPlacedDiceId;
 
@@ -26,7 +26,7 @@ namespace CardsAndDices
         {
             _compositeObjectId = compositeObjectId;
             _diceSlotPositionEntity = diceSlotPositionEntity;
-            _identifiableCommandBus = identifiableCommandBus;
+            _eventBus = identifiableCommandBus;
         }
 
         /// <summary>

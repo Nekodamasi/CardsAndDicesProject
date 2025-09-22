@@ -82,7 +82,6 @@ namespace CardsAndDices
 			{
 				case IdentifiableUIState.Idle:
 				case IdentifiableUIState.Hovered:
-					Debug.Log("すてーとましん（ホバー）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 					SetCurrentState(IdentifiableUIState.Hover, evt.ExecutedObjectId, null);
 
 					// アンホバーコマンド
@@ -98,13 +97,11 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnIdentifiableHovered(IdentifiableHoveredEvent evt)
 		{
-            			Debug.Log("すてーとましん（ホバー完了）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Hover:
 					if (StateObjectId == evt.ExecutedObjectId)
 					{
-            			Debug.Log("すてーとましん（ホバー完了）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Hovered, evt.ExecutedObjectId, null);
 						_identifiableEventBus.Emit(new IdentifiableStateHoveredEvent(evt.ExecutedObjectId));
 					}
@@ -124,7 +121,6 @@ namespace CardsAndDices
 				case IdentifiableUIState.Hovered:
 					if (StateObjectId == evt.ExecutedObjectId)
 					{
-						Debug.Log("すてーとましん（あんホバー）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Idle, null, null);
 						// アンホバーコマンド
 						_identifiableEventBus.Emit(new IdentifiableStateUnhoverEvent(evt.ExecutedObjectId));

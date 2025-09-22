@@ -13,7 +13,7 @@ namespace CardsAndDices
     {
         private IdentifiableViewRegistry _registry;
         private IdentifiableStatusManager _instanceManager;
-        private GameEventBus _identifiableCommandBus;
+        private GameEventBus _eventBus;
         private readonly List<IdentifiableStatusPresenter> _presenters = new();
 
         [Inject]
@@ -21,14 +21,14 @@ namespace CardsAndDices
         {
             _registry = registry;
             _instanceManager = instanceManager;
-            _identifiableCommandBus = identifiableCommandBus;
-            _identifiableCommandBus.On<InstanceSetUpedCommand>(OnInstanceSetUped);
+            _eventBus = identifiableCommandBus;
+            _eventBus.On<InstanceSetUpedEvent>(OnInstanceSetUped);
         }
 
         /// <summary>
         /// レジストリに登録された情報からインスタンスを生成します。
         /// </summary>
-        private void OnInstanceSetUped(InstanceSetUpedCommand cmd)
+        private void OnInstanceSetUped(InstanceSetUpedEvent evt)
         {
             SetUpStatusInstances();
         }
@@ -40,7 +40,6 @@ namespace CardsAndDices
         {
             Dispose();
             var statusviews = _registry.GetAllStatusViews();
-            Debug.Log("ここはきてる？：" + statusviews.Count);
             foreach (var view in statusviews)
             {
                 var instance = _instanceManager.GetStatus(view.CompositeObjectId);
@@ -48,7 +47,7 @@ namespace CardsAndDices
                 {
                     Debug.LogError("<color=red>IdentifiableStatusManager->instanceがnull</color>");
                 }
-                _presenters.Add(new IdentifiableStatusPresenter(instance, view, _identifiableCommandBus));
+                _presenters.Add(new IdentifiableStatusPresenter(instance, view, _eventBus));
             }
         }
 
