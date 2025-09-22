@@ -12,6 +12,7 @@ namespace CardsAndDices
         [SerializeField] private AnimationStrategyRegistry _animationStrategyRegistry;
         [SerializeField] private AnimationStrategyEntity _diceOnScreenAnimationStrategyEntity;
         [SerializeField] private AnimationStrategyEntity _diceOffScreenAnimationStrategyEntity;
+        [SerializeField] private SpriteSelector _spriteSelector;
 
         private AnimationExecutor _animationExecutor = new AnimationExecutor();
 
@@ -28,8 +29,9 @@ namespace CardsAndDices
         /// <summary>
         /// ダイスを画面に投げ入れる
         /// </summary>
-        public Sequence DisplayOnScreen(Vector3 homePosition)
+        public Sequence DisplayOnScreen(Vector3 homePosition, int diceFace)
         {
+            _spriteSelector.SelectSprite("Dice" + diceFace);
             _animationContext.HomePosition = homePosition;
             return AnimationExecute(_diceOnScreenAnimationStrategyEntity);
         }

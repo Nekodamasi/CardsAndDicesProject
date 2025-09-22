@@ -23,7 +23,7 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(GameEventBus identifiableCommandBus, CompositeObjectIdManager compositeObjectIdManager)
         {
-            Dispose();
+            DisposeInstances();
             _eventBus = identifiableCommandBus;
             _compositeObjectIdManager = compositeObjectIdManager;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);

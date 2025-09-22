@@ -22,6 +22,7 @@ classDiagram
         +DiceRoll()
     }
     class DiceSlotManager {
+        -List~DiceSlotPositionEntity~ _diceSlotPositionEntities
         -List~DiceSlotInstance~ _diceSlotInstances
         -List~DiceSlotController~ _diceSlotControllers
         +PlacedDice(CompositeObjectId)
@@ -48,6 +49,10 @@ classDiagram
         +PlacedDice(CompositeObjectId)
         +RemoveDice()
     }
+    class DiceSlotPositionEntity {
+        +DiceSlotLocation
+        +Vector3 Position
+    }
     class DiceView {
         +DisplayOnScreen()
     }
@@ -57,12 +62,24 @@ classDiagram
     DiceManager ..> DiceSlotManager : Calls PlacedDice
     DiceSlotManager --> DiceSlotInstance : Creates
     DiceSlotManager --> DiceSlotController : Creates
+    DiceSlotManager o-- DiceSlotPositionEntity : Has a
     DicePresenter o-- DiceInstance : Has a
     DicePresenter o-- DiceView : Has a
     DiceSlotController o-- DiceSlotInstance : Has a
+    DiceSlotInstance o-- DiceSlotPositionEntity : Has a
 ```
 
-### 1. ランタイムインスタンス (Model)
+### 1. データ定義 (ScriptableObject)
+
+- **`DiceSlotPositionEntity`**:
+    - **継承**: `ScriptableObject`
+    - ダイススロットの不変な定義データを保持します。
+    - **プロパティ**:
+        - `DiceSlotLocation`: スロットの論理的な場所を示すEnum (`DiceSlotLocation`)。
+        - `Position`: シーン内での物理的な座標 (`Vector3`)。
+    - **責務**: 個々のダイススロットが「どこに」あり「何という場所か」を定義します。`DiceSlotManager` がシーン開始時にこのリストを読み込み、`DiceSlotInstance` を生成する際の設計図として使用します。
+
+### 2. ランタイムインスタンス (Model)
 
 - **`DiceInstance`**:
     - **継承**: `Pure C# Class`
@@ -90,7 +107,7 @@ classDiagram
         - `PlacedDice(diceId)`: 指定されたダイスをスロットに配置します。
         - `RemoveDice()`: 配置されているダイスをスロットから取り除きます。
 
-### 2. 仲介クラス (Presenter / Controller)
+### 3. 仲介クラス (Presenter / Controller)
 
 - **`DicePresenter`**:
     - **継承**: `Pure C# Class`
@@ -112,7 +129,7 @@ classDiagram
         - `OnPlacedDice(...)`: スロットにダイスが配置された際の処理。`DiceSlotInstance` の状態を更新します。
         - `OnMoveToAnimationReflowDice(...)`: リフロー時にダイスをスロット位置へ移動させるアニメーションイベントを発行します。
 
-### 3. 管理クラス (Controller)
+### 4. 管理クラス (Controller)
 
 - **`DiceManager`**:
     - **継承**: `ScriptableObject`
@@ -129,6 +146,18 @@ classDiagram
         - `SceneLoadedEvent` に応じて、シーンに存在する全ての `DiceSlotInstance` と `DiceSlotController` を生成します。
         - ダイス配置のロジックを担当します。`PlacedDice()` メソッドは、空いているスロットを探し、そこにダイスを配置するための `PlacedDiceEvent` を発行します。
         - ダイススロットのリフロー処理 (`ReflowDiceSlots`) を担当します。
+
+### 5. 表示クラス (ビュー)
+
+- **`DiceView`**:
+    - **継承**: `BaseIdentifiableView`
+    - ダイスの視覚的な表現を担当する `MonoBehaviour` クラス。
+    - **責務**:
+        - `DicePresenter` からの指示に基づき、アニメーションを実行します。
+        - アニメーションの具体的な振る舞いは `AnimationStrategyEntity` として外部から注入されるため、View自体はロジックを持ちません。
+    - **メソッド**:
+        - `DisplayOnScreen(homePosition)`: ダイスが画面に登場するアニメーションを再生します。
+        - `DisplayOffScreen()`: ダイスが画面から退場するアニメーションを再生します。
 
 ---
 

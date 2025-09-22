@@ -24,9 +24,9 @@
 
 -   **IIdentifiableView （識別可能なオブジェクト）:** `CompositeObjectId` を持ち、自身が識別可能であることを示すインターフェース。
 -   **IdentifiableGameObject （識別可能なMonoBehaviour）:** `IIdentifiableView` を実装したMonoBehaviourのクラス。自身の `OnAwake()` メソッドで `CompositeObjectIdManager` からIDを自動的に取得し、`CompositeObjectRegistry` への登録を行います。ゲーム内で一意に識別される必要のある全てGameObject（カード、ダイス、スロット等）は、このクラスをインスペクター上でアタッチすることでGameObjectを１つの識別可能なオブジェクトに設定できます。
--   **IdentifiableInputHandler （入力受付）:** `IIdentifiableView` を持つGameObjectにアタッチされ、Unityの入力イベント（`OnPointerEnter`など）を検知し、`IdentifiableCommandBus` へ具体的なコマンド（`IdentifiableHoverCommand`など）を発行します。
--   **IdentifiableUIStateMachine （交通整理役）:** UI全体のインタラクション状態（`Idle`, `Dragging`など）を管理するステートマシン。`IdentifiableCommandBus` を流れるコマンドを監視し、状態の競合（例: ドラッグ中に別のオブジェクトをクリック）が起きないように、発行されるコマンドを制御します。
--   **BaseIdentifiableStateOperator （専門の処理実行役）:** 特定の `CompositeObjectId` に対する状態変化コマンド（`IdentifiableStateHoverCommand`など）を購読する `ScriptableObject`。コマンドを受け取ると、具体的なリアクション（例: アニメーション再生、エフェクト表示）を実行します。
+-   **IdentifiableInputHandler （入力受付）:** `IIdentifiableView` を持つGameObjectにアタッチされ、Unityの入力イベント（`OnPointerEnter`など）を検知し、`GameEventBus` へ具体的なコマンド（`IdentifiableHoverEvent`など）を発行します。
+-   **IdentifiableUIStateMachine （交通整理役）:** UI全体のインタラクション状態（`Idle`, `Dragging`など）を管理するステートマシン。`GameEventBus` を流れるコマンドを監視し、状態の競合（例: ドラッグ中に別のオブジェクトをクリック）が起きないように、発行されるコマンドを制御します。
+-   **BaseIdentifiableStateOperator （専門の処理実行役）:** 特定の `CompositeObjectId` に対する状態変化コマンド（`IdentifiableStateHoverEvent`など）を購読する `ScriptableObject`。コマンドを受け取ると、具体的なリアクション（例: アニメーション再生、エフェクト表示）を実行します。
 
 ---
 
@@ -44,10 +44,10 @@
 ユーザーの入力からオブジェクトの反応までは、以下のイベント駆動フローで処理されます。
 
 1.  **入力検知:** ユーザーがマウスカーソルをオブジェクトに乗せると、そのオブジェクトの `IdentifiableInputHandler` が `OnPointerEnter` イベントを検知します。
-2.  **コマンド発行（入力）:** `IdentifiableInputHandler` は、自身の `CompositeObjectId` を含んだ `IdentifiableHoverCommand` を `IdentifiableCommandBus` に発行します。
-3.  **状態判定:** `IdentifiableUIStateMachine` が `IdentifiableHoverCommand` を受信します。現在のUI状態が `Idle` であれば、状態を `Hover` に遷移させ、新たな状態変化コマンド `IdentifiableStateHoverCommand` を発行することを許可します。
-4.  **コマンド発行（状態変化）:** `IdentifiableUIStateMachine` は `IdentifiableStateHoverCommand` を発行します。
-5.  **処理実行:** `BaseIdentifiableStateOperator` が `IdentifiableStateHoverCommand` を受信します。コマンド内の `CompositeObjectId` が自身の監視対象であれば、`OnStateHover` メソッドを実行し、オブジェクトをハイライトさせるなどの具体的な処理を行います。
+2.  **コマンド発行（入力）:** `IdentifiableInputHandler` は、自身の `CompositeObjectId` を含んだ `IdentifiableHoverEvent` を `GameEventBus` に発行します。
+3.  **状態判定:** `IdentifiableUIStateMachine` が `IdentifiableHoverEvent` を受信します。現在のUI状態が `Idle` であれば、状態を `Hover` に遷移させ、新たな状態変化コマンド `IdentifiableStateHoverEvent` を発行することを許可します。
+4.  **コマンド発行（状態変化）:** `IdentifiableUIStateMachine` は `IdentifiableStateHoverEvent` を発行します。
+5.  **処理実行:** `BaseIdentifiableStateOperator` が `IdentifiableStateHoverEvent` を受信します。コマンド内の `CompositeObjectId` が自身の監視対象であれば、`OnStateHover` メソッドを実行し、オブジェクトをハイライトさせるなどの具体的な処理を行います。
 
 このフローにより、入力、状態管理、具体的な処理が疎結合に保たれ、拡張性の高いインタラクションを実現します。
 

@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// IDとスプライトのペアをコレクションとして保持するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "NewSelectableSpriteSheet", menuName = "CardsAndDices/SelectableSpriteSheet")]
+    [CreateAssetMenu(fileName = "SSSht_", menuName = "CardsAndDices/Core/Data/Visual/SelectableSpriteSheet")]
     public class SelectableSpriteSheet : ScriptableObject
     {
         /// <summary>

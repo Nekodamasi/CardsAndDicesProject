@@ -61,8 +61,7 @@ namespace CardsAndDices
             if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
             if (_instance.IsOnScreen) return;
             _instance.IsOnScreen = true;
-            Debug.Log("ほーむぽじしょんはなぜこうしんされているの？->" + _instance.DiceHomePosition);
-            _view.DisplayOnScreen(_instance.DiceHomePosition);
+            _view.DisplayOnScreen(_instance.DiceHomePosition, _instance.FaceValue);
         }
 
         /// <summary>

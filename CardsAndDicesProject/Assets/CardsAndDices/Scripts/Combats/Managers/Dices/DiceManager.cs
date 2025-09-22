@@ -39,10 +39,12 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(GameEventBus eventBus, IdentifiableViewRegistry viewRegistry, DiceSlotManager diceSlotManager)
         {
-            Dispose();
+            DisposeInstances();
+            DisposePresenters();
             _eventBus = eventBus;
             _viewRegistry = viewRegistry;
             _diceSlotManager = diceSlotManager;
+
             //_incrementId = 1;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
@@ -77,7 +79,7 @@ namespace CardsAndDices
             DisposeInstances();
             DisposePresenters();
             _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
-            _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
+            _eventBus.Off<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
         }
 
         /// <summary>

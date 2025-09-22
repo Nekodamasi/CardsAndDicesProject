@@ -7,7 +7,9 @@ namespace CardsAndDices
     /// </summary>
     public class SpriteSelector : MonoBehaviour
     {
-        [Header("Data Source")]
+        [Header("Component")]
+
+        // 表示するSpriteを管理しているSelectableSpriteSheet
         [SerializeField] private SelectableSpriteSheet _spriteSheet;
 
         // 表示を切り替える対象のSpriteRenderer
