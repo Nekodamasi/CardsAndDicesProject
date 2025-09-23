@@ -11,11 +11,10 @@ namespace CardsAndDices
         [Header("Prefab")]
         [SerializeField] private GameObject _creatureCardPrefab;
         [SerializeField] private GameObject _dicePrefab;
+        [SerializeField] private GameObject _creatureCardSlotPrefab;
 
         [Header("ScriptableObject Managers")]
         [SerializeField] private CompositeObjectIdManager _compositeObjectIdManager;
-        [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
-        [SerializeField] private DiceSpawnInfoManager _diceSpawnInfoManager;
         [SerializeField] private GameEventBus _gameEventBus;
         [SerializeField] private SceneInitializer _combatInitializer;
         [SerializeField] private IdentifiableStatusManager _identifiableStatusManager;
@@ -26,13 +25,20 @@ namespace CardsAndDices
         [SerializeField] private SoundManager _soundManager;
         
 
+        [Header("PrefabSpawnInfo Managers")]
+        [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
+        [SerializeField] private DiceSpawnInfoManager _diceSpawnInfoManager;
+        [SerializeField] private CreatureCardSlotSpawnInfoManager _creatureCardSlotSpawnInfoManager;
+
+
         [Header("ScriptableObject Registries")]
         [SerializeField] private CompositeObjectRegistry _compositeObjectRegistry;
         [SerializeField] private IdentifiableViewRegistry _identifiableViewRegistry;
 
-        [Header("MonoBehaviour")]
+        [Header("PrefabSpawner")]
         [SerializeField] private CreatureCardSpawner _creatureCardSpawner;
         [SerializeField] private DiceSpawner _diceSpawner;
+        [SerializeField] private CreatureCardSlotSpawner _creatureCardSlotSpawner;
 
         [Header("StateOperator")]
         [SerializeField] private CoreOperator _dragStateOperator;
@@ -44,8 +50,6 @@ namespace CardsAndDices
 
             // ScriptableObject Managers のバインド
             builder.RegisterInstance(_compositeObjectIdManager).AsSelf().AsImplementedInterfaces();
-            builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
-            builder.RegisterInstance(_diceSpawnInfoManager).AsSelf();
             builder.RegisterInstance(_gameEventBus).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_combatInitializer).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_identifiableStatusManager).AsSelf().AsImplementedInterfaces();
@@ -54,6 +58,11 @@ namespace CardsAndDices
             builder.RegisterInstance(_diceSlotManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_soundManager).AsSelf().AsImplementedInterfaces();
+
+            // PrefabSpawnInfo Managers のバインド
+            builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
+            builder.RegisterInstance(_diceSpawnInfoManager).AsSelf();
+            builder.RegisterInstance(_creatureCardSlotSpawnInfoManager).AsSelf();
 
             // ScriptableObject Registries のバインド
             builder.RegisterInstance(_compositeObjectRegistry).AsSelf().AsImplementedInterfaces();
@@ -104,6 +113,18 @@ namespace CardsAndDices
             },
             Lifetime.Singleton);
             builder.RegisterComponent(_diceSpawner);
+
+            // Factoryの登録
+            builder.RegisterFactory<CreatureCardSlotSpawnInfo, GameObject>(container => (cardSlotinfo) =>
+            {
+                var cardSlot = container.Instantiate(_creatureCardSlotPrefab);
+                var IdentifiableGameObject = cardSlot.GetComponent<IdentifiableGameObject>();
+                var IdentifiableInputHandler = cardSlot.GetComponent<IdentifiableInputHandler>();
+                var BaseIdentifiableView = cardSlot.GetComponent<BaseIdentifiableView>();
+                return cardSlot;
+            },
+            Lifetime.Singleton);
+            builder.RegisterComponent(_creatureCardSlotSpawner);
         }
     }
 }

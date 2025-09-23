@@ -52,24 +52,30 @@
 - `Docs/component/`: 各コンポーネントの仕様に関するドキュメント。
 - `Docs/class/`: 各クラスの詳細設計に関するドキュメント。
 - `Docs/ui/`: 各UIのトインタラクション設計に関するドキュメント。 
- - `Scripts/Abilities/`: ScriptableObjectベースのアビリティ定義
- - `Scripts/Animations/`: アニメーション関連のScriptableObject
- - `Scripts/Commands/`: コマンドパターンで使用されるコマンド定義
- - `Scripts/Core/`: プロジェクト全体で共通の基盤コード（インターフェース、抽象クラス、汎用ユーティリティ）
- - `Scripts/Data/`: 純粋なデータ定義（ScriptableObject、構造体、クラス）
- - `Scripts/Domain/`: ゲームのコアロジック、データモデル、エンティティ
- - `Scripts/Factory/`: オブジェクトの生成ロジックをカプセル化
- - `Scripts/Initializers/`: DIコンテナの初期化ロジック
- - `Scripts/Managers/`: 複数のコンポーネントやシステムを統括・管理する高レベルなロジック
- - `Scripts/Orchestrator/`: 複数のシステムやコンポーネント間の複雑な連携を調整
- - `Scripts/Presenter/`: ViewとModelの仲介役
- - `Scripts/Repository/`: データの永続化や取得を担当
- - `Scripts/Service/`: 特定の機能を提供するサービス層（データ操作、外部API連携など）
- - `Scripts/State/`: ステートマシン関連のクラス
- - `Scripts/Strategy/`: 特定の振る舞いをカプセル化し、交換可能なアルゴリズムを提供
- - `Scripts/Tester/`: テスト関連のスクリプト
- - `Scripts/UI/`: UIコンポーネント（MonoBehaviour）
- - `Scripts/Registries/`: レジストリクラス
+- `Scripts/Cores/`: プロジェクト全体で使用するコア機能
+- `Scripts/Combats/`: コンバットシーンで使用される機能
+- `Scripts/Cores/Data/`: 純粋なデータ定義（ScriptableObject、構造体、クラス）
+- `Scripts/Cores/Domain/`: ゲームのコアロジック、データモデル、エンティティ
+- `Scripts/Cores/Enum/`: 列挙型（Enum）
+- `Scripts/Cores/Events/`: イベントパターンで使用されるイベント定義
+- `Scripts/Cores/Initializers/`: DIコンテナの初期化ロジック
+- `Scripts/Cores/Interfaces/`: インターフェース定義
+- `Scripts/Cores/Managers/`: 複数のコンポーネントやシステムを統括・管理する高レベルなロジック
+- `Scripts/Cores/Operators/`: UIの最終的な応答を管理するオペレータクラス
+- `Scripts/Cores/Presenters/`: ViewとModelの仲介役
+- `Scripts/Cores/Registries/`: レジストリクラス
+- `Scripts/Cores/UI/`: UIコンポーネント（MonoBehaviour）
+- `Scripts/Combats/Data/`: 純粋なデータ定義（ScriptableObject、構造体、クラス）
+- `Scripts/Combats/Domain/`: ゲームのコアロジック、データモデル、エンティティ
+- `Scripts/Combats/Enum/`: 列挙型（Enum）
+- `Scripts/Combats/Events/`: イベントパターンで使用されるイベント定義
+- `Scripts/Combats/Initializers/`: DIコンテナの初期化ロジック
+- `Scripts/Combats/Interfaces/`: インターフェース定義
+- `Scripts/Combats/Managers/`: 複数のコンポーネントやシステムを統括・管理する高レベルなロジック
+- `Scripts/Combats/Operators/`: UIの最終的な応答を管理するオペレータクラス
+- `Scripts/Combats/Presenters/`: ViewとModelの仲介役
+- `Scripts/Combats/Registries/`: レジストリクラス
+- `Scripts/Combats/UI/`: UIコンポーネント（MonoBehaviour）
 
 ### 2. バージョン管理
 

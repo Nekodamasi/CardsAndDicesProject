@@ -3,9 +3,9 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// DiceSlotInstanceを管理し、の変更をコマンドで通知します
+    /// CreatureCardSlotInstanceを管理し、変更をコマンドで通知します
     /// </summary>
-    public class DiceSlotController : IDisposable, IIdentifiableController
+    public class CreatureCardSlotController : IDisposable, IIdentifiableController
     {
         private readonly DiceSlotInstance _diceSlotInstance;
         private readonly GameEventBus _eventBus;
@@ -18,7 +18,7 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DiceSlotController(DiceSlotInstance diceSlotInstance, GameEventBus eventBus)
+        public CreatureCardSlotController(DiceSlotInstance diceSlotInstance, GameEventBus eventBus)
         {
             _diceSlotInstance = diceSlotInstance;
             _eventBus = eventBus;

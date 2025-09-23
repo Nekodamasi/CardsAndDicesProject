@@ -9,11 +9,11 @@ namespace CardsAndDices
     /// <summary>
     /// 全てのダイススロットの状態を管理し、ダイスの配置などを担当するマネージャークラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceSlotManager", menuName = "CardsAndDices/Combats/Managers/Dices/DiceSlotManager")]
-    public class DiceSlotManager : ScriptableObject, IDisposable, IDiceSlotPosition
+    [CreateAssetMenu(fileName = "CreatureCardSlotManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureCardSlotManager")]
+    public class CreatureCardSlotManager : ScriptableObject, IDisposable, IDiceSlotPosition
     {
         [Header("Components")]
-        [SerializeField] private List<DiceSlotPositionEntity> _diceSlotPositionEntities;
+        [SerializeField] private List<CreatureCardSlotPositionEntity> _creatureCardSlotPositionEntity;
         [SerializeField] private CompositeObjectIdTypeEntity _objectType;
         private readonly List<DiceSlotInstance> _diceSlotInstances = new();
         private readonly List<DiceSlotController> _iceSlotControllers = new();
@@ -21,10 +21,10 @@ namespace CardsAndDices
         private CompositeObjectIdManager _compositeObjectIdManager;
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, CompositeObjectIdManager compositeObjectIdManager)
+        public void Initialize(GameEventBus identifiableCommandBus, CompositeObjectIdManager compositeObjectIdManager)
         {
             DisposeInstances();
-            _eventBus = eventBus;
+            _eventBus = identifiableCommandBus;
             _compositeObjectIdManager = compositeObjectIdManager;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.On<CombatPhaseReflowDiceEvent>(OnReflowDiceSlots);
@@ -74,11 +74,13 @@ namespace CardsAndDices
         /// </summary>
         private void OnSceneLoaded(SceneLoadedEvent evt)
         {
-            foreach (var diceSlotPositionEntity in _diceSlotPositionEntities)
+            foreach (var diceSlotPositionEntity in _creatureCardSlotPositionEntity)
             {
+/*
                 var instance = new DiceSlotInstance(_compositeObjectIdManager.CreateId(_objectType, null), diceSlotPositionEntity);
                 _diceSlotInstances.Add(instance);
                 _iceSlotControllers.Add(new DiceSlotController(instance, _eventBus));
+*/
             }
         }
         /// <summary>

@@ -15,7 +15,6 @@ namespace CardsAndDices
     {
         private class AddDice
         {
-            public CompositeObjectId DiceId;
             public int FaceValue;
             public AddDice(int Value)
             {

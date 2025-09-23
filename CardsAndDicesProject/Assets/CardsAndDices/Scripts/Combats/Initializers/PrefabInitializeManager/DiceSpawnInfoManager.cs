@@ -6,7 +6,7 @@ namespace CardsAndDices
     /// <summary>
     /// DiceSpawnInfoのリストを管理するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "DiceSpawnInfoManager", menuName = "CardsAndDices/Initializes/PrefabInitializeManager/DiceSpawnInfoManager")]
+    [CreateAssetMenu(fileName = "DiceSpawnInfoManager", menuName = "CardsAndDices/Combats/Initializes/PrefabInitializeManager/DiceSpawnInfoManager")]
     public class DiceSpawnInfoManager : ScriptableObject
     {
         /// <summary>

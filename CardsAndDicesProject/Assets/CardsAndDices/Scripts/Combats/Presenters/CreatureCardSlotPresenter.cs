@@ -3,9 +3,9 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// DiceData(Model)とDiceView(View)を1対1で紐づけ、両者の状態を同期させる責務を持つ仲介役。
+    /// CreatureCardSlotinstance(Model)とCreatureCardSlotView(View)を1対1で紐づけ、両者の状態を同期させる責務を持つ仲介役。
     /// </summary>
-    public class DicePresenter : IDisposable, IIdentifiablePresenter
+    public class CreatureCardSlotPresenter : IDisposable, IIdentifiablePresenter
     {
         private readonly DiceInstance _instance;
         private readonly DiceView _view;
@@ -21,7 +21,7 @@ namespace CardsAndDices
         /// </summary>
         public CompositeObjectId CompositeObjectId => _view.CompositeObjectId;
 
-        public DicePresenter(DiceInstance instance, DiceView view, GameEventBus eventBus)
+        public CreatureCardSlotPresenter(DiceInstance instance, DiceView view, GameEventBus eventBus)
         {
             _instance = instance;
             _view = view;
