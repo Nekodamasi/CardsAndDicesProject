@@ -12,7 +12,6 @@ namespace CardsAndDices
 
         private IdentifiableStatus _currentStatus;
         private Vector3 _homePosition;
-        private bool _isDragDisabled;
         private GameEventBus _eventBus;
         private IdentifiableUIStateMachine _identifiableUIStateMachine;
 
@@ -49,19 +48,7 @@ namespace CardsAndDices
         /// <summary>
         /// 現在のホームステータスを介します
         /// </summary>
-        public IdentifiableStatus CurrentHomeStatus {
-            get
-            {
-                if(_isDragDisabled)
-                {
-                    return IdentifiableStatus.Grayout;
-                }
-                else
-                {
-                    return IdentifiableStatus.Normal;
-                }
-             }
-        }
+        public IdentifiableStatus CurrentHomeStatus;
 
         /// <summary>
         /// コンストラクタ
@@ -69,7 +56,7 @@ namespace CardsAndDices
         /// <param name="compositeObjectId">追跡対象のオブジェクトID。</param>
         public IdentifiableStatusInstance(CompositeObjectId compositeObjectId, GameEventBus identifiableCommandBus, IdentifiableUIStateMachine identifiableUIStateMachine)
         {
-            _isDragDisabled = false;
+            CurrentHomeStatus = IdentifiableStatus.Normal;
             _compositeObjectId = compositeObjectId;
             _currentStatus = IdentifiableStatus.Hide;
             _homePosition = Vector3.zero;

@@ -41,6 +41,10 @@ namespace CardsAndDices
 
         public void OnStart()
         {
+            if (_identifiableGameObject is null)
+            {
+                Debug.LogWarning("identifiableGameObjectがnull ->" + this.gameObject.name);
+            }
             _identifiableStateOperator.RegisterTarget(_identifiableGameObject.CompositeObjectId);
 		}
 
@@ -149,10 +153,15 @@ namespace CardsAndDices
         public void OnDrop(PointerEventData eventData)
         {
             if (_profile != null && !_profile.CanBeDropTarget) return; // ガード節を追加
-            // SpriteInputHandlerのOnDropは、ドロップターゲットがない場所でのドロップも検知する
-            // ドロップターゲットがある場合は、そのターゲットのOnDropが先に呼ばれる
-            // ここでは、ドロップされたオブジェクトのObjectIdと、ドロップターゲットのObjectIdを渡す
+
             IdentifiableGameObject droppedObjectIdentifiable = eventData.pointerDrag.GetComponent<IdentifiableGameObject>();
+            if (droppedObjectIdentifiable == null)
+            {
+                // ドロップされたオブジェクトが識別可能なオブジェクトでない場合は何もしない
+                Debug.LogWarning("Dropped object is not an IdentifiableGameObject.", eventData.pointerDrag);
+                return;
+            }
+
             IdentifiableGameObject targetObjectIdentifiable = GetComponent<IdentifiableGameObject>(); // このオブジェクト自身がターゲット
 
             _eventBus.Emit(new IdentifiableDropEvent(droppedObjectIdentifiable.CompositeObjectId, targetObjectIdentifiable.CompositeObjectId));

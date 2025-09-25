@@ -70,7 +70,7 @@ namespace CardsAndDices
         /// </summary>
         protected override void OnStateDrag(IdentifiableStateDragEvent evt)
         {
-            Debug.Log("おぺれーたー（ドラッグ中）：" + evt.ExecutedObjectId);
+//            Debug.Log("おぺれーたー（ドラッグ中）：" + evt.ExecutedObjectId);
             // Statusの変更を通知する
             _eventBus.Emit(new ChangeViewStatusEvent(evt.ExecutedObjectId, IdentifiableStatus.DraggingInProgress));
 

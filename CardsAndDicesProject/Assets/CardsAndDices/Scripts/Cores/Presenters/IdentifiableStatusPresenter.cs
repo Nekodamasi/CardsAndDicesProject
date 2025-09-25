@@ -27,8 +27,7 @@ namespace CardsAndDices
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
             _eventBus.On<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
-            
-
+            _eventBus.On<SetCurrentHomeStatusEvent>(OnSetCurrentHomeStatus);
         }
         public void Dispose()
         {
@@ -40,6 +39,7 @@ namespace CardsAndDices
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
             _eventBus.Off<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
+            _eventBus.Off<SetCurrentHomeStatusEvent>(OnSetCurrentHomeStatus);
         }
         /// <summary>
         /// 現在のUIステートをViewに反映させるコマンド
@@ -55,6 +55,16 @@ namespace CardsAndDices
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
             _status.UpdateStatus(_status.CurrentHomeStatus);
+        }
+
+        /// <summary>
+        /// ホームステータスの設定をします
+        /// </summary>
+        private void OnSetCurrentHomeStatus(SetCurrentHomeStatusEvent evt)
+        {
+            // 自分以外は処理しない
+            if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
+            _status.CurrentHomeStatus = evt.CurrentHomeStatus;
         }
 
         /// <summary>
@@ -153,6 +163,16 @@ namespace CardsAndDices
             else if (_status.CurrentStatus == IdentifiableStatus.Click)
             {
                 _view.DisplayClickStatus();
+            }
+            // クリック状態
+            else if (_status.CurrentStatus == IdentifiableStatus.Inactive)
+            {
+                _view.DisplayInactiveStatus();
+            }
+            // クリック状態
+            else if (_status.CurrentStatus == IdentifiableStatus.Acceptable)
+            {
+                _view.DisplayAcceptableStatus();
             }
         }
     }

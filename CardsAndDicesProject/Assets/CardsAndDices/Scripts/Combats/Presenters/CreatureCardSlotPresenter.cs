@@ -43,15 +43,17 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// クリーチャーカードを画面に投げ入れる
+        /// 受け入れ状態になるイベント
         /// </summary>
         private void OnIdentifiableStateBeginDrag(IdentifiableStateBeginDragEvent evt)
         {
+//            Debug.Log("ほげほげほげほげほげ：" + evt.ExecutedObjectId.ObjectType + "/" + _compositeObjectIdTypeEntity);
             // 受け入れ対象がドラッグされた
             if (evt.ExecutedObjectId.ObjectType != _compositeObjectIdTypeEntity) return;
 
             // Statusを受け入れ状態に変更
-            _eventBus.Emit(new ChangeViewStatusEvent(evt.ExecutedObjectId, IdentifiableStatus.Acceptable));
+            _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Acceptable));
+            _eventBus.Emit(new DisplayStatusViewEvent(_instance.CompositeObjectId));
             _view.DisplayAcceptableStatus();
         }
     }

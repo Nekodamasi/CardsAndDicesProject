@@ -187,7 +187,7 @@ namespace CardsAndDices
 				case IdentifiableUIState.Dragging:
 					if (StateObjectId == evt.ExecutedObjectId)
 					{
-            			Debug.Log("すてーとましん（ドラッグ中）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
+//            			Debug.Log("すてーとましん（ドラッグ中）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Dragging, evt.ExecutedObjectId, null);
 						// ドラッグ中コマンド
 						_identifiableEventBus.Emit(new IdentifiableStateDragEvent(evt.ExecutedObjectId, evt.NewPosition));

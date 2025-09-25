@@ -85,6 +85,11 @@ namespace CardsAndDices
             // クリーチャーカードスロットビューを所定の場所に移動
             foreach (var creatureCardSlotPresenter in _creatureCardSlotPresenters)
             {
+                // Statusを変更しViewに反映
+                _eventBus.Emit(new SetCurrentHomeStatusEvent(creatureCardSlotPresenter.CompositeObjectId, IdentifiableStatus.Inactive));
+                _eventBus.Emit(new ChangeViewStatusEvent(creatureCardSlotPresenter.CompositeObjectId, IdentifiableStatus.Inactive));
+                _eventBus.Emit(new DisplayStatusViewEvent(creatureCardSlotPresenter.CompositeObjectId));
+
                 // HomePositionを設定し、そこに移動
                 _eventBus.Emit(new ChangeHomePositionStatusViewEvent(creatureCardSlotPresenter.CompositeObjectId, creatureCardSlotPresenter.HomePosition));
                 _eventBus.Emit(new ReturnHomePositionEvent(creatureCardSlotPresenter.CompositeObjectId));
@@ -98,7 +103,7 @@ namespace CardsAndDices
         {
             var draggedSlot = GetInstanceInReflowPlaced(evt.DraggedCardId);
             var targetSlot = GetInstance(evt.TargetSlotId);
-            _reflowService.CalculateReflowMovements(targetSlot, targetSlot, evt.DraggedCardId);
+            _reflowService.CalculateReflowMovements(draggedSlot, targetSlot, evt.DraggedCardId);
         }
 
         /// <summary>
@@ -165,7 +170,6 @@ namespace CardsAndDices
                 Debug.LogWarning("viewが取得できない");
                 return;
             }
-            view.SetBoundState(true);
             var instance = new CreatureCardSlotInstance(view.CompositeObjectId, creatureCardSlotPositionEntity);
             _creatureCardSlotInstances.Add(instance);
             var controller = new CreatureCardSlotController(instance, _eventBus);

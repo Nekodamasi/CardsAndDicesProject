@@ -177,11 +177,11 @@ classDiagram
 
 ### 2. ダイスの使用 (インレットへのドロップ)
 
-1.  プレイヤーが `DiceView` をドラッグし、`InletView` の上でドロップします。
-2.  `DiceView` にアタッチされた `IdentifiableInputHandler` が `IdentifiableDropEvent` を発行します。このイベントには、ドラッグされたオブジェクト（ダイス）とドロップ先オブジェクト（インレット）の `CompositeObjectId` が含まれます。
+1.  プレイヤーが `DiceGameObject` をドラッグし、`InletGameObject` の上でドロップします。
+2.  `DiceGameObject` にアタッチされた `IdentifiableInputHandler` が `IdentifiableDropEvent` を発行します。このイベントには、ドラッグされたオブジェクト（ダイス）とドロップ先オブジェクト（インレット）の `CompositeObjectId` が含まれます。
 3.  ダイスに対応する `DicePresenter` がこのイベントを受信します。
 4.  `OnIdentifiableDrop()` メソッド内で、`DicePresenter` は `DiceDropInInletCommand` を発行します。このコマンドには、ダイスの出目(`FaceValue`)が含まれており、インレットの能力発動システムが後続処理を行います。
-5.  `DicePresenter` は、使用済みとなった `DiceInstance` の `IsAlive` フラグを `false` に更新し、`DiceView` を非表示にするよう指示します。
+5.  `DicePresenter` は、使用済みとなった `DiceInstance` の `IsAlive` フラグを `false` に更新し、`DiceGameObject` を非表示にするよう指示します。
 
 ---
 

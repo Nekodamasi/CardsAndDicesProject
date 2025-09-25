@@ -28,7 +28,8 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayAcceptableStatus()
         {
-            return AnimationExecute(_acceptableAnimationStatusEntity);
+//            return AnimationExecute(_acceptableAnimationStatusEntity);
+            return null;
         }
     }
 }

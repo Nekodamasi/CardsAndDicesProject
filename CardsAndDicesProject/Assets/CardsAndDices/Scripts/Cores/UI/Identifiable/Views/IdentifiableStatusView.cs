@@ -23,6 +23,7 @@ namespace CardsAndDices
         [Header("SEData Components")]
         [SerializeField] private SEData _hoverSeData;
         [SerializeField] private SEData _clickSeData;
+        [SerializeField] private IdentifiableStatus _currentStatus;
 
         private AnimationExecutor _animationExecutor = new AnimationExecutor();
         private Sequence _currentMoveAnimation;
@@ -38,10 +39,22 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 受け入れ状態にします
+        /// </summary>
+        public Sequence DisplayAcceptableStatus()
+        {
+            Debug.Log("どうやーねーーーーーん");
+            _currentStatus = IdentifiableStatus.Acceptable;
+            SetColliderEnabled(true);
+            return null;
+        }
+
+        /// <summary>
         /// ホバー状態にします
         /// </summary>
         public Sequence DisplayHoverStatus()
         {
+            _currentStatus = IdentifiableStatus.Hover;
             _sEPlayer.PlayOneShot(_hoverSeData);
             return AnimationExecute(_hoverAnimationStrategyEntity);
         }
@@ -51,7 +64,8 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayNormalStatus()
         {
-
+            _currentStatus = IdentifiableStatus.Normal;
+            SetColliderEnabled(true);
             return AnimationExecute(_normalAnimationStrategyEntity);
         }
 
@@ -60,6 +74,7 @@ namespace CardsAndDices
         /// </summary>
         public void DisplayHideStatus()
         {
+            _currentStatus = IdentifiableStatus.Hide;
             SetDisplayActive(false);
         }
 
@@ -68,6 +83,8 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayGrayoutStatus()
         {
+            _currentStatus = IdentifiableStatus.Grayout;
+            SetColliderEnabled(true);
             return AnimationExecute(_grayoutAnimationStrategyEntity);
         }
 
@@ -76,8 +93,19 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayDragStatus()
         {
-
+            _currentStatus = IdentifiableStatus.DraggingStarted;
+            SetColliderEnabled(false);
             return AnimationExecute(_dragAnimationStrategyEntity);
+        }
+
+        /// <summary>
+        /// インアクティブ状態にします
+        /// </summary>
+        public Sequence DisplayInactiveStatus()
+        {
+            _currentStatus = IdentifiableStatus.Inactive;
+            SetColliderEnabled(false);
+            return null;
         }
 
         /// <summary>
@@ -85,6 +113,8 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayClickStatus()
         {
+            _currentStatus = IdentifiableStatus.Click;
+            SetColliderEnabled(true);
             _sEPlayer.PlayOneShot(_clickSeData);
             return AnimationExecute(_clickAnimationStrategyEntity);
         }
@@ -98,7 +128,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// ドラッグ中の移動を行います
+        /// 移動アニメーションを行います
         /// </summary>
         public Sequence MoveToAnimated(Vector3 targetPosition, float animationDuration)
         {

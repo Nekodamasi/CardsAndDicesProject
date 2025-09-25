@@ -29,7 +29,6 @@ namespace CardsAndDices
             _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.On<IdentifiableDropEvent>(OnIdentifiableDrop);
-            
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
