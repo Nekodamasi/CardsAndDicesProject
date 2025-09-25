@@ -7,9 +7,10 @@ namespace CardsAndDices
     /// </summary>
     public class CreatureCardSlotPresenter : IDisposable, IIdentifiablePresenter
     {
-        private readonly DiceInstance _instance;
-        private readonly DiceView _view;
+        private readonly CreatureCardSlotInstance _instance;
+        private readonly CreatureCardSlotView _view;
         private readonly GameEventBus _eventBus;
+        private readonly CompositeObjectIdTypeEntity _compositeObjectIdTypeEntity;
 
         /// <summary>
         /// インスタンス側のID
@@ -21,59 +22,37 @@ namespace CardsAndDices
         /// </summary>
         public CompositeObjectId CompositeObjectId => _view.CompositeObjectId;
 
-        public CreatureCardSlotPresenter(DiceInstance instance, DiceView view, GameEventBus eventBus)
+        public Vector3 HomePosition => _instance.CreatureCardSlotPosition;
+
+        public CreatureCardSlotPresenter(CreatureCardSlotInstance instance, CreatureCardSlotView view, GameEventBus eventBus, CompositeObjectIdTypeEntity compositeObjectIdTypeEntity)
         {
             _instance = instance;
             _view = view;
             _eventBus = eventBus;
-            _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
-            _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
-            _eventBus.On<IdentifiableDropEvent>(OnIdentifiableDrop);
-            
+            _compositeObjectIdTypeEntity = compositeObjectIdTypeEntity;
+            _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
+
         }
+
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
         /// </summary>
         public void Dispose()
         {
-            _eventBus.Off<DisplayOnScreenEvent>(OnDisplayOnScreen);
-            _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
-            _eventBus.Off<IdentifiableDropEvent>(OnIdentifiableDrop);
+            _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
         }
 
         /// <summary>
-        /// オブジェクトをドロップ
+        /// クリーチャーカードを画面に投げ入れる
         /// </summary>
-        private void OnIdentifiableDrop(IdentifiableDropEvent evt)
+        private void OnIdentifiableStateBeginDrag(IdentifiableStateBeginDragEvent evt)
         {
-            if (evt.TargetObjectId != _view.CompositeObjectId) return;
-            _eventBus.Emit(new DiceDropInInletEvent(evt.ExecutedObjectId, evt.TargetObjectId, _instance.FaceValue));
-            _instance.IsAlive = false;
-            _eventBus.Emit(new ChangeViewStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
-            _eventBus.Emit(new DisplayStatusViewEvent(_view.CompositeObjectId));
-        }
+            // 受け入れ対象がドラッグされた
+            if (evt.ExecutedObjectId.ObjectType != _compositeObjectIdTypeEntity) return;
 
-        /// <summary>
-        /// ダイスを画面に投げ入れる
-        /// </summary>
-        private void OnDisplayOnScreen(DisplayOnScreenEvent evt)
-        {
-            if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
-            if (_instance.IsOnScreen) return;
-            _instance.IsOnScreen = true;
-            _view.DisplayOnScreen(_instance.DiceHomePosition, _instance.FaceValue);
-        }
-
-        /// <summary>
-        /// ダイスを画面から退場させる
-        /// </summary>
-        private void OnDisplayOffScreen(DisplayOffScreenEvent evt)
-        {
-            if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
-            if (!_instance.IsOnScreen) return;
-            _instance.IsOnScreen = false;
-            _view.DisplayOffScreen();
-            _instance.IsAlive = false;
+            // Statusを受け入れ状態に変更
+            _eventBus.Emit(new ChangeViewStatusEvent(evt.ExecutedObjectId, IdentifiableStatus.Acceptable));
+            _view.DisplayAcceptableStatus();
         }
     }
 }

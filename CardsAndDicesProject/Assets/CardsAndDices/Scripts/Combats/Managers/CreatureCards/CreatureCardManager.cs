@@ -7,127 +7,69 @@ using System;
 namespace CardsAndDices
 {
     /// <summary>
-    /// 全てのダイススロットの状態を管理し、ダイスの配置などを担当するマネージャークラス。
+    /// 全てのクリーチャーカードの状態管理などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureCardManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureCardManager")]
-    public class CreatureCardManager : ScriptableObject, IDisposable, IDiceSlotPosition
+    public class CreatureCardManager : ScriptableObject, IDisposable
     {
         [Header("Components")]
-        [SerializeField] private List<CreatureCardSlotPositionEntity> _creatureCardSlotPositionEntity;
-        [SerializeField] private CompositeObjectIdTypeEntity _objectType;
-        private readonly List<DiceSlotInstance> _diceSlotInstances = new();
-        private readonly List<DiceSlotController> _iceSlotControllers = new();
+        private readonly List<CreatureCardInstance> _creatureCardInstances = new();
+        private readonly List<CreatureCardPresenter> _creatureCardPresenters = new();
         private GameEventBus _eventBus;
-        private CompositeObjectIdManager _compositeObjectIdManager;
+        private CreatureCardSlotManager _creatureCardSlotManager;
+        private IdentifiableViewRegistry _viewRegistry;
 
         [Inject]
-        public void Initialize(GameEventBus identifiableCommandBus, CompositeObjectIdManager compositeObjectIdManager)
+        public void Initialize(GameEventBus eventBus, CreatureCardSlotManager creatureCardSlotManager, IdentifiableViewRegistry viewRegistry)
         {
             DisposeInstances();
-            _eventBus = identifiableCommandBus;
-            _compositeObjectIdManager = compositeObjectIdManager;
-            _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
-            _eventBus.On<CombatPhaseReflowDiceEvent>(OnReflowDiceSlots);
+            _eventBus = eventBus;
+            _creatureCardSlotManager = creatureCardSlotManager;
+            _viewRegistry = viewRegistry;
+            _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
         }
 
         public void Dispose()
         {
             DisposeInstances();
-            DisposeControllers();
-            _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
-            _eventBus.Off<CombatPhaseReflowDiceEvent>(OnReflowDiceSlots);
+            DisposePresenters();
+            _eventBus.Off<CreateCreatureEvent>(OnCreateCreature);
         }
 
         /// <summary>
-        /// ダイススロットを前詰めでリフローします。
+        /// クリーチャーの生成イベント
         /// </summary>
-        public void ReflowDiceSlots()
+        private void OnCreateCreature(CreateCreatureEvent evt)
         {
-            var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
-            var occupiedSlots = sortedSlots.Where(s => s.IsOccupied).ToList();
-            var diceIds = occupiedSlots.Select(s => s.PlacedDiceId).ToList();
-
-            // すべてのサイコロを削除するコマンドを発行する
-            foreach (var slot in occupiedSlots)
-            {
-                _eventBus.Emit(new RemoveDiceEvent(slot.DiceSlotLocation, slot.PlacedDiceId));
-            }
-
-            // サイコロを前積み順に並べるコマンドを発行する
-            for (int i = 0; i < diceIds.Count; i++)
-            {
-                _eventBus.Emit(new PlacedDiceEvent(sortedSlots[i].CompositeObjectId, diceIds[i]));
-                _eventBus.Emit(new MoveToAnimationReflowDiceEvent(sortedSlots[i].CompositeObjectId));   
-            }
+            var instance = new CreatureCardInstance(evt.CreatureCardId, _creatureCardSlotManager);
+            _creatureCardInstances.Add(instance);
+            var view = _viewRegistry.GetView<CreatureCardView>(evt.CreatureCardId);
+            view.SetBoundState(true);
+            var presenter = new CreatureCardPresenter(instance, view, _eventBus);
+            _creatureCardPresenters.Add(presenter);
         }
 
-        /// <summary>
-        /// ダイスのリフローを行う
-        /// </summary>
-        private void OnReflowDiceSlots(CombatPhaseReflowDiceEvent evt)
-        {            
-            ReflowDiceSlots();
-        }
-
-        /// <summary>
-        /// ダイススロットポジションエンティティからインスタンスを生成します。
-        /// </summary>
-        private void OnSceneLoaded(SceneLoadedEvent evt)
-        {
-/*
-            foreach (var diceSlotPositionEntity in _diceSlotPositionEntities)
-            {
-                var instance = new DiceSlotInstance(_compositeObjectIdManager.CreateId(_objectType, null), diceSlotPositionEntity);
-                _diceSlotInstances.Add(instance);
-                _iceSlotControllers.Add(new DiceSlotController(instance, _eventBus));
-            }
-*/
-        }
         /// <summary>
         /// インスタンスをDisposeします
         /// </summary>
         private void DisposeInstances()
         {
-            foreach (var instance in _diceSlotInstances)
+            foreach (var instance in _creatureCardInstances)
             {
                 instance.Dispose();
             }
-            _diceSlotInstances.Clear();
+            _creatureCardInstances.Clear();
         }
         /// <summary>
         /// コントローラーをDisposeします
         /// </summary>
-        private void DisposeControllers()
+        private void DisposePresenters()
         {
-            foreach (var controller in _iceSlotControllers)
+            foreach (var presenter in _creatureCardPresenters)
             {
-                controller.Dispose();
+                presenter.Dispose();
             }
-            _iceSlotControllers.Clear();
+            _creatureCardPresenters.Clear();
         }
-        /// <summary>
-        /// ダイスをスロットに配置します
-        /// </summary>
-        public void PlacedDice(CompositeObjectId DiceId)
-        {
-            var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
-            var occupiedSlots = sortedSlots.Where(s => s.IsOccupied == false).ToList();
-            // Debug.Log("ダイススロット配置ー＞" + sortedSlots.Count + "/" + occupiedSlots.Count);
-            _eventBus.Emit(new PlacedDiceEvent(occupiedSlots[0].CompositeObjectId, DiceId));
-//            _eventBus.Emit(new ReturnHomePositionEvent(DiceId));
-        }
-
-        /// <summary>
-        /// 配置されたダイスのHomePositionを返します
-        /// </summary>
-        public Vector3 GetDiceHomePosition(CompositeObjectId DiceId)
-        {
-            var placedSlots = _diceSlotInstances.Where(s => s.ReflowPlacedDiceId == DiceId).ToList();
-            if (placedSlots.Count == 0)
-            {
-                return Vector3.zero;
-            }
-            return placedSlots[0].DiceSlotPosition;
-        }
-    }
+   }
 }

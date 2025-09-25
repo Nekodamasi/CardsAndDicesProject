@@ -105,6 +105,7 @@ namespace CardsAndDices
             foreach (var dice in _addDices)
             {
                 var view = _viewRegistry.GetNonBoundView<DiceView>();
+                view.SetBoundState(true);
                 var instance = CreateDiceInstance(view.CompositeObjectId, dice.FaceValue);
                 var Presenter = CreateDicePresenter(instance, view);
                 _diceSlotManager.PlacedDice(Presenter.CompositeObjectId);

@@ -64,6 +64,7 @@
 - `Scripts/Cores/Operators/`: UIの最終的な応答を管理するオペレータクラス
 - `Scripts/Cores/Presenters/`: ViewとModelの仲介役
 - `Scripts/Cores/Registries/`: レジストリクラス
+- `Scripts/Cores/Services/`: 高レベルのロジッククラス
 - `Scripts/Cores/UI/`: UIコンポーネント（MonoBehaviour）
 - `Scripts/Combats/Data/`: 純粋なデータ定義（ScriptableObject、構造体、クラス）
 - `Scripts/Combats/Domain/`: ゲームのコアロジック、データモデル、エンティティ
@@ -75,6 +76,7 @@
 - `Scripts/Combats/Operators/`: UIの最終的な応答を管理するオペレータクラス
 - `Scripts/Combats/Presenters/`: ViewとModelの仲介役
 - `Scripts/Combats/Registries/`: レジストリクラス
+- `Scripts/Combats/Services/`: 高レベルのロジッククラス
 - `Scripts/Combats/UI/`: UIコンポーネント（MonoBehaviour）
 
 ### 2. バージョン管理

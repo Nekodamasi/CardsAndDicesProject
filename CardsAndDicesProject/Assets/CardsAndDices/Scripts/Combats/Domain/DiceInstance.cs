@@ -25,7 +25,14 @@ namespace CardsAndDices
         /// </summary>
         public int FaceValue => _faceValue;
 
+        /// <summary>
+        /// 画面に配置しているかどうか。
+        /// </summary>
         public bool IsOnScreen;
+
+        /// <summary>
+        /// インスタンスが生きているか
+        /// </summary>
         public bool IsAlive;
 
         /// <summary>

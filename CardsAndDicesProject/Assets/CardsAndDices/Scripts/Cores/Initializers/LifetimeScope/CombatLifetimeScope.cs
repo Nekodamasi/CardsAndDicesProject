@@ -23,7 +23,10 @@ namespace CardsAndDices
         [SerializeField] private DiceSlotManager _diceSlotManager;
         [SerializeField] private DiceManager _diceManager;
         [SerializeField] private SoundManager _soundManager;
-        
+        [SerializeField] private CreatureManager _creatureManager;
+        [SerializeField] private PlayerCardDataProvider _playerCardDataProvider;
+        [SerializeField] private CreatureCardManager _creatureCardManager;
+        [SerializeField] private CreatureCardSlotManager _creatureCardSlotManager;
 
         [Header("PrefabSpawnInfo Managers")]
         [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
@@ -58,6 +61,10 @@ namespace CardsAndDices
             builder.RegisterInstance(_diceSlotManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_soundManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_creatureManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_playerCardDataProvider).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_creatureCardManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_creatureCardSlotManager).AsSelf().AsImplementedInterfaces();
 
             // PrefabSpawnInfo Managers のバインド
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
@@ -81,6 +88,10 @@ namespace CardsAndDices
             _diceSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager);
             _diceManager.Initialize(_gameEventBus, _identifiableViewRegistry, _diceSlotManager);
             _soundManager.Initialize();
+            _creatureManager.Initialize(_playerCardDataProvider, _gameEventBus, _identifiableViewRegistry);
+            _playerCardDataProvider.Initialize();
+            _creatureCardManager.Initialize(_gameEventBus, _creatureCardSlotManager, _identifiableViewRegistry);
+            _creatureCardSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();

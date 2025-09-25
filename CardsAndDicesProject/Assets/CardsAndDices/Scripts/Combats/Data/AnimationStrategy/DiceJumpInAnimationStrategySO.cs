@@ -23,7 +23,6 @@ namespace CardsAndDices
             var homePosition = context.HomePosition;
             var startPosition = homePosition + new Vector3(_profile.StartOffset, 0, 0);
             var overshootPosition = homePosition + new Vector3(_profile.OvershootDistance, 0, 0);
-            Debug.Log("ほーむぽじしょん：" + homePosition + "->StartPosition：" + startPosition + " ->おーば：" + overshootPosition);
 
             // アニメーションの各フェーズの時間
             var durationPhase1 = _profile.Duration * 0.75f;

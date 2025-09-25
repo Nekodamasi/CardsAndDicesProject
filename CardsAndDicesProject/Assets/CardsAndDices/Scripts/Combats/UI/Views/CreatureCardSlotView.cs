@@ -10,10 +10,7 @@ namespace CardsAndDices
         [Header("Components")]
         [SerializeField] private AnimationContext _animationContext;
         [SerializeField] private AnimationStrategyRegistry _animationStrategyRegistry;
-        [SerializeField] private AnimationStrategyEntity _diceOnScreenAnimationStrategyEntity;
-        [SerializeField] private AnimationStrategyEntity _diceOffScreenAnimationStrategyEntity;
-        [SerializeField] private SpriteSelector _spriteSelector;
-
+        [SerializeField] private AnimationStrategyEntity _acceptableAnimationStatusEntity;
         private AnimationExecutor _animationExecutor = new AnimationExecutor();
 
         /// <summary>
@@ -27,21 +24,11 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// ダイスを画面に投げ入れる
+        /// 受け入れ状態にします
         /// </summary>
-        public Sequence DisplayOnScreen(Vector3 homePosition, int diceFace)
+        public Sequence DisplayAcceptableStatus()
         {
-            _spriteSelector.SelectSprite("Dice" + diceFace);
-            _animationContext.HomePosition = homePosition;
-            return AnimationExecute(_diceOnScreenAnimationStrategyEntity);
-        }
-
-        /// <summary>
-        /// ダイスを画面から退場
-        /// </summary>
-        public Sequence DisplayOffScreen()
-        {
-            return AnimationExecute(_diceOffScreenAnimationStrategyEntity);
+            return AnimationExecute(_acceptableAnimationStatusEntity);
         }
     }
 }

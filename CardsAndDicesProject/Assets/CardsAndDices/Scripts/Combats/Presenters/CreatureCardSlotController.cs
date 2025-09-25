@@ -7,25 +7,25 @@ namespace CardsAndDices
     /// </summary>
     public class CreatureCardSlotController : IDisposable, IIdentifiableController
     {
-        private readonly DiceSlotInstance _diceSlotInstance;
+        private readonly CreatureCardSlotInstance _creatureCardSlotInstance;
         private readonly GameEventBus _eventBus;
 
         /// <summary>
         /// インスタンス側のID
         /// </summary>
-        public CompositeObjectId InstanceId => _diceSlotInstance.CompositeObjectId;
+        public CompositeObjectId InstanceId => _creatureCardSlotInstance.CompositeObjectId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CreatureCardSlotController(DiceSlotInstance diceSlotInstance, GameEventBus eventBus)
+        public CreatureCardSlotController(CreatureCardSlotInstance creatureCardSlotInstance, GameEventBus eventBus)
         {
-            _diceSlotInstance = diceSlotInstance;
+            _creatureCardSlotInstance = creatureCardSlotInstance;
             _eventBus = eventBus;
-            _eventBus.On<PlacedDiceEvent>(OnPlacedDice);
-            _eventBus.On<ReflowPlacedDiceEvent>(OnReflowPlacedDice);
-            _eventBus.On<RemoveDiceEvent>(OnRemoveDice);
-            _eventBus.On<MoveToAnimationReflowDiceEvent>(OnMoveToAnimationReflowDice);
+            _eventBus.On<PlacedCreatureCardSlotEvent>(OnPlacedCreatureCardSlot);
+            _eventBus.On<ReflowPlacedCreatureCardSlotEvent>(OnReflowPlacedCreatureCardSlot);
+            _eventBus.On<RemoveCreatureCardSlotEvent>(OnRemoveCreatureCardSlot);
+            _eventBus.On<MoveToAnimationReflowCreatureCardSlotEvent>(OnMoveToAnimationReflowCreatureCardSlot);
         }
 
         /// <summary>
@@ -33,54 +33,51 @@ namespace CardsAndDices
         /// </summary>
         public void Dispose()
         {
-            _eventBus.Off<PlacedDiceEvent>(OnPlacedDice);
-            _eventBus.Off<ReflowPlacedDiceEvent>(OnReflowPlacedDice);
-            _eventBus.Off<RemoveDiceEvent>(OnRemoveDice);
-            _eventBus.Off<MoveToAnimationReflowDiceEvent>(OnMoveToAnimationReflowDice);
+            _eventBus.Off<PlacedCreatureCardSlotEvent>(OnPlacedCreatureCardSlot);
+            _eventBus.Off<ReflowPlacedCreatureCardSlotEvent>(OnReflowPlacedCreatureCardSlot);
+            _eventBus.Off<RemoveCreatureCardSlotEvent>(OnRemoveCreatureCardSlot);
+            _eventBus.Off<MoveToAnimationReflowCreatureCardSlotEvent>(OnMoveToAnimationReflowCreatureCardSlot);
         }
 
         /// <summary>
-        /// リフロー位置へのダイスAnimation移動
+        /// リフロー位置へのクリーチャーカードAnimation移動
         /// </summary>
-        private void OnMoveToAnimationReflowDice(MoveToAnimationReflowDiceEvent evt)
+        private void OnMoveToAnimationReflowCreatureCardSlot(MoveToAnimationReflowCreatureCardSlotEvent evt)
         {
-            if (_diceSlotInstance.CompositeObjectId != evt.DiceSlotId) return;
-            if (_diceSlotInstance.ReflowPlacedDiceId == null) return;
-
-            Debug.Log("だいすすろっとこんとろーらー：" + _diceSlotInstance.CompositeObjectId + "/リフローダイス：" + _diceSlotInstance.ReflowPlacedDiceId + " /Position:" + _diceSlotInstance.DiceSlotPosition);
-            _eventBus.Emit(new MoveToIdentifiableEvent(_diceSlotInstance.ReflowPlacedDiceId, _diceSlotInstance.DiceSlotPosition));
+            if (_creatureCardSlotInstance.CompositeObjectId != evt.CreatureCardId) return;
+            if (_creatureCardSlotInstance.ReflowPlacedCardId == null) return;
+            _eventBus.Emit(new MoveToIdentifiableEvent(_creatureCardSlotInstance.ReflowPlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
         }
 
         /// <summary>
-        /// ダイスの配置処理
+        /// クリーチャーカードの配置処理
         /// </summary>
-        private void OnPlacedDice(PlacedDiceEvent evt)
+        private void OnPlacedCreatureCardSlot(PlacedCreatureCardSlotEvent evt)
         {
-//            Debug.Log("おんぷらいすだいす１：" + _diceSlotInstance.CompositeObjectId + "/" + evt.DiceSlotId + "/リフローダイス：" + _diceSlotInstance.ReflowPlacedDiceId + " Position:" + _diceSlotInstance.DiceSlotPosition);
-            if (evt.DiceSlotId != _diceSlotInstance.CompositeObjectId) return;
-            if (_diceSlotInstance.IsOccupied)
+            if (evt.CreatureCardSlotId != _creatureCardSlotInstance.CompositeObjectId) return;
+            if (_creatureCardSlotInstance.IsOccupied)
             {
-                _diceSlotInstance.RemoveDice();
+                _creatureCardSlotInstance.RemoveCard();
             }
-            _diceSlotInstance.PlacedDice(evt.DiceId);
-            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.DiceId, _diceSlotInstance.DiceSlotPosition));
+            _creatureCardSlotInstance.PlacedCard(evt.CreatureCardId);
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.CreatureCardSlotId, _creatureCardSlotInstance.CreatureCardSlotPosition));
         }
 
         /// <summary>
-        /// ダイスリフロー配置処理
+        ///クリーチャーカードリフロー配置処理
         /// </summary>
-        private void OnReflowPlacedDice(ReflowPlacedDiceEvent evt)
+        private void OnReflowPlacedCreatureCardSlot(ReflowPlacedCreatureCardSlotEvent evt)
         {
-            if(evt.DiceSlotLocation != _diceSlotInstance.DiceSlotLocation) return;
-            _diceSlotInstance.ReflowPlacedDice(evt.DiceId);
+            if (evt.CreatureCardSlotId != _creatureCardSlotInstance.CompositeObjectId) return;
+            _creatureCardSlotInstance.ReflowPlacedCard(evt.CreatureCard);
         }
 
         /// <summary>
-        /// ダイスのリムーブ処理
+        /// クリーチャーカードのリムーブ処理
         /// </summary>
-        private void OnRemoveDice(RemoveDiceEvent evt)
+        private void OnRemoveCreatureCardSlot(RemoveCreatureCardSlotEvent evt)
         {
-            _diceSlotInstance.RemoveDice();
+            _creatureCardSlotInstance.RemoveCard();
         }
 
     }
