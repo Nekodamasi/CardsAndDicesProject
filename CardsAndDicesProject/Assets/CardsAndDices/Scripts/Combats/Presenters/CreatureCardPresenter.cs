@@ -28,7 +28,7 @@ namespace CardsAndDices
             _eventBus = eventBus;
             _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
-            
+            _eventBus.On<AllCreatureCardReflowEvent>(OnAllCreatureCardReflow);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -37,6 +37,15 @@ namespace CardsAndDices
         {
             _eventBus.Off<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
+            _eventBus.Off<AllCreatureCardReflowEvent>(OnAllCreatureCardReflow);
+        }
+
+        /// <summary>
+        /// クリーチャーカードを画面に投げ入れる
+        /// </summary>
+        private void OnAllCreatureCardReflow(AllCreatureCardReflowEvent evt)
+        {
+            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_instance.CompositeObjectId, _instance.CreatureCardSlotPosition));
         }
 
         /// <summary>

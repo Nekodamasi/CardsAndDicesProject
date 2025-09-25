@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// 全てのクリーチャーカードスロットの状態を管理し、配置などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureCardSlotManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureCardSlotManager")]
-    public class CreatureCardSlotManager : ScriptableObject, IDisposable, ICreatureCardSlotPosition
+    public class CreatureCardSlotManager : ScriptableObject, IDisposable, ICreatureCardSlotPosition, ICreatureCardSlotInstanceRepository
     {
         [Header("Components")]
         [SerializeField] private List<CreatureCardSlotPositionEntity> _creatureCardSlotPositionEntitys;
@@ -22,6 +22,7 @@ namespace CardsAndDices
         private GameEventBus _eventBus;
         private CompositeObjectIdManager _compositeObjectIdManager;
         private IdentifiableViewRegistry _viewRegistry;
+        private ReflowService _reflowService;
 
         [Inject]
         public void Initialize(GameEventBus eventBus, CompositeObjectIdManager compositeObjectIdManager, IdentifiableViewRegistry viewRegistry)
@@ -34,7 +35,10 @@ namespace CardsAndDices
             _eventBus.On<CombatPhaseReflowCardEvent>(OnCombatPhaseReflowCard);
             _eventBus.On<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
             _eventBus.On<PlacedHandSlotEvent>(OnPlacedHandSlot);
+            _eventBus.On<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
             
+            _reflowService = new ReflowService(this);
+
         }
 
         public void Dispose()
@@ -46,31 +50,15 @@ namespace CardsAndDices
             _eventBus.Off<CombatPhaseReflowCardEvent>(OnCombatPhaseReflowCard);
             _eventBus.Off<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
             _eventBus.Off<PlacedHandSlotEvent>(OnPlacedHandSlot);
+            _eventBus.Off<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
         }
 
         /// <summary>
-        /// クリーチャーカードスロットを前詰めでリフローします。
+        /// クリーチャーカードの前詰め処理を行います
         /// </summary>
-        public void ReflowDCreatureCards()
+        private void OnCombatPhaseCardFrontLoadMovement(CombatPhaseCardFrontLoadMovementEvent evt)
         {
-/*
-            var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
-            var occupiedSlots = sortedSlots.Where(s => s.IsOccupied).ToList();
-            var diceIds = occupiedSlots.Select(s => s.PlacedDiceId).ToList();
-
-            // すべてのサイコロを削除するコマンドを発行する
-            foreach (var slot in occupiedSlots)
-            {
-                _eventBus.Emit(new RemoveDiceEvent(slot.DiceSlotLocation, slot.PlacedDiceId));
-            }
-
-            // サイコロを前積み順に並べるコマンドを発行する
-            for (int i = 0; i < diceIds.Count; i++)
-            {
-                _eventBus.Emit(new PlacedDiceEvent(sortedSlots[i].CompositeObjectId, diceIds[i]));
-                _eventBus.Emit(new MoveToAnimationReflowDiceEvent(sortedSlots[i].CompositeObjectId));   
-            }
-*/
+            _reflowService.CalculateFrontLoadMovements();
         }
 
         /// <summary>
@@ -108,7 +96,33 @@ namespace CardsAndDices
         /// </summary>
         private void OnCombatPhaseReflowCard(CombatPhaseReflowCardEvent evt)
         {
-            ReflowDCreatureCards();
+            var draggedSlot = GetInstanceInReflowPlaced(evt.DraggedCardId);
+            var targetSlot = GetInstance(evt.TargetSlotId);
+            _reflowService.CalculateReflowMovements(targetSlot, targetSlot, evt.DraggedCardId);
+        }
+
+        /// <summary>
+        /// 指定したIdのインスタンスを返します
+        /// </summary>
+        public CreatureCardSlotInstance GetInstanceInReflowPlaced(CompositeObjectId id)
+        {
+            var emptyHandSlot = _creatureCardSlotInstances
+                .Where(slot => slot.ReflowPlacedCardId == id)
+                .FirstOrDefault();
+
+            return emptyHandSlot;
+        }
+
+        /// <summary>
+        /// 指定したIdのインスタンスを返します
+        /// </summary>
+        public CreatureCardSlotInstance GetInstance(CompositeObjectId id)
+        {
+            var emptyHandSlot = _creatureCardSlotInstances
+                .Where(slot => slot.CompositeObjectId == id)
+                .FirstOrDefault();
+
+            return emptyHandSlot;
         }
 
         /// <summary>
@@ -126,7 +140,7 @@ namespace CardsAndDices
                 {
                     CreatePlayerSlot(creatureCardSlotPositionEntity);
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -201,13 +215,13 @@ namespace CardsAndDices
         /// </summary>
         public void PlacedCreatureCard(CompositeObjectId id)
         {
-/*
-            var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
-            var occupiedSlots = sortedSlots.Where(s => s.IsOccupied == false).ToList();
-            // Debug.Log("ダイススロット配置ー＞" + sortedSlots.Count + "/" + occupiedSlots.Count);
-            _eventBus.Emit(new PlacedDiceEvent(occupiedSlots[0].CompositeObjectId, DiceId));
-            //            _eventBus.Emit(new ReturnHomePositionEvent(DiceId));
-*/
+            /*
+                        var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
+                        var occupiedSlots = sortedSlots.Where(s => s.IsOccupied == false).ToList();
+                        // Debug.Log("ダイススロット配置ー＞" + sortedSlots.Count + "/" + occupiedSlots.Count);
+                        _eventBus.Emit(new PlacedDiceEvent(occupiedSlots[0].CompositeObjectId, DiceId));
+                        //            _eventBus.Emit(new ReturnHomePositionEvent(DiceId));
+            */
         }
 
         /// <summary>
@@ -232,6 +246,26 @@ namespace CardsAndDices
             var emptyHandSlot = _creatureCardSlotInstances
                 .Where(slot => slot.LinePosition == LinePosition.Hand && !slot.IsOccupied)
                 .OrderBy(slot => slot.Location)
+                .FirstOrDefault();
+
+            return emptyHandSlot;
+        }
+
+        /// <summary>
+        /// インスタンスのリストを返します。
+        /// </summary>
+        public List<CreatureCardSlotInstance> GetInstanceList()
+        {
+            return _creatureCardSlotInstances;
+        }
+
+        /// <summary>
+        /// 指定した配置場所のインスタンスを返します
+        /// </summary>
+        public CreatureCardSlotInstance GetInstance(Team team, LinePosition linePosition, SlotLocation slotLocation)
+        {
+            var emptyHandSlot = _creatureCardSlotInstances
+                .Where(slot => slot.Team == team && slot.LinePosition == linePosition && slot.Location == slotLocation)
                 .FirstOrDefault();
 
             return emptyHandSlot;

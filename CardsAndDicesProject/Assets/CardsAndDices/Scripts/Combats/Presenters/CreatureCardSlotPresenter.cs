@@ -35,7 +35,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// 関連付けを解除し、Viewをプールに返却します。
+        /// Disposeします
         /// </summary>
         public void Dispose()
         {
