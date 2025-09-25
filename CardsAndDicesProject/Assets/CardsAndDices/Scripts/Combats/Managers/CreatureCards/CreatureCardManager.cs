@@ -23,6 +23,7 @@ namespace CardsAndDices
         public void Initialize(GameEventBus eventBus, CreatureCardSlotManager creatureCardSlotManager, IdentifiableViewRegistry viewRegistry)
         {
             DisposeInstances();
+            DisposePresenters();
             _eventBus = eventBus;
             _creatureCardSlotManager = creatureCardSlotManager;
             _viewRegistry = viewRegistry;

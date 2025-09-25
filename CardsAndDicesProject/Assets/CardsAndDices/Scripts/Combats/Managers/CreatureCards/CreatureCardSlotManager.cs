@@ -32,6 +32,9 @@ namespace CardsAndDices
             _viewRegistry = viewRegistry;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.On<CombatPhaseReflowCardEvent>(OnCombatPhaseReflowCard);
+            _eventBus.On<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
+            _eventBus.On<PlacedHandSlotEvent>(OnPlacedHandSlot);
+            
         }
 
         public void Dispose()
@@ -41,6 +44,8 @@ namespace CardsAndDices
             DisposePresenters();
             _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.Off<CombatPhaseReflowCardEvent>(OnCombatPhaseReflowCard);
+            _eventBus.Off<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
+            _eventBus.Off<PlacedHandSlotEvent>(OnPlacedHandSlot);
         }
 
         /// <summary>
@@ -69,10 +74,40 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// クリーチャーカードをハンドスロットに配置します
+        /// </summary>
+        private void OnPlacedHandSlot(PlacedHandSlotEvent evt)
+        {
+            var instance = GetFirstEmptyHandSlotId();
+            if (instance is null)
+            {
+                Debug.LogWarning("インスタンスがとれない");
+                return;
+            }
+            instance.PlacedCard(evt.CreatureCardId);
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.CreatureCardId, instance.CreatureCardSlotPosition));
+
+        }
+
+        /// <summary>
+        /// クリーチャーカードスロットを所定の場所に配置します
+        /// </summary>
+        private void OnSceneScreenSetUp(SceneScreenSetUpEvent evt)
+        {
+            // クリーチャーカードスロットビューを所定の場所に移動
+            foreach (var creatureCardSlotPresenter in _creatureCardSlotPresenters)
+            {
+                // HomePositionを設定し、そこに移動
+                _eventBus.Emit(new ChangeHomePositionStatusViewEvent(creatureCardSlotPresenter.CompositeObjectId, creatureCardSlotPresenter.HomePosition));
+                _eventBus.Emit(new ReturnHomePositionEvent(creatureCardSlotPresenter.CompositeObjectId));
+            }
+        }
+
+        /// <summary>
         /// クリーチャーカードのリフローを行う
         /// </summary>
         private void OnCombatPhaseReflowCard(CombatPhaseReflowCardEvent evt)
-        {            
+        {
             ReflowDCreatureCards();
         }
 
@@ -91,17 +126,7 @@ namespace CardsAndDices
                 {
                     CreatePlayerSlot(creatureCardSlotPositionEntity);
                 }
-            }
-
-            // クリーチャーカードスロットビューを所定の場所に移動
-            foreach (var creatureCardSlotPresenter in _creatureCardSlotPresenters)
-            {
-                Debug.Log("ほげほげほげほげ");
-                // HomePositionを設定し、そこに移動
-                _eventBus.Emit(new ChangeHomePositionStatusViewEvent(creatureCardSlotPresenter.CompositeObjectId, creatureCardSlotPresenter.HomePosition));
-                _eventBus.Emit(new ReturnHomePositionEvent(creatureCardSlotPresenter.CompositeObjectId));
-            }
-            
+            }            
         }
 
         /// <summary>
@@ -128,6 +153,7 @@ namespace CardsAndDices
             }
             view.SetBoundState(true);
             var instance = new CreatureCardSlotInstance(view.CompositeObjectId, creatureCardSlotPositionEntity);
+            _creatureCardSlotInstances.Add(instance);
             var controller = new CreatureCardSlotController(instance, _eventBus);
             var Presenter = new CreatureCardSlotPresenter(instance, view, _eventBus, _acceptableTargetObjectType);
             _creatureCardSlotControllers.Add(controller);
@@ -173,7 +199,7 @@ namespace CardsAndDices
         /// <summary>
         /// クリーチャーカードをスロットに配置します
         /// </summary>
-        public void PlacedCreatureCard(CompositeObjectId DiceId)
+        public void PlacedCreatureCard(CompositeObjectId id)
         {
 /*
             var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
@@ -189,15 +215,26 @@ namespace CardsAndDices
         /// </summary>
         public Vector3 GetCreatureCardHomePosition(CompositeObjectId cardId)
         {
-/*
-            var placedSlots = _diceSlotInstances.Where(s => s.ReflowPlacedDiceId == DiceId).ToList();
+            var placedSlots = _creatureCardSlotInstances.Where(s => s.ReflowPlacedCardId == cardId).ToList();
             if (placedSlots.Count == 0)
             {
                 return Vector3.zero;
             }
-            return placedSlots[0].DiceSlotPosition;
-*/
-            return Vector3.zero;
+            return placedSlots[0].CreatureCardSlotPosition;
+        }
+
+        /// <summary>
+        /// 手札の空いているスロットのうち、最も若い番号のスロットIDを取得します。
+        /// </summary>
+        /// <returns>空き手札スロットのCompositeObjectId。見つからない場合はnull。</returns>
+        public CreatureCardSlotInstance GetFirstEmptyHandSlotId()
+        {
+            var emptyHandSlot = _creatureCardSlotInstances
+                .Where(slot => slot.LinePosition == LinePosition.Hand && !slot.IsOccupied)
+                .OrderBy(slot => slot.Location)
+                .FirstOrDefault();
+
+            return emptyHandSlot;
         }
     }
 }

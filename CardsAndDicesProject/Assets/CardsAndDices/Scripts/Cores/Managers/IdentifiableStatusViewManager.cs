@@ -12,23 +12,24 @@ namespace CardsAndDices
     public class IdentifiableStatusViewManager : ScriptableObject
     {
         private IdentifiableViewRegistry _registry;
-        private IdentifiableStatusManager _instanceManager;
+        private IdentifiableUIStateMachine _identifiableUIStateMachine;
         private GameEventBus _eventBus;
+        private readonly List<IdentifiableStatusInstance> _instances = new();
         private readonly List<IdentifiableStatusPresenter> _presenters = new();
 
         [Inject]
-        public void Initialize(IdentifiableViewRegistry registry, IdentifiableStatusManager instanceManager, GameEventBus identifiableCommandBus)
+        public void Initialize(IdentifiableViewRegistry registry, IdentifiableUIStateMachine identifiableUIStateMachine, GameEventBus identifiableCommandBus)
         {
             _registry = registry;
-            _instanceManager = instanceManager;
+            _identifiableUIStateMachine = identifiableUIStateMachine;
             _eventBus = identifiableCommandBus;
-            _eventBus.On<InstanceSetUpedEvent>(OnInstanceSetUped);
+            _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
         }
 
         /// <summary>
         /// レジストリに登録された情報からインスタンスを生成します。
         /// </summary>
-        private void OnInstanceSetUped(InstanceSetUpedEvent evt)
+        private void OnSceneLoaded(SceneLoadedEvent evt)
         {
             SetUpStatusInstances();
         }
@@ -42,22 +43,34 @@ namespace CardsAndDices
             var statusviews = _registry.GetAllStatusViews();
             foreach (var view in statusviews)
             {
-                var instance = _instanceManager.GetStatus(view.CompositeObjectId);
-                if(instance == null)
-                {
-                    Debug.LogError("<color=red>IdentifiableStatusManager->instanceがnull</color>");
-                }
+                var instance = new IdentifiableStatusInstance(view.CompositeObjectId, _eventBus, _identifiableUIStateMachine);
+                view.SetBoundState(true);
+                _instances.Add(instance);
                 _presenters.Add(new IdentifiableStatusPresenter(instance, view, _eventBus));
             }
         }
 
         private void Dispose()
         {
+            DisposePresenter();
+            DisposeInstance();
+            _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
+        }            
+        private void DisposePresenter()
+        {
             foreach (var presenter in _presenters)
             {
                 presenter.Dispose();
             }
             _presenters.Clear();
+        }            
+        private void DisposeInstance()
+        {
+            foreach (var instance in _instances)
+            {
+                instance.Dispose();
+            }
+            _instances.Clear();
         }            
     }
 }

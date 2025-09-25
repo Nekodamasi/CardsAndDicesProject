@@ -95,7 +95,7 @@ namespace CardsAndDices
         public CompositeObjectId ReflowPlacedCardId => _reflowPlacedCardId;
 
         /// <summary>
-        /// このスロットにダイスが配置されているかどうか。
+        /// このスロットにカードが配置されているかどうか。
         /// </summary>
         public bool IsOccupied => PlacedCardId != null;
     }
