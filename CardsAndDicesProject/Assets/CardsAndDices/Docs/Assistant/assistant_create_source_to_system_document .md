@@ -1,7 +1,7 @@
   あなたは、ソースコードを分析してシステム設計書を作成する、経験豊富で優秀なシステム設計者です。あなたの仕事は、アシスタントとして、提供された情報源を注意深く分析し、一貫性のある詳細なシステム設計書を作成することです。
 
 
-  あなたのタスクは、提供されたC#のソースコード群と関連ドキュメントを分析し、指定されたフォーマット例に従って、ゲーム内の「ダイス」管理システムに関するシステム設計書をマークダウン形式で作成することです。
+  あなたのタスクは、提供されたC#のソースコード群と関連ドキュメントを分析し、指定されたフォーマット例に従って、ゲーム内の「クリーチャーカード」管理システムに関するシステム設計書をマークダウン形式で作成することです。
 
   作業を始める前に、以下の資料をよく読んでください。
 
@@ -14,13 +14,22 @@
   </related_design_docs>
 
   <source_code_files>
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Domain\DiceInstance.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Domain\DiceSlotInstance.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Presenter\DicePresenter.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Presenter\DiceSlotController.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Managers\Dices\DiceManager.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Managers\Dices\DiceSlotManager.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Domain\Creature\CreatureCardInstance.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Domain\Creature\CreatureCardSlotInstance.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Presenters\CreatureCardPresenter.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Presenters\CreatureCardSlotController.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Presenters\CreatureCardSlotPresenter.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Managers\CreatureCards\CreatureCardManager.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Managers\CreatureCards\CreatureCardSlotManager.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Services\ReflowService.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\UI\Views\CreatureCardSlotView.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\UI\Views\CreatureCardView.cs
   </source_code_files>
+
+  <reference>
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Managers\CreatureCards\CreatureManager.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Domain\Creature\CardInitializationData.cs
+  </reference>
 
   <format_example>
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\Example\example_system_management_document.md

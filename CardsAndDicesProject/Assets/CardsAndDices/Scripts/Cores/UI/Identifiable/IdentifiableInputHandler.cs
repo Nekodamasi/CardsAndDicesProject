@@ -111,7 +111,6 @@ namespace CardsAndDices
         /// <param name="eventData">ポインターイベントデータ</param>
         public void OnBeginDrag(PointerEventData eventData)
         {
-            Debug.Log("<color=red>OnBeginDrag元：</color>" + gameObject.name + "_" + _profile.name);
             if (_profile != null && !_profile.CanDrag) return; // ガード節を追加
             _isDragging = true;
             _eventBus.Emit(new IdentifiableBeginDragEvent(_identifiableGameObject.CompositeObjectId));

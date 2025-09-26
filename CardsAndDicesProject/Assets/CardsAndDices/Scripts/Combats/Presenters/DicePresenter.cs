@@ -29,6 +29,7 @@ namespace CardsAndDices
             _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.On<IdentifiableDropEvent>(OnIdentifiableDrop);
+            _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -38,6 +39,20 @@ namespace CardsAndDices
             _eventBus.Off<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.Off<IdentifiableDropEvent>(OnIdentifiableDrop);
+            _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
+        }
+
+        /// <summary>
+        /// ドラッグされたダイス以外はインアクティブに変更
+        /// </summary>
+        private void OnIdentifiableStateBeginDrag(IdentifiableStateBeginDragEvent evt)
+        {
+            // 自分がドラッグ対象
+            if (evt.ExecutedObjectId == _instance.CompositeObjectId) return;
+
+            // 違う何かがドラッグされたらインアクティブに
+            _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Inactive));
+            _eventBus.Emit(new DisplayStatusViewEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>

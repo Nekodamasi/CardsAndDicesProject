@@ -3,33 +3,25 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// IdentifiableUIStateMachineが発行するDropイベント。
+    /// ドラッグエンドで呼ばれるドロップ失敗時の処理を行うイベント
     /// </summary>
-    public class IdentifiableStateDropEvent : IEvent
+    public class IdentifiableStateDropFailureEvent : IEvent
     {
         private readonly CompositeObjectId _executedObjectId;
-        private readonly CompositeObjectId _targetObjectId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="executedObjectId">イベントが発生したCompositeObjectId</param>
-        /// <param name="targetObjectId">イベントの対象となったCompositeObjectId</param>
-        public IdentifiableStateDropEvent(CompositeObjectId executedObjectId, CompositeObjectId targetObjectId)
+        /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
+        public IdentifiableStateDropFailureEvent(CompositeObjectId executedObjectId)
         {
             _executedObjectId = executedObjectId;
-            _targetObjectId = targetObjectId;
         }
 
         /// <summary>
         /// イベントの発生源のCompositeObjectIdを取得します。
         /// </summary>
         public CompositeObjectId ExecutedObjectId => _executedObjectId;
-
-        /// <summary>
-        /// ドロップを受け入れたObjectIDを取得します。
-        /// </summary>
-        public CompositeObjectId TargetObjectId => _targetObjectId;
 
         /// <summary>
         /// 効果を実行します。

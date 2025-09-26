@@ -9,6 +9,7 @@ namespace CardsAndDices
     {
         private readonly CreatureCardSlotInstance _creatureCardSlotInstance;
         private readonly GameEventBus _eventBus;
+        private readonly CompositeObjectIdTypeEntity _compositeObjectIdTypeEntity;
 
         /// <summary>
         /// インスタンス側のID
@@ -18,15 +19,19 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CreatureCardSlotController(CreatureCardSlotInstance creatureCardSlotInstance, GameEventBus eventBus)
+        public CreatureCardSlotController(CreatureCardSlotInstance creatureCardSlotInstance, GameEventBus eventBus, CompositeObjectIdTypeEntity compositeObjectIdTypeEntity)
         {
             _creatureCardSlotInstance = creatureCardSlotInstance;
             _eventBus = eventBus;
+            _compositeObjectIdTypeEntity = compositeObjectIdTypeEntity;
             _eventBus.On<PlacedCreatureCardSlotEvent>(OnPlacedCreatureCardSlot);
             _eventBus.On<ReflowPlacedCreatureCardSlotEvent>(OnReflowPlacedCreatureCardSlot);
             _eventBus.On<RemoveCreatureCardSlotEvent>(OnRemoveCreatureCardSlot);
             _eventBus.On<MoveToAnimationReflowCreatureCardSlotEvent>(OnMoveToAnimationReflowCreatureCardSlot);
-        }
+            _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.On<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
+             
+       }
 
         /// <summary>
         /// Disposeします
@@ -37,6 +42,32 @@ namespace CardsAndDices
             _eventBus.Off<ReflowPlacedCreatureCardSlotEvent>(OnReflowPlacedCreatureCardSlot);
             _eventBus.Off<RemoveCreatureCardSlotEvent>(OnRemoveCreatureCardSlot);
             _eventBus.Off<MoveToAnimationReflowCreatureCardSlotEvent>(OnMoveToAnimationReflowCreatureCardSlot);
+            _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.Off<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
+        }
+
+        /// <summary>
+        /// ドラッグ失敗イベント
+        /// </summary>
+        private void OnIdentifiableStateDropFailure(IdentifiableStateDropFailureEvent evt)
+        {
+            // 受け入れ対象がドロップ失敗したらリフローを戻すために配置場所をリセットし移動する
+            if (_compositeObjectIdTypeEntity != evt.ExecutedObjectId.ObjectType) return;
+
+            // 配置側でリセットする
+            _creatureCardSlotInstance.ReflowPlacedCard(_creatureCardSlotInstance.PlacedCardId);
+
+            // ホームポジションを設定
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_creatureCardSlotInstance.PlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
+            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_creatureCardSlotInstance.PlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
+        }
+
+        /// <summary>
+        /// UIリセットイベント
+        /// </summary>
+        private void OnResetUIStatus(ResetUIStatusEvent evt)
+        {
+            _creatureCardSlotInstance.PlacedCard(_creatureCardSlotInstance.ReflowPlacedCardId);
         }
 
         /// <summary>
@@ -44,9 +75,9 @@ namespace CardsAndDices
         /// </summary>
         private void OnMoveToAnimationReflowCreatureCardSlot(MoveToAnimationReflowCreatureCardSlotEvent evt)
         {
-            if (_creatureCardSlotInstance.CompositeObjectId != evt.CreatureCardId) return;
             if (_creatureCardSlotInstance.ReflowPlacedCardId == null) return;
-            _eventBus.Emit(new MoveToIdentifiableEvent(_creatureCardSlotInstance.ReflowPlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
+            if (evt.CragedCreatureCardId != null && evt.CragedCreatureCardId == _creatureCardSlotInstance.ReflowPlacedCardId) return;
+            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_creatureCardSlotInstance.ReflowPlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
         }
 
         /// <summary>

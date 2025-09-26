@@ -13,7 +13,7 @@ namespace CardsAndDices
 	[CreateAssetMenu(fileName = "IdentifiableUIStateMachine", menuName = "CardsAndDices/UI/Identifiable/State/UIStateMachine")]
 	public class IdentifiableUIStateMachine : ScriptableObject
 	{
-		public GameEventBus _identifiableEventBus;
+		private GameEventBus _identifiableEventBus;
 
 		/// <summary>
 		/// ScriptableObjectが初期化される時の処理。
@@ -81,11 +81,23 @@ namespace CardsAndDices
 			switch (CurrentState)
 			{
 				case IdentifiableUIState.Idle:
-				case IdentifiableUIState.Hovered:
 					SetCurrentState(IdentifiableUIState.Hover, evt.ExecutedObjectId, null);
 
-					// アンホバーコマンド
+					// ホバーコマンド
 					_identifiableEventBus.Emit(new IdentifiableStateHoverEvent(evt.ExecutedObjectId));
+					break;
+				case IdentifiableUIState.Hovered:
+					if (StateObjectId != evt.ExecutedObjectId)
+					{
+						SetCurrentState(IdentifiableUIState.Hover, evt.ExecutedObjectId, null);
+
+						// ホバーコマンド
+						_identifiableEventBus.Emit(new IdentifiableStateHoverEvent(evt.ExecutedObjectId));
+					}
+					break;
+				case IdentifiableUIState.Dragging:
+						// ドラッグホバーコマンド
+						_identifiableEventBus.Emit(new IdentifiableStateDragedHoverEvent(evt.ExecutedObjectId, StateObjectId));
 					break;
 				default:
 					break;
@@ -208,7 +220,7 @@ namespace CardsAndDices
 				case IdentifiableUIState.Dragging:
 					if (StateObjectId == evt.ExecutedObjectId)
 					{
-            			Debug.Log("すてーとましん（ドロップ）:" + evt.ExecutedObjectId + "/" + StateObjectId + " CurrentState:" + CurrentState);
+            			Debug.Log("すてーとましん（ドロップ）:" + evt.ExecutedObjectId + "/" + evt.TargetObjectId + " CurrentState:" + CurrentState);
 						SetCurrentState(IdentifiableUIState.Drop, evt.ExecutedObjectId, evt.TargetObjectId);
 						// ドラッグ開始コマンド
 						_identifiableEventBus.Emit(new IdentifiableStateDropEvent(evt.ExecutedObjectId, evt.TargetObjectId));

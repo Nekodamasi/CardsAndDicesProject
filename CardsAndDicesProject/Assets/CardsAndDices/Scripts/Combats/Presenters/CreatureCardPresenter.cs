@@ -28,7 +28,8 @@ namespace CardsAndDices
             _eventBus = eventBus;
             _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
-            _eventBus.On<AllCreatureCardReflowEvent>(OnAllCreatureCardReflow);
+            _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
+            _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -37,15 +38,29 @@ namespace CardsAndDices
         {
             _eventBus.Off<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
-            _eventBus.Off<AllCreatureCardReflowEvent>(OnAllCreatureCardReflow);
+            _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
+            _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
         }
 
         /// <summary>
-        /// クリーチャーカードを画面に投げ入れる
+        /// UIリセットイベント
         /// </summary>
-        private void OnAllCreatureCardReflow(AllCreatureCardReflowEvent evt)
+        private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
-            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_instance.CompositeObjectId, _instance.CreatureCardSlotPosition));
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_instance.CompositeObjectId, _instance.CreatureCardSlotPosition));
+        }
+
+        /// <summary>
+        /// ドラッグされたカード以外はインアクティブに変更
+        /// </summary>
+        private void OnIdentifiableStateBeginDrag(IdentifiableStateBeginDragEvent evt)
+        {
+            // 自分がドラッグ対象
+            if (evt.ExecutedObjectId == _instance.CompositeObjectId) return;
+
+            // 違う何かがドラッグされたらインアクティブに
+            _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Inactive));
+            _eventBus.Emit(new DisplayStatusViewEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>

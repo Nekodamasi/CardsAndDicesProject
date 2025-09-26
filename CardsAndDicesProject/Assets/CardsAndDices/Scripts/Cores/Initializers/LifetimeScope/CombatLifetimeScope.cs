@@ -46,6 +46,9 @@ namespace CardsAndDices
         [Header("StateOperator")]
         [SerializeField] private CoreOperator _dragStateOperator;
 
+        [Header("Debug")]
+        [SerializeField] private CreatureCardSlotStatusViewer _creatureCardSlotStatusViewer;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // DOTweenの初期化とTween容量の設定
@@ -136,6 +139,9 @@ namespace CardsAndDices
             },
             Lifetime.Singleton);
             builder.RegisterComponent(_creatureCardSlotSpawner);
+
+            // debug
+            builder.RegisterComponent(_creatureCardSlotStatusViewer);
         }
     }
 }

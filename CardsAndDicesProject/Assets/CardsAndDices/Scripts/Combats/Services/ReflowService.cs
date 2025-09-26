@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using VContainer;
 
 namespace CardsAndDices
@@ -34,8 +35,9 @@ namespace CardsAndDices
         {
             Dictionary<CompositeObjectId, Vector3> cardMovements = new Dictionary<CompositeObjectId, Vector3>();
 
+                Debug.Log("どらっぐすろっとおかしいんちゃう？" + draggedSlot.CompositeObjectId);
             // ターゲットスロットに元々配置されていたカードのID
-            CompositeObjectId originalCardInTargetSlot = draggedSlot.ReflowPlacedCardId;
+            CompositeObjectId originalCardInTargetSlot = targetSlot.ReflowPlacedCardId;
 
             // 0. 空のスロットに配置する場合
             if (originalCardInTargetSlot == null)
@@ -235,11 +237,16 @@ namespace CardsAndDices
             var center = _iCreatureCardSlotInstanceRepository.GetInstance(team, line, SlotLocation.Center);
             var vanguard = _iCreatureCardSlotInstanceRepository.GetInstance(team, line, SlotLocation.Vanguard);
 
-            if (vanguard.ReflowPlacedCardId == null)
+            if (vanguard is null)
             {
-                vanguard.ReflowPlacedCard(center.ReflowPlacedCardId);
-                center.ReflowPlacedCard(null);
+                Debug.Log("なぜえらー？：" + team + "/" + line);
             }
+
+            if (vanguard.ReflowPlacedCardId == null)
+                {
+                    vanguard.ReflowPlacedCard(center.ReflowPlacedCardId);
+                    center.ReflowPlacedCard(null);
+                }
             if (center.ReflowPlacedCardId == null)
             {
                 center.ReflowPlacedCard(rear.ReflowPlacedCardId);

@@ -14,6 +14,7 @@ namespace CardsAndDices
         [Header("Setting")]
         [SerializeField] protected float _hoveredTime = 0.0f;
         [SerializeField] protected float _clickTime = 0.1f;
+        [SerializeField] protected float _dropTime = 0.2f;
 
         [Header("監視対象")]
         [SerializeField] private List<string> _ids = new();

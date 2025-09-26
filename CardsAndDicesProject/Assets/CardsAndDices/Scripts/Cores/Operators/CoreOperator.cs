@@ -70,7 +70,7 @@ namespace CardsAndDices
         /// </summary>
         protected override void OnStateDrag(IdentifiableStateDragEvent evt)
         {
-//            Debug.Log("おぺれーたー（ドラッグ中）：" + evt.ExecutedObjectId);
+            //            Debug.Log("おぺれーたー（ドラッグ中）：" + evt.ExecutedObjectId);
             // Statusの変更を通知する
             _eventBus.Emit(new ChangeViewStatusEvent(evt.ExecutedObjectId, IdentifiableStatus.DraggingInProgress));
 
@@ -86,7 +86,7 @@ namespace CardsAndDices
             Debug.Log("おぺれーたー（ドラッグ終了）：" + evt.ExecutedObjectId);
 
             // HomePositionへのReturnを実行います
-            _eventBus.Emit(new ReturnHomePositionAnimationEvent(evt.ExecutedObjectId));
+            _eventBus.Emit(new IdentifiableStateDropFailureEvent(evt.ExecutedObjectId));
 
             // 待機
             await UniTask.Delay(TimeSpan.FromSeconds(_hoveredTime));

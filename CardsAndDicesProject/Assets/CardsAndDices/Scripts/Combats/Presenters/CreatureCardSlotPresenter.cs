@@ -31,7 +31,6 @@ namespace CardsAndDices
             _eventBus = eventBus;
             _compositeObjectIdTypeEntity = compositeObjectIdTypeEntity;
             _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
-
         }
 
         /// <summary>
@@ -47,7 +46,6 @@ namespace CardsAndDices
         /// </summary>
         private void OnIdentifiableStateBeginDrag(IdentifiableStateBeginDragEvent evt)
         {
-//            Debug.Log("ほげほげほげほげほげ：" + evt.ExecutedObjectId.ObjectType + "/" + _compositeObjectIdTypeEntity);
             // 受け入れ対象がドラッグされた
             if (evt.ExecutedObjectId.ObjectType != _compositeObjectIdTypeEntity) return;
 

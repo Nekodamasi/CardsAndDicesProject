@@ -43,7 +43,6 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayAcceptableStatus()
         {
-            Debug.Log("どうやーねーーーーーん");
             _currentStatus = IdentifiableStatus.Acceptable;
             SetColliderEnabled(true);
             return null;
@@ -56,6 +55,10 @@ namespace CardsAndDices
         {
             _currentStatus = IdentifiableStatus.Hover;
             _sEPlayer.PlayOneShot(_hoverSeData);
+            if (_hoverAnimationStrategyEntity is null)
+            {
+                return null;
+            }
             return AnimationExecute(_hoverAnimationStrategyEntity);
         }
 

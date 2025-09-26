@@ -55,6 +55,7 @@ namespace CardsAndDices
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
             _status.UpdateStatus(_status.CurrentHomeStatus);
+            DisplayCurrentStatus();
         }
 
         /// <summary>
@@ -72,7 +73,6 @@ namespace CardsAndDices
         /// </summary>
         private void OnMoveToAnimationIdentifiable(MoveToAnimationIdentifiableEvent evt)
         {
-            Debug.Log("すてーたすの移動処理Animation>：" + evt.ExecutedObjectId);
             // 自分以外は処理しない
             if (_view.CompositeObjectId != evt.ExecutedObjectId) return;
             _view.MoveToAnimated(evt.TargetPosition, 0.2f);

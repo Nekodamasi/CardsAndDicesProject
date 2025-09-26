@@ -3,22 +3,21 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// IdentifiableUIStateMachineが発行するDropイベント。
+    /// ムーブアニメーションを実行するコマンドです
     /// </summary>
-    public class IdentifiableStateDropEvent : IEvent
+    public class SetCurrentHomeStatusEvent : IEvent
     {
         private readonly CompositeObjectId _executedObjectId;
-        private readonly CompositeObjectId _targetObjectId;
+        private readonly IdentifiableStatus _currentHomeStatus;
 
         /// <summary>
-        /// コンストラクタ
+        /// IdentifiableBeginDragCommandを初期化します。
         /// </summary>
-        /// <param name="executedObjectId">イベントが発生したCompositeObjectId</param>
-        /// <param name="targetObjectId">イベントの対象となったCompositeObjectId</param>
-        public IdentifiableStateDropEvent(CompositeObjectId executedObjectId, CompositeObjectId targetObjectId)
+        /// <param name="executedObjectId">イベントの発生源のCompositeObjectId</param>
+        public SetCurrentHomeStatusEvent(CompositeObjectId executedObjectId, IdentifiableStatus currentHomeStatus)
         {
             _executedObjectId = executedObjectId;
-            _targetObjectId = targetObjectId;
+            _currentHomeStatus = currentHomeStatus;
         }
 
         /// <summary>
@@ -27,9 +26,11 @@ namespace CardsAndDices
         public CompositeObjectId ExecutedObjectId => _executedObjectId;
 
         /// <summary>
-        /// ドロップを受け入れたObjectIDを取得します。
+        /// 移動先のPositionを取得します
         /// </summary>
-        public CompositeObjectId TargetObjectId => _targetObjectId;
+        public IdentifiableStatus CurrentHomeStatus => _currentHomeStatus;
+
+        /// => _executedObjectId;
 
         /// <summary>
         /// 効果を実行します。

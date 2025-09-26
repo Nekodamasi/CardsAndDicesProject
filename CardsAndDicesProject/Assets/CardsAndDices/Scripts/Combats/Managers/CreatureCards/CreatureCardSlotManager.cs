@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using VContainer;
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace CardsAndDices
 {
@@ -32,11 +33,12 @@ namespace CardsAndDices
             _compositeObjectIdManager = compositeObjectIdManager;
             _viewRegistry = viewRegistry;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
-            _eventBus.On<CombatPhaseReflowCardEvent>(OnCombatPhaseReflowCard);
+            _eventBus.On<IdentifiableStateDragedHoverEvent>(OnIdentifiableStateDragedHover);
             _eventBus.On<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
             _eventBus.On<PlacedHandSlotEvent>(OnPlacedHandSlot);
             _eventBus.On<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
-            
+            _eventBus.On<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
+
             _reflowService = new ReflowService(this);
 
         }
@@ -47,10 +49,69 @@ namespace CardsAndDices
             DisposeControllers();
             DisposePresenters();
             _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
-            _eventBus.Off<CombatPhaseReflowCardEvent>(OnCombatPhaseReflowCard);
+            _eventBus.Off<IdentifiableStateDragedHoverEvent>(OnIdentifiableStateDragedHover);
             _eventBus.Off<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
             _eventBus.Off<PlacedHandSlotEvent>(OnPlacedHandSlot);
             _eventBus.Off<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
+            _eventBus.Off<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
+        }
+
+        /// <summary>
+        /// クリーチャーカードのリフローを行う
+        /// </summary>
+        private void OnIdentifiableStateDragedHover(IdentifiableStateDragedHoverEvent evt)
+        {
+            // リフロー
+            CreatureCardReflow(evt.DragedObjectId, evt.ExecutedObjectId);
+        }
+
+        private void CreatureCardReflow(CompositeObjectId moveCardId, CompositeObjectId toSlotId)
+        {
+            // 移動するカードの現在の配置場所
+            var draggedSlot = GetInstanceInReflowPlaced(moveCardId);
+
+            // 移動先
+            var targetSlot = GetInstance(toSlotId);
+
+            // 現在の配置場所と移動先が一致した場合はリフローを行わない
+            if (draggedSlot != targetSlot)
+            {
+                // リフロー
+                _reflowService.CalculateReflowMovements(draggedSlot, targetSlot, moveCardId);
+            }
+
+            // ドラッグしてたカードが所定位置に移動する必要があるので、移動イベントは通知
+            _eventBus.Emit(new MoveToAnimationReflowCreatureCardSlotEvent(moveCardId));
+        }
+
+        /// <summary>
+        /// ドロップされたカードを配置
+        /// </summary>
+        private async void OnIdentifiableStateDrop(IdentifiableStateDropEvent evt)
+        {
+            // リフロー
+            CreatureCardReflow(evt.ExecutedObjectId, evt.TargetObjectId);
+
+            // 待機
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+
+            // 前詰め処理
+            _reflowService.CalculateFrontLoadMovements();
+            _eventBus.Emit(new MoveToAnimationReflowCreatureCardSlotEvent(null));
+
+            // reset
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            _eventBus.Emit(new ResetUIStatusEvent());
+            /*
+                        Debug.Log("はいちーまん");
+                        PlacedCreatureCard(evt.ExecutedObjectId, evt.TargetObjectId);
+                        _reflowService.CalculateFrontLoadMovements();
+                        _eventBus.Emit(new MoveToAnimationReflowCreatureCardSlotEvent(null));
+
+                        // 待機
+                        await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                        _eventBus.Emit(new ResetUIStatusEvent());
+            */
         }
 
         /// <summary>
@@ -94,16 +155,6 @@ namespace CardsAndDices
                 _eventBus.Emit(new ChangeHomePositionStatusViewEvent(creatureCardSlotPresenter.CompositeObjectId, creatureCardSlotPresenter.HomePosition));
                 _eventBus.Emit(new ReturnHomePositionEvent(creatureCardSlotPresenter.CompositeObjectId));
             }
-        }
-
-        /// <summary>
-        /// クリーチャーカードのリフローを行う
-        /// </summary>
-        private void OnCombatPhaseReflowCard(CombatPhaseReflowCardEvent evt)
-        {
-            var draggedSlot = GetInstanceInReflowPlaced(evt.DraggedCardId);
-            var targetSlot = GetInstance(evt.TargetSlotId);
-            _reflowService.CalculateReflowMovements(draggedSlot, targetSlot, evt.DraggedCardId);
         }
 
         /// <summary>
@@ -155,7 +206,7 @@ namespace CardsAndDices
         {
             var instance = new CreatureCardSlotInstance(_compositeObjectIdManager.CreateId(_objectType, null), creatureCardSlotPositionEntity);
             _creatureCardSlotInstances.Add(instance);
-            var controller = new CreatureCardSlotController(instance, _eventBus);
+            var controller = new CreatureCardSlotController(instance, _eventBus, _objectType);
             _creatureCardSlotControllers.Add(controller);
         }
 
@@ -172,7 +223,7 @@ namespace CardsAndDices
             }
             var instance = new CreatureCardSlotInstance(view.CompositeObjectId, creatureCardSlotPositionEntity);
             _creatureCardSlotInstances.Add(instance);
-            var controller = new CreatureCardSlotController(instance, _eventBus);
+            var controller = new CreatureCardSlotController(instance, _eventBus, _acceptableTargetObjectType);
             var Presenter = new CreatureCardSlotPresenter(instance, view, _eventBus, _acceptableTargetObjectType);
             _creatureCardSlotControllers.Add(controller);
             _creatureCardSlotPresenters.Add(Presenter);
@@ -217,19 +268,19 @@ namespace CardsAndDices
         /// <summary>
         /// クリーチャーカードをスロットに配置します
         /// </summary>
-        public void PlacedCreatureCard(CompositeObjectId id)
+        public void PlacedCreatureCard(CompositeObjectId cardId, CompositeObjectId targetSlot)
         {
-            /*
-                        var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
-                        var occupiedSlots = sortedSlots.Where(s => s.IsOccupied == false).ToList();
-                        // Debug.Log("ダイススロット配置ー＞" + sortedSlots.Count + "/" + occupiedSlots.Count);
-                        _eventBus.Emit(new PlacedDiceEvent(occupiedSlots[0].CompositeObjectId, DiceId));
-                        //            _eventBus.Emit(new ReturnHomePositionEvent(DiceId));
-            */
+            // 元からカードを除去
+            var originalInstance = GetInstanceInReflowPlacedCardId(cardId);
+            originalInstance.ReflowPlacedCard(null);
+
+            //
+            var targetInstance = GetInstance(targetSlot);
+            targetInstance.ReflowPlacedCard(cardId);
         }
 
         /// <summary>
-        /// 配置されたダイスのHomePositionを返します
+        /// 配置されたカードのHomePositionを返します
         /// </summary>
         public Vector3 GetCreatureCardHomePosition(CompositeObjectId cardId)
         {
@@ -242,7 +293,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// 手札の空いているスロットのうち、最も若い番号のスロットIDを取得します。
+        /// 手札の空いているハンドスロットのうち、最も若い番号のスロットIDを取得します。
         /// </summary>
         /// <returns>空き手札スロットのCompositeObjectId。見つからない場合はnull。</returns>
         public CreatureCardSlotInstance GetFirstEmptyHandSlotId()
@@ -261,6 +312,18 @@ namespace CardsAndDices
         public List<CreatureCardSlotInstance> GetInstanceList()
         {
             return _creatureCardSlotInstances;
+        }
+
+        /// <summary>
+        /// 指定したカードがリフローに配置されたインスタンスを返します
+        /// </summary>
+        public CreatureCardSlotInstance GetInstanceInReflowPlacedCardId(CompositeObjectId cardId)
+        {
+            var emptyHandSlot = _creatureCardSlotInstances
+                .Where(slot => slot.ReflowPlacedCardId == cardId)
+                .FirstOrDefault();
+
+            return emptyHandSlot;
         }
 
         /// <summary>
