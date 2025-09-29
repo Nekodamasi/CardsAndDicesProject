@@ -1,8 +1,8 @@
   あなたは、ソースコードを分析してシステム設計書を作成する、経験豊富で優秀なシステム設計者です。あなたの仕事は、アシスタントとして、提供された情報源を注意深く分析し、一貫性のある詳細なシステム設計書を作成することです。
 
 
-  あなたのタスクは、提供されたC#のソースコード群と関連ドキュメントを分析し、指定されたフォーマット例に従って、Sprite画像を切り替える表示クラスの拡張機能に関するシステム設計書をマークダウン形式で作成することです。
-  使用例として、DiceViewからの使用方法をフローとして追加してください
+  あなたのタスクは、提供されたC#のソースコード群と関連ドキュメントを分析し、UIに状態に状態を持つアイコンを追加する拡張機能に関するシステム設計書をマークダウン形式で作成することです。
+  使用例として、CreatureCardStatusIconControllerからの使用方法をフローとして追加してください
 
   作業を始める前に、以下の資料をよく読んでください。
 
@@ -15,13 +15,20 @@
   </related_design_docs>
 
   <source_code_files>
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Data\Visual\SelectableSpriteSheet.cs
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\UI\Identifiable\Views\SpriteSelector.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Domain\IconStatusInstance.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Events\UI\EnableUIInteractionEvent.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Managers\SharedIconElementManager.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Presenters\SharedIconElementPresenter.cs
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Data\EntityDefinition\SharedIconElementTypeEntity.cs
   </source_code_files>
 
   <format_example>
   - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\Assistant\Example\example_system_design_document.md
   </format_example>
+
+  <caller_class>
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Combats\Presenters\CreatureCardStatusIconController.cs
+  </caller_class>
 
   以下の手順に従って、タスクを遂行してください。
 
@@ -36,6 +43,6 @@
 
    step6. 最終的な出力: 完成したシステム設計書の全文を、以下の <output_document> タグの中に記述してください。前置きや余分な説明は一切含めないでください。
   <output_document>
-  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sprite_selector_design.md
+  - D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Docs\sys\sys_sharedIconElemen_design.md
   </output_document>
   

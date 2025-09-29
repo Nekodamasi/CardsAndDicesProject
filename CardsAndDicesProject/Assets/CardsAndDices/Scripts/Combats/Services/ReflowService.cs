@@ -35,7 +35,6 @@ namespace CardsAndDices
         {
             Dictionary<CompositeObjectId, Vector3> cardMovements = new Dictionary<CompositeObjectId, Vector3>();
 
-                Debug.Log("どらっぐすろっとおかしいんちゃう？" + draggedSlot.CompositeObjectId);
             // ターゲットスロットに元々配置されていたカードのID
             CompositeObjectId originalCardInTargetSlot = targetSlot.ReflowPlacedCardId;
 
@@ -46,6 +45,50 @@ namespace CardsAndDices
                 draggedSlot.ReflowPlacedCard(null);
                 // ターゲットスロットにドラッグ中のカードを設定
                 targetSlot.ReflowPlacedCard(draggedCardId);
+            }
+            // 1. ハンドスロットに配置する場合
+            else if (targetSlot.LinePosition == LinePosition.Hand)
+            {
+                // LinePositionがHandのInstanceをLocationでソートして抽出
+                var handSlots = _iCreatureCardSlotInstanceRepository.GetInstanceList()
+                    .Where(s => s.LinePosition == LinePosition.Hand)
+                    .OrderBy(s => s.Location)
+                    .ToList();
+
+                // draggedSlotのリフロー配置をリムーブ
+                draggedSlot.ReflowPlacedCard(null);
+
+                // 既存のハンドスロットからカードIDのリストを作成（ドラッグ中のカードとnullを除く）
+                var newHandCardIds = handSlots
+                    .Select(s => s.ReflowPlacedCardId)
+                    .Where(id => id != null && id != draggedCardId)
+                    .ToList();
+
+                // ターゲットの位置にドラッグ中のカードを挿入
+                var targetIndex = handSlots.IndexOf(targetSlot);
+                if (targetIndex != -1)
+                {
+                    newHandCardIds.Insert(targetIndex, draggedCardId);
+                }
+                else
+                {
+                    newHandCardIds.Add(draggedCardId); // ターゲットが見つからない場合は末尾に追加
+                }
+
+                // 全てのハンドスロットのリフロー配置を一旦クリア
+                foreach (var slot in handSlots)
+                {
+                    slot.ReflowPlacedCard(null);
+                }
+
+                // 新しいカードリストを順にハンドスロットに再設定
+                for (int i = 0; i < newHandCardIds.Count; i++)
+                {
+                    if (i < handSlots.Count)
+                    {
+                        handSlots[i].ReflowPlacedCard(newHandCardIds[i]);
+                    }
+                }
             }
             // 1. 隣接スワップの場合
             else if (IsAdjacent(draggedSlot, targetSlot))
@@ -237,16 +280,11 @@ namespace CardsAndDices
             var center = _iCreatureCardSlotInstanceRepository.GetInstance(team, line, SlotLocation.Center);
             var vanguard = _iCreatureCardSlotInstanceRepository.GetInstance(team, line, SlotLocation.Vanguard);
 
-            if (vanguard is null)
-            {
-                Debug.Log("なぜえらー？：" + team + "/" + line);
-            }
-
             if (vanguard.ReflowPlacedCardId == null)
-                {
-                    vanguard.ReflowPlacedCard(center.ReflowPlacedCardId);
-                    center.ReflowPlacedCard(null);
-                }
+            {
+                vanguard.ReflowPlacedCard(center.ReflowPlacedCardId);
+                center.ReflowPlacedCard(null);
+            }
             if (center.ReflowPlacedCardId == null)
             {
                 center.ReflowPlacedCard(rear.ReflowPlacedCardId);
@@ -269,6 +307,40 @@ namespace CardsAndDices
             CalculateFrontLoadMovement(Team.Player, LinePosition.BottomLine);
             CalculateFrontLoadMovement(Team.Enemy, LinePosition.TopLine);
             CalculateFrontLoadMovement(Team.Enemy, LinePosition.BottomLine);
+            CalculateHandSlotFrontLoadMovement();
+        }
+
+        /// <summary>
+        /// ハンドスロットの前詰め処理
+        /// </summary>
+        private void CalculateHandSlotFrontLoadMovement()
+        {
+            // LinePositionがHandのInstanceをLocationでソートして抽出
+            var handSlots = _iCreatureCardSlotInstanceRepository.GetInstanceList()
+                .Where(s => s.LinePosition == LinePosition.Hand)
+                .OrderBy(s => s.Location)
+                .ToList();
+
+            // 既存のハンドスロットからカードIDのリストを作成（ドラッグ中のカードとnullを除く）
+            var newHandCardIds = handSlots
+                .Select(s => s.ReflowPlacedCardId)
+                .Where(id => id != null)
+                .ToList();
+
+            // 全てのハンドスロットのリフロー配置を一旦クリア
+            foreach (var slot in handSlots)
+            {
+                slot.ReflowPlacedCard(null);
+            }
+
+            // 新しいカードリストを順にハンドスロットに再設定
+            for (int i = 0; i < newHandCardIds.Count; i++)
+            {
+                if (i < handSlots.Count)
+                {
+                    handSlots[i].ReflowPlacedCard(newHandCardIds[i]);
+                }
+            }
         }
     }
 }

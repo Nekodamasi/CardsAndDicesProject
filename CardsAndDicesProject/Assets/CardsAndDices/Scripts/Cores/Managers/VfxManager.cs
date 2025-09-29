@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// <summary>
     /// VFXの再生とオブジェクトプールを管理するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "VfxManager", menuName = "CardsAndDices/Core/Managers/VfxManager")]
+    [CreateAssetMenu(fileName = "VfxManager", menuName = "CardsAndDices/Cores/Managers/VfxManager")]
     public class VfxManager : ScriptableObject
     {
         private readonly Dictionary<VfxDefinition, Queue<VfxPlayer>> _pool = new Dictionary<VfxDefinition, Queue<VfxPlayer>>();

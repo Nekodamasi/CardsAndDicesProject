@@ -8,9 +8,13 @@ namespace CardsAndDices
     /// <summary>
     /// バフ／デバフ効果を一元管理するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "EffectManager", menuName = "CardsAndDices/Managers/EffectManager")]
-    public class EffectManager : ScriptableObject
+    [CreateAssetMenu(fileName = "EffectManager", menuName = "CardsAndDices/Combats/Managers/Effects/EffectManager")]
+    public class EffectManager : ScriptableObject, IEffectValue
     {
+        public int GetTotalEffectValue(CompositeObjectId compositeObjectId, EffectTargetType type)
+        {
+            return 0;
+        }
 /*
         private readonly List<EffectInstance> _activeEffects = new List<EffectInstance>();
         private EffectFactory _effectFactory;
@@ -24,6 +28,8 @@ namespace CardsAndDices
             _commandBus.On<UpdateEffectExpiredCommand>(OnUpdateEffectExpired);
             _commandBus.On<ApplyEffectCommand>(OnApplyEffect);
         }
+
+
         private void ClearCollections()
         {
             _activeEffects.Clear();

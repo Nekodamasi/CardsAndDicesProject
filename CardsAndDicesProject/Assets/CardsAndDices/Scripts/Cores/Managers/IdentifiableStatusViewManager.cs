@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// <summary>
     /// 全ての識別可能オブジェクトの状態(IdentifiableStatusInstance)を一元管理するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "IdentifiableStatusViewManager", menuName = "CardsAndDices/UI/Identifiable/ViewManagers/IdentifiableStatusViewManager")]
+    [CreateAssetMenu(fileName = "IdentifiableStatusViewManager", menuName = "CardsAndDices/Core/Managers/IdentifiableStatusViewManager")]
     public class IdentifiableStatusViewManager : ScriptableObject
     {
         private IdentifiableViewRegistry _registry;

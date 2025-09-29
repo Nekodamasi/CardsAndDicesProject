@@ -3,7 +3,7 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ダイスの配置イベント
+    /// クリーチャーカードを配置するイベント
     /// </summary>
     public class PlacedCreatureCardSlotEvent : IEvent
     {

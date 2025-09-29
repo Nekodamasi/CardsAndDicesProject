@@ -7,7 +7,7 @@ namespace CardsAndDices
 	/// CompositeObjectIdを生成・管理するマネージャークラス。
 	/// ScriptableObjectとして実装され、ユニークIDの採番を永続化します。
 	/// </summary>
-	[CreateAssetMenu(fileName = "CompositeObjectIdManager", menuName = "CardsAndDices/Managers/CompositeObjectIdManager")]
+	[CreateAssetMenu(fileName = "CompositeObjectIdManager", menuName = "CardsAndDices/Cores/Managers/CompositeObjectIdManager")]
 	public class CompositeObjectIdManager : ScriptableObject
 	{
 		/// <summary>

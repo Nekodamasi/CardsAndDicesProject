@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// 全ての識別可能オブジェクトの状態(IdentifiableStatusInstance)を一元管理するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "IdentifiableStatusManager", menuName = "CardsAndDices/Managers/IdentifiableStatusManager")]
+    [CreateAssetMenu(fileName = "IdentifiableStatusManager", menuName = "CardsAndDices/Cores/Managers/IdentifiableStatusManager")]
     public class IdentifiableStatusManager : ScriptableObject
     {
         private CompositeObjectRegistry _registry;

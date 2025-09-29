@@ -58,6 +58,7 @@ namespace CardsAndDices
                 }
                 _compositeObjectIds.Add(view.CompositeObjectId);
                 _eventBus.Emit(new CreateCreatureEvent(view.CompositeObjectId, initData));
+                _eventBus.Emit(new CreatureCardSetUpEvent(view.CompositeObjectId));
             }
         }
 

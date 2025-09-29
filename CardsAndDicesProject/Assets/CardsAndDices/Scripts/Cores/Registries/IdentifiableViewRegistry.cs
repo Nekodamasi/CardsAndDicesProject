@@ -14,14 +14,14 @@ namespace CardsAndDices
     {
         private readonly List<BaseIdentifiableView> _views = new();
         private readonly List<IdentifiableStatusView> _statusViews = new();
-        private readonly List<DiceView> _diceViews = new();
+        private readonly List<SharedIconElementView> _iConStatusViews = new();
 
         [Inject]
         public void Initialize()
         {
             _views.Clear();
             _statusViews.Clear();
-            _diceViews.Clear();
+            _iConStatusViews.Clear();
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace CardsAndDices
             {
                 _statusViews.Add(statusView);
             }
-            else if (view is DiceView diceView)
+            else if (view is SharedIconElementView iConStatusView)
             {
-                _diceViews.Add(diceView);
+                _iConStatusViews.Add(iConStatusView);
             }
         }
 
@@ -56,9 +56,9 @@ namespace CardsAndDices
             {
                 _statusViews.Remove(statusView);
             }
-            else if (view is DiceView diceView)
+            else if (view is SharedIconElementView iConStatusView)
             {
-                _diceViews.Remove(diceView);
+                _iConStatusViews.Remove(iConStatusView);
             }
         }
 
@@ -84,8 +84,8 @@ namespace CardsAndDices
         public IReadOnlyList<IdentifiableStatusView> GetAllStatusViews() => _statusViews;
 
         /// <summary>
-        /// 登録されている全てのDiceViewを取得します。
+        /// 登録されている全てのIConStatusViewを取得します。
         /// </summary>
-        public IReadOnlyList<DiceView> GetAllDiceViews() => _diceViews;
+        public IReadOnlyList<SharedIconElementView> GetAllSharedIconElementViews() => _iConStatusViews;
     }
 }
