@@ -2,10 +2,10 @@ namespace CardsAndDices
 {
     public class InletExecuteAbilityEffectCommand : IEvent
     {
-        public TriggerTiming TriggerTiming { get; }
+        public ActivationTiming TriggerTiming { get; }
         public CompositeObjectId InletObjectId { get; }
 
-        public InletExecuteAbilityEffectCommand(CompositeObjectId inletObjectId, TriggerTiming triggerTiming)
+        public InletExecuteAbilityEffectCommand(CompositeObjectId inletObjectId, ActivationTiming triggerTiming)
         {
             InletObjectId = inletObjectId;
             TriggerTiming = triggerTiming;

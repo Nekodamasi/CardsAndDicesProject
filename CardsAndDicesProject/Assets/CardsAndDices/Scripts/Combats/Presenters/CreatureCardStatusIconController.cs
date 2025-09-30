@@ -45,7 +45,6 @@ namespace CardsAndDices
             if (evt.CreatureCardId != _instance.CompositeObjectId) return;
             foreach (var iconData in _creatureStatusIconDataList)
             {
-                Debug.Log("こんとろーらー->iconData.EffectTargetType:" + iconData.EffectTargetType);
                 if (iconData.EffectTargetType == EffectTargetType.Attack)
                 {
 //                    _eventBus.Emit(new DisplaySharedIconElementEvent(evt.CreatureCardId, iconData._sharedIconElementTypeEntity, _instance.Attack));

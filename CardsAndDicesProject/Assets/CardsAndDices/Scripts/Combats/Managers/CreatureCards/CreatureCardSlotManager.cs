@@ -11,7 +11,7 @@ namespace CardsAndDices
     /// 全てのクリーチャーカードスロットの状態を管理し、配置などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureCardSlotManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureCardSlotManager")]
-    public class CreatureCardSlotManager : ScriptableObject, IDisposable, ICreatureCardSlotPosition, ICreatureCardSlotInstanceRepository
+    public class CreatureCardSlotManager : ScriptableObject, IDisposable, ICreatureCardSlotPosition, ICreatureCardSlotInstanceRepository, ICreatureCardlocation
     {
         [Header("Components")]
         [SerializeField] private List<CreatureCardSlotPositionEntity> _creatureCardSlotPositionEntitys;
@@ -102,16 +102,6 @@ namespace CardsAndDices
             // reset
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
             _eventBus.Emit(new ResetUIStatusEvent());
-            /*
-                        Debug.Log("はいちーまん");
-                        PlacedCreatureCard(evt.ExecutedObjectId, evt.TargetObjectId);
-                        _reflowService.CalculateFrontLoadMovements();
-                        _eventBus.Emit(new MoveToAnimationReflowCreatureCardSlotEvent(null));
-
-                        // 待機
-                        await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
-                        _eventBus.Emit(new ResetUIStatusEvent());
-            */
         }
 
         /// <summary>
@@ -336,6 +326,48 @@ namespace CardsAndDices
                 .FirstOrDefault();
 
             return emptyHandSlot;
+        }
+
+        /// <summary>
+        /// 配置されたカードのteamを取得します
+        /// </summary>
+        public Team GetTeam(CompositeObjectId cardId)
+        {
+            var placedSlots = _creatureCardSlotInstances.Where(s => s.ReflowPlacedCardId == cardId).ToList();
+            if (placedSlots.Count == 0)
+            {
+                Debug.LogWarning("スロットとれない");
+                return Team.Player;
+            }
+            return placedSlots[0].Team;
+        }
+
+        /// <summary>
+        /// 配置されたカードのlocationを返します
+        /// </summary>
+        public SlotLocation GetSlotLocation(CompositeObjectId cardId)
+        {
+            var placedSlots = _creatureCardSlotInstances.Where(s => s.ReflowPlacedCardId == cardId).ToList();
+            if (placedSlots.Count == 0)
+            {
+                Debug.LogWarning("スロットとれない");
+                return SlotLocation.Vanguard;
+            }
+            return placedSlots[0].Location;
+        }
+
+        /// <summary>
+        /// 配置されたカードのlocationを返します
+        /// </summary>
+        public LinePosition GetLinePosition(CompositeObjectId cardId)
+        {
+            var placedSlots = _creatureCardSlotInstances.Where(s => s.ReflowPlacedCardId == cardId).ToList();
+            if (placedSlots.Count == 0)
+            {
+                Debug.LogWarning("スロットとれない");
+                return LinePosition.TopLine;
+            }
+            return placedSlots[0].LinePosition;
         }
     }
 }

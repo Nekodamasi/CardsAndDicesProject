@@ -3,31 +3,21 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// Abstract base class for all ability trigger conditions.
+    /// すべての能力効果の発動判定定義の抽象基本クラス。
     /// </summary>
     public abstract class BaseAbilityTriggerConditionSO : ScriptableObject
     {
         [Tooltip("アクティブタイミング")]
-        public TriggerTiming ActivationTiming;
+        [SerializeField] private ActivationTiming _activationTiming;
 
         /// <summary>
-        /// Checks if the trigger condition is met.
-        /// This method first checks the activation timing and then calls the specific condition check.
+        /// 発動条件チェックを行う
         /// </summary>
-/*
-        public bool Check(CompositeObjectId ownerId, TriggerTiming activationTiming, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager)
-        {
-            if (ActivationTiming != activationTiming)
-            {
-                return false;
-            }
-            return CheckCondition(ownerId, creatureManager, diceManager, abilityManager);
-        }
-*/
+        public ActivationTiming ActivationTiming => _activationTiming;
+
         /// <summary>
-        /// When overridden in a derived class, checks the specific conditions for the trigger.
+        /// 発動条件チェックを行う
         /// </summary>
-        /// <returns>True if the specific conditions are met, false otherwise.</returns>
-//        protected abstract bool CheckCondition(CompositeObjectId ownerId, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager);
+        public abstract bool CheckCondition(AbilityContext abilityContext);
     }
 }

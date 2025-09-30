@@ -12,7 +12,7 @@ namespace CardsAndDices
         public string Id;
 
         [Tooltip("この能力の効果範囲")]
-        public BaseAbilityTargetSelectorSO TargetSelector;
+        [SerializeField] private AreaOfEffect _areaOfEffect;
 
         [Tooltip("この能力を発動させる条件")]
         public BaseAbilityTriggerConditionSO TriggerCondition;
@@ -22,5 +22,10 @@ namespace CardsAndDices
 
         [Tooltip("能力の持続時間、クールダウン、または使用制限")]
         public BaseAbilityDurationSO Duration;
+
+        /// <summary>
+        /// abilityの効果範囲
+        /// </summary>
+        public AreaOfEffect AreaOfEffect => _areaOfEffect;
     }
 }

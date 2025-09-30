@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
-using Cysharp.Threading.Tasks;
-using UnityEditor;
+using System;
 using UnityEngine;
 using VContainer;
 
@@ -11,108 +9,171 @@ namespace CardsAndDices
     /// ゲーム内のすべてのアクティブな AbilityInstances を管理します
     /// </summary>
     [CreateAssetMenu(fileName = "AbilityManager", menuName = "CardsAndDices/Managers/AbilityManager")]
-    public class AbilityManager : ScriptableObject
+    public class AbilityManager : ScriptableObject, IDisposable
     {
-        /*
-                private SpriteCommandBus _commandBus;
-                private CreatureManager _creatureManager;
-                private DiceManager _diceManager;
-                private AbilityFactory _abilityFactory;
-                private EffectManager _effectManager;
+        private GameEventBus _eventBus;
+        private ICreatureCardlocation _iCreatureCardlocation;
+        private readonly List<AbilityInstance> _Instances = new();
+        private readonly List<AbilityController> _controllers = new();
 
-                private readonly List<AbilityInstance> _abilities = new();
+        [Inject]
+        public void Initialize(GameEventBus eventBus, ICreatureCardlocation iCreatureCardlocation)
+        {
+            _eventBus = eventBus;
+            _eventBus.On<CreateAbilityEvent>(OnCreateAbility);
+            _iCreatureCardlocation = iCreatureCardlocation;
+        }
+        public void Dispose()
+        {
+            DisposeInstances();
+            DisposeControllers();
+            _eventBus.Off<CreateAbilityEvent>(OnCreateAbility);
+        }
 
-                [Inject]
-                public void Initialize(SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager)
-                {
-                    ClearCollections();
-                    _commandBus = commandBus;
-                    _creatureManager = creatureManager;
-                    _diceManager = diceManager;
-                    _effectManager = effectManager;
-                    _abilityFactory = new AbilityFactory();
-                    // すべてのコマンドをサブスクライブします。より最適化されたアプローチとしては、専用のイベントタイプを使用するとよいでしょう
-                    _commandBus.On<ICommand>(OnCommandDispatched);
-                    _commandBus.On<ExecuteAbilityEffectCommand>(OnExecuteAbilityEffect);
-                    _commandBus.On<InletExecuteAbilityEffectCommand>(OnInletExecuteAbilityEffect);
+        /// <summary>
+        /// インスタンスをDisposeします
+        /// </summary>
+        private void DisposeInstances()
+        {
+            foreach (var instance in _Instances)
+            {
+                instance.Dispose();
+            }
+            _Instances.Clear();
+        }
 
-                }
-                private void ClearCollections()
-                {
-                    _abilities.Clear();
-                }
+        /// <summary>
+        /// コントローラーをDisposeします
+        /// </summary>
+        private void DisposeControllers()
+        {
+            foreach (var controller in _controllers)
+            {
+                controller.Dispose();
+            }
+            _controllers.Clear();
+        }
 
-                private void OnDisable()
-                {
-                    _commandBus.Off<ICommand>(OnCommandDispatched);
-                    _commandBus.Off<ExecuteAbilityEffectCommand>(OnExecuteAbilityEffect);
-                    _commandBus.Off<InletExecuteAbilityEffectCommand>(OnInletExecuteAbilityEffect);
-                }
+        /// <summary>
+        /// InstanceとControllerを生成します
+        /// </summary>
+        private void CreateInstance(CompositeObjectId ownerId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, ICreatureCardlocation iCreatureCardlocation)
+        {
+            var instance = new AbilityInstance(ownerId, baseAbilityDataSO, subOwnerId, creatureStatusInstance, _eventBus, iCreatureCardlocation);
+            _Instances.Add(instance);
+            var controller = new AbilityController(instance, _eventBus);
+            _controllers.Add(controller);
+        }
 
-                /// <summary>
-                /// クリーチャーの新しい能力インスタンスを作成して登録します。
-                /// </summary>
-                public void RegisterAbility(BaseAbilityDataSO abilityData, CompositeObjectId ownerId, CompositeObjectId subOwnerId)
-                {
-                    var instance = _abilityFactory.Create(abilityData, ownerId, subOwnerId);
-                    _abilities.Add(instance);
-                }
+        /// <summary>
+        /// abilityの生成イベント
+        /// </summary>
+        private void OnCreateAbility(CreateAbilityEvent evt)
+        {
+            CreateInstance(evt.CreatureCardId, evt.BaseAbilityDataSO, evt.SubOwnerId, evt.CreatureStatusInstance, _iCreatureCardlocation);
+        }
 
-                /// <summary>
-                /// 特定の所有者に関連付けられているすべての機能を登録解除します。
-                /// </summary>
-                public void UnregisterAbilitiesForOwner(CompositeObjectId ownerId)
-                {
-                    _abilities.RemoveAll(instance => instance.OwnerId == ownerId);
-                }
 
-                private async void OnExecuteAbilityEffect(ExecuteAbilityEffectCommand command)
-                {
-                    foreach (var instance in _abilities)
-                    {
-                        await instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming);
-                    }
-                }
+            /*
+                        private SpriteCommandBus _commandBus;
+                        private CreatureManager _creatureManager;
+                        private DiceManager _diceManager;
+                        private AbilityFactory _abilityFactory;
+                        private EffectManager _effectManager;
 
-                private async void OnInletExecuteAbilityEffect(InletExecuteAbilityEffectCommand command)
-                {
-                    Debug.Log("<color=Green>OnInletExecuteAbilityEffect：</color>" + command.InletObjectId);
-                    foreach (var instance in _abilities)
-                    {
-                        Debug.Log("<color=Green>アビリティ：</color>" + instance.SubOwnerId + "/" + command.InletObjectId);
-                        if (instance.SubOwnerId == command.InletObjectId)
+                        private readonly List<AbilityInstance> _abilities = new();
+
+                        [Inject]
+                        public void Initialize(SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager)
                         {
-                            await instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming);
+                            ClearCollections();
+                            _commandBus = commandBus;
+                            _creatureManager = creatureManager;
+                            _diceManager = diceManager;
+                            _effectManager = effectManager;
+                            _abilityFactory = new AbilityFactory();
+                            // すべてのコマンドをサブスクライブします。より最適化されたアプローチとしては、専用のイベントタイプを使用するとよいでしょう
+                            _commandBus.On<ICommand>(OnCommandDispatched);
+                            _commandBus.On<ExecuteAbilityEffectCommand>(OnExecuteAbilityEffect);
+                            _commandBus.On<InletExecuteAbilityEffectCommand>(OnInletExecuteAbilityEffect);
+
                         }
-                    }
-                }
-                private void OnCommandDispatched(ICommand command)
-                {
-                    /*
-                                // Handle ability triggering
-                                foreach (var instance in _abilities)
-                                {
-                                    if (instance.IsSuppressed || instance.Data.TriggerCondition == null) continue;
+                        private void ClearCollections()
+                        {
+                            _abilities.Clear();
+                        }
 
-                                    if (instance.Data.TriggerCondition.Check(command, instance))
-                                    {
-                                        // TODO: Check for cooldown and usage limits from instance.Data.Duration
-                                        var context = new BaseAbilityEffectDefinitionSO.AbilityContext
+                        private void OnDisable()
+                        {
+                            _commandBus.Off<ICommand>(OnCommandDispatched);
+                            _commandBus.Off<ExecuteAbilityEffectCommand>(OnExecuteAbilityEffect);
+                            _commandBus.Off<InletExecuteAbilityEffectCommand>(OnInletExecuteAbilityEffect);
+                        }
+
+                        /// <summary>
+                        /// クリーチャーの新しい能力インスタンスを作成して登録します。
+                        /// </summary>
+                        public void RegisterAbility(BaseAbilityDataSO abilityData, CompositeObjectId ownerId, CompositeObjectId subOwnerId)
+                        {
+                            var instance = _abilityFactory.Create(abilityData, ownerId, subOwnerId);
+                            _abilities.Add(instance);
+                        }
+
+                        /// <summary>
+                        /// 特定の所有者に関連付けられているすべての機能を登録解除します。
+                        /// </summary>
+                        public void UnregisterAbilitiesForOwner(CompositeObjectId ownerId)
+                        {
+                            _abilities.RemoveAll(instance => instance.OwnerId == ownerId);
+                        }
+
+                        private async void OnExecuteAbilityEffect(ExecuteAbilityEffectCommand command)
+                        {
+                            foreach (var instance in _abilities)
+                            {
+                                await instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming);
+                            }
+                        }
+
+                        private async void OnInletExecuteAbilityEffect(InletExecuteAbilityEffectCommand command)
+                        {
+                            Debug.Log("<color=Green>OnInletExecuteAbilityEffect：</color>" + command.InletObjectId);
+                            foreach (var instance in _abilities)
+                            {
+                                Debug.Log("<color=Green>アビリティ：</color>" + instance.SubOwnerId + "/" + command.InletObjectId);
+                                if (instance.SubOwnerId == command.InletObjectId)
+                                {
+                                    await instance.ExecuteAbility(_creatureManager, _diceManager, this, _effectManager, _commandBus, command.TriggerTiming);
+                                }
+                            }
+                        }
+                        private void OnCommandDispatched(ICommand command)
+                        {
+                            /*
+                                        // Handle ability triggering
+                                        foreach (var instance in _abilities)
                                         {
-                                            SourceId = instance.OwnerId
-                                            // TODO: Populate TargetId and other context from the command if available
-                                        };
-                                        instance.Data.EffectDefinition?.Execute(context, _commandBus);
-                                        // TODO: Update duration state (e.g., decrement uses, set cooldown)
-                                    }
-                                }
+                                            if (instance.IsSuppressed || instance.Data.TriggerCondition == null) continue;
 
-                                // Handle duration updates
-                                foreach (var instance in _abilities)
-                                {
-                                    instance.Data.Duration?.OnEvent(instance, command);
-                                }
-    }
-        */
-    }
+                                            if (instance.Data.TriggerCondition.Check(command, instance))
+                                            {
+                                                // TODO: Check for cooldown and usage limits from instance.Data.Duration
+                                                var context = new BaseAbilityEffectDefinitionSO.AbilityContext
+                                                {
+                                                    SourceId = instance.OwnerId
+                                                    // TODO: Populate TargetId and other context from the command if available
+                                                };
+                                                instance.Data.EffectDefinition?.Execute(context, _commandBus);
+                                                // TODO: Update duration state (e.g., decrement uses, set cooldown)
+                                            }
+                                        }
+
+                                        // Handle duration updates
+                                        foreach (var instance in _abilities)
+                                        {
+                                            instance.Data.Duration?.OnEvent(instance, command);
+                                        }
+            }
+                */
+        }
 }

@@ -1,73 +1,112 @@
-using Cysharp.Threading.Tasks;
-
+using System;
+using Unity.VisualScripting;
+using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// Represents a runtime instance of an ability attached to a creature.
+    /// abilityのインスタンスクラス
     /// </summary>
-    public class AbilityInstance
+    public class AbilityInstance : IDisposable, IIdentifiableInstance
     {
-/*
-        /// <summary>
-        /// abilityの所有者のオブジェクトID
-        /// </summary>
-        public CompositeObjectId OwnerId { get; }
+        private CompositeObjectId _compositeObjectId;
+        private BaseAbilityDataSO _baseAbilityDataSO;
+        private CompositeObjectId _subOwnerId;
+        private CreatureStatusInstance _creatureStatusInstance;
+        private int _remainingUsages;
+        private bool _isLock;
+        private readonly AbilityContext _abilityContext = new();
+        private GameEventBus _gameEventBus;
+        private ICreatureCardlocation _iCreatureCardlocation;
 
         /// <summary>
-        /// アビリティデータ
+        /// コンストラクタ
         /// </summary>
-        public BaseAbilityDataSO Data { get; }
+        public AbilityInstance(CompositeObjectId ownerId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, GameEventBus gameEventBus, ICreatureCardlocation iCreatureCardlocation)
+        {
+            _compositeObjectId = ownerId;
+            _baseAbilityDataSO = baseAbilityDataSO;
+            _subOwnerId = subOwnerId;
+            _creatureStatusInstance = creatureStatusInstance;
+            _iCreatureCardlocation = iCreatureCardlocation;
+            _gameEventBus = gameEventBus;
+
+            _abilityContext.CreatureStatusInstance = _creatureStatusInstance;
+            _abilityContext.ICreatureCardlocation = _iCreatureCardlocation;
+        }
+        public void Dispose()
+        {
+        }
 
         /// <summary>
-        /// サブオーナーID
+        /// abilityの所有者を一意に識別するID。
         /// </summary>
-        public CompositeObjectId SubOwnerId { get; }
+        public CompositeObjectId CompositeObjectId => _compositeObjectId;
 
         /// <summary>
-        /// 現在クールダウン値
+        /// サブオーナーを一意に識別するID。
         /// </summary>
-        public int CurrentCooldown { get; set; }
+        public CompositeObjectId SubOwnerId => _subOwnerId;
+
+        /// <summary>
+        /// 所有者のステータスインスタンス。
+        /// </summary>
+        public CreatureStatusInstance CreatureStatusInstance => _creatureStatusInstance;
 
         /// <summary>
         /// 残り使用回数
         /// </summary>
-        public int RemainingUsages { get; set; }
+        public int RemainingUsages => _remainingUsages;
 
         /// <summary>
-        /// スポーンフラグ
+        /// 残り使用回数
         /// </summary>
-        public bool IsSuppressed { get; set; }
-
-        /// <summary>
-        /// アビリティの実行
-        /// </summary>
-        public async UniTask<bool> ExecuteAbility(CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager, SpriteCommandBus spriteCommandBus, TriggerTiming triggerTiming)
+        public void SetRemainingUsages(int value)
         {
-            // スポーンフラグOFF
-            if (!IsSuppressed) return false;
+            _remainingUsages = value;
+        }
 
-            // 使用回数が足りない
-            if (RemainingUsages <= 0) return false;
+        /// <summary>
+        /// 残り使用回数
+        /// </summary>
+        public bool IsLock => _isLock;
 
-            // 発動条件のチェック
-            if (!Data.TriggerCondition.Check(OwnerId, triggerTiming, creatureManager, diceManager, abilityManager)) return false;
+        /// <summary>
+        /// 残り使用回数
+        /// </summary>
+        public void SetLock(bool flg)
+        {
+            _isLock = flg;
+        }
 
-            // abilityの実行
-            var abilityContext = new BaseAbilityEffectDefinitionSO.AbilityContext();
-            abilityContext.SourceId = OwnerId;
-            abilityContext.TargetIds = Data.TargetSelector.SelectTarget(OwnerId, creatureManager, diceManager);
-            await Data.EffectDefinition.Execute(abilityContext, spriteCommandBus, creatureManager, diceManager, abilityManager, effectManager);
-            Data.Duration.OnUse(this);
+        /// <summary>
+        /// 現在使用可能か取得します
+        /// </summary>
+        public bool IsAvailable => _baseAbilityDataSO.Duration.OnCheck(this);
+
+        /// <summary>
+        /// 使用回数のリセットタイミング
+        /// </summary>
+        public ActivationTiming ResetTiming => _baseAbilityDataSO.Duration.ResetTiming;
+
+        /// <summary>
+        /// アクティブタイミング
+        /// </summary>
+        public ActivationTiming ActivationTiming => _baseAbilityDataSO.TriggerCondition.ActivationTiming;
+
+        /// <summary>
+        /// Triggerの条件を満たしているか取得します
+        /// </summary>
+        public bool IsTrigger => _baseAbilityDataSO.TriggerCondition.CheckCondition(_abilityContext);
+
+        /// <summary>
+        /// アビリティの効果を実行します。実行に成功したかを返します。
+        /// </summary>
+        public bool Execute()
+        {
+            if (!IsTrigger) return false;
+            if (!IsAvailable) return false;
+            _baseAbilityDataSO.EffectDefinition.Execute(_abilityContext, _gameEventBus);
             return true;
         }
-        public AbilityInstance(CompositeObjectId ownerId, BaseAbilityDataSO data, CompositeObjectId subOwnerId)
-        {
-            OwnerId = ownerId;
-            Data = data;
-            SubOwnerId = subOwnerId;
-            IsSuppressed = true;
-            data.Duration?.OnReset(this);
-        }
-*/
     }
 }

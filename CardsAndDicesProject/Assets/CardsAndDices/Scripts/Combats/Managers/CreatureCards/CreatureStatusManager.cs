@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using VContainer;
 using System;
@@ -52,11 +51,11 @@ namespace CardsAndDices
             _creatureStatusInstances.Add(instance);
             var controller = new CreatureCardStatusIconController(instance, _eventBus, _reatureStatusIconDataList);
             _creatureCardStatusIconControllers.Add(controller);
-            
-//            var view = _viewRegistry.GetView<CreatureCardView>(evt.CreatureCardId);
-//            view.SetBoundState(true);
-//            var presenter = new CreatureCardPresenter(instance, view, _eventBus);
-//            _creatureCardPresenters.Add(presenter);
+
+            foreach (var ability in evt.CardInitializationData.CreatureData.Abilities)
+            {
+                _eventBus.Emit(new CreateAbilityEvent(instance.CompositeObjectId, ability, null, instance));
+            }
         }
 
         /// <summary>

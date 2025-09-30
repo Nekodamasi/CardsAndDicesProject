@@ -2,9 +2,9 @@ namespace CardsAndDices
 {
     public class UpdateEffectExpiredCommand : IEvent
     {
-        public TriggerTiming TriggerTiming { get; }
+        public ActivationTiming TriggerTiming { get; }
 
-        public UpdateEffectExpiredCommand(TriggerTiming tiggerTiming)
+        public UpdateEffectExpiredCommand(ActivationTiming tiggerTiming)
         {
             TriggerTiming = tiggerTiming;
         }

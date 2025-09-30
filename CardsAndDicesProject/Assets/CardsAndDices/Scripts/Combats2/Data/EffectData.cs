@@ -14,8 +14,8 @@ namespace CardsAndDices
         public BuffDebuffType BuffDebuffType => _buffDebuffType;
 
         [Tooltip("更新タイミング")]
-        [SerializeField] private TriggerTiming _updateTiming;
-        public TriggerTiming UpdateTiming => _updateTiming;
+        [SerializeField] private ActivationTiming _updateTiming;
+        public ActivationTiming UpdateTiming => _updateTiming;
 
         [Tooltip("持続ターン数または条件値")]
         [SerializeField] private int _durationValue;

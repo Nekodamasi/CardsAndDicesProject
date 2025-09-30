@@ -40,7 +40,6 @@ namespace CardsAndDices
         /// </summary>
         private void OnCreateCreature(CreateCreatureEvent evt)
         {
-            Debug.Log("ここはうごいてる？" + _viewRegistry.GetAllSharedIconElementViews().Count);
             foreach (var iconview in _viewRegistry.GetAllSharedIconElementViews())
             {
                 var instance = new IconStatusInstance(iconview.CompositeObjectId, iconview.SharedIconElementTypeEntity, SharedIconElementStatus.Normal);

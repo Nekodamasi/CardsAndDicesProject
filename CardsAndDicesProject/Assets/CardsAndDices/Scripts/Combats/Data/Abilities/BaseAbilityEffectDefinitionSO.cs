@@ -11,25 +11,13 @@ namespace CardsAndDices
     {
         [Header("VFX Settings")]
         [Tooltip("再生するパーティクルのVfxDefinition")]
-        [SerializeField]
-        public VfxDefinition VfxDefinition;
-
-        /// <summary>
-        /// ソースやターゲットなど、アビリティ実行のコンテキストが含まれます。
-        /// </summary>
-        public class AbilityContext
-        {
-            public CompositeObjectId SourceId;
-            public List<CompositeObjectId> TargetIds;
-            public int DiceValue;
-            // Add other context-specific data as needed
-        }
+        [SerializeField] private VfxDefinition VfxDefinition;
 
         /// <summary>
         /// 能力の効果を実行します。
         /// </summary>
         /// <param name="context">The context of the ability execution.</param>
         /// <param name="commandBus">The command bus to dispatch new commands if needed.</param>
-//        public abstract UniTask Execute(AbilityContext context, SpriteCommandBus commandBus, CreatureManager creatureManager, DiceManager diceManager, AbilityManager abilityManager, EffectManager effectManager);
+        public abstract void Execute(AbilityContext context, GameEventBus eventBus);
     }
 }

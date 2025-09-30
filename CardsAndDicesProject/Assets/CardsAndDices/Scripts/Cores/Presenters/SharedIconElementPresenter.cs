@@ -43,7 +43,6 @@ namespace CardsAndDices
         /// </summary>
         private void OnDisplaySharedIconElement(DisplaySharedIconElementEvent evt)
         {
-            Debug.Log("ここはあいこんのぷれぜんたー");
             if (evt.ExecutedObjectId != _instance.CompositeObjectId || evt.SharedIconElementTypeEntity != _instance.SharedIconElementTypeEntity) return;
             _instance.SetIconValue(evt.NumberValue);
             _view.UpdateNumberValue(evt.NumberValue);
