@@ -3,7 +3,7 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ホームポジション変更コマンド
+    /// SharedIconElementを現在の状態に更新します
     /// </summary>
     public class DisplaySharedIconElementEvent : IEvent
     {

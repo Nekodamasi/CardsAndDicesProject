@@ -2,32 +2,39 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using VContainer;
+using System.Linq;
 
 namespace CardsAndDices
 {
     /// <summary>
     /// ゲーム内のすべてのアクティブな AbilityInstances を管理します
     /// </summary>
-    [CreateAssetMenu(fileName = "AbilityManager", menuName = "CardsAndDices/Managers/AbilityManager")]
+    [CreateAssetMenu(fileName = "AbilityManager", menuName = "CardsAndDices/Combats/Managers/Abilities/AbilityManager")]
     public class AbilityManager : ScriptableObject, IDisposable
     {
         private GameEventBus _eventBus;
         private ICreatureCardlocation _iCreatureCardlocation;
-        private readonly List<AbilityInstance> _Instances = new();
+        private ITargetManager _iTargetManager;
+        private readonly List<AbilityInstance> _instances = new();
         private readonly List<AbilityController> _controllers = new();
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, ICreatureCardlocation iCreatureCardlocation)
+        public void Initialize(GameEventBus eventBus, ICreatureCardlocation iCreatureCardlocation, ITargetManager iTargetManager)
         {
+            _instances.Clear();
+            _controllers.Clear();
             _eventBus = eventBus;
             _eventBus.On<CreateAbilityEvent>(OnCreateAbility);
+            _eventBus.On<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
             _iCreatureCardlocation = iCreatureCardlocation;
+            _iTargetManager = iTargetManager;
         }
         public void Dispose()
         {
             DisposeInstances();
             DisposeControllers();
             _eventBus.Off<CreateAbilityEvent>(OnCreateAbility);
+            _eventBus.Off<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
         }
 
         /// <summary>
@@ -35,11 +42,11 @@ namespace CardsAndDices
         /// </summary>
         private void DisposeInstances()
         {
-            foreach (var instance in _Instances)
+            foreach (var instance in _instances)
             {
                 instance.Dispose();
             }
-            _Instances.Clear();
+            _instances.Clear();
         }
 
         /// <summary>
@@ -57,10 +64,10 @@ namespace CardsAndDices
         /// <summary>
         /// InstanceとControllerを生成します
         /// </summary>
-        private void CreateInstance(CompositeObjectId ownerId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, ICreatureCardlocation iCreatureCardlocation)
+        private void CreateInstance(CompositeObjectId ownerId, AbilityDataEntity baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, ICreatureCardlocation iCreatureCardlocation, ITargetManager iTargetManager)
         {
-            var instance = new AbilityInstance(ownerId, baseAbilityDataSO, subOwnerId, creatureStatusInstance, _eventBus, iCreatureCardlocation);
-            _Instances.Add(instance);
+            var instance = new AbilityInstance(ownerId, baseAbilityDataSO, subOwnerId, creatureStatusInstance, _eventBus, iCreatureCardlocation, iTargetManager);
+            _instances.Add(instance);
             var controller = new AbilityController(instance, _eventBus);
             _controllers.Add(controller);
         }
@@ -70,9 +77,28 @@ namespace CardsAndDices
         /// </summary>
         private void OnCreateAbility(CreateAbilityEvent evt)
         {
-            CreateInstance(evt.CreatureCardId, evt.BaseAbilityDataSO, evt.SubOwnerId, evt.CreatureStatusInstance, _iCreatureCardlocation);
+            CreateInstance(evt.CreatureCardId, evt.BaseAbilityDataSO, evt.SubOwnerId, evt.CreatureStatusInstance, _iCreatureCardlocation, _iTargetManager);
         }
 
+        /// <summary>
+        /// アビリティの実行
+        /// </summary>
+        private void OnExecuteAbilityEffect(ExecuteAbilityEffectEvent evt)
+        {
+            var list = _instances.Where(a => a.CompositeObjectId == evt.SourceObjectId && a.ActivationTiming == evt.TriggerTiming && a.IsAvailable).ToList();
+
+            foreach (var instance in list)
+            {
+                if (instance.IsTrigger)
+                {
+                    instance.Execute();
+                }
+            }
+        }
+        public List<AbilityInstance> GetInstanceList()
+        {
+            return _instances;
+        }
 
             /*
                         private SpriteCommandBus _commandBus;

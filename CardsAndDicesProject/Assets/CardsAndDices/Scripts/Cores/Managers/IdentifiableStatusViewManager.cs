@@ -47,6 +47,7 @@ namespace CardsAndDices
                 view.SetBoundState(true);
                 _instances.Add(instance);
                 _presenters.Add(new IdentifiableStatusPresenter(instance, view, _eventBus));
+                view.DisplayHideStatus();
             }
         }
 

@@ -48,7 +48,12 @@ namespace CardsAndDices
         private void OnIdentifiableStateBeginDrag(IdentifiableStateBeginDragEvent evt)
         {
             // 自分がドラッグ対象
-            if (evt.ExecutedObjectId == _instance.CompositeObjectId) return;
+            if (evt.ExecutedObjectId == _instance.CompositeObjectId)
+            {
+                Debug.Log("ここが２回？");
+                _eventBus.Emit(new DiceBeginDragEvent(_instance.CompositeObjectId, _instance.FaceValue));                
+                return;
+            }
 
             // 違う何かがドラッグされたらインアクティブに
             _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Inactive));

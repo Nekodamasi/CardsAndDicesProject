@@ -21,7 +21,7 @@ namespace CardsAndDices
         public InletActivationViewType InletActivationViewType => _inletActivationViewType;
 
         [Tooltip("投入可能なダイスの目")]
-        [SerializeField] private AllowedDiceFacesSO _allowedDiceFaces;
+        [SerializeField] private AllowedDiceFacesEntity _allowedDiceFaces;
 
         [Tooltip("インレットの初期カウントダウン値")]
         [SerializeField] private int _initialCountdownValue = 1;

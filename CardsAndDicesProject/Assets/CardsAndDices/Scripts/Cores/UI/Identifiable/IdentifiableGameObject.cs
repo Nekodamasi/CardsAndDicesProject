@@ -16,6 +16,7 @@ namespace CardsAndDices
 		/// インスペクターから設定します。
 		/// </summary>
 		[SerializeField] private CompositeObjectIdTypeEntity _objectType;
+		[SerializeField] private IdentifiableGameObject _Owner;
 	
 		/// <summary>
 		/// このオブジェクトのタイプを表す文字列。
@@ -47,6 +48,8 @@ namespace CardsAndDices
 
 		public void OnStart()
 		{
+			if (_Owner is null) return;
+			CompositeObjectId.Owner = _Owner.CompositeObjectId;
 		}
 
 		/// <summary>

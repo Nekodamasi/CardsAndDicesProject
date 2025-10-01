@@ -16,7 +16,7 @@ namespace CardsAndDices
         [SerializeField] private int _shield;
         [SerializeField] private int _cooldown;
         [SerializeField] private int _energy;
-        [SerializeField] private List<BaseAbilityDataSO> _abilities = new List<BaseAbilityDataSO>();
+        [SerializeField] private List<AbilityDataEntity> _abilities = new List<AbilityDataEntity>();
 
         [Header("Appearance")]
         [SerializeField] private AppearanceProfile _appearanceProfile;
@@ -24,14 +24,16 @@ namespace CardsAndDices
         // ダイスインレット1のデータ
         [Header("Inlet 1 Data")]
         [SerializeField] private InletProfileIdEntity _inlet1ProfileId;
-        [SerializeField] private DiceInletConditionSO _inlet1Condition;
-        [SerializeField] private List<BaseAbilityDataSO> _inlet1Abilities = new List<BaseAbilityDataSO>();
+        [SerializeField] private CompositeObjectIdTypeEntity inlet1Category;
+        [SerializeField] private List<AbilityDataEntity> _inlet1RareAbilities = new List<AbilityDataEntity>();
+        [SerializeField] private List<AbilityDataEntity> _inlet1LegendAbilities = new List<AbilityDataEntity>();
 
         // ダイスインレット2のデータ
         [Header("Inlet 2 Data")]
         [SerializeField] private InletProfileIdEntity _inlet2ProfileId;
-        [SerializeField] private DiceInletConditionSO _inlet2Condition;
-       [SerializeField] private List<BaseAbilityDataSO> _inlet2Abilities = new List<BaseAbilityDataSO>();
+        [SerializeField] private CompositeObjectIdTypeEntity inlet2Category;
+        [SerializeField] private List<AbilityDataEntity> _inlet2RareAbilities = new List<AbilityDataEntity>();
+        [SerializeField] private List<AbilityDataEntity> _inlet2LegendAbilities = new List<AbilityDataEntity>();
 
         [Header("Main Attack Data")]
         [SerializeField] private EffectTargetType _mainAttackScoresType = EffectTargetType.Attack;
@@ -61,24 +63,23 @@ namespace CardsAndDices
             );
 
             // InletAbilityProfileのリストを生成
-            List<InletAbilityProfile> inletAbilityProfiles = new List<InletAbilityProfile>();
+            List<InletPackageProfile> inletPackageProfiles = new List<InletPackageProfile>();
 
             // インレット1のデータが存在すればリストに追加
-            if (_inlet1Condition != null)
+            if (inlet1Category != null)
 //            if (_inlet1Condition != null && _inlet1Ability != null)
             {
-                inletAbilityProfiles.Add(new InletAbilityProfile(_inlet1ProfileId, _inlet1Condition, _inlet1Abilities));
+                inletPackageProfiles.Add(new InletPackageProfile(_inlet1ProfileId, inlet1Category, _inlet1RareAbilities, _inlet1LegendAbilities));
             }
 
             // インレット2のデータが存在すればリストに追加
-            if (_inlet2Condition != null)
+            if (inlet2Category != null)
             {
-                Debug.Log("ほげほげほげほ：" + _inlet2Abilities.Count);
-                inletAbilityProfiles.Add(new InletAbilityProfile(_inlet2ProfileId, _inlet2Condition, _inlet2Abilities));
+                inletPackageProfiles.Add(new InletPackageProfile(_inlet2ProfileId, inlet2Category, _inlet2RareAbilities, _inlet2LegendAbilities));
             }
 //            Debug.Log("<color=Green>インレットプロフィール：</color>" + inletAbilityProfiles.Count);
             // CardInitializationDataのインスタンスを生成して返す
-            return new CardInitializationData(creatureData, inletAbilityProfiles, _appearanceProfile);
+            return new CardInitializationData(creatureData, inletPackageProfiles, _appearanceProfile);
         }
     }
 }

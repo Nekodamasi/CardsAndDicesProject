@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// 識別可能オブジェクトの状態変化コマンドを監視し、具体的な処理を実装するためのクラス。
     /// BaseIdentifiableStateOperatorを継承し、各コマンドに対応するメソッドをオーバーライドして使用する。
     /// </summary>
-    [CreateAssetMenu(fileName = "CoreOperator", menuName = "CardsAndDices/Core/Operator/CoreOperator")]
+    [CreateAssetMenu(fileName = "CoreOperator", menuName = "CardsAndDices/Core/Operators/CoreOperator")]
     public class CoreOperator : BaseIdentifiableStateOperator
     {
         /// <summary>
@@ -57,7 +57,6 @@ namespace CardsAndDices
         /// </summary>
         protected override void OnStateBeginDrag(IdentifiableStateBeginDragEvent evt)
         {
-            Debug.Log("ほげほげほげ");
             // Statusの変更を通知する
             _eventBus.Emit(new ChangeViewStatusEvent(evt.ExecutedObjectId, IdentifiableStatus.DraggingStarted));
 

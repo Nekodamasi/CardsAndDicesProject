@@ -56,7 +56,7 @@ namespace CardsAndDices
         /// <param name="compositeObjectId">追跡対象のオブジェクトID。</param>
         public IdentifiableStatusInstance(CompositeObjectId compositeObjectId, GameEventBus identifiableCommandBus, IdentifiableUIStateMachine identifiableUIStateMachine)
         {
-            CurrentHomeStatus = IdentifiableStatus.Normal;
+            CurrentHomeStatus = IdentifiableStatus.Hide;
             _compositeObjectId = compositeObjectId;
             _currentStatus = IdentifiableStatus.Hide;
             _homePosition = Vector3.zero;

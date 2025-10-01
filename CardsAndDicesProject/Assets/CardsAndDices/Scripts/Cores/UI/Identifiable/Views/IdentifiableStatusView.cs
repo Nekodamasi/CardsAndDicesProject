@@ -12,6 +12,7 @@ namespace CardsAndDices
         [SerializeField] private GameObject _displayRootGameObject;
         [SerializeField] private AnimationContext _animationContext;
         [SerializeField] protected BoxCollider2D _boxCollider2D;
+        [SerializeField] protected SortingController _sortingController;
         [SerializeField] private AnimationStrategyRegistry _animationStrategyRegistry;
         [SerializeField] private AnimationStrategyEntity _hoverAnimationStrategyEntity;
         [SerializeField] private AnimationStrategyEntity _normalAnimationStrategyEntity;
@@ -23,10 +24,25 @@ namespace CardsAndDices
         [Header("SEData Components")]
         [SerializeField] private SEData _hoverSeData;
         [SerializeField] private SEData _clickSeData;
-        [SerializeField] private IdentifiableStatus _currentStatus;
+        [SerializeField] private IdentifiableStatus _currentStatus = IdentifiableStatus.None;
+
+        [Header("Sorting Components")]
+        [SerializeField] private SortingOrderEntity _normalSortingOrderEntity;
+        [SerializeField] private SortingOrderEntity _hoverSortingOrderEntity;
+        [SerializeField] private SortingOrderEntity _dragSortingOrderEntity;
+        
 
         private AnimationExecutor _animationExecutor = new AnimationExecutor();
         private Sequence _currentMoveAnimation;
+
+        /// <summary>
+        /// ソート順を変更します
+        /// </summary>
+        public void SetSortingOrder(SortingOrderEntity sortingOrderEntity)
+        {
+            if (sortingOrderEntity is null) return;
+            _sortingController.SetOrder(sortingOrderEntity.OderValue);
+        }
 
         /// <summary>
         /// Animationの実行を開始します。
@@ -43,8 +59,10 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayAcceptableStatus()
         {
+            if (_currentStatus == IdentifiableStatus.Acceptable) return null;
             _currentStatus = IdentifiableStatus.Acceptable;
             SetColliderEnabled(true);
+            SetDisplayActive(true);
             return null;
         }
 
@@ -53,12 +71,15 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayHoverStatus()
         {
+            if (_currentStatus == IdentifiableStatus.Hover) return null;
             _currentStatus = IdentifiableStatus.Hover;
             _sEPlayer.PlayOneShot(_hoverSeData);
             if (_hoverAnimationStrategyEntity is null)
             {
                 return null;
             }
+
+            SetSortingOrder(_hoverSortingOrderEntity);
             return AnimationExecute(_hoverAnimationStrategyEntity);
         }
 
@@ -67,8 +88,16 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayNormalStatus()
         {
+            if (_currentStatus == IdentifiableStatus.Normal) return null;
             _currentStatus = IdentifiableStatus.Normal;
             SetColliderEnabled(true);
+            SetDisplayActive(true);
+            if (_normalAnimationStrategyEntity is null)
+            {
+                return null;
+            }
+
+            SetSortingOrder(_normalSortingOrderEntity);
             return AnimationExecute(_normalAnimationStrategyEntity);
         }
 
@@ -77,7 +106,9 @@ namespace CardsAndDices
         /// </summary>
         public void DisplayHideStatus()
         {
+            if (_currentStatus == IdentifiableStatus.Hide) return;
             _currentStatus = IdentifiableStatus.Hide;
+            SetColliderEnabled(false);
             SetDisplayActive(false);
         }
 
@@ -86,8 +117,12 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayGrayoutStatus()
         {
+            if (_currentStatus == IdentifiableStatus.Grayout) return null;
             _currentStatus = IdentifiableStatus.Grayout;
             SetColliderEnabled(true);
+            SetDisplayActive(true);
+
+            SetSortingOrder(_normalSortingOrderEntity);
             return AnimationExecute(_grayoutAnimationStrategyEntity);
         }
 
@@ -96,8 +131,11 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayDragStatus()
         {
+            if (_currentStatus == IdentifiableStatus.DraggingStarted) return null;
             _currentStatus = IdentifiableStatus.DraggingStarted;
             SetColliderEnabled(false);
+            SetDisplayActive(true);
+            SetSortingOrder(_dragSortingOrderEntity);
             return AnimationExecute(_dragAnimationStrategyEntity);
         }
 
@@ -106,8 +144,11 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayInactiveStatus()
         {
+            if (_currentStatus == IdentifiableStatus.Inactive) return null;
             _currentStatus = IdentifiableStatus.Inactive;
             SetColliderEnabled(false);
+            SetDisplayActive(true);
+            SetSortingOrder(_normalSortingOrderEntity);
             return null;
         }
 
@@ -116,9 +157,12 @@ namespace CardsAndDices
         /// </summary>
         public Sequence DisplayClickStatus()
         {
+            if (_currentStatus == IdentifiableStatus.Click) return null;
             _currentStatus = IdentifiableStatus.Click;
             SetColliderEnabled(true);
+            SetDisplayActive(true);
             _sEPlayer.PlayOneShot(_clickSeData);
+            SetSortingOrder(_normalSortingOrderEntity);
             return AnimationExecute(_clickAnimationStrategyEntity);
         }
 

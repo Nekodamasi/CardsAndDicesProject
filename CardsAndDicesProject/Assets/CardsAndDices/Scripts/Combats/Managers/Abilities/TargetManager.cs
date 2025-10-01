@@ -1,0 +1,79 @@
+using System.Collections.Generic;
+using UnityEngine;
+using VContainer;
+namespace CardsAndDices
+{
+    /// <summary>
+    /// 効果範囲（AreaOfEffect）に基づいて、ターゲットのリストを解決する責務を持つScriptableObject。
+    /// </summary>
+    [CreateAssetMenu(fileName = "TargetManager", menuName = "CardsAndDices/Combats/Managers/Abilities/TargetManager")]
+    public class TargetManager : ScriptableObject, ITargetManager
+    {
+        [Header("Components")]
+        private CreatureCardSlotManager _creatureCardSlotManager;
+
+        [Inject]
+        public void Initialize(CreatureCardSlotManager creatureCardSlotManager)
+        {
+            _creatureCardSlotManager = creatureCardSlotManager;
+        }
+
+        /// <summary>
+        /// 指定された実行者と効果範囲に基づいて、ターゲットとなるカードのIDリストを取得します。
+        /// </summary>
+        /// <param name="areaOfEffect">効果範囲の定義。</param>
+        /// <param name="executorId">効果の実行者のID。</param>
+        /// <returns>ターゲットとなるカードのCompositeObjectIdのリスト。</returns>
+        public List<CompositeObjectId> GetTargetList(AreaOfEffect areaOfEffect, CompositeObjectId executorId)
+        {
+            if (_creatureCardSlotManager == null)
+            {
+                Debug.LogError("[TargetManager] CreatureCardSlotManagerがインジェクトされていません。");
+                return new List<CompositeObjectId>();
+            }
+
+            // 実行者のスロット情報を取得します。多くの効果範囲の基点となります。
+            // 実装メモ: CreatureCardSlotManagerには、カードIDからスロット情報（位置や所有者など）を逆引きする機能が必要です。
+            var executorSlot = _creatureCardSlotManager.GetInstanceInReflowPlaced(executorId);
+            if (executorSlot == null)
+            {
+                // 実行者が盤面にいない場合、ほとんどのターゲティングは不可能です。
+                Debug.LogWarning($"[TargetManager] 実行者（ID: {executorId}）が盤面に見つかりません。");
+                return new List<CompositeObjectId>();
+            }
+
+            switch (areaOfEffect)
+            {
+                case AreaOfEffect.Self:
+                    return new List<CompositeObjectId> { executorId };
+/*
+                case AreaOfEffect.All:
+                    // 実装メモ: CreatureCardSlotManagerには、盤面上の全てのカードIDを取得する機能が必要です。
+                    return _creatureCardSlotManager.GetAllCardIdsOnBoard();
+
+                case AreaOfEffect.AllEnemies:
+                    // 実装メモ: CreatureCardSlotManagerには、指定したプレイヤーの敵対プレイヤーが所有する全てのカードIDを取得する機能が必要です。
+                    return _creatureCardSlotManager.GetEnemyCardIds(executorSlot.OwnerPlayerId);
+
+                case AreaOfEffect.AllAllies:
+                    // 実装メモ: CreatureCardSlotManagerには、指定したプレイヤーが所有する全てのカードIDを取得する機能が必要です。
+                    return _creatureCardSlotManager.GetAlliedCardIds(executorSlot.OwnerPlayerId);
+
+                // --- 以下、より複雑な範囲指定のサンプル ---
+                /*
+                case AreaOfEffect.Front:
+                    // 実装メモ: CreatureCardSlotManagerには、指定したスロットの正面にあるスロットのカードIDを取得する機能が必要です。
+                    return _creatureCardSlotManager.GetCardIdInOpposingSlot(executorSlot);
+
+                case AreaOfEffect.SameRow:
+                    // 実装メモ: CreatureCardSlotManagerには、指定したスロットと同じ行にある全てのカードIDを取得する機能が必要です。
+                    return _creatureCardSlotManager.GetCardIdsInSameRow(executorSlot);
+                */
+
+                default:
+                    Debug.LogWarning($"[TargetManager] 未対応のAreaOfEffectです: {areaOfEffect}");
+                    return new List<CompositeObjectId>();
+            }
+        }
+    }
+}

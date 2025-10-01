@@ -51,11 +51,24 @@ namespace CardsAndDices
             _creatureStatusInstances.Add(instance);
             var controller = new CreatureCardStatusIconController(instance, _eventBus, _reatureStatusIconDataList);
             _creatureCardStatusIconControllers.Add(controller);
+            var view = _viewRegistry.GetView<CreatureCardView>(instance.CompositeObjectId);
+            var presenter = new CreatureStatusPresenter(instance, view, _eventBus);
+            _creatureStatusPresenters.Add(presenter);
 
+            // クリーチャーの固有アビリティのインスタンス化
             foreach (var ability in evt.CardInitializationData.CreatureData.Abilities)
             {
                 _eventBus.Emit(new CreateAbilityEvent(instance.CompositeObjectId, ability, null, instance));
             }
+
+            // インレットのインスタンス化
+            foreach (var profile in evt.CardInitializationData.InletPackageProfiles)
+            {
+                _eventBus.Emit(new CreateDiceInletEvent(instance.CompositeObjectId, profile));
+            }
+            _eventBus.Emit(new SetCurrentHomeStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Normal));
+            _eventBus.Emit(new ChangeViewStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Normal));
+            _eventBus.Emit(new DisplayStatusViewEvent(instance.CompositeObjectId));
         }
 
         /// <summary>

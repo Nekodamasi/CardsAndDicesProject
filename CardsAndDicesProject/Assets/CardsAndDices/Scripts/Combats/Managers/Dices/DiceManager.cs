@@ -109,8 +109,10 @@ namespace CardsAndDices
                 var instance = CreateDiceInstance(view.CompositeObjectId, dice.FaceValue);
                 var Presenter = CreateDicePresenter(instance, view);
                 _diceSlotManager.PlacedDice(Presenter.CompositeObjectId);
+                _eventBus.Emit(new SetCurrentHomeStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Normal));
+                _eventBus.Emit(new ChangeViewStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Normal));
+                _eventBus.Emit(new DisplayStatusViewEvent(instance.CompositeObjectId));
                 _eventBus.Emit(new DisplayOnScreenEvent(view.CompositeObjectId));
-                
             }
             _addDices.Clear();
         }

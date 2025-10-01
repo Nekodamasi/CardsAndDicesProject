@@ -49,7 +49,7 @@ namespace CardsAndDices
             // 4. コマンド発行
             sequence.OnComplete(() =>
             {
-                context.IdentifiableCommandBus.Emit(new PlayVfxEvent(context.VfxDefinition, context.MoveTargetTransform.position, context.MoveTargetTransform.rotation));
+                context.GameEventBus.Emit(new PlayVfxEvent(context.VfxDefinition, context.MoveTargetTransform.position, context.MoveTargetTransform.rotation));
             });
             return sequence;
         }

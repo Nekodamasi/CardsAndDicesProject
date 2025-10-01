@@ -32,7 +32,7 @@ namespace CardsAndDices
             _eventBus = eventBus;
             _compositeObjectIdManager = compositeObjectIdManager;
             _viewRegistry = viewRegistry;
-            _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
+            _eventBus.On<InstanceSetUpedEvent>(OnInstanceSetUped);
             _eventBus.On<IdentifiableStateDragedHoverEvent>(OnIdentifiableStateDragedHover);
             _eventBus.On<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
             _eventBus.On<PlacedHandSlotEvent>(OnPlacedHandSlot);
@@ -48,7 +48,7 @@ namespace CardsAndDices
             DisposeInstances();
             DisposeControllers();
             DisposePresenters();
-            _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
+            _eventBus.Off<InstanceSetUpedEvent>(OnInstanceSetUped);
             _eventBus.Off<IdentifiableStateDragedHoverEvent>(OnIdentifiableStateDragedHover);
             _eventBus.Off<SceneScreenSetUpEvent>(OnSceneScreenSetUp);
             _eventBus.Off<PlacedHandSlotEvent>(OnPlacedHandSlot);
@@ -61,6 +61,9 @@ namespace CardsAndDices
         /// </summary>
         private void OnIdentifiableStateDragedHover(IdentifiableStateDragedHoverEvent evt)
         {
+            // 受け入れ対象外がドラッグされている場合は無視する
+            if (evt.DragedObjectId.ObjectType != _acceptableTargetObjectType) return;
+
             // リフロー
             CreatureCardReflow(evt.DragedObjectId, evt.ExecutedObjectId);
         }
@@ -80,7 +83,7 @@ namespace CardsAndDices
                 _reflowService.CalculateReflowMovements(draggedSlot, targetSlot, moveCardId);
             }
 
-            // ドラッグしてたカードが所定位置に移動する必要があるので、移動イベントは通知
+            // ドラッグしてたカードが所定位置に移動する必要があるので、移動イベントを通知
             _eventBus.Emit(new MoveToAnimationReflowCreatureCardSlotEvent(moveCardId));
         }
 
@@ -89,6 +92,9 @@ namespace CardsAndDices
         /// </summary>
         private async void OnIdentifiableStateDrop(IdentifiableStateDropEvent evt)
         {
+            // ドラッグ対象が受け入れ対象
+            if (evt.ExecutedObjectId.ObjectType != _acceptableTargetObjectType) return;
+
             // リフロー
             CreatureCardReflow(evt.ExecutedObjectId, evt.TargetObjectId);
 
@@ -174,7 +180,7 @@ namespace CardsAndDices
         /// <summary>
         /// クリーチャーカードスロットポジションエンティティからインスタンスを生成します。
         /// </summary>
-        private void OnSceneLoaded(SceneLoadedEvent evt)
+        private void OnInstanceSetUped(InstanceSetUpedEvent evt)
         {
             foreach (var creatureCardSlotPositionEntity in _creatureCardSlotPositionEntitys)
             {
@@ -218,6 +224,9 @@ namespace CardsAndDices
             _creatureCardSlotControllers.Add(controller);
             _creatureCardSlotPresenters.Add(Presenter);
             view.SetBoundState(true);
+            _eventBus.Emit(new SetCurrentHomeStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Inactive));
+            _eventBus.Emit(new ChangeViewStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Inactive));
+            _eventBus.Emit(new DisplayStatusViewEvent(instance.CompositeObjectId));
         }
 
         /// <summary>

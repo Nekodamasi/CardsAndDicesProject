@@ -33,9 +33,9 @@ namespace CardsAndDices
             // 2. 移動完了後にステータス表示コマンドを発行
             sequence.AppendCallback(() =>
             {
-                if (context.IdentifiableCommandBus != null)
+                if (context.GameEventBus != null)
                 {
-                    context.IdentifiableCommandBus.Emit(new DisplayStatusViewEvent(context.IdentifiableGameObject.CompositeObjectId));
+                    context.GameEventBus.Emit(new DisplayStatusViewEvent(context.IdentifiableGameObject.CompositeObjectId));
                 }
             });
 

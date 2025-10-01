@@ -71,6 +71,14 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定されたIDをownerに持ち、指定したObjecttypeで、型に一致するViewを取得します。
+        /// </summary>
+        public T GetOwnerAndObjectTypeView<T>(CompositeObjectId ownerid, CompositeObjectIdTypeEntity objectType) where T : BaseIdentifiableView
+        {
+            return _views.FirstOrDefault(v => v.CompositeObjectId.Owner != null && v.CompositeObjectId.Owner == ownerid && v.CompositeObjectId.ObjectType == objectType && v is T) as T;
+        }
+
+        /// <summary>
         /// 型に一致するバインドされていないViewを取得します。
         /// </summary>
         public T GetNonBoundView<T>() where T : BaseIdentifiableView

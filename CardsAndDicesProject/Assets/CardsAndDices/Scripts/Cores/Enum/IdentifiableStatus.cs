@@ -6,6 +6,11 @@ namespace CardsAndDices
     public enum IdentifiableStatus
     {
         /// <summary>
+        /// 初期状態。
+        /// </summary>
+        None,
+
+        /// <summary>
         /// 通常状態。
         /// </summary>
         Normal,

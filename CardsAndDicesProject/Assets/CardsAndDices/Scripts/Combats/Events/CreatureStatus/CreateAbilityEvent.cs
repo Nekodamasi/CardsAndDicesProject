@@ -6,14 +6,14 @@ namespace CardsAndDices
     public class CreateAbilityEvent : IEvent
     {
         public CompositeObjectId _creatureCardId;
-        private BaseAbilityDataSO _baseAbilityDataSO;
+        private AbilityDataEntity _baseAbilityDataSO;
         private CompositeObjectId _subOwnerId;
         private CreatureStatusInstance _creatureStatusInstance;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CreateAbilityEvent(CompositeObjectId creatureCardId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance)
+        public CreateAbilityEvent(CompositeObjectId creatureCardId, AbilityDataEntity baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance)
         {
             _creatureCardId = creatureCardId;
             _baseAbilityDataSO = baseAbilityDataSO;
@@ -29,7 +29,7 @@ namespace CardsAndDices
         /// <summary>
         /// abilityデータを取得します
         /// </summary>
-        public BaseAbilityDataSO BaseAbilityDataSO => _baseAbilityDataSO;
+        public AbilityDataEntity BaseAbilityDataSO => _baseAbilityDataSO;
 
         /// <summary>
         /// サブオーナーIDを取得します

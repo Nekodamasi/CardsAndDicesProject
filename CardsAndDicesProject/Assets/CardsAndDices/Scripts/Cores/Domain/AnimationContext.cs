@@ -47,7 +47,7 @@ namespace CardsAndDices
         /// <summary>
         /// コマンドを発行するのに使用します
         /// </summary>
-        [SerializeField] public GameEventBus IdentifiableCommandBus;
+        [SerializeField] public GameEventBus GameEventBus;
 
         /// <summary>
         /// vfxデータ

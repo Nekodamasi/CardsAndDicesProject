@@ -16,7 +16,7 @@ namespace CardsAndDices
         /// <summary>
         /// カードに付属する各インレットの能力（条件と効果）を定義するプロファイルのリスト。
         /// </summary>
-        public List<InletAbilityProfile> InletAbilityProfiles { get; private set; }
+        public List<InletPackageProfile> InletPackageProfiles { get; private set; }
 
         /// <summary>
         /// クリーチャーの外観を定義するプロファイル。
@@ -29,10 +29,10 @@ namespace CardsAndDices
         /// <param name="creatureData">クリーチャーの基本データ。</param>
         /// <param name="profiles">インレット能力プロファイルのリスト。</param>
         /// <param name="appearance">外観プロファイル。</param>
-        public CardInitializationData(CreatureData creatureData, List<InletAbilityProfile> profiles, AppearanceProfile appearance)
+        public CardInitializationData(CreatureData creatureData, List<InletPackageProfile> profiles, AppearanceProfile appearance)
         {
             CreatureData = creatureData;
-            InletAbilityProfiles = profiles;
+            InletPackageProfiles = profiles;
             Appearance = appearance;
         }
     }

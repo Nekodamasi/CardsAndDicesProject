@@ -10,7 +10,7 @@ namespace CardsAndDices
 	/// カードやダイスのドラッグ状態などを一元的に管理し、UIの競合を防ぎます。
 	/// 設計書「gdd_combat_system_mockup.md」に基づき、ScriptableObjectとして機能します。
 	/// </summary>
-	[CreateAssetMenu(fileName = "IdentifiableUIStateMachine", menuName = "CardsAndDices/UI/Identifiable/State/UIStateMachine")]
+	[CreateAssetMenu(fileName = "IdentifiableUIStateMachine", menuName = "CardsAndDices/Cores/UI/State/IdentifiableUIStateMachine")]
 	public class IdentifiableUIStateMachine : ScriptableObject
 	{
 		private GameEventBus _identifiableEventBus;
