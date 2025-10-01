@@ -7,21 +7,21 @@ namespace CardsAndDices
     /// </summary>
     public class CreatureCardSlotController : IDisposable, IIdentifiableController
     {
-        private readonly CreatureCardSlotInstance _creatureCardSlotInstance;
+        private readonly CreatureCardSlotInstance _instance;
         private readonly GameEventBus _eventBus;
         private readonly CompositeObjectIdTypeEntity _compositeObjectIdTypeEntity;
 
         /// <summary>
         /// インスタンス側のID
         /// </summary>
-        public CompositeObjectId InstanceId => _creatureCardSlotInstance.CompositeObjectId;
+        public CompositeObjectId InstanceId => _instance.CompositeObjectId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public CreatureCardSlotController(CreatureCardSlotInstance creatureCardSlotInstance, GameEventBus eventBus, CompositeObjectIdTypeEntity compositeObjectIdTypeEntity)
         {
-            _creatureCardSlotInstance = creatureCardSlotInstance;
+            _instance = creatureCardSlotInstance;
             _eventBus = eventBus;
             _compositeObjectIdTypeEntity = compositeObjectIdTypeEntity;
             _eventBus.On<PlacedCreatureCardSlotEvent>(OnPlacedCreatureCardSlot);
@@ -55,11 +55,11 @@ namespace CardsAndDices
             if (_compositeObjectIdTypeEntity != evt.ExecutedObjectId.ObjectType) return;
 
             // 配置側でリセットする
-            _creatureCardSlotInstance.ReflowPlacedCard(_creatureCardSlotInstance.PlacedCardId);
+            _instance.ReflowPlacedCard(_instance.PlacedCardId);
 
             // ホームポジションを設定
-            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_creatureCardSlotInstance.PlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
-            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_creatureCardSlotInstance.PlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_instance.PlacedCardId, _instance.CreatureCardSlotPosition));
+            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_instance.PlacedCardId, _instance.CreatureCardSlotPosition));
         }
 
         /// <summary>
@@ -67,7 +67,8 @@ namespace CardsAndDices
         /// </summary>
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
-            _creatureCardSlotInstance.PlacedCard(_creatureCardSlotInstance.ReflowPlacedCardId);
+            _instance.PlacedCard(_instance.ReflowPlacedCardId);
+//            _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.CardPlacement, _instance.CompositeObjectId, null));
         }
 
         /// <summary>
@@ -75,9 +76,9 @@ namespace CardsAndDices
         /// </summary>
         private void OnMoveToAnimationReflowCreatureCardSlot(MoveToAnimationReflowCreatureCardSlotEvent evt)
         {
-            if (_creatureCardSlotInstance.ReflowPlacedCardId == null) return;
-            if (evt.CragedCreatureCardId != null && evt.CragedCreatureCardId == _creatureCardSlotInstance.ReflowPlacedCardId) return;
-            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_creatureCardSlotInstance.ReflowPlacedCardId, _creatureCardSlotInstance.CreatureCardSlotPosition));
+            if (_instance.ReflowPlacedCardId == null) return;
+            if (evt.CragedCreatureCardId != null && evt.CragedCreatureCardId == _instance.ReflowPlacedCardId) return;
+            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_instance.ReflowPlacedCardId, _instance.CreatureCardSlotPosition));
         }
 
         /// <summary>
@@ -85,13 +86,13 @@ namespace CardsAndDices
         /// </summary>
         private void OnPlacedCreatureCardSlot(PlacedCreatureCardSlotEvent evt)
         {
-            if (evt.CreatureCardSlotId != _creatureCardSlotInstance.CompositeObjectId) return;
-            if (_creatureCardSlotInstance.IsOccupied)
+            if (evt.CreatureCardSlotId != _instance.CompositeObjectId) return;
+            if (_instance.IsOccupied)
             {
-                _creatureCardSlotInstance.RemoveCard();
+                _instance.RemoveCard();
             }
-            _creatureCardSlotInstance.PlacedCard(evt.CreatureCardId);
-            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.CreatureCardSlotId, _creatureCardSlotInstance.CreatureCardSlotPosition));
+            _instance.PlacedCard(evt.CreatureCardId);
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.CreatureCardSlotId, _instance.CreatureCardSlotPosition));
         }
 
         /// <summary>
@@ -99,8 +100,8 @@ namespace CardsAndDices
         /// </summary>
         private void OnReflowPlacedCreatureCardSlot(ReflowPlacedCreatureCardSlotEvent evt)
         {
-            if (evt.CreatureCardSlotId != _creatureCardSlotInstance.CompositeObjectId) return;
-            _creatureCardSlotInstance.ReflowPlacedCard(evt.CreatureCard);
+            if (evt.CreatureCardSlotId != _instance.CompositeObjectId) return;
+            _instance.ReflowPlacedCard(evt.CreatureCard);
         }
 
         /// <summary>
@@ -108,7 +109,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnRemoveCreatureCardSlot(RemoveCreatureCardSlotEvent evt)
         {
-            _creatureCardSlotInstance.RemoveCard();
+            _instance.RemoveCard();
         }
 
     }

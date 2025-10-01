@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// </summary>
     public class CreatureStatusPresenter : IDisposable, IIdentifiablePresenter
     {
-        private readonly CreatureCardInstance _instance;
+        private readonly CreatureStatusInstance _instance;
         private readonly CreatureCardView _view;
         private readonly GameEventBus _eventBus;
 
@@ -21,13 +21,11 @@ namespace CardsAndDices
         /// </summary>
         public CompositeObjectId CompositeObjectId => _view.CompositeObjectId;
 
-        public CreatureStatusPresenter(CreatureCardInstance instance, CreatureCardView view, GameEventBus eventBus)
+        public CreatureStatusPresenter(CreatureStatusInstance instance, CreatureCardView view, GameEventBus eventBus)
         {
             _instance = instance;
             _view = view;
             _eventBus = eventBus;
-            _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
-            _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
         }
@@ -36,8 +34,6 @@ namespace CardsAndDices
         /// </summary>
         public void Dispose()
         {
-            _eventBus.Off<DisplayOnScreenEvent>(OnDisplayOnScreen);
-            _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
         }
@@ -47,7 +43,8 @@ namespace CardsAndDices
         /// </summary>
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
-            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_instance.CompositeObjectId, _instance.CreatureCardSlotPosition));
+            _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.CardPlacement, _instance.CompositeObjectId, null));
+            _eventBus.Emit(new UpdateDisplayCreatureStatusEvent(_instance.CompositeObjectId));            
         }
 
         /// <summary>
@@ -59,31 +56,8 @@ namespace CardsAndDices
             if (evt.ExecutedObjectId == _instance.CompositeObjectId) return;
 
             // 違う何かがドラッグされたらインアクティブに
-            _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Inactive));
             _eventBus.Emit(new DisplayStatusViewEvent(_instance.CompositeObjectId));
-        }
-
-        /// <summary>
-        /// クリーチャーカードを画面に投げ入れる
-        /// </summary>
-        private void OnDisplayOnScreen(DisplayOnScreenEvent evt)
-        {
-            if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
-            if (_instance.IsOnScreen) return;
-            _instance.IsOnScreen = true;
-            _view.DisplayOnScreen(_instance.CreatureCardSlotPosition);
-        }
-
-        /// <summary>
-        /// クリーチャーカードを画面から退場させる
-        /// </summary>
-        private void OnDisplayOffScreen(DisplayOffScreenEvent evt)
-        {
-            if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
-            if (!_instance.IsOnScreen) return;
-            _instance.IsOnScreen = false;
-            _view.DisplayOffScreen();
-            _instance.IsAlive = false;
+            _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Inactive));
         }
     }
 }

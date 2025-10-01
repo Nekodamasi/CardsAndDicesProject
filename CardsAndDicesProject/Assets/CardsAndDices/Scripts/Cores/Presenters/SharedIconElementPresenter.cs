@@ -39,7 +39,7 @@ namespace CardsAndDices
         public CompositeObjectId CompositeObjectId => _view.CompositeObjectId;
 
         /// <summary>
-        /// クリーチャーカードの配置処理
+        /// アイコンの状態を最新に更新します
         /// </summary>
         private void OnDisplaySharedIconElement(DisplaySharedIconElementEvent evt)
         {
@@ -49,6 +49,9 @@ namespace CardsAndDices
             DisplayCurrentStatus();
         }
 
+        /// <summary>
+        /// 現在の状態に応じてViewを更新します
+        /// </summary>
         private void DisplayCurrentStatus()
         {
             // ノーマル状態

@@ -1,5 +1,7 @@
 using System;
+using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
 namespace CardsAndDices
 {
@@ -17,11 +19,12 @@ namespace CardsAndDices
         private readonly AbilityContext _abilityContext = new();
         private GameEventBus _gameEventBus;
         private ICreatureCardlocation _iCreatureCardlocation;
+        private ITargetManager _iTargetManager;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public AbilityInstance(CompositeObjectId ownerId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, GameEventBus gameEventBus, ICreatureCardlocation iCreatureCardlocation)
+        public AbilityInstance(CompositeObjectId ownerId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, GameEventBus gameEventBus, ICreatureCardlocation iCreatureCardlocation, ITargetManager iTargetManager)
         {
             _compositeObjectId = ownerId;
             _baseAbilityDataSO = baseAbilityDataSO;
@@ -29,9 +32,12 @@ namespace CardsAndDices
             _creatureStatusInstance = creatureStatusInstance;
             _iCreatureCardlocation = iCreatureCardlocation;
             _gameEventBus = gameEventBus;
+            _iTargetManager = iTargetManager;
 
             _abilityContext.CreatureStatusInstance = _creatureStatusInstance;
             _abilityContext.ICreatureCardlocation = _iCreatureCardlocation;
+
+            _baseAbilityDataSO.Duration.OnReset(this);
         }
         public void Dispose()
         {
@@ -46,6 +52,11 @@ namespace CardsAndDices
         /// サブオーナーを一意に識別するID。
         /// </summary>
         public CompositeObjectId SubOwnerId => _subOwnerId;
+
+        /// <summary>
+        /// アビリティのデータSO
+        /// </summary>
+        public BaseAbilityDataSO BaseAbilityData => _baseAbilityDataSO;
 
         /// <summary>
         /// 所有者のステータスインスタンス。
@@ -103,8 +114,10 @@ namespace CardsAndDices
         /// </summary>
         public bool Execute()
         {
+            Debug.Log("ここはうごいてる？");
             if (!IsTrigger) return false;
             if (!IsAvailable) return false;
+            _abilityContext.TargetIds = _iTargetManager.GetTargetList(_baseAbilityDataSO.AreaOfEffect, CompositeObjectId);
             _baseAbilityDataSO.EffectDefinition.Execute(_abilityContext, _gameEventBus);
             return true;
         }

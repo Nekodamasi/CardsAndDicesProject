@@ -25,8 +25,7 @@ namespace CardsAndDices
             _instance = instance;
             _eventBus = eventBus;
             _creatureStatusIconDataList = creatureStatusIconDataList;
-            _eventBus.On<CreatureCardSetUpEvent>(OnCreatureCardSetUp);
-
+            _eventBus.On<UpdateDisplayCreatureStatusEvent>(OnUpdateDisplayCreatureStatus);
         }
 
         /// <summary>
@@ -34,21 +33,28 @@ namespace CardsAndDices
         /// </summary>
         public void Dispose()
         {
-            _eventBus.Off<CreatureCardSetUpEvent>(OnCreatureCardSetUp);
+            _eventBus.Off<UpdateDisplayCreatureStatusEvent>(OnUpdateDisplayCreatureStatus);
+        }
+
+        /// <summary>
+        /// クリーチャーカードアイコンの更新
+        /// </summary>
+        private void OnUpdateDisplayCreatureStatus(UpdateDisplayCreatureStatusEvent evt)
+        {
+            UpdateIcon(evt.CreatureCardId);
         }
 
         /// <summary>
         /// クリーチャーカードの配置処理
         /// </summary>
-        private void OnCreatureCardSetUp(CreatureCardSetUpEvent evt)
+        private void UpdateIcon(CompositeObjectId creatureCardId)
         {
-            if (evt.CreatureCardId != _instance.CompositeObjectId) return;
+            if (creatureCardId != _instance.CompositeObjectId) return;
             foreach (var iconData in _creatureStatusIconDataList)
             {
                 if (iconData.EffectTargetType == EffectTargetType.Attack)
                 {
-//                    _eventBus.Emit(new DisplaySharedIconElementEvent(evt.CreatureCardId, iconData._sharedIconElementTypeEntity, _instance.Attack));
-                    _eventBus.Emit(new DisplaySharedIconElementEvent(evt.CreatureCardId, iconData._sharedIconElementTypeEntity, _instance.Attack));
+                    _eventBus.Emit(new DisplaySharedIconElementEvent(creatureCardId, iconData._sharedIconElementTypeEntity, _instance.Attack));
                 }
             }
         }

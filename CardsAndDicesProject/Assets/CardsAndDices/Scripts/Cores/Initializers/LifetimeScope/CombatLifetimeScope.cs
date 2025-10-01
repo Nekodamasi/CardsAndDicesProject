@@ -30,6 +30,8 @@ namespace CardsAndDices
         [SerializeField] private CreatureStatusManager _creatureStatusManager;
         [SerializeField] private SharedIconElementManager _sharedIconElementManager;
         [SerializeField] private EffectManager _effectManager;
+        [SerializeField] private AbilityManager _abilityManager;
+        [SerializeField] private TargetManager _targetManager;
 
         [Header("PrefabSpawnInfo Managers")]
         [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
@@ -51,6 +53,8 @@ namespace CardsAndDices
 
         [Header("Debug")]
         [SerializeField] private CreatureCardSlotStatusViewer _creatureCardSlotStatusViewer;
+        [SerializeField] private AbilityManagerStatusViewer _abilityManagerStatusViewer;
+        [SerializeField] private EffectManagerStatusViewer _effectManagerStatusViewer;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -73,6 +77,9 @@ namespace CardsAndDices
             builder.RegisterInstance(_creatureCardSlotManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_creatureStatusManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_sharedIconElementManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_effectManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_abilityManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_targetManager).AsSelf().AsImplementedInterfaces();
 
             // PrefabSpawnInfo Managers のバインド
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
@@ -102,6 +109,9 @@ namespace CardsAndDices
             _creatureCardSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
             _creatureStatusManager.Initialize(_gameEventBus, _creatureCardSlotManager, _identifiableViewRegistry, _effectManager);
             _sharedIconElementManager.Initialize(_gameEventBus, _identifiableViewRegistry);
+            _targetManager.Initialize(_creatureCardSlotManager);
+            _abilityManager.Initialize(_gameEventBus, _creatureCardSlotManager, _targetManager);
+            _effectManager.Initialize(_gameEventBus);
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();
@@ -149,6 +159,8 @@ namespace CardsAndDices
 
             // debug
             builder.RegisterComponent(_creatureCardSlotStatusViewer);
+            builder.RegisterComponent(_abilityManagerStatusViewer);
+            builder.RegisterComponent(_effectManagerStatusViewer);
         }
     }
 }

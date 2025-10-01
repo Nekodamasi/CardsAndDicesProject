@@ -80,7 +80,7 @@ namespace CardsAndDices
                 _reflowService.CalculateReflowMovements(draggedSlot, targetSlot, moveCardId);
             }
 
-            // ドラッグしてたカードが所定位置に移動する必要があるので、移動イベントは通知
+            // ドラッグしてたカードが所定位置に移動する必要があるので、移動イベントを通知
             _eventBus.Emit(new MoveToAnimationReflowCreatureCardSlotEvent(moveCardId));
         }
 

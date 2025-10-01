@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using UnityEditor.Search;
 using UnityEngine;
-using VContainer; // CreatureManagerをDIで受け取るため
 
 namespace CardsAndDices
 {
@@ -20,6 +17,8 @@ namespace CardsAndDices
         {
             public EffectTargetType EffectTargetType;
             public int Value;
+            public ActivationTiming ExpiredTiming;
+            public int RemainingTurns;
         }
         public override void Execute(AbilityContext context, GameEventBus eventBus)
         {
@@ -28,7 +27,7 @@ namespace CardsAndDices
                 foreach (var buffDebuff in _buffDebuffContexts)
                 {
                     Debug.Log("<color=Green>アプライエフェクト：</color>" + targetId + "_");
-                    eventBus.Emit(new ApplyEffectCommand(targetId, _effectData, buffDebuff.EffectTargetType, buffDebuff.Value));
+                    eventBus.Emit(new ApplyEffectEvent(targetId, buffDebuff.EffectTargetType, buffDebuff.Value, buffDebuff.ExpiredTiming, buffDebuff.RemainingTurns));
                 }
             }
         }

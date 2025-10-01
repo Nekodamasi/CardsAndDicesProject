@@ -11,109 +11,116 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "EffectManager", menuName = "CardsAndDices/Combats/Managers/Effects/EffectManager")]
     public class EffectManager : ScriptableObject, IEffectValue
     {
+        [Header("Components")]
+        private readonly List<EffectInstance> _instances = new();
+        private readonly List<EffectController> _controllers = new();
+        private GameEventBus _eventBus;
+
+        [Inject]
+        public void Initialize(GameEventBus eventBusBus)
+        {
+            _eventBus = eventBusBus;
+            _eventBus.On<ApplyEffectEvent>(OnApplyEffect);
+            _eventBus.On<UpdateEffectExpiredEvent>(OnUpdateEffectExpired);
+        }
+
+        public void Dispose()
+        {
+            DisposeInstances();
+            DisposeControllers();
+            _eventBus.Off<ApplyEffectEvent>(OnApplyEffect);
+            _eventBus.On<UpdateEffectExpiredEvent>(OnUpdateEffectExpired);
+        }
+
+        /// <summary>
+        /// インスタンスをDisposeします
+        /// </summary>
+        private void DisposeInstances()
+        {
+            foreach (var instance in _instances)
+            {
+                instance.Dispose();
+            }
+            _instances.Clear();
+        }
+
+        /// <summary>
+        /// コントローラーをDisposeします
+        /// </summary>
+        private void DisposeControllers()
+        {
+            foreach (var controller in _controllers)
+            {
+                controller.Dispose();
+            }
+            _controllers.Clear();
+        }
+
+        /// <summary>
+        /// 指定された識別IDへのエフェクトターゲットタイプの合計値を返します。
+        /// </summary>
+        private void OnApplyEffect(ApplyEffectEvent evt)
+        {
+            var instance = new EffectInstance(evt.TargetObjectId, evt.EffectTargetType, evt.Value, evt.ExpiredTiming, evt.RemainingTurns);
+            _instances.Add(instance);
+            var controller = new EffectController(instance, _eventBus);
+            _controllers.Add(controller);
+        }
+
+        /// <summary>
+        /// 指定されたタイミングで有効期限の更新を行う
+        /// </summary>
+        private void OnUpdateEffectExpired(UpdateEffectExpiredEvent evt)
+        {
+            var list = _instances.Where(e => e.CompositeObjectId == evt.SourceObjectId && e.ExpiredTiming == evt.TriggerTiming && e.IsExpired == false).ToList();
+
+            foreach (var instance in list)
+            {
+                instance.UpdateExpired(evt.TriggerTiming);
+                if (instance.IsExpired)
+                {
+                    DisposeEffect(instance);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 指定された識別IDへのエフェクトターゲットタイプの合計値を返します。
+        /// </summary>
         public int GetTotalEffectValue(CompositeObjectId compositeObjectId, EffectTargetType type)
         {
-            return 0;
-        }
-/*
-        private readonly List<EffectInstance> _activeEffects = new List<EffectInstance>();
-        private EffectFactory _effectFactory;
-        private SpriteCommandBus _commandBus;
-        [Inject]
-        public void Initialize(SpriteCommandBus commandBus)
-        {
-            ClearCollections();
-            _commandBus = commandBus;
-            _effectFactory = new EffectFactory();
-            _commandBus.On<UpdateEffectExpiredCommand>(OnUpdateEffectExpired);
-            _commandBus.On<ApplyEffectCommand>(OnApplyEffect);
-        }
-
-
-        private void ClearCollections()
-        {
-            _activeEffects.Clear();
-        }
-
-        private void OnDisable()
-        {
-            _commandBus.Off<UpdateEffectExpiredCommand>(OnUpdateEffectExpired);
-            _commandBus.Off<ApplyEffectCommand>(OnApplyEffect);
-        }
-
-        private void OnApplyEffect(ApplyEffectCommand command)
-        {
-            var instance = _effectFactory.Create(command.TargetObjectId, command.EffectData, command.EffectTargetType, command.Value);
-            Debug.Log("<color=Green>えふぇくとあぷらい：</color>" + command.TargetObjectId + "_" + instance.TargetType + "_" + instance.CurrentValue);
-            RegisterEffect(instance);
-        }
-
-        private void OnUpdateEffectExpired(UpdateEffectExpiredCommand command)
-        {
-            foreach (var instance in _activeEffects)
-            {
-                instance.CheckExpired(command.TriggerTiming);
-                Debug.Log("<color=Green>OnUpdateEffectExpired</color>" + instance.TargetObjectId + "_" + instance.IsExpired);
-            }
-            RemoveExpiredEffects();
-        }
-
-        /// <summary>
-        /// 新しいエフェクトインスタンスを登録します。
-        /// </summary>
-        /// <param name="effectInstance">登録するエフェクトインスタンス</param>
-        public void RegisterEffect(EffectInstance effectInstance)
-        {
-            _activeEffects.Add(effectInstance);
-        }
-
-        /// <summary>
-        /// 指定されたエフェクトインスタンスを管理リストから削除します。
-        /// </summary>
-        /// <param name="effectInstance">削除するエフェクトインスタンス</param>
-        public void RemoveEffect(EffectInstance effectInstance)
-        {
-            _activeEffects.Remove(effectInstance);
-        }
-
-        /// <summary>
-        /// 期限切れのエフェクトをリストから削除します。
-        /// </summary>
-        private void RemoveExpiredEffects()
-        {
-            var expiredEffects = _activeEffects.Where(e => e.IsExpired).ToList();
-            foreach (var effect in expiredEffects)
-            {
-                // TODO: EffectExpirationCommandを発行する
-                RemoveEffect(effect);
-            }
-        }
-
-        /// <summary>
-        /// 指定されたカードに適用されている特定タイプのエフェクトの合計値を取得します。
-        /// </summary>
-        /// <param name="targetObjectId">カードのID</param>
-        /// <param name="targetType">エフェクトの対象タイプ</param>
-        /// <returns>エフェクトの合計値</returns>
-        public int GetTotalEffectValue(CompositeObjectId targetObjectId, EffectTargetType targetType)
-        {
-            return _activeEffects
-                .Where(e => e.TargetObjectId.Equals(targetObjectId) && e.TargetType == targetType)
-                .Sum(e => e.CurrentValue);
+            return _instances
+                .Where(e => e.CompositeObjectId.Equals(compositeObjectId) && e.TargetType == type)
+                .Sum(e => e.Value);
         }
 
         /// <summary>
         /// 指定されたクリーチャーIDに紐づく全てのエフェクトを削除します。
         /// </summary>
         /// <param name="creatureId">所有者であるクリーチャーのID</param>
-        public void RemoveEffectsByCreatureId(CompositeObjectId creatureId)
+        public void RemoveEffectsByOwnerId(CompositeObjectId OwnerId)
         {
-            var effectsToRemove = _activeEffects.Where(e => e.TargetObjectId == creatureId).ToList();
-            foreach (var effect in effectsToRemove)
+            var list = _instances.Where(e => e.CompositeObjectId == OwnerId && e.IsExpired == false).ToList();
+            foreach (var instance in list)
             {
-                RemoveEffect(effect);
+                DisposeEffect(instance);
             }
         }
-*/
+
+        /// <summary>
+        /// エフェクトをディスポーズします
+        /// </summary>
+        private void DisposeEffect(EffectInstance instance)
+        {
+            var controller = _controllers.Where(e => e.InstanceId == instance.CompositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _instances.Remove(instance);
+            controller.Dispose();
+            _controllers.Remove(controller);
+        }
+        public List<EffectInstance> GetInstanceList()
+        {
+            return _instances;
+        }
     }
 }
