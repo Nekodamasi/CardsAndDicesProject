@@ -64,7 +64,11 @@ namespace CardsAndDices
         /// <summary>
         /// InstanceとControllerを生成します
         /// </summary>
+<<<<<<< HEAD
         private void CreateInstance(CompositeObjectId ownerId, AbilityDataEntity baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, ICreatureCardlocation iCreatureCardlocation, ITargetManager iTargetManager)
+=======
+        private void CreateInstance(CompositeObjectId ownerId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, ICreatureCardlocation iCreatureCardlocation, ITargetManager iTargetManager)
+>>>>>>> e5ac3da428fc54fc5ea1bc83c493f35a6a69d268
         {
             var instance = new AbilityInstance(ownerId, baseAbilityDataSO, subOwnerId, creatureStatusInstance, _eventBus, iCreatureCardlocation, iTargetManager);
             _instances.Add(instance);
@@ -87,8 +91,16 @@ namespace CardsAndDices
         {
             var list = _instances.Where(a => a.CompositeObjectId == evt.SourceObjectId && a.ActivationTiming == evt.TriggerTiming && a.IsAvailable).ToList();
 
+<<<<<<< HEAD
             foreach (var instance in list)
             {
+=======
+            Debug.Log("りすと：" + _instances[0].CompositeObjectId + "_" + evt.SourceObjectId);
+//            Debug.Log("りすと：" + _instances.Count + "_" + list.Count + "_" + _instances[0].ActivationTiming + "_" + _instances[0].IsAvailable);
+            foreach (var instance in list)
+            {
+            Debug.Log("とりがー：" + instance.IsTrigger);
+>>>>>>> e5ac3da428fc54fc5ea1bc83c493f35a6a69d268
                 if (instance.IsTrigger)
                 {
                     instance.Execute();

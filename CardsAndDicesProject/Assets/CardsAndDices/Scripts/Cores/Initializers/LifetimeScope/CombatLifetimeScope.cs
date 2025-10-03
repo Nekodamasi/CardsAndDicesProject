@@ -32,7 +32,10 @@ namespace CardsAndDices
         [SerializeField] private EffectManager _effectManager;
         [SerializeField] private AbilityManager _abilityManager;
         [SerializeField] private TargetManager _targetManager;
+<<<<<<< HEAD
         [SerializeField] private DiceInletManager _diceInletManager;
+=======
+>>>>>>> e5ac3da428fc54fc5ea1bc83c493f35a6a69d268
 
         [Header("PrefabSpawnInfo Managers")]
         [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
@@ -81,7 +84,10 @@ namespace CardsAndDices
             builder.RegisterInstance(_effectManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_abilityManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_targetManager).AsSelf().AsImplementedInterfaces();
+<<<<<<< HEAD
             builder.RegisterInstance(_diceInletManager).AsSelf().AsImplementedInterfaces();
+=======
+>>>>>>> e5ac3da428fc54fc5ea1bc83c493f35a6a69d268
 
             // PrefabSpawnInfo Managers のバインド
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
@@ -114,7 +120,10 @@ namespace CardsAndDices
             _targetManager.Initialize(_creatureCardSlotManager);
             _abilityManager.Initialize(_gameEventBus, _creatureCardSlotManager, _targetManager);
             _effectManager.Initialize(_gameEventBus);
+<<<<<<< HEAD
             _diceInletManager.Initialize(_gameEventBus, _identifiableViewRegistry);
+=======
+>>>>>>> e5ac3da428fc54fc5ea1bc83c493f35a6a69d268
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();
