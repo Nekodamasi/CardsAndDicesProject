@@ -24,11 +24,7 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-<<<<<<< HEAD
         public AbilityInstance(CompositeObjectId ownerId, AbilityDataEntity baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, GameEventBus gameEventBus, ICreatureCardlocation iCreatureCardlocation, ITargetManager iTargetManager)
-=======
-        public AbilityInstance(CompositeObjectId ownerId, BaseAbilityDataSO baseAbilityDataSO, CompositeObjectId subOwnerId, CreatureStatusInstance creatureStatusInstance, GameEventBus gameEventBus, ICreatureCardlocation iCreatureCardlocation, ITargetManager iTargetManager)
->>>>>>> e5ac3da428fc54fc5ea1bc83c493f35a6a69d268
         {
             _compositeObjectId = ownerId;
             _baseAbilityDataSO = baseAbilityDataSO;
@@ -60,11 +56,7 @@ namespace CardsAndDices
         /// <summary>
         /// アビリティのデータSO
         /// </summary>
-<<<<<<< HEAD
         public AbilityDataEntity BaseAbilityData => _baseAbilityDataSO;
-=======
-        public BaseAbilityDataSO BaseAbilityData => _baseAbilityDataSO;
->>>>>>> e5ac3da428fc54fc5ea1bc83c493f35a6a69d268
 
         /// <summary>
         /// 所有者のステータスインスタンス。
