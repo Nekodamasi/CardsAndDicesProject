@@ -48,7 +48,6 @@ namespace CardsAndDices
         {
             // 受け入れ対象がドラッグされた
             if (evt.ExecutedObjectId.ObjectType != _compositeObjectIdTypeEntity) return;
-            Debug.Log("ここにとおってる？" + evt.ExecutedObjectId.ObjectType.Id + "/" + _compositeObjectIdTypeEntity.Id);
 
             // Statusを受け入れ状態に変更
             _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Acceptable));

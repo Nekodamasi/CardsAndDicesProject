@@ -82,7 +82,6 @@ namespace CardsAndDices
             }
             var instance = new DiceInletInstance(view.CompositeObjectId, inletPackageProfile);
             _instances.Add(instance);
-            Debug.Log("ここが２回よばえてたりする？" + ownerid);
             var presenter = new DiceInletPresenter(instance, view, _eventBus, _acceptableTargetObjectType);
             _presenters.Add(presenter);
             _eventBus.Emit(new SetCurrentHomeStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Inactive));

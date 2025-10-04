@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// バフ効果を受けた際のアニメーションパラメータを定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "BuffAnimationProfile", menuName = "CardsAndDices/Animation Profiles/Buff")]
+    [CreateAssetMenu(fileName = "BuffAnimationProfile", menuName = "CardsAndDices/Combats/Data/AnimationProfile/BuffAnimationProfile")]
     public class BuffAnimationProfile : BaseAnimationProfile
     {
         [Header("Squash and Stretch")]

@@ -51,9 +51,15 @@ namespace CardsAndDices
             _creatureStatusInstances.Add(instance);
             var controller = new CreatureCardStatusIconController(instance, _eventBus, _reatureStatusIconDataList);
             _creatureCardStatusIconControllers.Add(controller);
-            var view = _viewRegistry.GetView<CreatureCardView>(instance.CompositeObjectId);
+            var view = _viewRegistry.GetView<CreatureStatusView>(instance.CompositeObjectId);
+            if (view is null)
+            {
+                Debug.LogWarning("ビューがとれない");
+                return;
+            }
             var presenter = new CreatureStatusPresenter(instance, view, _eventBus);
             _creatureStatusPresenters.Add(presenter);
+            view.SetBoundState(true);
 
             // クリーチャーの固有アビリティのインスタンス化
             foreach (var ability in evt.CardInitializationData.CreatureData.Abilities)

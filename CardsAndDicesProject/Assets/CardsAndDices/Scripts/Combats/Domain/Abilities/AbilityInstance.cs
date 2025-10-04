@@ -114,7 +114,6 @@ namespace CardsAndDices
         /// </summary>
         public bool Execute()
         {
-            Debug.Log("ここはうごいてる？");
             if (!IsTrigger) return false;
             if (!IsAvailable) return false;
             _abilityContext.TargetIds = _iTargetManager.GetTargetList(_baseAbilityDataSO.AreaOfEffect, CompositeObjectId);

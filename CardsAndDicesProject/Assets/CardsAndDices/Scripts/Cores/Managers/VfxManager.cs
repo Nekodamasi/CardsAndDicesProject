@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System;
 using UnityEngine;
 using VContainer;
 
@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// VFXの再生とオブジェクトプールを管理するScriptableObject。
     /// </summary>
     [CreateAssetMenu(fileName = "VfxManager", menuName = "CardsAndDices/Cores/Managers/VfxManager")]
-    public class VfxManager : ScriptableObject
+    public class VfxManager : ScriptableObject, IDisposable
     {
         private readonly Dictionary<VfxDefinition, Queue<VfxPlayer>> _pool = new Dictionary<VfxDefinition, Queue<VfxPlayer>>();
         private readonly Dictionary<int, VfxPlayer> _activeInstances = new Dictionary<int, VfxPlayer>();
@@ -42,7 +42,7 @@ namespace CardsAndDices
             _nextInstanceId = 0;
         }
 
-        private void OnDisable()
+        public void Dispose()
         {
             _eventBus.Off<PlayVfxEvent>(OnPlayVfx);
         }

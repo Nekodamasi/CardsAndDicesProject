@@ -72,10 +72,13 @@ namespace CardsAndDices
                 if (_instance.InletEffectType == InletEffectType.AbilityExecutor)
                 {
                     //abilityチェック
+                    _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.Inlet, _instance.CompositeObjectId.Owner, _instance.CompositeObjectId));
                 }
                 else
                 {
                     //abilityロック
+                    _eventBus.Emit(new UpdateAbilityLockEvent(_instance.CompositeObjectId, true));
+                    _instance.SetIsLock(true);
                 }
                 return;
             }

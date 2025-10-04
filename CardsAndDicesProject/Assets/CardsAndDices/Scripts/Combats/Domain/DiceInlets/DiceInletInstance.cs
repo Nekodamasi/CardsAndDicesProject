@@ -81,6 +81,20 @@ namespace CardsAndDices
         public InletEffectType InletEffectType => _inletPackageProfile.InletProfileId.InletEffectType;
 
         /// <summary>
+        /// リセットタイミング
+        /// </summary>
+        public ActivationTiming UsageCountResetType => _inletPackageProfile.InletProfileId.UsageCountResetType;
+
+        /// <summary>
+        /// リセットタイミング
+        /// </summary>
+        public void SetIsLock(bool flg)
+        {
+            IsLock = flg;
+        }
+
+
+        /// <summary>
         /// Disposeします
         /// </summary>
         public void Dispose()

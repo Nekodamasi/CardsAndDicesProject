@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// ダメージを受けた際のアニメーションパラメータを定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "DamageAnimationProfile", menuName = "CardsAndDices/AnimationProfile/Damage")]
+    [CreateAssetMenu(fileName = "DamageAnimationProfile", menuName = "CardsAndDices/Combats/Data/AnimationProfile/DamageAnimationProfile")]
     public class DamageAnimationProfile : BaseAnimationProfile
     {
         [SerializeField]

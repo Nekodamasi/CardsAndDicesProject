@@ -10,8 +10,8 @@ namespace CardsAndDices
         [Header("Components")]
         [SerializeField] private AnimationContext _animationContext;
         [SerializeField] private AnimationStrategyRegistry _animationStrategyRegistry;
-        [SerializeField] private AnimationStrategyEntity _diceOnScreenAnimationStrategyEntity;
-        [SerializeField] private AnimationStrategyEntity _diceOffScreenAnimationStrategyEntity;
+        [SerializeField] private AnimationStrategyEntity _buffAnimationStrategyEntity;
+        [SerializeField] private AnimationStrategyEntity _deBuffAnimationStrategyEntity;
         private AnimationExecutor _animationExecutor = new AnimationExecutor();
 
         /// <summary>
@@ -25,20 +25,19 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// ダイスを画面に投げ入れる
+        /// バフアニメーション
         /// </summary>
-        public Sequence DisplayOnScreen(Vector3 homePosition)
+        public Sequence DisplayBuff()
         {
-            _animationContext.HomePosition = homePosition;
-            return AnimationExecute(_diceOnScreenAnimationStrategyEntity);
+            return AnimationExecute(_buffAnimationStrategyEntity);
         }
 
         /// <summary>
-        /// ダイスを画面から退場
+        /// デバフアニメーション
         /// </summary>
-        public Sequence DisplayOffScreen()
+        public Sequence DisplayDeBuff()
         {
-            return AnimationExecute(_diceOffScreenAnimationStrategyEntity);
+            return AnimationExecute(_deBuffAnimationStrategyEntity);
         }
     }
 }

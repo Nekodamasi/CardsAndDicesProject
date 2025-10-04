@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// 体当たりアニメーションのパラメータを定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "BodySlamAnimationProfile", menuName = "CardsAndDices/AnimationProfile/BodySlamProfile")]
+    [CreateAssetMenu(fileName = "BodySlamAnimationProfile", menuName = "CardsAndDices/Combats/Data/AnimationProfile/BodySlamProfile")]
     public class BodySlamAnimationProfile : BaseAnimationProfile
     {
         [Header("Movement Settings")]

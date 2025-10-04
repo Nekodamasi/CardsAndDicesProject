@@ -5,7 +5,7 @@ namespace CardsAndDices
     /// <summary>
     /// 死亡時のアニメーションパラメータを定義するScriptableObject。
     /// </summary>
-    [CreateAssetMenu(fileName = "DeathAnimationProfile", menuName = "CardsAndDices/Animation Profiles/Death")]
+    [CreateAssetMenu(fileName = "DeathAnimationProfile", menuName = "CardsAndDices/Combats/Data/AnimationProfile/DeathAnimationProfile")]
     public class DeathAnimationProfile : BaseAnimationProfile
     {
         [SerializeField]

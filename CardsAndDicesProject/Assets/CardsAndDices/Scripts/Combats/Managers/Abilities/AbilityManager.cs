@@ -26,6 +26,8 @@ namespace CardsAndDices
             _eventBus = eventBus;
             _eventBus.On<CreateAbilityEvent>(OnCreateAbility);
             _eventBus.On<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
+            _eventBus.On<UpdateAbilityLockEvent>(OnUpdateAbilityLock);
+
             _iCreatureCardlocation = iCreatureCardlocation;
             _iTargetManager = iTargetManager;
         }
@@ -35,6 +37,7 @@ namespace CardsAndDices
             DisposeControllers();
             _eventBus.Off<CreateAbilityEvent>(OnCreateAbility);
             _eventBus.Off<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
+            _eventBus.On<UpdateAbilityLockEvent>(OnUpdateAbilityLock);
         }
 
         /// <summary>
@@ -98,6 +101,20 @@ namespace CardsAndDices
                 }
             }
         }
+
+        /// <summary>
+        /// アビリティロックのアップデート
+        /// </summary>
+        private void OnUpdateAbilityLock(UpdateAbilityLockEvent evt)
+        {
+            var list = _instances.Where(a => a.SubOwnerId == evt.SubSourceObjectId && a.IsAvailable).ToList();
+
+            foreach (var instance in list)
+            {
+                instance.SetLock(evt.IsLock);
+            }
+        }
+
         public List<AbilityInstance> GetInstanceList()
         {
             return _instances;

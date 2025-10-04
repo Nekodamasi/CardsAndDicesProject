@@ -8,7 +8,7 @@ namespace CardsAndDices
     public class CreatureStatusPresenter : IDisposable, IIdentifiablePresenter
     {
         private readonly CreatureStatusInstance _instance;
-        private readonly CreatureCardView _view;
+        private readonly CreatureStatusView _view;
         private readonly GameEventBus _eventBus;
 
         /// <summary>
@@ -21,21 +21,23 @@ namespace CardsAndDices
         /// </summary>
         public CompositeObjectId CompositeObjectId => _view.CompositeObjectId;
 
-        public CreatureStatusPresenter(CreatureStatusInstance instance, CreatureCardView view, GameEventBus eventBus)
+        public CreatureStatusPresenter(CreatureStatusInstance instance, CreatureStatusView view, GameEventBus eventBus)
         {
             _instance = instance;
             _view = view;
             _eventBus = eventBus;
-            _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.On<DisplayCreatureBuffEvent>(OnDisplayCreatureBuff);
+            _eventBus.On<DisplayCreatureDeBuffEvent>(OnDisplayCreatureDeBuff);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
         /// </summary>
         public void Dispose()
         {
-            _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.Off<DisplayCreatureBuffEvent>(OnDisplayCreatureBuff);
+            _eventBus.Off<DisplayCreatureDeBuffEvent>(OnDisplayCreatureDeBuff);
         }
 
         /// <summary>
@@ -43,21 +45,27 @@ namespace CardsAndDices
         /// </summary>
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
+            // CardPlacement の設定Abilityを更新
             _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.CardPlacement, _instance.CompositeObjectId, null));
-            _eventBus.Emit(new UpdateDisplayCreatureStatusEvent(_instance.CompositeObjectId));            
+            _eventBus.Emit(new UpdateDisplayCreatureStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>
-        /// ドラッグされたカード以外はインアクティブに変更
+        /// バフアニメーション
         /// </summary>
-        private void OnIdentifiableStateBeginDrag(IdentifiableStateBeginDragEvent evt)
+        private void OnDisplayCreatureBuff(DisplayCreatureBuffEvent evt)
         {
-            // 自分がドラッグ対象
-            if (evt.ExecutedObjectId == _instance.CompositeObjectId) return;
+            if (evt.CreatureCardId != _view.CompositeObjectId) return;
+            _view.DisplayBuff();
+        }
 
-            // 違う何かがドラッグされたらインアクティブに
-            _eventBus.Emit(new DisplayStatusViewEvent(_instance.CompositeObjectId));
-            _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Inactive));
+        /// <summary>
+        /// デバフアニメーション
+        /// </summary>
+        private void OnDisplayCreatureDeBuff(DisplayCreatureDeBuffEvent evt)
+        {
+            if (evt.CreatureCardId != _view.CompositeObjectId) return;
+            _view.DisplayDeBuff();
         }
     }
 }

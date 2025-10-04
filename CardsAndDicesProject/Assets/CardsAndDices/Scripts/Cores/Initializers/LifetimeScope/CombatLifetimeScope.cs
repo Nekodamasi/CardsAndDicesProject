@@ -3,6 +3,7 @@ using VContainer;
 using VContainer.Unity;
 using DG.Tweening;
 using UnityEditor.Rendering;
+using TMPro;
 
 namespace CardsAndDices
 {
@@ -33,6 +34,8 @@ namespace CardsAndDices
         [SerializeField] private AbilityManager _abilityManager;
         [SerializeField] private TargetManager _targetManager;
         [SerializeField] private DiceInletManager _diceInletManager;
+        [SerializeField] private VfxManager _vfxManager;
+
 
         [Header("PrefabSpawnInfo Managers")]
         [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
@@ -44,13 +47,16 @@ namespace CardsAndDices
         [SerializeField] private CompositeObjectRegistry _compositeObjectRegistry;
         [SerializeField] private IdentifiableViewRegistry _identifiableViewRegistry;
 
+
         [Header("PrefabSpawner")]
         [SerializeField] private CreatureCardSpawner _creatureCardSpawner;
         [SerializeField] private DiceSpawner _diceSpawner;
         [SerializeField] private CreatureCardSlotSpawner _creatureCardSlotSpawner;
 
+
         [Header("StateOperator")]
         [SerializeField] private CoreOperator _dragStateOperator;
+
 
         [Header("Debug")]
         [SerializeField] private CreatureCardSlotStatusViewer _creatureCardSlotStatusViewer;
@@ -82,6 +88,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_abilityManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_targetManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceInletManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_vfxManager).AsSelf().AsImplementedInterfaces();
 
             // PrefabSpawnInfo Managers のバインド
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
@@ -115,6 +122,7 @@ namespace CardsAndDices
             _abilityManager.Initialize(_gameEventBus, _creatureCardSlotManager, _targetManager);
             _effectManager.Initialize(_gameEventBus);
             _diceInletManager.Initialize(_gameEventBus, _identifiableViewRegistry);
+            _vfxManager.Initialize(_soundManager, _gameEventBus);
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();
