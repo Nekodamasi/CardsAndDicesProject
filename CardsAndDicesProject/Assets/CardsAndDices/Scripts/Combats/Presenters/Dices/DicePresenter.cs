@@ -28,7 +28,7 @@ namespace CardsAndDices
             _eventBus = eventBus;
             _eventBus.On<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
-            _eventBus.On<IdentifiableDropEvent>(OnIdentifiableDrop);
+            _eventBus.On<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
             _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
         }
         /// <summary>
@@ -38,7 +38,7 @@ namespace CardsAndDices
         {
             _eventBus.Off<DisplayOnScreenEvent>(OnDisplayOnScreen);
             _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
-            _eventBus.Off<IdentifiableDropEvent>(OnIdentifiableDrop);
+            _eventBus.Off<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
             _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
         }
 
@@ -50,7 +50,6 @@ namespace CardsAndDices
             // 自分がドラッグ対象
             if (evt.ExecutedObjectId == _instance.CompositeObjectId)
             {
-                Debug.Log("ここが２回？");
                 _eventBus.Emit(new DiceBeginDragEvent(_instance.CompositeObjectId, _instance.FaceValue));                
                 return;
             }
@@ -62,10 +61,10 @@ namespace CardsAndDices
         /// <summary>
         /// オブジェクトをドロップ
         /// </summary>
-        private void OnIdentifiableDrop(IdentifiableDropEvent evt)
+        private void OnIdentifiableStateDrop(IdentifiableStateDropEvent evt)
         {
-            if (evt.TargetObjectId != _view.CompositeObjectId) return;
-            _eventBus.Emit(new DiceDropInInletEvent(evt.ExecutedObjectId, evt.TargetObjectId, _instance.FaceValue));
+            if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
+            _eventBus.Emit(new DiceDropInInletEvent(evt.TargetObjectId, evt.ExecutedObjectId, _instance.FaceValue));
             _instance.IsAlive = false;
             _eventBus.Emit(new ChangeViewStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
             _eventBus.Emit(new DisplayStatusViewEvent(_view.CompositeObjectId));

@@ -55,18 +55,17 @@ namespace CardsAndDices
 
         public bool ChkFaceAllowed(int faceValue)
         {
-            Debug.Log("なぜふぁるす？:IsLock->" + IsLock + " Count->" + CurrentUsageCount + " IsAlive->" + IsAlive);
             if (IsLock) return false;
             if (CurrentUsageCount <= 0) return false;
             if (!IsAlive) return false;
 
-            Debug.Log("ちぇっくがおかしい？:" + _inletPackageProfile.ChkFaceAllowed(faceValue) + " 値：" + faceValue);
             return _inletPackageProfile.ChkFaceAllowed(faceValue);
         }
 
         public bool AcceptableDice(int faceValue)
         {
             CurrentCountdownValue -= faceValue;
+            Debug.Log("だいすいれたあと：" + CurrentCountdownValue + "/" + faceValue);
             if (CurrentCountdownValue <= 0)
             {
                 CurrentCountdownValue = 0;

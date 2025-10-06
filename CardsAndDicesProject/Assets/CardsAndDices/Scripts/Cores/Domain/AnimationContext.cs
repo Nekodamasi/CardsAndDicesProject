@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using VContainer;
 namespace CardsAndDices
 {
     /// <summary>
@@ -8,7 +8,7 @@ namespace CardsAndDices
     /// </summary>
     public class AnimationContext : MonoBehaviour
     {
-        [Header("Display Root")]
+        [Header("Component")]
         /// <summary>
         /// アニメーション内でコルーチンやUniTaskの実行基点となるMonoBehaviour。
         /// </summary>
@@ -47,12 +47,18 @@ namespace CardsAndDices
         /// <summary>
         /// コマンドを発行するのに使用します
         /// </summary>
-        [SerializeField] public GameEventBus GameEventBus;
+        public GameEventBus GameEventBus;
 
         /// <summary>
         /// vfxデータ
         /// </summary>
         public VfxDefinition VfxDefinition;
+
+		[Inject]
+		public void Construct(GameEventBus gameEventBus)
+		{
+			GameEventBus = gameEventBus;
+        }
 
         /// <summary>
         /// 指定された色の明るさを増加させた新しい色を取得します。

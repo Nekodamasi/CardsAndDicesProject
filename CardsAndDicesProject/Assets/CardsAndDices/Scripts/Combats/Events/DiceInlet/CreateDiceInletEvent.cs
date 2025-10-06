@@ -7,14 +7,16 @@ namespace CardsAndDices
     {
         public CompositeObjectId CreatureCardId { get; }
         public InletPackageProfile InletPackageProfile { get; }
+        public CreatureStatusInstance CreatureStatusInstance { get; }
 
-    /// <summary>
-    /// コンストラクタ
-    /// </summary>
-        public CreateDiceInletEvent(CompositeObjectId creatureCardId, InletPackageProfile inletPackageProfile)
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public CreateDiceInletEvent(CompositeObjectId creatureCardId, InletPackageProfile inletPackageProfile, CreatureStatusInstance creatureStatusInstance)
         {
             CreatureCardId = creatureCardId;
             InletPackageProfile = inletPackageProfile;
+            CreatureStatusInstance = creatureStatusInstance;
         }
     }
 }

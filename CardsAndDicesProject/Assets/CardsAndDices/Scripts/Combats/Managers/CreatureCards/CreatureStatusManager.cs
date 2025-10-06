@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using System;
+using System.Linq;
 
 namespace CardsAndDices
 {
@@ -9,7 +10,7 @@ namespace CardsAndDices
     /// 全てのクリーチャーカードの状態管理などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureStatusManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureStatusManager")]
-    public class CreatureStatusManager : ScriptableObject, IDisposable
+    public class CreatureStatusManager : ScriptableObject, IDisposable, ICreatureStatusInstanceRepository
     {
         [Header("Components")]
 
@@ -70,7 +71,7 @@ namespace CardsAndDices
             // インレットのインスタンス化
             foreach (var profile in evt.CardInitializationData.InletPackageProfiles)
             {
-                _eventBus.Emit(new CreateDiceInletEvent(instance.CompositeObjectId, profile));
+                _eventBus.Emit(new CreateDiceInletEvent(instance.CompositeObjectId, profile, instance));
             }
             _eventBus.Emit(new SetCurrentHomeStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Normal));
             _eventBus.Emit(new ChangeViewStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Normal));
@@ -111,5 +112,26 @@ namespace CardsAndDices
             }
             _creatureCardStatusIconControllers.Clear();
         }
-   }
+
+        /// <summary>
+        /// 指定されたIDのインスタンスを返します。
+        /// </summary>
+        public CreatureStatusInstance GetInstance(CompositeObjectId CompositeObjectId)
+        {
+            var instance = _creatureStatusInstances
+                .Where(c => c.CompositeObjectId == CompositeObjectId)
+                .FirstOrDefault();
+
+            return instance;
+        }
+
+        /// <summary>
+        /// 全てのインスタンスを返します
+        /// </summary>
+        public 
+        List<CreatureStatusInstance> GetInstanceList()
+        {
+            return _creatureStatusInstances;
+        }
+    }
 }

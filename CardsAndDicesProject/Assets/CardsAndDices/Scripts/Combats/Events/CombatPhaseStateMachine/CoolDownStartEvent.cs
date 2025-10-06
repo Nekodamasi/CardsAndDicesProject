@@ -3,14 +3,14 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// バフデバフ演出完了イベント
+    /// クールダウン開始イベント
     /// </summary>
-    public class BuffDebuffEffectEndActionEvent : IEvent
+    public class CoolDownStartEvent : IEvent
     {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public BuffDebuffEffectEndActionEvent()
+        public CoolDownStartEvent()
         {
         }
     }

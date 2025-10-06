@@ -48,7 +48,6 @@ namespace CardsAndDices
         {
             // ドラッグされたダイスが受け入れられるか
             if (!_instance.ChkFaceAllowed(evt.DiceValue)) return;
-            Debug.Log("ここはきている？" + _instance.ChkFaceAllowed(evt.DiceValue));
 
             _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Acceptable));
             _eventBus.Emit(new DisplayStatusViewEvent(_instance.CompositeObjectId));
@@ -60,6 +59,7 @@ namespace CardsAndDices
         /// </summary>
         private async void OnDiceDropInInlet(DiceDropInInletEvent evt)
         {
+                    Debug.Log("だいすどろっぷいんれっと");
             // 自分以外は無視する
             if (evt.InletId != _instance.CompositeObjectId) return;
 
@@ -71,6 +71,7 @@ namespace CardsAndDices
 
                 if (_instance.InletEffectType == InletEffectType.AbilityExecutor)
                 {
+                    Debug.Log("あびりてぃちぇっくだー");
                     //abilityチェック
                     _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.Inlet, _instance.CompositeObjectId.Owner, _instance.CompositeObjectId));
                 }

@@ -56,6 +56,18 @@ namespace CardsAndDices
                 {
                     _eventBus.Emit(new DisplaySharedIconElementEvent(creatureCardId, iconData._sharedIconElementTypeEntity, _instance.Attack));
                 }
+                if (iconData.EffectTargetType == EffectTargetType.Health)
+                {
+                    _eventBus.Emit(new DisplaySharedIconElementEvent(creatureCardId, iconData._sharedIconElementTypeEntity, _instance.CurrentHealth));
+                }
+                if (iconData.EffectTargetType == EffectTargetType.Shield)
+                {
+                    _eventBus.Emit(new DisplaySharedIconElementEvent(creatureCardId, iconData._sharedIconElementTypeEntity, _instance.CurrentShield));
+                }
+                if (iconData.EffectTargetType == EffectTargetType.Cooldown)
+                {
+                    _eventBus.Emit(new DisplaySharedIconElementEvent(creatureCardId, iconData._sharedIconElementTypeEntity, _instance.CurrentCooldown));
+                }
             }
         }
     }

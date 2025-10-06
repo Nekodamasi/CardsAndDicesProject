@@ -118,7 +118,7 @@ namespace CardsAndDices
             _creatureCardSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
             _creatureStatusManager.Initialize(_gameEventBus, _creatureCardSlotManager, _identifiableViewRegistry, _effectManager);
             _sharedIconElementManager.Initialize(_gameEventBus, _identifiableViewRegistry);
-            _targetManager.Initialize(_creatureCardSlotManager);
+            _targetManager.Initialize(_creatureCardSlotManager, _creatureStatusManager);
             _abilityManager.Initialize(_gameEventBus, _creatureCardSlotManager, _targetManager);
             _effectManager.Initialize(_gameEventBus);
             _diceInletManager.Initialize(_gameEventBus, _identifiableViewRegistry);
@@ -138,6 +138,7 @@ namespace CardsAndDices
                 var IdentifiableGameObject = card.GetComponent<IdentifiableGameObject>();
                 var IdentifiableInputHandler = card.GetComponent<IdentifiableInputHandler>();
                 var BaseIdentifiableView = card.GetComponent<BaseIdentifiableView>();
+                var AnimationContext = card.GetComponent<AnimationContext>();
                 var SEPlayer = card.GetComponent<SEPlayer>();
                 return card;
             },
@@ -151,6 +152,7 @@ namespace CardsAndDices
                 var IdentifiableGameObject = dice.GetComponent<IdentifiableGameObject>();
                 var IdentifiableInputHandler = dice.GetComponent<IdentifiableInputHandler>();
                 var BaseIdentifiableView = dice.GetComponent<BaseIdentifiableView>();
+                var AnimationContext = dice.GetComponent<AnimationContext>();
                 return dice;
             },
             Lifetime.Singleton);

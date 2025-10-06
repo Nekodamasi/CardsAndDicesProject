@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VContainer;
 namespace CardsAndDices
@@ -11,11 +12,50 @@ namespace CardsAndDices
     {
         [Header("Components")]
         private CreatureCardSlotManager _creatureCardSlotManager;
+        private ICreatureStatusInstanceRepository _iCreatureStatusInstanceRepository;
 
         [Inject]
-        public void Initialize(CreatureCardSlotManager creatureCardSlotManager)
+        public void Initialize(CreatureCardSlotManager creatureCardSlotManager, ICreatureStatusInstanceRepository iCreatureStatusInstanceRepository)
         {
             _creatureCardSlotManager = creatureCardSlotManager;
+            _iCreatureStatusInstanceRepository = iCreatureStatusInstanceRepository;
+        }
+
+        /// <summary>
+        /// 基本的な行動順序に則ってソートされたカードIDの中で、CoolDown処理待ちのIDを取得します。
+        /// </summary>
+        public CompositeObjectId GetActionOrderCoolDownZeroId()
+        {
+            var ids = GetActionOrderList();
+            foreach (var id in ids)
+            {
+                var instance = _iCreatureStatusInstanceRepository.GetInstance(id);
+                if (instance.IsCooldownFinished == false && instance.CurrentCooldown == 0)
+                {
+                    return id;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 基本的な行動順序に則ってソートされたカードIDのリストを取得します
+        /// </summary>
+        public List<CompositeObjectId> GetActionOrderList()
+        {
+            var list = _creatureCardSlotManager.GetNonHandInstanceList();
+            var sortedSlots = list
+                .Where(slot => slot.IsOccupied)
+                .OrderBy(slot => slot.Team == Team.Enemy ? 0 : 1) // Enemy first
+                .ThenBy(slot => slot.Location);
+
+            List<CompositeObjectId> ids = new();
+            foreach (var slot in sortedSlots)
+            {
+                ids.Add(slot.ReflowPlacedCardId);
+            }
+
+            return ids;
         }
 
         /// <summary>
@@ -46,29 +86,29 @@ namespace CardsAndDices
             {
                 case AreaOfEffect.Self:
                     return new List<CompositeObjectId> { executorId };
-/*
-                case AreaOfEffect.All:
-                    // 実装メモ: CreatureCardSlotManagerには、盤面上の全てのカードIDを取得する機能が必要です。
-                    return _creatureCardSlotManager.GetAllCardIdsOnBoard();
-
-                case AreaOfEffect.AllEnemies:
-                    // 実装メモ: CreatureCardSlotManagerには、指定したプレイヤーの敵対プレイヤーが所有する全てのカードIDを取得する機能が必要です。
-                    return _creatureCardSlotManager.GetEnemyCardIds(executorSlot.OwnerPlayerId);
-
-                case AreaOfEffect.AllAllies:
-                    // 実装メモ: CreatureCardSlotManagerには、指定したプレイヤーが所有する全てのカードIDを取得する機能が必要です。
-                    return _creatureCardSlotManager.GetAlliedCardIds(executorSlot.OwnerPlayerId);
-
-                // --- 以下、より複雑な範囲指定のサンプル ---
                 /*
-                case AreaOfEffect.Front:
-                    // 実装メモ: CreatureCardSlotManagerには、指定したスロットの正面にあるスロットのカードIDを取得する機能が必要です。
-                    return _creatureCardSlotManager.GetCardIdInOpposingSlot(executorSlot);
+                                case AreaOfEffect.All:
+                                    // 実装メモ: CreatureCardSlotManagerには、盤面上の全てのカードIDを取得する機能が必要です。
+                                    return _creatureCardSlotManager.GetAllCardIdsOnBoard();
 
-                case AreaOfEffect.SameRow:
-                    // 実装メモ: CreatureCardSlotManagerには、指定したスロットと同じ行にある全てのカードIDを取得する機能が必要です。
-                    return _creatureCardSlotManager.GetCardIdsInSameRow(executorSlot);
-                */
+                                case AreaOfEffect.AllEnemies:
+                                    // 実装メモ: CreatureCardSlotManagerには、指定したプレイヤーの敵対プレイヤーが所有する全てのカードIDを取得する機能が必要です。
+                                    return _creatureCardSlotManager.GetEnemyCardIds(executorSlot.OwnerPlayerId);
+
+                                case AreaOfEffect.AllAllies:
+                                    // 実装メモ: CreatureCardSlotManagerには、指定したプレイヤーが所有する全てのカードIDを取得する機能が必要です。
+                                    return _creatureCardSlotManager.GetAlliedCardIds(executorSlot.OwnerPlayerId);
+
+                                // --- 以下、より複雑な範囲指定のサンプル ---
+                                /*
+                                case AreaOfEffect.Front:
+                                    // 実装メモ: CreatureCardSlotManagerには、指定したスロットの正面にあるスロットのカードIDを取得する機能が必要です。
+                                    return _creatureCardSlotManager.GetCardIdInOpposingSlot(executorSlot);
+
+                                case AreaOfEffect.SameRow:
+                                    // 実装メモ: CreatureCardSlotManagerには、指定したスロットと同じ行にある全てのカードIDを取得する機能が必要です。
+                                    return _creatureCardSlotManager.GetCardIdsInSameRow(executorSlot);
+                                */
 
                 default:
                     Debug.LogWarning($"[TargetManager] 未対応のAreaOfEffectです: {areaOfEffect}");

@@ -7,7 +7,7 @@ using System;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "CurrentValueChangeEffectSO", menuName = "CardsAndDices/Abilities/Effects/CurrentValueChangeEffectSO")]
+    [CreateAssetMenu(fileName = "CurrentValueChangeEffectSO", menuName = "CardsAndDices/Combats/Data/Abilities/Effects/CurrentValueChangeEffectSO")]
     public class CurrentValueChangeEffectSO : BaseAbilityEffectDefinitionSO
     {
         [SerializeField] private EffectData _effectData;
@@ -22,8 +22,20 @@ namespace CardsAndDices
             public EffectTargetType EffectTargetType;
             public int Value;
         }
-        public override void Execute(AbilityContext context, GameEventBus eventBus)
+        public override async void Execute(AbilityContext context, GameEventBus eventBus)
         {
+            foreach (var targetId in context.TargetIds)
+            {
+                foreach (var changeValue in _currentValueChangeContexts)
+                {
+                    Debug.Log("<color=Green>アプライCHANGEValue：</color>" + targetId + "_");
+                    eventBus.Emit(new ChangeCreatureCurrentValueEvent(targetId, changeValue.EffectTargetType, changeValue.Value));
+                    eventBus.Emit(new DisplayCreatureBuffEvent(targetId, VfxDefinition));
+
+                }
+            }
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            eventBus.Emit(new BuffDebuffEffectEndActionEvent());
         }
     }
 }

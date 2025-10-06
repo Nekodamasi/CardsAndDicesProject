@@ -69,10 +69,10 @@ namespace CardsAndDices
         /// </summary>
         private void OnCreateDiceInlet(CreateDiceInletEvent evt)
         {
-            CreateDiceInletInstance(evt.CreatureCardId, evt.InletPackageProfile);
+            CreateDiceInletInstance(evt.CreatureCardId, evt.InletPackageProfile, evt.CreatureStatusInstance);
         }
 
-        private void CreateDiceInletInstance(CompositeObjectId ownerid, InletPackageProfile inletPackageProfile)
+        private void CreateDiceInletInstance(CompositeObjectId ownerid, InletPackageProfile inletPackageProfile, CreatureStatusInstance creatureStatusInstance)
         {
             var view = _viewRegistry.GetOwnerAndObjectTypeView<DiceInletView>(ownerid, inletPackageProfile.InletCategory);
             if (view is null)
@@ -84,6 +84,21 @@ namespace CardsAndDices
             _instances.Add(instance);
             var presenter = new DiceInletPresenter(instance, view, _eventBus, _acceptableTargetObjectType);
             _presenters.Add(presenter);
+
+            // インレットアビリティの追加
+            foreach (var ability in inletPackageProfile.InletProfileId.Abilities)
+            {
+                _eventBus.Emit(new CreateAbilityEvent(instance.CompositeObjectId.Owner, ability, instance.CompositeObjectId, creatureStatusInstance));
+            }
+            foreach (var ability in inletPackageProfile.RareAbilities)
+            {
+                _eventBus.Emit(new CreateAbilityEvent(instance.CompositeObjectId.Owner, ability, instance.CompositeObjectId, creatureStatusInstance));
+            }
+            foreach (var ability in inletPackageProfile.LegendAbilities)
+            {
+                _eventBus.Emit(new CreateAbilityEvent(instance.CompositeObjectId.Owner, ability, instance.CompositeObjectId, creatureStatusInstance));
+            }
+
             _eventBus.Emit(new SetCurrentHomeStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Inactive));
             _eventBus.Emit(new ChangeViewStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Inactive));
             _eventBus.Emit(new DisplayStatusViewEvent(instance.CompositeObjectId));

@@ -62,7 +62,11 @@ namespace CardsAndDices
         public async UniTask<int> PlayVfxAsync(VfxDefinition vfxDefinition, Vector3 position, Quaternion rotation)
         {
             VfxPlayer player = GetFromPool(vfxDefinition);
-            if (player == null) return -1; // プレハブがないなどの理由でプレイヤーを取得できなかった
+            if (player == null)
+            {
+                Debug.LogWarning("Playerが取得できない");
+                return -1; // プレハブがないなどの理由でプレイヤーを取得できなかった
+            }
 
             player.transform.SetPositionAndRotation(position, rotation);
             player.gameObject.SetActive(true);

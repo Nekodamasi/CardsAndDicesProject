@@ -11,7 +11,7 @@ namespace CardsAndDices
     {
         [Header("VFX Settings")]
         [Tooltip("再生するパーティクルのVfxDefinition")]
-        [SerializeField] private VfxDefinition VfxDefinition;
+        [SerializeField] protected VfxDefinition VfxDefinition;
 
         /// <summary>
         /// 能力の効果を実行します。

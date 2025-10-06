@@ -44,38 +44,72 @@ namespace CardsAndDices
         public int BaseCooldown => _CreatureData.Cooldown + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Cooldown);
         public int Energy => _CreatureData.Energy + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Energy);
         public int HitsPerMainAttack => _CreatureData.HitsPerMainAttack;
-        public int MainAttack
+        public void ChangeCurrentValue(EffectTargetType effectTargetType, int addValue)
         {
-            get
+            if (EffectTargetType.Health == effectTargetType)
             {
-                int value = 0;
-                if (EffectTargetType.Attack == _CreatureData.MainAttackScoresType)
-                {
-                    value = Attack;
-                }
-                else if (EffectTargetType.Cooldown == _CreatureData.MainAttackScoresType)
-                {
-                    value = CurrentCooldown;
-                }
-                else if (EffectTargetType.Health == _CreatureData.MainAttackScoresType)
-                {
-                    value = CurrentHealth;
-                }
-                else if (EffectTargetType.Energy == _CreatureData.MainAttackScoresType)
-                {
-                    value = Energy;
-                }
-                else if (EffectTargetType.Shield == _CreatureData.MainAttackScoresType)
-                {
-                    value = CurrentShield;
-                }
-                return value;
+                CurrentHealth += addValue;
+                if(CurrentHealth < 0) { CurrentHealth = 0; }
+            }
+            else if (EffectTargetType.Cooldown == effectTargetType)
+            {
+                CurrentCooldown += addValue;
+                if(CurrentCooldown < 0) { CurrentCooldown = 0; }
+            }
+            else if (EffectTargetType.Shield == effectTargetType)
+            {
+                CurrentShield += addValue;
+                if(CurrentShield < 0) { CurrentShield = 0; }
             }
         }
+        public int GetToTargetStatus(EffectTargetType targetStatusType)
+        {
+            int value = 0;
+            if (EffectTargetType.Attack == targetStatusType)
+            {
+                value = Attack;
+            }
+            else if (EffectTargetType.Cooldown == targetStatusType)
+            {
+                value = CurrentCooldown;
+            }
+            else if (EffectTargetType.Health == targetStatusType)
+            {
+                value = CurrentHealth;
+            }
+            else if (EffectTargetType.Energy == targetStatusType)
+            {
+                value = Energy;
+            }
+            else if (EffectTargetType.Shield == targetStatusType)
+            {
+                value = CurrentShield;
+            }
+            return value;
+        }
+
+        public int MainAttack =>GetToTargetStatus(_CreatureData.MainAttackScoresType);
+        public EffectTargetType MainAttackScoresType => _CreatureData.MainAttackScoresType;
         public AreaOfEffect MainAttackAoE => _CreatureData.MainAttackAoE;
         public bool IsCooldownFinished { get; private set; }
         public bool IsDamage{ get; private set; }
         public bool IsDeath{ get; private set; }
+        public bool IsAttacker{ get; private set; }
+        public void SetIsAttacker(bool flg) { IsAttacker = flg; }
+        public bool IsReaction
+        {
+            get
+            {
+                if (IsDamage || IsDeath) return false;
+                return true;
+            }
+        }
+        public void ResetAttackFlgs()
+        {
+            IsDamage = false;
+            IsDeath = false;
+            IsAttacker = false;
+        }
 
         /// <summary>
         /// Disposeします

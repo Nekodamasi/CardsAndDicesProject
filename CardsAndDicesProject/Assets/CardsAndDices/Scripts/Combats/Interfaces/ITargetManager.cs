@@ -14,5 +14,15 @@ namespace CardsAndDices
         /// <param name="executorId">効果の実行者のID。</param>
         /// <returns>ターゲットとなるカードのCompositeObjectIdのリスト。</returns>
         List<CompositeObjectId> GetTargetList(AreaOfEffect areaOfEffect, CompositeObjectId executorId);
+
+        /// <summary>
+        /// クールダウン０処理待ちIDを取得します
+        /// </summary>
+        CompositeObjectId GetActionOrderCoolDownZeroId();
+
+        /// <summary>
+        /// アクション順にソートされたIdのリストを取得します
+        /// </summary>
+        List<CompositeObjectId> GetActionOrderList();
     }
 }

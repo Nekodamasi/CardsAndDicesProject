@@ -27,16 +27,18 @@ namespace CardsAndDices
         /// <summary>
         /// バフアニメーション
         /// </summary>
-        public Sequence DisplayBuff()
+        public Sequence DisplayBuff(VfxDefinition vfxDefinition)
         {
+            _animationContext.VfxDefinition = vfxDefinition;
             return AnimationExecute(_buffAnimationStrategyEntity);
         }
 
         /// <summary>
         /// デバフアニメーション
         /// </summary>
-        public Sequence DisplayDeBuff()
+        public Sequence DisplayDeBuff(VfxDefinition vfxDefinition)
         {
+            _animationContext.VfxDefinition = vfxDefinition;
             return AnimationExecute(_deBuffAnimationStrategyEntity);
         }
     }

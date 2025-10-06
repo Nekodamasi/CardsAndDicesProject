@@ -35,5 +35,6 @@ namespace CardsAndDices
 
         [Tooltip("インレットで発動またはロックされるアビリティ")]
         [SerializeField] private List<AbilityDataEntity> _abilities = new List<AbilityDataEntity>();
+        public List<AbilityDataEntity> Abilities => _abilities;
     }
 }

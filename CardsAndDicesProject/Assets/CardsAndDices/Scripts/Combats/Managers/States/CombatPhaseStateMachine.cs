@@ -25,7 +25,7 @@ namespace CardsAndDices
 			_currentCombatPhase = CombatPhase.None;
 			_eventBus.On<ChangeCombatPhaseEvent>(OnChangeCombatPhase);
 			_eventBus.On<BuffDebuffEffectEndActionEvent>(OnBuffDebuffEffectEndAction);
-//			_eventBus.On<AttackActionStartEvent>(OnAttackActionStart);
+			_eventBus.On<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 //			_eventBus.On<AttackActionEndEvent>(OnAttackActionEnd);
 		}
 
@@ -33,9 +33,31 @@ namespace CardsAndDices
         {
 			_eventBus.Off<ChangeCombatPhaseEvent>(OnChangeCombatPhase);
 			_eventBus.Off<BuffDebuffEffectEndActionEvent>(OnBuffDebuffEffectEndAction);
-//			_eventBus.Off<AttackActionStartEvent>(OnAttackActionStart);
+			_eventBus.Off<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 //			_eventBus.Off<AttackActionEndEvent>(OnAttackActionEnd);
         }
+
+		/// <summary>
+		/// クールダウン攻撃処理終了
+		/// </summary>
+		private void OnCoolDownZeoAttackEnd(CoolDownZeoAttackEndEvent evt)
+		{
+			switch (_currentCombatPhase)
+			{
+				case CombatPhase.DiceInletEffectPhase:
+					// クールダウンフェーズに変更
+					SetCurrentCombatPhase(CombatPhase.CooldownPhase);
+                	_eventBus.Emit(new CoolDownStartEvent());
+					break;
+				case CombatPhase.CooldownPhase:
+					// プレイヤーインプットフェーズに変更
+					SetCurrentCombatPhase(CombatPhase.PlayerInputPhase);
+                	_eventBus.Emit(new ResetUIStatusEvent());
+					break;
+				default:
+					break;
+			}
+		}
 
 		/// <summary>
 		/// バフデバフエフェクト完了イベント
@@ -45,6 +67,7 @@ namespace CardsAndDices
 			switch (_currentCombatPhase)
 			{
 				case CombatPhase.DiceInletEffectPhase:
+                	_eventBus.Emit(new CoolDownZeoAttackEvent());
 					break;
 				default:
 					break;

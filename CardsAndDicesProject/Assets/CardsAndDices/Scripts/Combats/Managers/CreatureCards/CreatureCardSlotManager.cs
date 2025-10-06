@@ -314,6 +314,17 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// ハンドスロット以外のカードリストを返します
+        /// </summary>
+        public List<CreatureCardSlotInstance> GetNonHandInstanceList()
+        {
+            var list = _creatureCardSlotInstances
+                .Where(slot => slot.LinePosition != LinePosition.Hand)
+                .ToList();
+            return list;
+        }
+
+        /// <summary>
         /// 指定したカードがリフローに配置されたインスタンスを返します
         /// </summary>
         public CreatureCardSlotInstance GetInstanceInReflowPlacedCardId(CompositeObjectId cardId)

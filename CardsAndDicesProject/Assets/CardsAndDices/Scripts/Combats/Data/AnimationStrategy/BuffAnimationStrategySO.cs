@@ -50,6 +50,7 @@ namespace CardsAndDices
             sequence.OnComplete(() =>
             {
                 context.GameEventBus.Emit(new PlayVfxEvent(context.VfxDefinition, context.MoveTargetTransform.position, context.MoveTargetTransform.rotation));
+                context.GameEventBus.Emit(new UpdateDisplayCreatureStatusEvent(context.IdentifiableGameObject.CompositeObjectId));
             });
             return sequence;
         }
