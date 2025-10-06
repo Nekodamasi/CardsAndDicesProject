@@ -35,6 +35,8 @@ namespace CardsAndDices
         [SerializeField] private TargetManager _targetManager;
         [SerializeField] private DiceInletManager _diceInletManager;
         [SerializeField] private VfxManager _vfxManager;
+        [SerializeField] private CombatPhaseStateMachine _combatPhaseStateMachine;
+        
 
 
         [Header("PrefabSpawnInfo Managers")]
@@ -89,6 +91,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_targetManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_diceInletManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_vfxManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_combatPhaseStateMachine).AsSelf().AsImplementedInterfaces();            
 
             // PrefabSpawnInfo Managers のバインド
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
@@ -116,13 +119,14 @@ namespace CardsAndDices
             _playerCardDataProvider.Initialize();
             _creatureCardManager.Initialize(_gameEventBus, _creatureCardSlotManager, _identifiableViewRegistry);
             _creatureCardSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
-            _creatureStatusManager.Initialize(_gameEventBus, _creatureCardSlotManager, _identifiableViewRegistry, _effectManager);
+            _creatureStatusManager.Initialize(_gameEventBus, _targetManager, _identifiableViewRegistry, _effectManager);
             _sharedIconElementManager.Initialize(_gameEventBus, _identifiableViewRegistry);
             _targetManager.Initialize(_creatureCardSlotManager, _creatureStatusManager);
             _abilityManager.Initialize(_gameEventBus, _creatureCardSlotManager, _targetManager);
             _effectManager.Initialize(_gameEventBus);
             _diceInletManager.Initialize(_gameEventBus, _identifiableViewRegistry);
             _vfxManager.Initialize(_soundManager, _gameEventBus);
+            _combatPhaseStateMachine.Initialize(_gameEventBus);
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();

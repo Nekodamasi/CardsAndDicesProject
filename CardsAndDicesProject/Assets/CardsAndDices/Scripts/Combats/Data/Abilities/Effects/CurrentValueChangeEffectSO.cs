@@ -35,6 +35,7 @@ namespace CardsAndDices
                 }
             }
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            Debug.Log("ここがうごいてないのかあ？");
             eventBus.Emit(new BuffDebuffEffectEndActionEvent());
         }
     }

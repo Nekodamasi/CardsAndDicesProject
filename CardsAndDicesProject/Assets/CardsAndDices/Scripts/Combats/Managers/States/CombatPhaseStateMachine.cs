@@ -45,6 +45,7 @@ namespace CardsAndDices
 			switch (_currentCombatPhase)
 			{
 				case CombatPhase.DiceInletEffectPhase:
+					Debug.Log("えふぇくとしゅうりょう");
 					// クールダウンフェーズに変更
 					SetCurrentCombatPhase(CombatPhase.CooldownPhase);
                 	_eventBus.Emit(new CoolDownStartEvent());
@@ -53,6 +54,7 @@ namespace CardsAndDices
 					// プレイヤーインプットフェーズに変更
 					SetCurrentCombatPhase(CombatPhase.PlayerInputPhase);
                 	_eventBus.Emit(new ResetUIStatusEvent());
+					Debug.Log("ここにもどるそうてい");
 					break;
 				default:
 					break;
@@ -64,9 +66,11 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnBuffDebuffEffectEndAction(BuffDebuffEffectEndActionEvent evt)
 		{
+			Debug.Log("そもそもここにきてない：" + _currentCombatPhase);
 			switch (_currentCombatPhase)
 			{
 				case CombatPhase.DiceInletEffectPhase:
+					Debug.Log("ここが最初");
                 	_eventBus.Emit(new CoolDownZeoAttackEvent());
 					break;
 				default:

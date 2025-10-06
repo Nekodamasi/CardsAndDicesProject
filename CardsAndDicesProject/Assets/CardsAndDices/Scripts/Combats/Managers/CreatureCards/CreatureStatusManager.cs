@@ -19,20 +19,22 @@ namespace CardsAndDices
         private readonly List<CreatureStatusPresenter> _creatureStatusPresenters = new();
         private readonly List<CreatureCardStatusIconController> _creatureCardStatusIconControllers = new();
         private GameEventBus _eventBus;
-        private CreatureCardSlotManager _creatureCardSlotManager;
+        private ITargetManager _iTargetManager;
         private IdentifiableViewRegistry _viewRegistry;
         private IEffectValue _iEffectValue;
+        private CreatureAttackService _creatureAttackService;
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, CreatureCardSlotManager creatureCardSlotManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue)
+        public void Initialize(GameEventBus eventBus, ITargetManager iTargetManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue)
         {
             DisposeInstances();
             DisposePresenters();
             _eventBus = eventBus;
-            _creatureCardSlotManager = creatureCardSlotManager;
+            _iTargetManager = iTargetManager;
             _viewRegistry = viewRegistry;
             _iEffectValue = iEffectValue;
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
+            _creatureAttackService = new CreatureAttackService(_iTargetManager, this, _eventBus);
         }
 
         public void Dispose()

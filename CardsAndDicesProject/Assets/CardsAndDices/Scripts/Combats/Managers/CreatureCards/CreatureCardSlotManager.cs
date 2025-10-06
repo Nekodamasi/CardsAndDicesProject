@@ -57,7 +57,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// クリーチャーカードのリフローを行う
+        /// クリーチャーカードのリフローを行うイベント
         /// </summary>
         private void OnIdentifiableStateDragedHover(IdentifiableStateDragedHoverEvent evt)
         {
@@ -68,6 +68,9 @@ namespace CardsAndDices
             CreatureCardReflow(evt.DragedObjectId, evt.ExecutedObjectId);
         }
 
+        /// <summary>
+        /// クリーチャーカードのリフローを行う
+        /// </summary>
         private void CreatureCardReflow(CompositeObjectId moveCardId, CompositeObjectId toSlotId)
         {
             // 移動するカードの現在の配置場所
@@ -131,7 +134,21 @@ namespace CardsAndDices
             }
             instance.PlacedCard(evt.CreatureCardId);
             _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.CreatureCardId, instance.CreatureCardSlotPosition));
+        }
 
+        /// <summary>
+        /// クリーチャーカードを指定のスロットに配置します
+        /// </summary>
+        private void OnPlacedPpecifiedSlot(PlacedPpecifiedSlotEvent evt)
+        {
+            var instance = GetInstance(evt.Team, evt.LinePosition, evt.SlotLocation);
+            if (instance is null)
+            {
+                Debug.LogWarning("インスタンスがとれない");
+                return;
+            }
+            instance.PlacedCard(evt.CreatureCardId);
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.CreatureCardId, instance.CreatureCardSlotPosition));
         }
 
         /// <summary>

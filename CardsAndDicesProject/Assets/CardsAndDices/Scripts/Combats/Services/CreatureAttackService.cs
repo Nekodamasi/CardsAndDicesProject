@@ -9,7 +9,7 @@ namespace CardsAndDices
     /// <summary>
     /// 攻撃処理の計算ロジックを担当するサービスクラスです。
     /// </summary>
-    public class CreateAttackService : IDisposable
+    public class CreatureAttackService : IDisposable
     {
         private ITargetManager _iTargetManager;
         private ICreatureStatusInstanceRepository _iCreatureStatusInstanceRepository;
@@ -18,7 +18,7 @@ namespace CardsAndDices
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CreateAttackService(ITargetManager iTargetManager, ICreatureStatusInstanceRepository iCreatureStatusInstanceRepository, GameEventBus gameEventBus)
+        public CreatureAttackService(ITargetManager iTargetManager, ICreatureStatusInstanceRepository iCreatureStatusInstanceRepository, GameEventBus gameEventBus)
         {
             _iTargetManager = iTargetManager;
             _iCreatureStatusInstanceRepository = iCreatureStatusInstanceRepository;
