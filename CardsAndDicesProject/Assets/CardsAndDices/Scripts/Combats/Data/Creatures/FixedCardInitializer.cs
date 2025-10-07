@@ -46,7 +46,7 @@ namespace CardsAndDices
         /// インスペクターで設定されたデータに基づいてCardInitializationDataを生成します。
         /// </summary>
         /// <returns>生成されたCardInitializationData。</returns>
-        public CardInitializationData CreateCardInitializationData()
+        public CardInitializationData CreateCardInitializationData(Team creatureDataTeam)
         {
             // CreatureDataのインスタンスを生成
             CreatureData creatureData = new CreatureData(
@@ -79,7 +79,7 @@ namespace CardsAndDices
             }
 //            Debug.Log("<color=Green>インレットプロフィール：</color>" + inletAbilityProfiles.Count);
             // CardInitializationDataのインスタンスを生成して返す
-            return new CardInitializationData(creatureData, inletPackageProfiles, _appearanceProfile);
+            return new CardInitializationData(creatureData, inletPackageProfiles, _appearanceProfile, creatureDataTeam);
         }
     }
 }

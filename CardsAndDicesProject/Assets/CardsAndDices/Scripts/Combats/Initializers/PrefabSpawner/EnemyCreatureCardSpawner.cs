@@ -6,23 +6,23 @@ using VContainer.Unity;
 namespace CardsAndDices
 {
     /// <summary>
-    /// abilityインスタンスの生成ロジックに特化したFactoryクラス。
+    /// エネミークリーチャーカードPrefabからスポーンを行うクラス
     /// </summary>
     public sealed class EnemyCreatureCardSpawner : MonoBehaviour, IStartable
     {
-        [Inject] private readonly Func<CreatureCardSpawnInfo, GameObject> _creatureCardFactory;
-        [Inject] private readonly CreatureCardSpawnInfoManager _CreatureCardSpawnInfoManager;
+        [Inject] private readonly Func<EnemyCreatureCardSpawnInfo, GameObject> _enemyCreatureCardFactory;
+        [Inject] private readonly EnemyCreatureCardSpawnInfoManager _enemyCreatureCardSpawnInfoManager;
         [Inject] private readonly SceneInitializer _combatInitializer;
 
         public void Start()
         {
-            var infolist = _CreatureCardSpawnInfoManager.GetSpawnInfos();
+            var infolist = _enemyCreatureCardSpawnInfoManager.GetSpawnInfos();
             foreach (var info in infolist)
             {
-                var creatureCard = _creatureCardFactory(info);
-                creatureCard.transform.SetParent(transform, false);
-                creatureCard.transform.localScale = Vector3.one;
-                foreach(var initializer in creatureCard.GetComponentsInChildren<IGameInitializable>())
+                var enemycreatureCard = _enemyCreatureCardFactory(info);
+                enemycreatureCard.transform.SetParent(transform, false);
+                enemycreatureCard.transform.localScale = Vector3.one;
+                foreach(var initializer in enemycreatureCard.GetComponentsInChildren<IGameInitializable>())
                 {
                     _combatInitializer.AddInitializables(initializer);
                 }

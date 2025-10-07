@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VContainer;
 
 namespace CardsAndDices
 {
-    [CreateAssetMenu(fileName = "CombatScenarioRegistry", menuName = "CardsAndDices/Combats/Data/Waves/CombatScenarioRegistry")]
+    [CreateAssetMenu(fileName = "CombatScenarioRegistry", menuName = "CardsAndDices/Combats/Registries/CombatScenarioRegistry")]
     /// <summary>
     /// 全てコンバットデータを管理するレジストリクラス
     /// </summary>
-    public class CombatScenarioRegistry : ScriptableObject
+    public class CombatScenarioRegistry : ScriptableObject, IDisposable
     {
         [Header("Components")]
         [SerializeField] private List<CombatScenarioEntry> _combatScenarios;
@@ -24,6 +25,16 @@ namespace CardsAndDices
             var list = CombatScenarios.Where(s => s.Area == areaId && s.Challenge == challenge).ToList();
             var num = new System.Random().Next(0, list.Count);
             return list[num].CombatDataAsset;
+        }
+
+        [Inject]
+        public void Initialize()
+        {
+        }
+
+        public void Dispose()
+        {
+            //            _eventBus.Off<CreateCreatureEvent>(OnCreateCreature);
         }
     }
 

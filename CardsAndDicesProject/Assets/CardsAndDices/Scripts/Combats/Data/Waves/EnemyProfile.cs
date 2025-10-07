@@ -18,5 +18,6 @@ namespace CardsAndDices
         public ChallengeRating ChallengeRating => _challengeRating;
         public EnemyRoleId EnemyRoleId => _enemyRoleId;
         public int PowerLevel => _powerLevel;
+        public CardInitializationData CardInitializationData => _fixedCardInitializer.CreateCardInitializationData(Team.Enemy);
     }
 }

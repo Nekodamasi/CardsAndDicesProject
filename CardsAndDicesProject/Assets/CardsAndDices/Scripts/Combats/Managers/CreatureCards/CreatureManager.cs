@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 using Cysharp.Threading.Tasks;
+using NUnit.Framework;
 
 namespace CardsAndDices
 {
@@ -15,6 +16,8 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "CreatureManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureManager")]
     public class CreatureManager : ScriptableObject, IDisposable
     {
+        [Header("Components")]
+        [SerializeField] private CompositeObjectIdTypeEntity playerCardObjectType;
         private ICardDataProvider _playerCardDataProvider;
         private GameEventBus _eventBus;
         private IdentifiableViewRegistry _viewRegistry;
@@ -31,12 +34,10 @@ namespace CardsAndDices
             _eventBus = eventBus;
             _viewRegistry = viewRegistry;
             _eventBus.On<CombatPhasePlayerCardinitializedEvent>(OnCombatPhasePlayerCardinitialized);
-            _eventBus.On<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
         }
         public void Dispose()
         {
             _eventBus.Off<CombatPhasePlayerCardinitializedEvent>(OnCombatPhasePlayerCardinitialized);
-            _eventBus.Off<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace CardsAndDices
 
             foreach (CardInitializationData initData in playerInitList)
             {
-                var view = _viewRegistry.GetNonBoundView<CreatureCardView>();
+                var view = _viewRegistry.GetNonBoundAndObjectTypeView<CreatureCardView>(playerCardObjectType);
                 if (view is null)
                 {
                     Debug.LogWarning("viewが取れない");
@@ -60,23 +61,6 @@ namespace CardsAndDices
                 _eventBus.Emit(new CreateCreatureEvent(view.CompositeObjectId, initData));
                 _eventBus.Emit(new UpdateDisplayCreatureStatusEvent(view.CompositeObjectId));
             }
-        }
-
-        /// <summary>
-        /// OnStateEndDragが発生したさいのコマンドを処理します。
-        /// </summary>
-        private async void OnCombatPhasePlayerCardOnScreen(CombatPhasePlayerCardOnScreenEvent evt)
-        {
-            foreach (CompositeObjectId id in _compositeObjectIds)
-            {
-                _eventBus.Emit(new PlacedHandSlotEvent(id));
-                _eventBus.Emit(new DisplayOnScreenEvent(id));
-
-                // 待機
-                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
-            }
-            // 待機
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         }
     }
 }

@@ -13,13 +13,13 @@ namespace CardsAndDices
         /// クリーチャーカードのスポーン情報リスト。
         /// </summary>
         [SerializeField]
-        private List<CreatureCardSpawnInfo> _spawnInfos;
+        private List<EnemyCreatureCardSpawnInfo> _spawnInfos;
 
         /// <summary>
         /// 保持している全てのスポーン情報リストを取得します。
         /// </summary>
         /// <returns>CreatureCardSpawnInfoのリスト。</returns>
-        public List<CreatureCardSpawnInfo> GetSpawnInfos()
+        public List<EnemyCreatureCardSpawnInfo> GetSpawnInfos()
         {
             return _spawnInfos;
         }

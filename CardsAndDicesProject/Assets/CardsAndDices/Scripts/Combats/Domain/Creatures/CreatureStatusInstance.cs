@@ -10,16 +10,18 @@ namespace CardsAndDices
     {
         private CompositeObjectId _compositeObjectId;
         private IEffectValue _iEffectValue;
-        private CreatureData _CreatureData;
+        private CreatureData _creatureData;
+        private Team _creatureDataTeam;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CreatureStatusInstance(CompositeObjectId compositeObjectId, CreatureData data, IEffectValue iEffectValue)
+        public CreatureStatusInstance(CompositeObjectId compositeObjectId, CreatureData data, IEffectValue iEffectValue, Team creatureDataTeam)
         {
             _compositeObjectId = compositeObjectId;
-            _CreatureData = data;
+            _creatureData = data;
             _iEffectValue = iEffectValue;
+            _creatureDataTeam = creatureDataTeam;
 
             CurrentHealth = data.Health;
             CurrentShield = data.Shield;
@@ -34,16 +36,21 @@ namespace CardsAndDices
         /// </summary>
         public CompositeObjectId CompositeObjectId => _compositeObjectId;
 
+        /// <summary>
+        /// クリーチャーが所属するチーム
+        /// </summary>
+        public Team CreatureDataTeam => _creatureDataTeam;
+
         // ステータス
         public int CurrentHealth { get; private set; }
-        public int BaseHealth => _CreatureData.Health + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Health);
-        public int Attack => _CreatureData.Attack + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Attack);
+        public int BaseHealth => _creatureData.Health + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Health);
+        public int Attack => _creatureData.Attack + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Attack);
         public int CurrentShield { get; private set; }
-        public int BaseShield => _CreatureData.Shield + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Shield);
+        public int BaseShield => _creatureData.Shield + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Shield);
         public int CurrentCooldown { get; private set; }
-        public int BaseCooldown => _CreatureData.Cooldown + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Cooldown);
-        public int Energy => _CreatureData.Energy + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Energy);
-        public int HitsPerMainAttack => _CreatureData.HitsPerMainAttack;
+        public int BaseCooldown => _creatureData.Cooldown + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Cooldown);
+        public int Energy => _creatureData.Energy + _iEffectValue.GetTotalEffectValue(_compositeObjectId, EffectTargetType.Energy);
+        public int HitsPerMainAttack => _creatureData.HitsPerMainAttack;
         public void ChangeCurrentValue(EffectTargetType effectTargetType, int addValue)
         {
             if (EffectTargetType.Health == effectTargetType)
@@ -88,9 +95,9 @@ namespace CardsAndDices
             return value;
         }
 
-        public int MainAttack =>GetToTargetStatus(_CreatureData.MainAttackScoresType);
-        public EffectTargetType MainAttackScoresType => _CreatureData.MainAttackScoresType;
-        public AreaOfEffect MainAttackAoE => _CreatureData.MainAttackAoE;
+        public int MainAttack =>GetToTargetStatus(_creatureData.MainAttackScoresType);
+        public EffectTargetType MainAttackScoresType => _creatureData.MainAttackScoresType;
+        public AreaOfEffect MainAttackAoE => _creatureData.MainAttackAoE;
         public bool IsCooldownFinished { get; private set; }
         public bool IsDamage{ get; private set; }
         public bool IsDeath{ get; private set; }

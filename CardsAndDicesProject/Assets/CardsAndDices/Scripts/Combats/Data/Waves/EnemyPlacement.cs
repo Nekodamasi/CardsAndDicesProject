@@ -3,13 +3,14 @@ using System;
 namespace CardsAndDices 
 {
     [Serializable]
-     /// <summary>
+    /// <summary>
     /// エネミーグループの配置場所。エネミーグループの１体が指定した配置場所に配置される
     /// </summary>
-   public class EnemyPlacement
+    public class EnemyPlacement
     {
         public EnemyGroup EnemyGroup;
         public LinePosition Position;
         public SlotLocation Location;
+        public CardInitializationData CardInitializationData => EnemyGroup.EnemyProfile.CardInitializationData;
     }
 }

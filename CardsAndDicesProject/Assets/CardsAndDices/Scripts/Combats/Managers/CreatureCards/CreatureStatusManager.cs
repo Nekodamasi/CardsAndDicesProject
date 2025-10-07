@@ -3,6 +3,7 @@ using UnityEngine;
 using VContainer;
 using System;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace CardsAndDices
 {
@@ -34,6 +35,9 @@ namespace CardsAndDices
             _viewRegistry = viewRegistry;
             _iEffectValue = iEffectValue;
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
+            _eventBus.On<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
+            _eventBus.On<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
+            
             _creatureAttackService = new CreatureAttackService(_iTargetManager, this, _eventBus);
         }
 
@@ -43,6 +47,43 @@ namespace CardsAndDices
             DisposePresenters();
             DisposeControllers();
             _eventBus.Off<CreateCreatureEvent>(OnCreateCreature);
+            _eventBus.Off<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
+            _eventBus.Off<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
+        }
+
+        /// <summary>
+        /// プレイヤーカードの画面へ配置
+        /// </summary>
+        private async void OnCombatPhasePlayerCardOnScreen(CombatPhasePlayerCardOnScreenEvent evt)
+        {
+            var list = _creatureStatusInstances.Where(s => s.CreatureDataTeam == Team.Player).ToList();
+            foreach (var instance in list)
+            {
+                _eventBus.Emit(new PlacedHandSlotEvent(instance.CompositeObjectId));
+                _eventBus.Emit(new DisplayOnScreenEvent(instance.CompositeObjectId));
+
+                // 待機
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            }
+            // 待機
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+        }
+
+        /// <summary>
+        /// エネミーカードの画面へ配置
+        /// </summary>
+        private async void OnCombatPhaseEnemyCardOnScreen(CombatPhaseEnemyCardOnScreenEvent evt)
+        {
+            var list = _creatureStatusInstances.Where(s => s.CreatureDataTeam == Team.Enemy).ToList();
+            foreach (var instance in list)
+            {
+                _eventBus.Emit(new DisplayOnScreenEvent(instance.CompositeObjectId));
+
+                // 待機
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            }
+            // 待機
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         }
 
         /// <summary>
@@ -50,7 +91,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnCreateCreature(CreateCreatureEvent evt)
         {
-            var instance = new CreatureStatusInstance(evt.CreatureCardId, evt.CardInitializationData.CreatureData, _iEffectValue);
+            var instance = new CreatureStatusInstance(evt.CreatureCardId, evt.CardInitializationData.CreatureData, _iEffectValue, evt.CardInitializationData.CreatureDataTeam);
             _creatureStatusInstances.Add(instance);
             var controller = new CreatureCardStatusIconController(instance, _eventBus, _reatureStatusIconDataList);
             _creatureCardStatusIconControllers.Add(controller);

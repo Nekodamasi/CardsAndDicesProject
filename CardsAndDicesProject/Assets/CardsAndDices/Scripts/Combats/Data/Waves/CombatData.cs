@@ -15,5 +15,9 @@ namespace CardsAndDices
 
         public string CombatId => _combatId;
         public IReadOnlyList<WaveData> Waves => _waves;
+        public IReadOnlyList<EnemyPlacement> GetEnemyPlacementList(int waveNumber)
+        {
+            return Waves[waveNumber].EnemyPlacements;
+        }
     }
 }

@@ -81,6 +81,14 @@ namespace CardsAndDices
         /// <summary>
         /// 型に一致するバインドされていないViewを取得します。
         /// </summary>
+        public T GetNonBoundAndObjectTypeView<T>(CompositeObjectIdTypeEntity objectType) where T : BaseIdentifiableView
+        {
+            return _views.FirstOrDefault(v => v.IsBound == false && v.CompositeObjectId.ObjectType == objectType && v is T) as T;
+        }
+
+        /// <summary>
+        /// 指定したObjecttypeを持つ、型に一致するバインドされていないViewを取得します。
+        /// </summary>
         public T GetNonBoundView<T>() where T : BaseIdentifiableView
         {
             return _views.FirstOrDefault(v => v.IsBound == false && v is T) as T;

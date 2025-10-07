@@ -14,5 +14,6 @@ namespace CardsAndDices
 
         public string GroupName => _groupName;
         public IReadOnlyList<EnemyProfile> EnemyProfiles => _enemyProfiles;
+        public EnemyProfile EnemyProfile => EnemyProfiles[new System.Random().Next(0, EnemyProfiles.Count)];
     }
 }

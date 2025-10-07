@@ -8,6 +8,7 @@ namespace CardsAndDices
     /// </summary>
     public class CardInitializationData
     {
+        public Team CreatureDataTeam { get; private set; }
         /// <summary>
         /// 生成するカードのクリーチャーとしての基本データ。
         /// </summary>
@@ -29,11 +30,12 @@ namespace CardsAndDices
         /// <param name="creatureData">クリーチャーの基本データ。</param>
         /// <param name="profiles">インレット能力プロファイルのリスト。</param>
         /// <param name="appearance">外観プロファイル。</param>
-        public CardInitializationData(CreatureData creatureData, List<InletPackageProfile> profiles, AppearanceProfile appearance)
+        public CardInitializationData(CreatureData creatureData, List<InletPackageProfile> profiles, AppearanceProfile appearance, Team creatureDataTeam)
         {
             CreatureData = creatureData;
             InletPackageProfiles = profiles;
             Appearance = appearance;
+            CreatureDataTeam = creatureDataTeam;
         }
     }
 }

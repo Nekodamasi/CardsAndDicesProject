@@ -38,6 +38,7 @@ namespace CardsAndDices
             _eventBus.On<PlacedHandSlotEvent>(OnPlacedHandSlot);
             _eventBus.On<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
             _eventBus.On<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
+            _eventBus.On<PlacedPpecifiedSlotEvent>(OnPlacedPpecifiedSlot);            
 
             _reflowService = new ReflowService(this);
 
@@ -54,6 +55,7 @@ namespace CardsAndDices
             _eventBus.Off<PlacedHandSlotEvent>(OnPlacedHandSlot);
             _eventBus.Off<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
             _eventBus.Off<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
+            _eventBus.Off<PlacedPpecifiedSlotEvent>(OnPlacedPpecifiedSlot);            
         }
 
         /// <summary>

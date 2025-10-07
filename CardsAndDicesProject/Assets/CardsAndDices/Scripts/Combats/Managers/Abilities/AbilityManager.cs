@@ -88,6 +88,9 @@ namespace CardsAndDices
         /// </summary>
         private void OnExecuteAbilityEffect(ExecuteAbilityEffectEvent evt)
         {
+            // エフェクトの有効期限を更新
+            _eventBus.Emit(new UpdateEffectExpiredEvent(evt.TriggerTiming, evt.SourceObjectId, evt.SubSourceObjectId));
+            
             var list = _instances.Where(a => a.CompositeObjectId == evt.SourceObjectId && a.ActivationTiming == evt.TriggerTiming && a.IsAvailable).ToList();
 
             foreach (var instance in list)

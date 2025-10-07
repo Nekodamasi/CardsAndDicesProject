@@ -27,7 +27,7 @@ namespace CardsAndDices
 
             for (var i = 0; i < _fixedCardInitializerList.Count; i++)
             {
-                list.Add(_fixedCardInitializerList[i].CreateCardInitializationData());
+                list.Add(_fixedCardInitializerList[i].CreateCardInitializationData(Team.Player));
             }
 
             return list;
