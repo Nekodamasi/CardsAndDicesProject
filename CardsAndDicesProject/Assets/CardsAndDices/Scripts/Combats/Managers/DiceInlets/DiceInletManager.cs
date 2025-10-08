@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using VContainer;
-using UnityEditor.Search;
+using System.Linq;
 
 namespace CardsAndDices
 {
@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// 全てのダイスインレットを一元管理するマネージャークラス
     /// </summary>
     [CreateAssetMenu(fileName = "DiceInletManager", menuName = "CardsAndDices/Combats/Managers/DiceInlets/DiceInletManager")]
-    public class DiceInletManager : ScriptableObject, IDisposable
+    public class DiceInletManager : ScriptableObject, IDisposable, IIdentifiableManager
     {
         [Header("Components")]
         [SerializeField] private CompositeObjectIdTypeEntity _acceptableTargetObjectType;
@@ -103,6 +103,18 @@ namespace CardsAndDices
             _eventBus.Emit(new ChangeViewStatusEvent(instance.CompositeObjectId, IdentifiableStatus.Inactive));
             _eventBus.Emit(new DisplayStatusViewEvent(instance.CompositeObjectId));
             
+        }
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _instances.Remove(instance);
+            var presenter = _presenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            presenter.Dispose();
+            _presenters.Remove(presenter);
         }
     }
 }

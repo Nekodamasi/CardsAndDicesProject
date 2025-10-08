@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// 全てのクリーチャーカードの状態管理などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "WaveManager", menuName = "CardsAndDices/Combats/Managers/Waves/WaveManager")]
-    public class WaveManager : ScriptableObject, IDisposable
+    public class WaveManager : ScriptableObject, IDisposable, IWaveNumber
     {
         [Header("Components")]
         [SerializeField] private CompositeObjectIdTypeEntity _enemyCardObjectType;
@@ -82,6 +82,28 @@ namespace CardsAndDices
             _eventBus.Emit(new CreateCreatureEvent(view.CompositeObjectId, enemyPlacement.CardInitializationData));
             _eventBus.Emit(new UpdateDisplayCreatureStatusEvent(view.CompositeObjectId));
             _eventBus.Emit(new PlacedPpecifiedSlotEvent(view.CompositeObjectId, Team.Enemy, enemyPlacement.Position, enemyPlacement.Location));
+        }
+
+        /// <summary>
+        /// ウェーブの最大数を取得する
+        /// </summary>
+        public int MaxWaveNumber => _combatData.Waves.Count;
+
+        /// <summary>
+        /// ウェーブの現在値を取得する
+        /// </summary>
+        public int CurrentWaveNumber => _waveNumber;
+
+        /// <summary>
+        /// ウェーブナンバーを次の番号に変更します
+        /// </summary>
+        public void NextWaveNumber()
+        {
+            _waveNumber++;
+            if (MaxWaveNumber < _waveNumber)
+            {
+                Debug.LogWarning("WaveNumberが最大値を超えています");
+            }
         }
 
         public void Dispose()

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using VContainer;
-using UnityEditor.Search;
+using System.Linq;
 
 namespace CardsAndDices
 {
@@ -11,7 +11,7 @@ namespace CardsAndDices
     /// ScriptableObjectとして、ダイスのデータ管理に特化します。
     /// </summary>
     [CreateAssetMenu(fileName = "DiceManager", menuName = "CardsAndDices/Combats/Managers/Dices/DiceManager")]
-    public class DiceManager : ScriptableObject, IDisposable
+    public class DiceManager : ScriptableObject, IDisposable, IIdentifiableManager
     {
         private class AddDice
         {
@@ -47,7 +47,7 @@ namespace CardsAndDices
             //_incrementId = 1;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
-            
+
         }
         /// <summary>
         /// インスタンスをDisposeします
@@ -159,6 +159,19 @@ namespace CardsAndDices
         public void RemoveDice(CompositeObjectId id)
         {
             _diceInstances.RemoveAll(d => d.CompositeObjectId == id);
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _diceInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _diceInstances.Remove(instance);
+            var presenter = _dicePresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            presenter.Dispose();
+            _dicePresenters.Remove(presenter);
         }
     }
 }

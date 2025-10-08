@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VContainer;
+using System;
 
 namespace CardsAndDices
 {
@@ -9,7 +10,7 @@ namespace CardsAndDices
     /// バフ／デバフ効果を一元管理するScriptableObject。
     /// </summary>
     [CreateAssetMenu(fileName = "EffectManager", menuName = "CardsAndDices/Combats/Managers/Effects/EffectManager")]
-    public class EffectManager : ScriptableObject, IEffectValue
+    public class EffectManager : ScriptableObject, IEffectValue, IDisposable, IIdentifiableManager
     {
         [Header("Components")]
         private readonly List<EffectInstance> _instances = new();
@@ -121,6 +122,19 @@ namespace CardsAndDices
         public List<EffectInstance> GetInstanceList()
         {
             return _instances;
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _instances.Remove(instance);
+            var controller = _controllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();
+            controller.Dispose();
+            _controllers.Remove(controller);
         }
     }
 }

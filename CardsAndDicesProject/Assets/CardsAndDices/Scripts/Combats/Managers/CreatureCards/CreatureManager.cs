@@ -14,14 +14,14 @@ namespace CardsAndDices
     /// ScriptableObjectとして、ゲームロジックの統括に特化します。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureManager")]
-    public class CreatureManager : ScriptableObject, IDisposable
+    public class CreatureManager : ScriptableObject, IDisposable, IIdentifiableManager
     {
         [Header("Components")]
         [SerializeField] private CompositeObjectIdTypeEntity playerCardObjectType;
         private ICardDataProvider _playerCardDataProvider;
         private GameEventBus _eventBus;
         private IdentifiableViewRegistry _viewRegistry;
-        private readonly List<CompositeObjectId> _compositeObjectIds = new();
+//        private readonly List<CompositeObjectId> _compositeObjectIds = new();
 
         /// <summary>
         /// 初期化します。
@@ -29,7 +29,7 @@ namespace CardsAndDices
         [Inject]
         public void Initialize(ICardDataProvider playerCardDataProvider, GameEventBus eventBus, IdentifiableViewRegistry viewRegistry)
         {
-            _compositeObjectIds.Clear();
+//            _compositeObjectIds.Clear();
             _playerCardDataProvider = playerCardDataProvider;
             _eventBus = eventBus;
             _viewRegistry = viewRegistry;
@@ -57,10 +57,18 @@ namespace CardsAndDices
                     Debug.LogWarning("viewが取れない");
                     return;
                 }
-                _compositeObjectIds.Add(view.CompositeObjectId);
+//                _compositeObjectIds.Add(view.CompositeObjectId);
                 _eventBus.Emit(new CreateCreatureEvent(view.CompositeObjectId, initData));
                 _eventBus.Emit(new UpdateDisplayCreatureStatusEvent(view.CompositeObjectId));
             }
+
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
         }
     }
 }

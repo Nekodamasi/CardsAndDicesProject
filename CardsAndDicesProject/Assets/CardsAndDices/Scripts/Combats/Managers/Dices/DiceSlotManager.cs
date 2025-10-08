@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// 全てのダイススロットの状態を管理し、ダイスの配置などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "DiceSlotManager", menuName = "CardsAndDices/Combats/Managers/Dices/DiceSlotManager")]
-    public class DiceSlotManager : ScriptableObject, IDisposable, IDiceSlotPosition
+    public class DiceSlotManager : ScriptableObject, IDisposable, IDiceSlotPosition, IIdentifiableManager
     {
         [Header("Components")]
         [SerializeField] private List<DiceSlotPositionEntity> _diceSlotPositionEntities;
@@ -126,6 +126,19 @@ namespace CardsAndDices
                 return Vector3.zero;
             }
             return placedSlots[0].DiceSlotPosition;
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _diceSlotInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _diceSlotInstances.Remove(instance);
+            var controller = _iceSlotControllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();
+            controller.Dispose();
+            _iceSlotControllers.Remove(controller);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// 全てのクリーチャーカードの状態管理などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureCardManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureCardManager")]
-    public class CreatureCardManager : ScriptableObject, IDisposable
+    public class CreatureCardManager : ScriptableObject, IDisposable, IIdentifiableManager
     {
         [Header("Components")]
         private readonly List<CreatureCardInstance> _creatureCardInstances = new();
@@ -28,6 +28,8 @@ namespace CardsAndDices
             _creatureCardSlotManager = creatureCardSlotManager;
             _viewRegistry = viewRegistry;
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+            
         }
 
         public void Dispose()
@@ -35,6 +37,15 @@ namespace CardsAndDices
             DisposeInstances();
             DisposePresenters();
             _eventBus.Off<CreateCreatureEvent>(OnCreateCreature);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+        }
+
+        /// <summary>
+        /// 指定されたIDに紐づくインスタンスをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
         }
 
         /// <summary>
@@ -71,6 +82,19 @@ namespace CardsAndDices
                 presenter.Dispose();
             }
             _creatureCardPresenters.Clear();
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _creatureCardInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _creatureCardInstances.Remove(instance);
+            var presenter = _creatureCardPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            presenter.Dispose();
+            _creatureCardPresenters.Remove(presenter);
         }
    }
 }

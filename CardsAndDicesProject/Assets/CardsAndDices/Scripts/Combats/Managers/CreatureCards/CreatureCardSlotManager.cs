@@ -11,7 +11,7 @@ namespace CardsAndDices
     /// 全てのクリーチャーカードスロットの状態を管理し、配置などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureCardSlotManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureCardSlotManager")]
-    public class CreatureCardSlotManager : ScriptableObject, IDisposable, ICreatureCardSlotPosition, ICreatureCardSlotInstanceRepository, ICreatureCardlocation
+    public class CreatureCardSlotManager : ScriptableObject, IDisposable, ICreatureCardSlotPosition, ICreatureCardSlotInstanceRepository, ICreatureCardlocation, IIdentifiableManager
     {
         [Header("Components")]
         [SerializeField] private List<CreatureCardSlotPositionEntity> _creatureCardSlotPositionEntitys;
@@ -407,6 +407,22 @@ namespace CardsAndDices
                 return LinePosition.TopLine;
             }
             return placedSlots[0].LinePosition;
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _creatureCardSlotInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _creatureCardSlotInstances.Remove(instance);
+            var presenter = _creatureCardSlotPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            presenter.Dispose();
+            _creatureCardSlotPresenters.Remove(presenter);
+            var controller = _creatureCardSlotControllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();
+            controller.Dispose();
+            _creatureCardSlotControllers.Remove(controller);
         }
     }
 }

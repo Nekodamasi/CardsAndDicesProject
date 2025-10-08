@@ -11,7 +11,7 @@ namespace CardsAndDices
     /// 全てのクリーチャーカードの状態管理などを担当するマネージャークラス。
     /// </summary>
     [CreateAssetMenu(fileName = "CreatureStatusManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CreatureStatusManager")]
-    public class CreatureStatusManager : ScriptableObject, IDisposable, ICreatureStatusInstanceRepository
+    public class CreatureStatusManager : ScriptableObject, IDisposable, ICreatureStatusInstanceRepository, IIdentifiableManager
     {
         [Header("Components")]
 
@@ -175,6 +175,22 @@ namespace CardsAndDices
         List<CreatureStatusInstance> GetInstanceList()
         {
             return _creatureStatusInstances;
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _creatureStatusInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _creatureStatusInstances.Remove(instance);
+            var presenter = _creatureStatusPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            presenter.Dispose();
+            _creatureStatusPresenters.Remove(presenter);
+            var controller = _creatureCardStatusIconControllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();
+            controller.Dispose();
+            _creatureCardStatusIconControllers.Remove(controller);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// ゲーム内のすべてのアクティブな AbilityInstances を管理します
     /// </summary>
     [CreateAssetMenu(fileName = "AbilityManager", menuName = "CardsAndDices/Combats/Managers/Abilities/AbilityManager")]
-    public class AbilityManager : ScriptableObject, IDisposable
+    public class AbilityManager : ScriptableObject, IDisposable, IIdentifiableManager
     {
         private GameEventBus _eventBus;
         private ICreatureCardlocation _iCreatureCardlocation;
@@ -121,6 +121,19 @@ namespace CardsAndDices
         public List<AbilityInstance> GetInstanceList()
         {
             return _instances;
+        }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeします
+        /// </summary>
+        public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
+        {
+            var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            instance.Dispose();
+            _instances.Remove(instance);
+            var controller = _controllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();
+            controller.Dispose();
+            _controllers.Remove(controller);
         }
 
             /*
