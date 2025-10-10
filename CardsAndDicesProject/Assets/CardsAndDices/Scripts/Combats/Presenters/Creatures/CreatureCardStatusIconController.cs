@@ -41,7 +41,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnUpdateDisplayCreatureStatus(UpdateDisplayCreatureStatusEvent evt)
         {
-            UpdateIcon(evt.CreatureCardId);
+            UpdateIcon(evt.ExecutedObjectId);
         }
 
         /// <summary>

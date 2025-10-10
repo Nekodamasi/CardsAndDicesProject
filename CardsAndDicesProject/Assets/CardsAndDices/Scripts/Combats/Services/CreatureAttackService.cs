@@ -37,6 +37,7 @@ namespace CardsAndDices
         /// </summary>
         private async void OnCoolDownStart(CoolDownStartEvent evt)
         {
+            Debug.Log("ここまできてる？");
             var ids = _iTargetManager.GetActionOrderList();
             foreach (var id in ids)
             {
@@ -53,6 +54,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnCoolDownZeoAttack(CoolDownZeoAttackEvent evt)
         {
+            Debug.Log("ここにはきている？");
             CoolDownZeoAttack();
         }
 

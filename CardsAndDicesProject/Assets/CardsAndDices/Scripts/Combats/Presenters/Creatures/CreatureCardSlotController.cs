@@ -31,7 +31,7 @@ namespace CardsAndDices
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.On<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
             _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
-             
+            _eventBus.On<UpdateDisplayCreatureStatusEvent>(OnUpdateDisplayCreatureStatus);
        }
 
         /// <summary>
@@ -45,7 +45,8 @@ namespace CardsAndDices
             _eventBus.Off<MoveToAnimationReflowCreatureCardSlotEvent>(OnMoveToAnimationReflowCreatureCardSlot);
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.Off<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
-            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.Off<UpdateDisplayCreatureStatusEvent>(OnUpdateDisplayCreatureStatus);
         }
 
         /// <summary>
@@ -70,6 +71,15 @@ namespace CardsAndDices
             // ホームポジションを設定
             _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_instance.PlacedCardId, _instance.CreatureCardSlotPosition));
             _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_instance.PlacedCardId, _instance.CreatureCardSlotPosition));
+        }
+
+        /// <summary>
+        /// ディスプレイを現在のステータスで表示するイベント
+        /// </summary>
+        private void OnUpdateDisplayCreatureStatus(UpdateDisplayCreatureStatusEvent evt)
+        {
+            if (evt.ExecutedObjectId != _instance.CompositeObjectId) return;
+            _eventBus.Emit(new IdentifiableCurrentUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>

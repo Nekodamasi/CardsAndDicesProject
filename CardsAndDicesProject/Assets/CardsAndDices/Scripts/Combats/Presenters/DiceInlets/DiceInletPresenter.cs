@@ -33,6 +33,7 @@ namespace CardsAndDices
             _eventBus.On<DiceDropInInletEvent>(OnDiceDropInInlet);
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.On<UpdateDisplayCreatureStatusEvent>(OnUpdateDisplayCreatureStatus);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -43,7 +44,17 @@ namespace CardsAndDices
             _eventBus.Off<DiceDropInInletEvent>(OnDiceDropInInlet);
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.Off<UpdateDisplayCreatureStatusEvent>(OnUpdateDisplayCreatureStatus);
             _view.SetBoundState(false);
+        }
+
+        /// <summary>
+        /// ディスプレイを現在のステータスで表示するイベント
+        /// </summary>
+        private void OnUpdateDisplayCreatureStatus(UpdateDisplayCreatureStatusEvent evt)
+        {
+            if (evt.ExecutedObjectId != _instance.CompositeObjectId) return;
+            _eventBus.Emit(new IdentifiableCurrentUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>

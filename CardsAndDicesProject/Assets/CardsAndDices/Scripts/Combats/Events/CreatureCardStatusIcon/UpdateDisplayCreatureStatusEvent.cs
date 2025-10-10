@@ -5,14 +5,14 @@ namespace CardsAndDices
     /// </summary>
     public class UpdateDisplayCreatureStatusEvent : IEvent
     {
-        public CompositeObjectId CreatureCardId { get; }
+        public CompositeObjectId ExecutedObjectId { get; }
 
     /// <summary>
     /// コンストラクタ
     /// </summary>
-        public UpdateDisplayCreatureStatusEvent(CompositeObjectId creatureCardId)
+        public UpdateDisplayCreatureStatusEvent(CompositeObjectId executedObjectId)
         {
-            CreatureCardId = creatureCardId;
+            ExecutedObjectId = executedObjectId;
         }
     }
 }

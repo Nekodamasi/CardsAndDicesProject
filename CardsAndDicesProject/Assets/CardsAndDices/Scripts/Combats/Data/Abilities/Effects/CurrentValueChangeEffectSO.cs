@@ -34,7 +34,7 @@ namespace CardsAndDices
 
                 }
             }
-            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            await UniTask.Delay(TimeSpan.FromSeconds(2.2f));
             eventBus.Emit(new BuffDebuffEffectEndActionEvent());
         }
     }
