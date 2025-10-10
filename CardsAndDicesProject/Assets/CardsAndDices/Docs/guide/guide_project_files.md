@@ -323,6 +323,18 @@
 | TriggerTiming.cs | アビリティの期限や発動のタイミングを定義するEnum。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\TriggerTiming.cs |
 | UsageCountResetType.cs | ダイスインレットの使用可能回数がリセットされるタイミングを定義するEnum。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Core\UsageCountResetType.cs |
 
+### Scripts/Cores/Data/AnimationProfile
+
+| ファイル名 | 解説 | 格納場所 |
+| :--- | :--- | :--- |
+| ShakeAnimationProfile.cs | Shakeアニメーションのパラメータを定義するプロファイル。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Data\AnimationProfile\ShakeAnimationProfile.cs |
+
+### Scripts/Cores/Data/AnimationStrategy
+
+| ファイル名 | 解説 | 格納場所 |
+| :--- | :--- | :--- |
+| ShakeAnimationStrategySO.cs | DOTweenのDOShakeScaleを使用して、オブジェクトを振動させるアニメーション戦略。 | D:\Users\ponki\Unity\CardsAndDicesProject\Assets\CardsAndDices\Scripts\Cores\Data\AnimationStrategy\ShakeAnimationStrategySO.cs |
+
 ### Scripts/Core/Identifiable
 
 | ファイル名 | 解説 | 格納場所 |

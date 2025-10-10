@@ -30,6 +30,7 @@ namespace CardsAndDices
             _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -40,6 +41,8 @@ namespace CardsAndDices
             _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _view.SetBoundState(false);
         }
 
         /// <summary>
@@ -48,6 +51,7 @@ namespace CardsAndDices
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
             _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_instance.CompositeObjectId, _instance.CreatureCardSlotPosition));
+            _eventBus.Emit(new IdentifiableResetUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>
@@ -61,6 +65,14 @@ namespace CardsAndDices
             // 違う何かがドラッグされたらインアクティブに
             _eventBus.Emit(new ChangeViewStatusEvent(_instance.CompositeObjectId, IdentifiableStatus.Inactive));
             _eventBus.Emit(new DisplayStatusViewEvent(_instance.CompositeObjectId));
+        }
+
+        /// <summary>
+        /// ディスプレイを現在のステータスで表示するイベント
+        /// </summary>
+        private void OnDisplayUIStatus(DisplayUIStatusEvent evt)
+        {
+            _eventBus.Emit(new IdentifiableCurrentUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>

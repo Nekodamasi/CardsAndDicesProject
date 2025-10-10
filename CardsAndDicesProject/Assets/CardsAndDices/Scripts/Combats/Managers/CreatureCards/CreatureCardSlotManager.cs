@@ -38,7 +38,8 @@ namespace CardsAndDices
             _eventBus.On<PlacedHandSlotEvent>(OnPlacedHandSlot);
             _eventBus.On<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
             _eventBus.On<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
-            _eventBus.On<PlacedPpecifiedSlotEvent>(OnPlacedPpecifiedSlot);            
+            _eventBus.On<PlacedPpecifiedSlotEvent>(OnPlacedPpecifiedSlot);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
 
             _reflowService = new ReflowService(this);
 
@@ -55,7 +56,8 @@ namespace CardsAndDices
             _eventBus.Off<PlacedHandSlotEvent>(OnPlacedHandSlot);
             _eventBus.Off<CombatPhaseCardFrontLoadMovementEvent>(OnCombatPhaseCardFrontLoadMovement);
             _eventBus.Off<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
-            _eventBus.Off<PlacedPpecifiedSlotEvent>(OnPlacedPpecifiedSlot);            
+            _eventBus.Off<PlacedPpecifiedSlotEvent>(OnPlacedPpecifiedSlot);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -382,6 +384,14 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
+        }
+
+        /// <summary>
         /// 配置されたカードのlocationを返します
         /// </summary>
         public SlotLocation GetSlotLocation(CompositeObjectId cardId)
@@ -415,6 +425,10 @@ namespace CardsAndDices
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _creatureCardSlotInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _creatureCardSlotInstances.Remove(instance);
             var presenter = _creatureCardSlotPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();

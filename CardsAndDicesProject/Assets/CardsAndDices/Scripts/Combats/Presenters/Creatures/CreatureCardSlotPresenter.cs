@@ -39,6 +39,7 @@ namespace CardsAndDices
         public void Dispose()
         {
             _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
+            _view.SetBoundState(false);
         }
 
         /// <summary>

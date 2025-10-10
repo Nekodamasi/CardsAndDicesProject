@@ -10,6 +10,7 @@ namespace CardsAndDices
         private readonly DiceInstance _instance;
         private readonly DiceView _view;
         private readonly GameEventBus _eventBus;
+        private bool hoge;
 
         /// <summary>
         /// インスタンス側のID
@@ -30,6 +31,9 @@ namespace CardsAndDices
             _eventBus.On<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.On<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
             _eventBus.On<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
+            _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            hoge = false;
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -40,6 +44,30 @@ namespace CardsAndDices
             _eventBus.Off<DisplayOffScreenEvent>(OnDisplayOffScreen);
             _eventBus.Off<IdentifiableStateDropEvent>(OnIdentifiableStateDrop);
             _eventBus.Off<IdentifiableStateBeginDragEvent>(OnIdentifiableStateBeginDrag);
+            _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _view.SetBoundState(false);
+            hoge = true;
+        }
+
+        /// <summary>
+        /// ディスプレイを現在のステータスで表示するイベント
+        /// </summary>
+        private void OnDisplayUIStatus(DisplayUIStatusEvent evt)
+        {
+            _eventBus.Emit(new IdentifiableCurrentUIStatusEvent(_instance.CompositeObjectId));
+        }
+
+        /// <summary>
+        /// UIリセットイベント
+        /// </summary>
+        private void OnResetUIStatus(ResetUIStatusEvent evt)
+        {
+            if (hoge)
+            {
+                Debug.LogWarning("ディスポーズ後にいつまでよばれるの？:" + _instance.CompositeObjectId + "_" + hoge);
+            }
+            _eventBus.Emit(new IdentifiableResetUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>
@@ -50,7 +78,7 @@ namespace CardsAndDices
             // 自分がドラッグ対象
             if (evt.ExecutedObjectId == _instance.CompositeObjectId)
             {
-                _eventBus.Emit(new DiceBeginDragEvent(_instance.CompositeObjectId, _instance.FaceValue));                
+                _eventBus.Emit(new DiceBeginDragEvent(_instance.CompositeObjectId, _instance.FaceValue));
                 return;
             }
 
@@ -64,10 +92,10 @@ namespace CardsAndDices
         private void OnIdentifiableStateDrop(IdentifiableStateDropEvent evt)
         {
             if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
-            _eventBus.Emit(new DiceDropInInletEvent(evt.TargetObjectId, evt.ExecutedObjectId, _instance.FaceValue));
+            var faceValue = _instance.FaceValue;
+            _eventBus.Emit(new DisposeByCompositeObjectIdEvent(_view.CompositeObjectId));
+            _eventBus.Emit(new DiceDropInInletEvent(evt.TargetObjectId, evt.ExecutedObjectId, faceValue));
             _instance.IsAlive = false;
-            _eventBus.Emit(new ChangeViewStatusEvent(_view.CompositeObjectId, IdentifiableStatus.Hide));
-            _eventBus.Emit(new DisplayStatusViewEvent(_view.CompositeObjectId));
         }
 
         /// <summary>

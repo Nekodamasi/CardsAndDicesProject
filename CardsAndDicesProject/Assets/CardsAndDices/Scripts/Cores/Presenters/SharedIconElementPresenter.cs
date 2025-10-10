@@ -44,8 +44,11 @@ namespace CardsAndDices
         private void OnDisplaySharedIconElement(DisplaySharedIconElementEvent evt)
         {
             if (evt.ExecutedObjectId != _instance.CompositeObjectId || evt.SharedIconElementTypeEntity != _instance.SharedIconElementTypeEntity) return;
-            _instance.SetIconValue(evt.NumberValue);
-            _view.UpdateNumberValue(evt.NumberValue);
+            if (_instance.DisplayiconValue != evt.NumberValue)
+            {
+                _instance.SetIconValue(evt.NumberValue);
+                _view.DisplayChangeNumberAnimation(evt.NumberValue);
+            }
             DisplayCurrentStatus();
         }
 

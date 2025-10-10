@@ -90,6 +90,10 @@ namespace CardsAndDices
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _creatureCardInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _creatureCardInstances.Remove(instance);
             var presenter = _creatureCardPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();

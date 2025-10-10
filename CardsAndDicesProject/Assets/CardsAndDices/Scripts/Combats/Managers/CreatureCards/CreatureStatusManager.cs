@@ -37,6 +37,7 @@ namespace CardsAndDices
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
             _eventBus.On<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
             _eventBus.On<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
             
             _creatureAttackService = new CreatureAttackService(_iTargetManager, this, _eventBus);
         }
@@ -49,6 +50,7 @@ namespace CardsAndDices
             _eventBus.Off<CreateCreatureEvent>(OnCreateCreature);
             _eventBus.Off<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
             _eventBus.Off<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -178,11 +180,23 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
+        }
+
+        /// <summary>
         /// 指定したIDに紐づいたInstanceをDisposeします
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _creatureStatusInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _creatureStatusInstances.Remove(instance);
             var presenter = _creatureStatusPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();

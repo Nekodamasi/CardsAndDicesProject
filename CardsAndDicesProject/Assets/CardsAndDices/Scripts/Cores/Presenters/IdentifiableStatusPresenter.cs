@@ -24,10 +24,11 @@ namespace CardsAndDices
             _eventBus.On<ReturnHomePositionAnimationEvent>(OnReturnHomePositionAnimation);
             _eventBus.On<ReturnHomePositionEvent>(OnReturnHomePosition);            
             _eventBus.On<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
-            _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
-            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.On<IdentifiableResetUIStatusEvent>(OnIdentifiableResetUIStatus);
+            _eventBus.On<IdentifiableCurrentUIStatusEvent>(OnIdentifiableCurrentUIStatus);
             _eventBus.On<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
             _eventBus.On<SetCurrentHomeStatusEvent>(OnSetCurrentHomeStatus);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
         public void Dispose()
         {
@@ -36,24 +37,40 @@ namespace CardsAndDices
             _eventBus.Off<ReturnHomePositionAnimationEvent>(OnReturnHomePositionAnimation);
             _eventBus.Off<ReturnHomePositionEvent>(OnReturnHomePosition);            
             _eventBus.Off<MoveToAnimationIdentifiableEvent>(OnMoveToAnimationIdentifiable);
-            _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
-            _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.Off<IdentifiableResetUIStatusEvent>(OnIdentifiableResetUIStatus);
+            _eventBus.Off<IdentifiableCurrentUIStatusEvent>(OnIdentifiableCurrentUIStatus);
             _eventBus.Off<IdentifiableStateClickEvent>(OnIdentifiableStateClick);
             _eventBus.Off<SetCurrentHomeStatusEvent>(OnSetCurrentHomeStatus);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
+
         /// <summary>
-        /// 現在のUIステートをViewに反映させるコマンド
+        /// 指定Dispose
         /// </summary>
-        private void OnDisplayUIStatus(DisplayUIStatusEvent evt)
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
         {
+            if (evt.CompositeObjectId != _status.CompositeObjectId) return;
+            _view.SetBoundState(false);
+            _status.UpdateStatus(IdentifiableStatus.Hide);
+            _view.DisplayHideStatus();
+            Debug.LogWarning("Statusはここででぃすぽーずしてる：" + evt.CompositeObjectId);
+        }
+
+        /// <summary>
+        /// 現在のUIステートをViewに反映させるイベント
+        /// </summary>
+        private void OnIdentifiableCurrentUIStatus(IdentifiableCurrentUIStatusEvent evt)
+        {
+            if (evt.ExecutedObjectId != _status.CompositeObjectId) return;
             DisplayCurrentStatus();
         }
 
         /// <summary>
         /// UIStatusのreset
         /// </summary>
-        private void OnResetUIStatus(ResetUIStatusEvent evt)
+        private void OnIdentifiableResetUIStatus(IdentifiableResetUIStatusEvent evt)
         {
+            if (evt.ExecutedObjectId != _status.CompositeObjectId) return;
             _status.UpdateStatus(_status.CurrentHomeStatus);
             DisplayCurrentStatus();
         }

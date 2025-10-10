@@ -23,6 +23,7 @@ namespace CardsAndDices
             _eventBus = eventBusBus;
             _eventBus.On<ApplyEffectEvent>(OnApplyEffect);
             _eventBus.On<UpdateEffectExpiredEvent>(OnUpdateEffectExpired);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         public void Dispose()
@@ -30,7 +31,8 @@ namespace CardsAndDices
             DisposeInstances();
             DisposeControllers();
             _eventBus.Off<ApplyEffectEvent>(OnApplyEffect);
-            _eventBus.On<UpdateEffectExpiredEvent>(OnUpdateEffectExpired);
+            _eventBus.Off<UpdateEffectExpiredEvent>(OnUpdateEffectExpired);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -125,11 +127,23 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
+        }
+
+        /// <summary>
         /// 指定したIDに紐づいたInstanceをDisposeします
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _instances.Remove(instance);
             var controller = _controllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();

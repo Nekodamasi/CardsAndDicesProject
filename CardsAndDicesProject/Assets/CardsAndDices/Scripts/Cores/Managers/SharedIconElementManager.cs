@@ -25,20 +25,20 @@ namespace CardsAndDices
             DisposePresenters();
             _eventBus = eventBus;
             _viewRegistry = viewRegistry;
-            _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
+            _eventBus.On<InstanceSetUpedEvent>(OnInstanceSetUped);
         }
 
         public void Dispose()
         {
             DisposeInstances();
             DisposePresenters();
-            _eventBus.Off<CreateCreatureEvent>(OnCreateCreature);
+            _eventBus.Off<InstanceSetUpedEvent>(OnInstanceSetUped);
         }
 
         /// <summary>
-        /// クリーチャーの生成イベント
+        /// クリーチャーアイコンの生成イベント
         /// </summary>
-        private void OnCreateCreature(CreateCreatureEvent evt)
+        private void OnInstanceSetUped(InstanceSetUpedEvent evt)
         {
             foreach (var iconview in _viewRegistry.GetAllSharedIconElementViews())
             {

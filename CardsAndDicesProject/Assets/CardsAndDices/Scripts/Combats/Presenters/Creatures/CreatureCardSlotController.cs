@@ -30,6 +30,7 @@ namespace CardsAndDices
             _eventBus.On<MoveToAnimationReflowCreatureCardSlotEvent>(OnMoveToAnimationReflowCreatureCardSlot);
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.On<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
              
        }
 
@@ -44,6 +45,15 @@ namespace CardsAndDices
             _eventBus.Off<MoveToAnimationReflowCreatureCardSlotEvent>(OnMoveToAnimationReflowCreatureCardSlot);
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.Off<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+        }
+
+        /// <summary>
+        /// ディスプレイを現在のステータスで表示するイベント
+        /// </summary>
+        private void OnDisplayUIStatus(DisplayUIStatusEvent evt)
+        {
+            _eventBus.Emit(new IdentifiableCurrentUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>
@@ -68,7 +78,7 @@ namespace CardsAndDices
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
             _instance.PlacedCard(_instance.ReflowPlacedCardId);
-//            _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.CardPlacement, _instance.CompositeObjectId, null));
+            _eventBus.Emit(new IdentifiableResetUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>

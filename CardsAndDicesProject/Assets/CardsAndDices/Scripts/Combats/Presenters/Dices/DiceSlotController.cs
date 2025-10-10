@@ -7,20 +7,20 @@ namespace CardsAndDices
     /// </summary>
     public class DiceSlotController : IDisposable, IIdentifiableController
     {
-        private readonly DiceSlotInstance _diceSlotInstance;
+        private readonly DiceSlotInstance _instance;
         private readonly GameEventBus _eventBus;
 
         /// <summary>
         /// インスタンス側のID
         /// </summary>
-        public CompositeObjectId InstanceId => _diceSlotInstance.CompositeObjectId;
+        public CompositeObjectId InstanceId => _instance.CompositeObjectId;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public DiceSlotController(DiceSlotInstance diceSlotInstance, GameEventBus eventBus)
         {
-            _diceSlotInstance = diceSlotInstance;
+            _instance = diceSlotInstance;
             _eventBus = eventBus;
             _eventBus.On<PlacedDiceEvent>(OnPlacedDice);
             _eventBus.On<ReflowPlacedDiceEvent>(OnReflowPlacedDice);
@@ -28,6 +28,8 @@ namespace CardsAndDices
             _eventBus.On<MoveToAnimationReflowDiceEvent>(OnMoveToAnimationReflowDice);
             _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.On<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -41,6 +43,23 @@ namespace CardsAndDices
             _eventBus.Off<MoveToAnimationReflowDiceEvent>(OnMoveToAnimationReflowDice);
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.Off<IdentifiableStateDropFailureEvent>(OnIdentifiableStateDropFailure);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+        }
+
+        /// <summary>
+        /// 指定Dispose
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            if (evt.CompositeObjectId == _instance.ReflowPlacedDiceId)
+            {
+                _instance.ReflowPlacedDice(null);
+            }
+            if (evt.CompositeObjectId == _instance.PlacedDiceId)
+            {
+                _instance.PlacedDice(null);
+            }
         }
 
         /// <summary>
@@ -49,20 +68,29 @@ namespace CardsAndDices
         private void OnIdentifiableStateDropFailure(IdentifiableStateDropFailureEvent evt)
         {
             // 配置側でリセットする
-            _diceSlotInstance.PlacedDice(_diceSlotInstance.PlacedDiceId);
+            _instance.PlacedDice(_instance.PlacedDiceId);
 
             // ホームポジションを設定
-            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_diceSlotInstance.PlacedDiceId, _diceSlotInstance.DiceSlotPosition));
-            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_diceSlotInstance.PlacedDiceId, _diceSlotInstance.DiceSlotPosition));
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_instance.PlacedDiceId, _instance.DiceSlotPosition));
+            _eventBus.Emit(new MoveToAnimationIdentifiableEvent(_instance.PlacedDiceId, _instance.DiceSlotPosition));
         }
 
         /// <summary>
-        /// リフロー配置を配置側に適用する
+        /// UIリセット
         /// </summary>
         private void OnResetUIStatus(ResetUIStatusEvent evt)
         {
-            _diceSlotInstance.PlacedDice(_diceSlotInstance.ReflowPlacedDiceId);
-            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_diceSlotInstance.CompositeObjectId, _diceSlotInstance.DiceSlotPosition));
+            _instance.PlacedDice(_instance.ReflowPlacedDiceId);
+            _eventBus.Emit(new IdentifiableResetUIStatusEvent(_instance.CompositeObjectId));
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(_instance.CompositeObjectId, _instance.DiceSlotPosition));
+        }
+
+        /// <summary>
+        /// ディスプレイを現在のステータスで表示するイベント
+        /// </summary>
+        private void OnDisplayUIStatus(DisplayUIStatusEvent evt)
+        {
+            _eventBus.Emit(new IdentifiableCurrentUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>
@@ -70,10 +98,10 @@ namespace CardsAndDices
         /// </summary>
         private void OnMoveToAnimationReflowDice(MoveToAnimationReflowDiceEvent evt)
         {
-            if (_diceSlotInstance.CompositeObjectId != evt.DiceSlotId) return;
-            if (_diceSlotInstance.ReflowPlacedDiceId == null) return;
+            if (_instance.CompositeObjectId != evt.DiceSlotId) return;
+            if (_instance.ReflowPlacedDiceId == null) return;
 
-            _eventBus.Emit(new MoveToIdentifiableEvent(_diceSlotInstance.ReflowPlacedDiceId, _diceSlotInstance.DiceSlotPosition));
+            _eventBus.Emit(new MoveToIdentifiableEvent(_instance.ReflowPlacedDiceId, _instance.DiceSlotPosition));
         }
 
         /// <summary>
@@ -82,13 +110,13 @@ namespace CardsAndDices
         private void OnPlacedDice(PlacedDiceEvent evt)
         {
 //            Debug.Log("おんぷらいすだいす１：" + _diceSlotInstance.CompositeObjectId + "/" + evt.DiceSlotId + "/リフローダイス：" + _diceSlotInstance.ReflowPlacedDiceId + " Position:" + _diceSlotInstance.DiceSlotPosition);
-            if (evt.DiceSlotId != _diceSlotInstance.CompositeObjectId) return;
-            if (_diceSlotInstance.IsOccupied)
+            if (evt.DiceSlotId != _instance.CompositeObjectId) return;
+            if (_instance.IsOccupied)
             {
-                _diceSlotInstance.RemoveDice();
+                _instance.RemoveDice();
             }
-            _diceSlotInstance.PlacedDice(evt.DiceId);
-            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.DiceId, _diceSlotInstance.DiceSlotPosition));
+            _instance.PlacedDice(evt.DiceId);
+            _eventBus.Emit(new ChangeHomePositionStatusViewEvent(evt.DiceId, _instance.DiceSlotPosition));
         }
 
         /// <summary>
@@ -96,8 +124,8 @@ namespace CardsAndDices
         /// </summary>
         private void OnReflowPlacedDice(ReflowPlacedDiceEvent evt)
         {
-            if(evt.DiceSlotLocation != _diceSlotInstance.DiceSlotLocation) return;
-            _diceSlotInstance.ReflowPlacedDice(evt.DiceId);
+            if(evt.DiceSlotLocation != _instance.DiceSlotLocation) return;
+            _instance.ReflowPlacedDice(evt.DiceId);
         }
 
         /// <summary>
@@ -105,7 +133,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnRemoveDice(RemoveDiceEvent evt)
         {
-            _diceSlotInstance.RemoveDice();
+            _instance.RemoveDice();
         }
 
     }

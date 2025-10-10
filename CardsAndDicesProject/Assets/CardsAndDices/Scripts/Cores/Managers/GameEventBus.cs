@@ -1,18 +1,18 @@
 using UnityEngine;
-using VContainer; // VContainer.Inject を使用するために追加
+using VContainer;
 using System.Collections.Generic;
 using System;
 
 namespace CardsAndDices
 {
     /// <summary>
-    /// SpriteUIに関連するイベントの登録、配信、解除を一元管理する中央ハブ。
+    /// ゲーム内イベントの登録、配信、解除を一元管理する中央ハブ。
     /// ScriptableObjectを使用したシングルトンとして実装されています。
     /// </summary>
     [CreateAssetMenu(fileName = "GameEventBus", menuName = "CardsAndDices/Core/Identifiable/GameEventBus")]
     public class GameEventBus : ScriptableObject
     {
-        private readonly Dictionary<Type, List<Action<IEvent>>> _subscribers = new();
+        private readonly Dictionary<Type, Delegate> _subscribers = new();
 
         /// <summary>
         /// ScriptableObjectが初期化される時の処理。
@@ -21,72 +21,66 @@ namespace CardsAndDices
         [Inject]
         public void Initialize()
         {
-            // 購読者リストをクリア
             _subscribers.Clear();
         }
 
         /// <summary>
-        /// コマンドタイプに対する購読者を登録します。
+        /// イベントタイプに対する購読者を登録します。
         /// </summary>
-        /// <typeparam name="T">購読するコマンドの型</typeparam>
-        /// <param name="handler">コマンドを処理するハンドラー</param>
+        /// <typeparam name="T">購読するイベントの型</typeparam>
+        /// <param name="handler">イベントを処理するハンドラー</param>
         public void On<T>(Action<T> handler) where T : IEvent
         {
             var type = typeof(T);
-            if (!_subscribers.ContainsKey(type))
+            if (_subscribers.TryGetValue(type, out var existingHandler))
             {
-                _subscribers[type] = new List<Action<IEvent>>();
+                _subscribers[type] = Delegate.Combine(existingHandler, handler);
             }
-
-            _subscribers[type].Add((command) => handler((T)command));
+            else
+            {
+                _subscribers[type] = handler;
+            }
         }
 
         /// <summary>
-        /// コマンドタイプに対する購読を解除します。
+        /// イベントタイプに対する購読を解除します。
         /// </summary>
-        /// <typeparam name="T">購読解除するコマンドの型</typeparam>
+        /// <typeparam name="T">購読解除するイベントの型</typeparam>
         /// <param name="handler">解除するハンドラー</param>
         public void Off<T>(Action<T> handler) where T : IEvent
         {
             var type = typeof(T);
-            if (!_subscribers.ContainsKey(type))
+            if (_subscribers.TryGetValue(type, out var existingHandler))
             {
-                return;
-            }
-
-            var index = _subscribers[type].FindIndex(
-                action => action.Target == handler.Target && 
-                action.Method == handler.Method
-            );
-
-            if (index >= 0)
-            {
-                _subscribers[type].RemoveAt(index);
+                var newHandler = Delegate.Remove(existingHandler, handler);
+                if (newHandler == null)
+                {
+                    _subscribers.Remove(type);
+                }
+                else
+                {
+                    _subscribers[type] = newHandler;
+                }
             }
         }
 
         /// <summary>
-        /// コマンドを発行し、登録された購読者に配信します。
+        /// イベントを発行し、登録された購読者に配信します。
         /// </summary>
-        /// <param name="command">発行するコマンド</param>
-        public void Emit(IEvent command)
+        /// <param name="eventInstance">発行するイベント</param>
+        public void Emit(IEvent eventInstance)
         {
-            var type = command.GetType();
-
-            if (!_subscribers.ContainsKey(type))
-            {
-                return;
-            }
-
-            foreach (var handler in _subscribers[type])
+            var type = eventInstance.GetType();
+            if (_subscribers.TryGetValue(type, out var handler))
             {
                 try
                 {
-                    handler(command);
+                    // 登録されたデリゲートを実行
+                    handler.DynamicInvoke(eventInstance);
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"[SpriteCommandBus] Error handling command {type.Name}: {e}");
+                    Debug.LogError($"[GameEventBus] Error handling event {type.Name}: {e}");
                 }
             }
         }

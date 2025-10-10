@@ -31,6 +31,7 @@ namespace CardsAndDices
             _viewRegistry = viewRegistry;
 
             _eventBus.On<CreateDiceInletEvent>(OnCreateDiceInlet);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -62,6 +63,7 @@ namespace CardsAndDices
             DisposeInstances();
             DisposePresenters();
             _eventBus.Off<CreateDiceInletEvent>(OnCreateDiceInlet);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -104,12 +106,25 @@ namespace CardsAndDices
             _eventBus.Emit(new DisplayStatusViewEvent(instance.CompositeObjectId));
             
         }
+
+        /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
+        }
+
         /// <summary>
         /// 指定したIDに紐づいたInstanceをDisposeします
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _instances.Remove(instance);
             var presenter = _presenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();

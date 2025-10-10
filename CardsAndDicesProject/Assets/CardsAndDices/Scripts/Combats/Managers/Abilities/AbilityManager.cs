@@ -27,6 +27,7 @@ namespace CardsAndDices
             _eventBus.On<CreateAbilityEvent>(OnCreateAbility);
             _eventBus.On<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
             _eventBus.On<UpdateAbilityLockEvent>(OnUpdateAbilityLock);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
 
             _iCreatureCardlocation = iCreatureCardlocation;
             _iTargetManager = iTargetManager;
@@ -37,7 +38,8 @@ namespace CardsAndDices
             DisposeControllers();
             _eventBus.Off<CreateAbilityEvent>(OnCreateAbility);
             _eventBus.Off<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
-            _eventBus.On<UpdateAbilityLockEvent>(OnUpdateAbilityLock);
+            _eventBus.Off<UpdateAbilityLockEvent>(OnUpdateAbilityLock);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -124,11 +126,23 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
+        }
+
+        /// <summary>
         /// 指定したIDに紐づいたInstanceをDisposeします
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _instances.Remove(instance);
             var controller = _controllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();

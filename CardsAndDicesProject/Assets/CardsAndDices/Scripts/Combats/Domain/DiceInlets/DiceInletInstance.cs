@@ -65,7 +65,6 @@ namespace CardsAndDices
         public bool AcceptableDice(int faceValue)
         {
             CurrentCountdownValue -= faceValue;
-            Debug.Log("だいすいれたあと：" + CurrentCountdownValue + "/" + faceValue);
             if (CurrentCountdownValue <= 0)
             {
                 CurrentCountdownValue = 0;

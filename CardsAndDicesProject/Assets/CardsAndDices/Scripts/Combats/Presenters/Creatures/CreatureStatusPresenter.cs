@@ -40,6 +40,7 @@ namespace CardsAndDices
             _eventBus.Off<DisplayCreatureBuffEvent>(OnDisplayCreatureBuff);
             _eventBus.Off<DisplayCreatureDeBuffEvent>(OnDisplayCreatureDeBuff);
             _eventBus.On<ChangeCreatureCurrentValueEvent>(OnChangeCreatureCurrentValue);
+            _view.SetBoundState(false);
         }
 
         /// <summary>

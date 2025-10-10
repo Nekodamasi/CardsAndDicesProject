@@ -31,6 +31,8 @@ namespace CardsAndDices
             _compositeObjectIdTypeEntity = compositeObjectIdTypeEntity;
             _eventBus.On<DiceBeginDragEvent>(OnDiceBeginDrag);
             _eventBus.On<DiceDropInInletEvent>(OnDiceDropInInlet);
+            _eventBus.On<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.On<DisplayUIStatusEvent>(OnDisplayUIStatus);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -39,6 +41,25 @@ namespace CardsAndDices
         {
             _eventBus.Off<DiceBeginDragEvent>(OnDiceBeginDrag);
             _eventBus.Off<DiceDropInInletEvent>(OnDiceDropInInlet);
+            _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
+            _eventBus.Off<DisplayUIStatusEvent>(OnDisplayUIStatus);
+            _view.SetBoundState(false);
+        }
+
+        /// <summary>
+        /// ディスプレイを現在のステータスで表示するイベント
+        /// </summary>
+        private void OnDisplayUIStatus(DisplayUIStatusEvent evt)
+        {
+            _eventBus.Emit(new IdentifiableCurrentUIStatusEvent(_instance.CompositeObjectId));
+        }
+
+        /// <summary>
+        /// UIリセットイベント
+        /// </summary>
+        private void OnResetUIStatus(ResetUIStatusEvent evt)
+        {
+            _eventBus.Emit(new IdentifiableResetUIStatusEvent(_instance.CompositeObjectId));
         }
 
         /// <summary>
@@ -59,7 +80,6 @@ namespace CardsAndDices
         /// </summary>
         private async void OnDiceDropInInlet(DiceDropInInletEvent evt)
         {
-                    Debug.Log("だいすどろっぷいんれっと");
             // 自分以外は無視する
             if (evt.InletId != _instance.CompositeObjectId) return;
 

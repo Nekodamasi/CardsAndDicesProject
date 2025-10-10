@@ -28,6 +28,7 @@ namespace CardsAndDices
             _compositeObjectIdManager = compositeObjectIdManager;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.On<CombatPhaseReflowDiceEvent>(OnReflowDiceSlots);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         public void Dispose()
@@ -36,6 +37,7 @@ namespace CardsAndDices
             DisposeControllers();
             _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.Off<CombatPhaseReflowDiceEvent>(OnReflowDiceSlots);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -129,11 +131,23 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
+        }
+
+        /// <summary>
         /// 指定したIDに紐づいたInstanceをDisposeします
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _diceSlotInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _diceSlotInstances.Remove(instance);
             var controller = _iceSlotControllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();

@@ -92,9 +92,6 @@ namespace CardsAndDices
 
             // Statusをリセットします
             _eventBus.Emit(new ResetUIStatusEvent());
-
-            // resetしたStatusでViewを更新します
-            _eventBus.Emit(new DisplayUIStatusEvent());
         }
 
         /// <summary>
@@ -107,9 +104,6 @@ namespace CardsAndDices
 
             // Statusをリセットします
             _eventBus.Emit(new ResetUIStatusEvent());
-
-            // resetしたStatusでViewを更新します
-            _eventBus.Emit(new DisplayUIStatusEvent());
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using VContainer;
 using System.Linq;
+using Unity.Burst.Intrinsics;
 
 namespace CardsAndDices
 {
@@ -47,6 +48,8 @@ namespace CardsAndDices
             //_incrementId = 1;
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
+            _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+            
 
         }
         /// <summary>
@@ -79,6 +82,7 @@ namespace CardsAndDices
             DisposePresenters();
             _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.Off<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
+            _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
         }
 
         /// <summary>
@@ -162,11 +166,23 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定したIDに紐づいたInstanceをDisposeするイベント
+        /// </summary>
+        private void OnDisposeByCompositeObjectId(DisposeByCompositeObjectIdEvent evt)
+        {
+            DisposeByCompositeObjectId(evt.CompositeObjectId);
+        }
+
+        /// <summary>
         /// 指定したIDに紐づいたInstanceをDisposeします
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
             var instance = _diceInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            if (instance is null)
+            {
+                return;
+            }
             instance.Dispose();
             _diceInstances.Remove(instance);
             var presenter = _dicePresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();

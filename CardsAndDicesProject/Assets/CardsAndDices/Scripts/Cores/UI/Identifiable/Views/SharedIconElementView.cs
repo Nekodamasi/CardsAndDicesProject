@@ -35,7 +35,7 @@ namespace CardsAndDices
         /// </summary>
         public SharedIconElementTypeEntity SharedIconElementTypeEntity => _sharedIconElementTypeEntity;
 
-        public void UpdateNumberValue(int value)
+        private void UpdateNumberValue(int value)
         {
             _valueText.text = string.Format(_formatString, value);
         }
@@ -59,7 +59,7 @@ namespace CardsAndDices
                 return null;
             }
             UpdateNumberValue(value);
-            return AnimationExecute(_grayoutAnimationStrategyEntity);
+            return AnimationExecute(_changeNumberAnimationStrategyEntity);
         }
 
         /// <summary>
