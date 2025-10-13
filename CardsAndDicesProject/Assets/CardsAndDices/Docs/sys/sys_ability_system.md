@@ -66,7 +66,7 @@ classDiagram
     BaseAbilityEffectDefinitionSO <|-- BuffDebuffEffectSO
 ```
 
-### 1. 管理クラス (Controller/Manager)
+### 1. 管理クラス (Manager)
 
 - **`AbilityManager` (ScriptableObject)**:
     - **継承**: `ScriptableObject`, `IDisposable`, `IIdentifiableManager`
@@ -85,6 +85,8 @@ classDiagram
         - `OnUpdateAbilityLock(UpdateAbilityLockEvent)`: 対象アビリティの `SetLock` メソッドを呼び出す。
         - `DisposeByCompositeObjectId(CompositeObjectId)`: 指定されたIDに関連するインスタンスとコントローラーを破棄する。
 
+### 2. 仲介クラス (Presenter / Controller)
+
 - **`AbilityController` (POCO)**:
     - **継承**: `IDisposable`, `IIdentifiableController`
     - **責務**: `AbilityInstance` (Model) と将来的なViewを仲介する。現状はインスタンスを保持するのみで、具体的なロジックは持たない。
@@ -92,7 +94,7 @@ classDiagram
         - `_instance`: 担当する `AbilityInstance`。
         - `InstanceId`: 担当するインスタンスの `CompositeObjectId`。
 
-### 2. データ定義 (Model - ScriptableObject)
+### 3. データ定義 (Model - ScriptableObject)
 
 - **`AbilityDataEntity` (ScriptableObject)**:
     - **継承**: `BaseEntityDefinition`
@@ -117,7 +119,7 @@ classDiagram
     - **メソッド**:
         - `Execute(AbilityContext, GameEventBus)`: 効果を実行する。通常、`GameEventBus` を介して具体的なコマンド（`CreatureAttackEvent`など）を発行する。
 
-### 3. 実行時インスタンス (Model - POCO)
+### 4. 実行時インスタンス (Model - POCO)
 
 - **`AbilityInstance` (POCO)**:
     - **継承**: `IDisposable`, `IIdentifiableInstance`

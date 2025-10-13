@@ -76,7 +76,7 @@ classDiagram
     - `CreatureCardSlotInstance` の状態変更を管理します。
     - **責務**: カードの配置、リフロー、削除に関するイベントを購読し、担当する `CreatureCardSlotInstance` の状態を更新します。また、リフロー計算の結果に基づき、カードを移動させるためのアニメーションイベントを発行します。
 
-### 3. 管理クラス (Controller)
+### 3. 管理クラス (Manager)
 
 - **`CreatureManager`**:
     - **継承**: `ScriptableObject`
