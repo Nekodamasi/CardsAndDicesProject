@@ -30,6 +30,8 @@ namespace CardsAndDices
             _eventBus.On<DisplayCreatureBuffEvent>(OnDisplayCreatureBuff);
             _eventBus.On<DisplayCreatureDeBuffEvent>(OnDisplayCreatureDeBuff);
             _eventBus.On<ChangeCreatureCurrentValueEvent>(OnChangeCreatureCurrentValue);
+            _eventBus.On<DisplayCreatureAttackEvent>(OnDisplayCreatureAttack);
+            _eventBus.On<DisplayCreatureReactionEvent>(OnDisplayCreatureReaction);
         }
         /// <summary>
         /// 関連付けを解除し、Viewをプールに返却します。
@@ -39,8 +41,35 @@ namespace CardsAndDices
             _eventBus.Off<ResetUIStatusEvent>(OnResetUIStatus);
             _eventBus.Off<DisplayCreatureBuffEvent>(OnDisplayCreatureBuff);
             _eventBus.Off<DisplayCreatureDeBuffEvent>(OnDisplayCreatureDeBuff);
-            _eventBus.On<ChangeCreatureCurrentValueEvent>(OnChangeCreatureCurrentValue);
+            _eventBus.Off<ChangeCreatureCurrentValueEvent>(OnChangeCreatureCurrentValue);
+            _eventBus.Off<DisplayCreatureAttackEvent>(OnDisplayCreatureAttack);
+            _eventBus.Off<DisplayCreatureReactionEvent>(OnDisplayCreatureReaction);
             _view.SetBoundState(false);
+        }
+
+        /// <summary>
+        /// リアクション
+        /// </summary>
+        private void OnDisplayCreatureReaction(DisplayCreatureReactionEvent evt)
+        {
+            if (evt.TargetId != _view.CompositeObjectId) return;
+            if (_instance.IsDamage)
+            {
+                _view.DisplayDamage(null);
+            }
+            else if (_instance.IsDeath)
+            {
+                _view.DisplayDeath(null);
+            }
+        }
+
+        /// <summary>
+        /// クリーチャーアタック
+        /// </summary>
+        private void OnDisplayCreatureAttack(DisplayCreatureAttackEvent evt)
+        {
+            if (evt.AttackerId != _view.CompositeObjectId) return;
+            _view.DisplayBodySlam(null);
         }
 
         /// <summary>

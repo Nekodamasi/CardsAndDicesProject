@@ -25,11 +25,24 @@ namespace CardsAndDices
             _gameEventBus = gameEventBus;
             _gameEventBus.On<CoolDownZeoAttackEvent>(OnCoolDownZeoAttack);
             _gameEventBus.On<CoolDownStartEvent>(OnCoolDownStart);
+            _gameEventBus.On<CreatureAttackEvent>(OnCreatureAttack);
+            
         }
         public void Dispose()
         {
             _gameEventBus.Off<CoolDownZeoAttackEvent>(OnCoolDownZeoAttack);
             _gameEventBus.Off<CoolDownStartEvent>(OnCoolDownStart);
+            _gameEventBus.Off<CreatureAttackEvent>(OnCreatureAttack);
+        }
+
+        /// <summary>
+        /// クリーチャーの攻撃
+        /// </summary>
+        private async void OnCreatureAttack(CreatureAttackEvent evt)
+        {
+            // １アクション攻撃処理を実行
+            await CreateAttack(evt.CreateAttackContext);
+            _gameEventBus.Emit(new CreatureAttackEndEvent());
         }
 
         /// <summary>
@@ -37,7 +50,6 @@ namespace CardsAndDices
         /// </summary>
         private async void OnCoolDownStart(CoolDownStartEvent evt)
         {
-            Debug.Log("ここまできてる？");
             var ids = _iTargetManager.GetActionOrderList();
             foreach (var id in ids)
             {
@@ -54,7 +66,6 @@ namespace CardsAndDices
         /// </summary>
         private void OnCoolDownZeoAttack(CoolDownZeoAttackEvent evt)
         {
-            Debug.Log("ここにはきている？");
             CoolDownZeoAttack();
         }
 
@@ -73,7 +84,7 @@ namespace CardsAndDices
         /// <summary>
         /// クールダウン０
         /// </summary>
-        private void CoolDownZeoAttack()
+        private async void CoolDownZeoAttack()
         {
             var cooldownzeroId = _iTargetManager.GetActionOrderCoolDownZeroId();
 
@@ -85,8 +96,9 @@ namespace CardsAndDices
             }
 
             var attacker = _iCreatureStatusInstanceRepository.GetInstance(cooldownzeroId);
+            attacker.OnCooldownFinished();
 
-            CreateAttackContext createAttackContext = new CreateAttackContext(
+            CreatureAttackContext creatureAttackContext = new CreatureAttackContext(
                                                                                 cooldownzeroId,
                                                                                 attacker.HitsPerMainAttack,
                                                                                 attacker.MainAttackAoE,
@@ -94,13 +106,14 @@ namespace CardsAndDices
                                                                                 0);
 
             // １アクション攻撃処理を実行
-            CreateAttack(createAttackContext);
+            await CreateAttack(creatureAttackContext);
+            _gameEventBus.Emit(new CoolDownZeoAttackEvent());
         }
 
         /// <summary>
         /// １アクション分の戦闘処理とアニメーション
         /// </summary>
-        private async void CreateAttack(CreateAttackContext createAttackContext)
+        private async UniTask CreateAttack(CreatureAttackContext createAttackContext)
         {
             for (var i = 0; i < createAttackContext.HitsPerAttack; i++)
             {
@@ -111,7 +124,7 @@ namespace CardsAndDices
         /// <summary>
         /// １回の攻撃分の処理を行う
         /// </summary>
-        private async UniTask PerformAttack(CreateAttackContext createAttackContext)
+        private async UniTask PerformAttack(CreatureAttackContext createAttackContext)
         {
             var attacker = _iCreatureStatusInstanceRepository.GetInstance(createAttackContext.AttackerId);
             var attackValue = attacker.GetToTargetStatus(createAttackContext.AttackEffectTargetType) + createAttackContext.AddAttackPoint;

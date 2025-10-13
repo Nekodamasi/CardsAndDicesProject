@@ -102,7 +102,6 @@ namespace CardsAndDices
 
                 if (_instance.InletEffectType == InletEffectType.AbilityExecutor)
                 {
-                    Debug.Log("あびりてぃちぇっくだー");
                     //abilityチェック
                     _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.Inlet, _instance.CompositeObjectId.Owner, _instance.CompositeObjectId));
                 }
@@ -111,13 +110,15 @@ namespace CardsAndDices
                     //abilityロック
                     _eventBus.Emit(new UpdateAbilityLockEvent(_instance.CompositeObjectId, true));
                     _instance.SetIsLock(true);
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                    _eventBus.Emit(new CoolDownStartEvent());
                 }
                 return;
             }
 
             // reset
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
-            _eventBus.Emit(new ResetUIStatusEvent());
+            _eventBus.Emit(new CoolDownStartEvent());
         }
     }
 }

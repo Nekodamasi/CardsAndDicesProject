@@ -53,7 +53,6 @@ namespace CardsAndDices
             _view.SetBoundState(false);
             _status.UpdateStatus(IdentifiableStatus.Hide);
             _view.DisplayHideStatus();
-            Debug.LogWarning("Statusはここででぃすぽーずしてる：" + evt.CompositeObjectId);
         }
 
         /// <summary>

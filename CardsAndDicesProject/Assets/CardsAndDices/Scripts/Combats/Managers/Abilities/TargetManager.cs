@@ -59,6 +59,26 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 基本的な行動順序に則ってソートされた敵カードのうち、一番最初に出たカードを取得します
+        /// </summary>
+        public List<CompositeObjectId> GetHostileCreature(Team team)
+        {
+            var list = _creatureCardSlotManager.GetNonHandInstanceList();
+            var sortedSlots = list
+                .Where(slot => slot.IsOccupied && slot.Team != team)
+                .OrderBy(slot => slot.Team) // Enemy first
+                .ThenBy(slot => slot.Location);
+
+            List<CompositeObjectId> ids = new();
+            foreach (var slot in sortedSlots)
+            {
+                ids.Add(slot.ReflowPlacedCardId);
+                break;
+            }
+            return ids;
+        }
+
+        /// <summary>
         /// 指定された実行者と効果範囲に基づいて、ターゲットとなるカードのIDリストを取得します。
         /// </summary>
         /// <param name="areaOfEffect">効果範囲の定義。</param>
@@ -86,6 +106,8 @@ namespace CardsAndDices
             {
                 case AreaOfEffect.Self:
                     return new List<CompositeObjectId> { executorId };
+                case AreaOfEffect.HostileCreature:
+                    return GetHostileCreature(executorSlot.Team);
                 /*
                                 case AreaOfEffect.All:
                                     // 実装メモ: CreatureCardSlotManagerには、盤面上の全てのカードIDを取得する機能が必要です。

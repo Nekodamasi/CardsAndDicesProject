@@ -1,4 +1,4 @@
-# sys_effect_management.md - エフェクト管理システム設計書
+# sys_effect_system.md - エフェクト管理システム設計書
 
 ---
 

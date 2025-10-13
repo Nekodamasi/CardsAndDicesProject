@@ -152,17 +152,19 @@ namespace CardsAndDices
             }
         }
 
-        private void OnCooldownFinished()
+        public void OnCooldownFinished()
         {
             IsCooldownFinished = true;
         }
 
-        private void RecalculateStats()
+        public void RecalculateStats()
         {
-            // Clamp current values to new base values if necessary
-            CurrentHealth = System.Math.Min(CurrentHealth, BaseHealth);
-            CurrentShield = System.Math.Min(CurrentShield, BaseShield);
-            CurrentCooldown = System.Math.Min(CurrentCooldown, BaseCooldown);
+            IsCooldownFinished = false;
+            CurrentShield = System.Math.Max(CurrentShield, BaseShield);
+            CurrentCooldown = System.Math.Max(CurrentCooldown, BaseCooldown);
+            Debug.Log("りせっとできてない？->CurrentCooldown" + CurrentCooldown + "/" + BaseCooldown);
+            IsDamage = false;
+            IsDeath = false;
         }
     }
 }

@@ -6,7 +6,6 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "BuffDebuffEffect", menuName = "CardsAndDices/Combats/Data/Abilities/Effects/BuffDebuffEffect")]
     public class BuffDebuffEffectSO : BaseAbilityEffectDefinitionSO
     {
-        [SerializeField] private EffectData _effectData;
         [SerializeField] private List<BuffDebuffContext> _buffDebuffContexts = new List<BuffDebuffContext>();
 
         /// <summary>

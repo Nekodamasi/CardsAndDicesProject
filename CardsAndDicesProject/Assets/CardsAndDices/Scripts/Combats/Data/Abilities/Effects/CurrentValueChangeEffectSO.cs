@@ -10,7 +10,6 @@ namespace CardsAndDices
     [CreateAssetMenu(fileName = "CurrentValueChangeEffectSO", menuName = "CardsAndDices/Combats/Data/Abilities/Effects/CurrentValueChangeEffectSO")]
     public class CurrentValueChangeEffectSO : BaseAbilityEffectDefinitionSO
     {
-        [SerializeField] private EffectData _effectData;
         [SerializeField] private List<CurrentValueChangeContext> _currentValueChangeContexts = new List<CurrentValueChangeContext>();
 
         /// <summary>

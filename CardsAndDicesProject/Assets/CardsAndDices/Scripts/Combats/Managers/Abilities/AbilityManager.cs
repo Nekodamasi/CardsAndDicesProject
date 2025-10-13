@@ -112,6 +112,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnUpdateAbilityLock(UpdateAbilityLockEvent evt)
         {
+            Debug.Log("ここはロックされるはず？：" + evt.SubSourceObjectId);
             var list = _instances.Where(a => a.SubOwnerId == evt.SubSourceObjectId && a.IsAvailable).ToList();
 
             foreach (var instance in list)
@@ -138,16 +139,19 @@ namespace CardsAndDices
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
-            var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
-            if (instance is null)
+            var instances = _instances.Where(i => i.CompositeObjectId == compositeObjectId).ToList();
+            foreach (var instance in instances)
             {
-                return;
+                instance.Dispose();
+                _instances.Remove(instance);
             }
-            instance.Dispose();
-            _instances.Remove(instance);
-            var controller = _controllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();
-            controller.Dispose();
-            _controllers.Remove(controller);
+
+            var controllers = _controllers.Where(c => c.InstanceId == compositeObjectId).ToList();
+            foreach (var controller in controllers)
+            {
+                controller.Dispose();
+                _controllers.Remove(controller);
+            }
         }
 
             /*

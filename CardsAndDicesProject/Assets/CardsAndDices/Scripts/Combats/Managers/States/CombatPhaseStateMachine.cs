@@ -26,7 +26,7 @@ namespace CardsAndDices
 			_eventBus.On<ChangeCombatPhaseEvent>(OnChangeCombatPhase);
 			_eventBus.On<BuffDebuffEffectEndActionEvent>(OnBuffDebuffEffectEndAction);
 			_eventBus.On<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
-//			_eventBus.On<AttackActionEndEvent>(OnAttackActionEnd);
+			_eventBus.On<CreatureAttackEndEvent>(OnCreatureAttackEnd);
 		}
 
         public void Dispose()
@@ -34,8 +34,23 @@ namespace CardsAndDices
 			_eventBus.Off<ChangeCombatPhaseEvent>(OnChangeCombatPhase);
 			_eventBus.Off<BuffDebuffEffectEndActionEvent>(OnBuffDebuffEffectEndAction);
 			_eventBus.Off<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
-//			_eventBus.Off<AttackActionEndEvent>(OnAttackActionEnd);
+			_eventBus.Off<CreatureAttackEndEvent>(OnCreatureAttackEnd);
         }
+
+		/// <summary>
+		/// クリーチャー攻撃処理終了
+		/// </summary>
+		private void OnCreatureAttackEnd(CreatureAttackEndEvent evt)
+		{
+			switch (_currentCombatPhase)
+			{
+				case CombatPhase.DiceInletEffectPhase:
+					// クールダウンフェーズに変更
+					SetCurrentCombatPhase(CombatPhase.CooldownPhase);
+					_eventBus.Emit(new CoolDownZeoAttackEvent());
+					break;
+			}
+		}
 
 		/// <summary>
 		/// クールダウン攻撃処理終了
@@ -47,12 +62,12 @@ namespace CardsAndDices
 				case CombatPhase.DiceInletEffectPhase:
 					// クールダウンフェーズに変更
 					SetCurrentCombatPhase(CombatPhase.CooldownPhase);
-                	_eventBus.Emit(new CoolDownStartEvent());
+					_eventBus.Emit(new CoolDownStartEvent());
 					break;
 				case CombatPhase.CooldownPhase:
 					// プレイヤーインプットフェーズに変更
 					SetCurrentCombatPhase(CombatPhase.PlayerInputPhase);
-                	_eventBus.Emit(new ResetUIStatusEvent());
+					_eventBus.Emit(new ResetCoolDownEvent());
 					break;
 				default:
 					break;

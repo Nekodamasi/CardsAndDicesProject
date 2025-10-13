@@ -4,29 +4,31 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// 体当たりアニメーションを実装する戦略クラス。
+    /// バフ効果を受けた際のアニメーション戦略。
     /// </summary>
-    public class BodySlamAnimationStrategy
+    [CreateAssetMenu(fileName = "BodySlamAnimationStrategySO", menuName = "CardsAndDices/Combats/Data/AnimationStrategy/BodySlamAnimationStrategySO")]
+    public class BodySlamAnimationStrategySO :  BaseAnimationStrategySO
     {
-        private readonly BodySlamAnimationProfile _profile;
+        [SerializeField] private BodySlamAnimationProfile _profile;
 
         /// <summary>
-        /// BodySlamAnimationStrategyを初期化します。
+        /// コンストラクタ。
         /// </summary>
-        /// <param name="profile">使用するアニメーションプロファイル</param>
-        public BodySlamAnimationStrategy(BodySlamAnimationProfile profile)
+        /// <param name="profile">アニメーションのパラメータを定義するプロファイル。</param>
+        public BodySlamAnimationStrategySO(BodySlamAnimationProfile profile)
         {
             _profile = profile;
         }
 
         /// <summary>
-        /// 体当たりアニメーションを実行します。
+        /// アニメーションを実行します。
         /// </summary>
-        /// <param name="context">アニメーションに必要なコンポーネントのコンテキスト</param>
-        public Sequence ExecuteAsync(AnimationContext context)
+        /// <param name="context">アニメーションに必要なコンポーネントのコンテキスト。</param>
+        /// <returns>生成されたDOTweenのSequence。</returns>
+        public override Sequence ExecuteAsync(AnimationContext context)
         {
             Transform targetTransform = context.MoveTargetTransform;
-            Vector3 originalPosition = targetTransform.localPosition;
+            Vector3 originalPosition = context.MoveTargetTransform.localPosition;
 
             Sequence sequence = DOTween.Sequence();
 

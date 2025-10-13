@@ -38,6 +38,7 @@ namespace CardsAndDices
             _eventBus.On<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
             _eventBus.On<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
             _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+            _eventBus.On<ResetCoolDownEvent>(OnResetCoolDown);
             
             _creatureAttackService = new CreatureAttackService(_iTargetManager, this, _eventBus);
         }
@@ -51,6 +52,23 @@ namespace CardsAndDices
             _eventBus.Off<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
             _eventBus.Off<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
             _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+            _eventBus.Off<ResetCoolDownEvent>(OnResetCoolDown);
+        }
+
+        /// <summary>
+        /// プレイヤーカードの画面へ配置
+        /// </summary>
+        private async void OnResetCoolDown(ResetCoolDownEvent evt)
+        {
+            var list = _creatureStatusInstances.Where(s => s.IsCooldownFinished == true).ToList();
+            Debug.Log("ここにきてるのだろうか？:" + list.Count);
+            foreach (var instance in list)
+            {
+                instance.RecalculateStats();
+            }
+            // 待機
+            await UniTask.Delay(TimeSpan.FromSeconds(0.6f));
+			_eventBus.Emit(new ResetUIStatusEvent());
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-# sys_sharedIconElement_design.md - 共有アイコン要素設計書
+# sys_shared_icon_element_design.md - 共有アイコン要素設計書
 
 ---
 

@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// クリーチャーアタックコンテキスト
     /// </summary>
-    public class CreateAttackContext
+    public class CreatureAttackContext
     {
         public CompositeObjectId AttackerId;
         public int HitsPerAttack;
@@ -17,7 +17,7 @@ namespace CardsAndDices
         /// <summary>
         /// クリーチャーアタックコンテキスト
         /// </summary>
-        public CreateAttackContext(CompositeObjectId attackerId, int hitsPerAttack, AreaOfEffect areaOfEffect, EffectTargetType attackEffectTargetType, int addAttackPoint)
+        public CreatureAttackContext(CompositeObjectId attackerId, int hitsPerAttack, AreaOfEffect areaOfEffect, EffectTargetType attackEffectTargetType, int addAttackPoint)
         {
             AttackerId = attackerId;
             HitsPerAttack = hitsPerAttack;

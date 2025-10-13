@@ -3,14 +3,14 @@ using UnityEngine;
 namespace CardsAndDices
 {
     /// <summary>
-    /// 攻撃Action終了イベント
+    /// クールダウン処理のリセット
     /// </summary>
-    public class AttackActionEndEvent : IEvent
+    public class ResetCoolDownEvent : IEvent
     {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public AttackActionEndEvent()
+        public ResetCoolDownEvent()
         {
         }
     }
