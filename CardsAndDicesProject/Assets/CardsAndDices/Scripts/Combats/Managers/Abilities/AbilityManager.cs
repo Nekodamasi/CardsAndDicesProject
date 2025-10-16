@@ -10,7 +10,7 @@ namespace CardsAndDices
     /// ゲーム内のすべてのアクティブな AbilityInstances を管理します
     /// </summary>
     [CreateAssetMenu(fileName = "AbilityManager", menuName = "CardsAndDices/Combats/Managers/Abilities/AbilityManager")]
-    public class AbilityManager : ScriptableObject, IDisposable, IIdentifiableManager
+    public class AbilityManager : ScriptableObject, IDisposable, IIdentifiableManager, IAbilityCheck
     {
         private GameEventBus _eventBus;
         private ICreatureCardlocation _iCreatureCardlocation;
@@ -86,13 +86,49 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定された実行者とタイミングで実行可能なAbilityがあるか返します
+        /// </summary>
+        public bool HasExecutableAbility(CompositeObjectId ownerId, CompositeObjectId subOwnerId, ActivationTiming activationTiming)
+        {
+            var list = _instances.Where(a => a.CompositeObjectId == ownerId && a.ActivationTiming == activationTiming && a.IsAvailable).ToList();
+
+            foreach (var instance in list)
+            {
+                if (instance.IsTrigger)
+                {
+                    if (instance.SubOwnerId == null || instance.SubOwnerId == subOwnerId)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// タイミングで実行可能なAbilityがあるか返します
+        /// </summary>
+        public bool HasExecutableAbility(ActivationTiming activationTiming)
+        {
+            var list = _instances.Where(a => a.ActivationTiming == activationTiming && a.IsAvailable).ToList();
+            foreach (var instance in list)
+            {
+                if (instance.IsTrigger)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// アビリティの実行
         /// </summary>
         private void OnExecuteAbilityEffect(ExecuteAbilityEffectEvent evt)
         {
             // エフェクトの有効期限を更新
             _eventBus.Emit(new UpdateEffectExpiredEvent(evt.TriggerTiming, evt.SourceObjectId, evt.SubSourceObjectId));
-            
+
             var list = _instances.Where(a => a.CompositeObjectId == evt.SourceObjectId && a.ActivationTiming == evt.TriggerTiming && a.IsAvailable).ToList();
 
             foreach (var instance in list)

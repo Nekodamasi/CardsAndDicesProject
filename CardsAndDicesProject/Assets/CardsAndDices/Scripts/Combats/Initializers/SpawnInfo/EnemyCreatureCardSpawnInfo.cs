@@ -3,7 +3,7 @@ using System;
 namespace CardsAndDices
 {
     /// <summary>
-    /// クリーチャーカードのスポーン情報を保持するデータクラス。
+    /// エネミークリーチャーカードのスポーン情報を保持するデータクラス。
     /// </summary>
     [Serializable]
     public class EnemyCreatureCardSpawnInfo

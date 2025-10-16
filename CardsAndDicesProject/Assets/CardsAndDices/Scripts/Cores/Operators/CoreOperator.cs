@@ -101,9 +101,6 @@ namespace CardsAndDices
         {
             // 待機
             await UniTask.Delay(TimeSpan.FromSeconds(_clickTime));
-
-            // Statusをリセットします
-            _eventBus.Emit(new ResetUIStatusEvent());
         }
     }
 }

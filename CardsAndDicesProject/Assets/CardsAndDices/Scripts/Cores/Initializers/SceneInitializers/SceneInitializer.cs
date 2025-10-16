@@ -41,6 +41,7 @@ namespace CardsAndDices
             _eventBus.Emit(new CombatPhasePlayerCardOnScreenEvent());
             _eventBus.Emit(new CombatPhaseWaveEnemySetUpEvent());
             _eventBus.Emit(new CombatPhaseEnemyCardOnScreenEvent());
+            _eventBus.Emit(new CombatPhaseCombatBtnOnScreenEvent());
         }
     }
 }

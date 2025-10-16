@@ -29,6 +29,8 @@ namespace CardsAndDices
             IsCooldownFinished = false;
             IsDamage = false;
             IsDeath = false;
+            IsTurnEndAbilityBuffDebuff = false;
+            IsTurnEndAbilityAttack = false;
         }
 
         /// <summary>
@@ -56,17 +58,17 @@ namespace CardsAndDices
             if (EffectTargetType.Health == effectTargetType)
             {
                 CurrentHealth += addValue;
-                if(CurrentHealth < 0) { CurrentHealth = 0; }
+                if (CurrentHealth < 0) { CurrentHealth = 0; }
             }
             else if (EffectTargetType.Cooldown == effectTargetType)
             {
                 CurrentCooldown += addValue;
-                if(CurrentCooldown < 0) { CurrentCooldown = 0; }
+                if (CurrentCooldown < 0) { CurrentCooldown = 0; }
             }
             else if (EffectTargetType.Shield == effectTargetType)
             {
                 CurrentShield += addValue;
-                if(CurrentShield < 0) { CurrentShield = 0; }
+                if (CurrentShield < 0) { CurrentShield = 0; }
             }
         }
         public int GetToTargetStatus(EffectTargetType targetStatusType)
@@ -95,14 +97,16 @@ namespace CardsAndDices
             return value;
         }
 
-        public int MainAttack =>GetToTargetStatus(_creatureData.MainAttackScoresType);
+        public int MainAttack => GetToTargetStatus(_creatureData.MainAttackScoresType);
         public EffectTargetType MainAttackScoresType => _creatureData.MainAttackScoresType;
         public AreaOfEffect MainAttackAoE => _creatureData.MainAttackAoE;
         public bool IsCooldownFinished { get; private set; }
-        public bool IsDamage{ get; private set; }
-        public bool IsDeath{ get; private set; }
-        public bool IsAttacker{ get; private set; }
+        public bool IsDamage { get; private set; }
+        public bool IsDeath { get; private set; }
+        public bool IsAttacker { get; private set; }
         public void SetIsAttacker(bool flg) { IsAttacker = flg; }
+        public bool IsTurnEndAbilityBuffDebuff { get; private set; }
+        public bool IsTurnEndAbilityAttack { get; private set; }
         public bool IsReaction
         {
             get
@@ -166,5 +170,7 @@ namespace CardsAndDices
             IsDamage = false;
             IsDeath = false;
         }
+        public void SetIsTurnEndAbilityAttack(bool flg) { IsTurnEndAbilityAttack = flg; }
+        public void SetIsTurnEndAbilityBuffDebuff(bool flg) { IsTurnEndAbilityBuffDebuff = flg; }
     }
 }

@@ -7,7 +7,8 @@ namespace CardsAndDices
     {
         CardPlacement, // カード配置
         Inlet, // インレット発動
-        TurnEnd, // ターンエンド
+        TurnEndBuffDebuff, // ターンエンド
+        TurnEndAttack, // ターンエンド
         CoolDownEnd, // クールダウンエンド
     }
 }

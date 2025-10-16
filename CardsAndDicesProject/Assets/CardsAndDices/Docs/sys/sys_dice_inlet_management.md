@@ -4,162 +4,179 @@
 
 ## 概要
 
-このドキュメントは、ゲーム内のダイスインレットの実行時インスタンスの管理システムについて定義します。
-ダイスインレットの値やステータス変動、ライフサイクル、およびViewとの連携を管理するための主要なクラスとその責務を詳述します。
+本設計は、「Cards and Dices」プロジェクトにおけるクリーチャーカードに付属する「ダイスインレット」機能の技術的な実装を定義します。インレットの生成、状態管理、ユーザーによるダイスの投入、そしてその結果としてのアビリティ実行またはロックに至るまで、インレットに関連する全てのコンポーネントとその責務、処理フローを詳述します。
 
 ---
 
-## データ定義
+## クラスおよびコンポーネント設計
 
-### 1. `InletAbilityProfile`
+ダイスインレット管理システムは、MVC (Model-View-Controller) パターンに基づき、以下のクラス群で構成されます。
 
-- **役割**: ダイスインレットの静的な識別情報と基本設定を保持します。このプロファイルは、`PlayerCardDataProvider` や `EnemyCardDataProvider` といった `ICardDataProvider` インターフェースを実装したクラスによって生成される `CardInitializationData` に含まれる形で、カードのライフサイクル初期に`DiceInletManager` へ登録されます。
-- **主なフィールド**:
-    - `DiceInletConditionSO Condition`: ダイス投入時の発動条件。
-        - `int InitialCountdownValue`: インレットの初期カウントダウン値。
-        - `int InitialUsageCount`: インレットの初期使用可能回数。
-        - `UsageCountResetType`: 使用可能回数がリセットされるタイミング（TurnEnd, CooldownReset）
-    - `BaseInletAbilitySO Ability`: インレットが発動する能力。
+```mermaid
+classDiagram
+    class DiceInletManager {
+        -List~DiceInletInstance~ _instances
+        -List~DiceInletPresenter~ _presenters
+        +OnCreateDiceInlet(CreateDiceInletEvent)
+        +CreateDiceInletInstance()
+    }
+    class DiceInletPresenter {
+        -DiceInletInstance _instance
+        -DiceInletView _view
+        +OnDiceBeginDrag(DiceBeginDragEvent)
+        +OnDiceDropInInlet(DiceDropInInletEvent)
+    }
+    class DiceInletInstance {
+        +CompositeObjectId
+        +InletPackageProfile _inletPackageProfile
+        +int CurrentCountdownValue
+        +int CurrentUsageCount
+        +bool IsLock
+        +AcceptableDice(int)
+        +SetIsLock(bool)
+    }
+    class DiceInletView {
+        +DisplayAcceptableStatus()
+    }
+    class InletPackageProfile {
+        +InletProfileIdEntity InletProfileId
+        +List~AbilityDataEntity~ RareAbilities
+        +List~AbilityDataEntity~ LegendAbilities
+    }
+    class InletProfileIdEntity {
+        +InletEffectType _inletEffectType
+        +List~AbilityDataEntity~ _abilities
+    }
 
-### 2. `DiceInletConditionSO` (ScriptableObject)
+    DiceInletManager --> DiceInletInstance : Creates
+    DiceInletManager --> DiceInletPresenter : Creates
+    DiceInletPresenter o-- DiceInletInstance : Has a
+    DiceInletPresenter o-- DiceInletView : Has a
+    DiceInletInstance o-- InletPackageProfile : Has a
+    InletPackageProfile o-- InletProfileIdEntity : Has a
+```
 
-- **役割**: ダイス投入時の発動条件を定義します。
-- **主なフィールド**:
-    - `AllowedDiceFacesSO AllowedDiceFaces`: 投入許可されたダイスの目（１～６）。
-- **主なメソッド**:
-    - `bool CanAccept(DiceData diceData)`: 投入されたダイスの値が条件を満たすかチェックします。
+### 1. データ定義 (ScriptableObject / Pure C# Class)
 
-### 3. `BaseInletAbilitySO` (ScriptableObject)
+- **`InletProfileIdEntity`**:
+    - **継承**: `ScriptableObject`
+    - インレットの不変な基本定義データを保持します。
+    - **プロパティ**:
+        - `InletActivationViewType`: インレットの見た目の種類。
+        - `AllowedDiceFacesEntity`: 受け入れ可能なダイスの目。
+        - `InitialCountdownValue`: 能力発動までに必要なカウントの初期値。
+        - `InitialUsageCount`: 使用可能回数の初期値。
+        - `UsageCountResetType`: 使用回数がリセットされるタイミング。
+        - `InletEffectType`: 発動時の効果（アビリティ実行か、敵アビリティのロックか）。
+        - `Abilities`: このインレットに紐づく基本アビリティのリスト。
+    - **責務**: 個々のインレットが「どのような」特性を持つかを定義する設計図として機能します。
 
-- **役割**: インレットが発動する「効果」を定義するすべてのScriptableObjectの基底クラス。
-- **主なメソッド**:
-    - `void ExecuteAbility(ICreature targetCreature, DiceData placedDice)`: インレットの能力を実行します。具体的な効果に応じたコマンドを `SpriteCommandBus` を介して発行します。
+- **`InletPackageProfile`**:
+    - **継承**: `Pure C# Class`
+    - `InletProfileIdEntity` に加え、レアリティごとの追加アビリティ情報などをパッケージ化したデータコンテナ。
+    - **プロパティ**:
+        - `InletProfileId`: インレットの基本定義。
+        - `InletCategory`: インレットの配置場所（例: `InletTop`, `InletBottom`）。
+        - `RareAbilities`: レアアビリティのリスト。
+        - `LegendAbilities`: レジェンドアビリティのリスト。
+    - **責務**: `CardInitializationData` の一部として、クリーチャー生成時にインレットの全構成情報を `DiceInletManager` に提供します。
+
+### 2. ランタイムインスタンス (Model)
+
+- **`DiceInletInstance`**:
+    - **継承**: `Pure C# Class`, `IIdentifiableInstance`
+    - ゲーム中に存在するインレット1つずつの実行時インスタンス。
+    - **プロパティ**:
+        - `CompositeObjectId`: Viewと紐づく一意なID。
+        - `CurrentCountdownValue`: 発動までの残りカウント。
+        - `CurrentUsageCount`: 残り使用可能回数。
+        - `IsLock`: 敵の能力をロックしたかどうかを示す状態。
+        - `IsAlive`: インスタンスが有効かどうかの状態。
+    - **責務**: インレット自身の揮発的な状態（残りカウント、使用回数、ロック状態）を保持・管理します。
+    - **メソッド**:
+        - `ChkFaceAllowed(int faceValue)`: 指定された出目のダイスを受け入れ可能か判定します。
+        - `AcceptableDice(int faceValue)`: ダイスを受け入れ、カウントダウンを減らします。カウントが0以下になれば `true` を返します。
+        - `SetIsLock(bool flg)`: ロック状態を設定します。
+
+### 3. 仲介クラス (Presenter)
+
+- **`DiceInletPresenter`**:
+    - **継承**: `Pure C# Class`, `IIdentifiablePresenter`
+    - `DiceInletInstance` (Model) と `DiceInletView` (View) を1対1で繋ぐ仲介役。
+    - **責務**:
+        - `GameEventBus` を購読し、ダイスのドラッグ開始やドロップイベントを監視します。
+        - ダイスドラッグ時には、`Instance` の状態に基づき、受け入れ可能であれば `View` の見た目を変更させます。
+        - ダイスドロップ時には、`Instance` の状態を更新し、その結果（アビリティ実行/ロック）に応じて後続のイベントを発行します。
+    - **メソッド**:
+        - `OnDiceBeginDrag(...)`: ダイスのドラッグが開始された際の処理。受け入れ可能ならViewをハイライトさせる。
+        - `OnDiceDropInInlet(...)`: 自身のViewにダイスがドロップされた際の処理。`Instance` のカウントを更新し、結果に応じて `ExecuteAbilityEffectEvent` または `UpdateAbilityLockEvent` を発行する。
+
+### 4. 管理クラス (Manager)
+
+- **`DiceInletManager`**:
+    - **継承**: `ScriptableObject`, `IIdentifiableManager`
+    - 全ての `DiceInletInstance` と `DiceInletPresenter` のライフサイクルを一元管理するマネージャークラス。
+    - **責務**:
+        - `CreateDiceInletEvent` を購読し、インレットの生成フローを開始します。
+        - `DiceInletInstance` と `DiceInletPresenter` を生成し、リストに登録・解除します。
+        - インレット生成時に、`InletPackageProfile` に含まれる全てのアビリティ（基本、レア、レジェンド）を生成するための `CreateAbilityEvent` を発行します。
+
+### 5. 表示クラス (View)
+
+- **`DiceInletView`**:
+    - **継承**: `BaseIdentifiableView`
+    - インレットの視覚的な表現を担当する `MonoBehaviour` クラス。
+    - **責務**:
+        - `DiceInletPresenter` からの指示に基づき、アニメーションや表示の更新を実行します。
+    - **メソッド**:
+        - `DisplayAcceptableStatus()`: ダイス受け入れ可能な状態の表示を行います。
 
 ---
 
-## ダイスインレット実行時インスタンス (`DiceInlet`)
+## 主要な処理フロー
 
-ゲーム中に存在するダイスインレットの論理的な表現であり、`CurrentCountdownValue` などの変動する状態を保持します。
+### 1. ダイスインレットの生成
 
-### 1. 責務
+1.  `CreatureManager` がクリーチャーを生成する過程で `CreateCreatureEvent` を発行します。このイベントには `CardInitializationData` が含まれています。
+2.  `CreatureCardManager` (図にはないが関連クラス) が `CreateCreatureEvent` を受信し、クリーチャーカードのインスタンスを生成した後、`CardInitializationData` 内の `InletPackageProfiles` に基づいて、インレットごとに `CreateDiceInletEvent` を発行します。
+3.  `DiceInletManager` は `CreateDiceInletEvent` を受信します。
+4.  `Manager` は、`IdentifiableViewRegistry` を通じて、対象クリーチャーカードの子オブジェクトであり、かつ指定されたカテゴリ（`InletTop`など）を持つ `DiceInletView` を検索します。
+5.  `Manager` は `DiceInletInstance` と `DiceInletPresenter` を生成し、ViewとInstanceを紐付けます。
+6.  `Manager` は `InletPackageProfile` に定義されている全てのアビリティに対して `CreateAbilityEvent` を発行し、`AbilityManager` にアビリティの生成を依頼します。
+7.  最後に、インレットのUIを初期状態（非アクティブ）に設定するための各種イベントを発行します。
 
-- `InletAbilityProfile` への参照を保持し、基本設定を取得する。
-- `CurrentCountdownValue` を保有し、ダイス投入時に更新する。
-- ダイスドラッグの条件チェックと、能力発動のトリガー。
-- カウントダウン値の変更をイベントとして発行する。
+### 2. ダイスインレットの起動とアビリティ実行／ロック
 
-### 2. 主なプロパティ
-
-- `CompositeObjectId Id`: インレットの一意な識別子。
-- `CompositeObjectId CardId`: インレットが所属するクリーチャーカードの一意な識別子。
-- `int CurrentCountdownValue`: 現在のカウントダウン値。
-- `Int CurrentUsageCount` 現在の使用可能回数
-
-### 3. 主なメソッド
-
-- `void OnDiceDropped(DiceData diceData, ICreature targetCreature)`: ダイスがインレットに投入された際の処理。投入された `diceData` に応じてカウントダウン値を減少させます。カウントダウン値が0以下になった場合、能力を発動し、カウントダウン値を初期カウントダウン値 (`InitialCountdownValue`) に戻します。
-- `bool CanAccept(DiceData diceData)`:ダイスドラッグ時にインレットを活性化させるかをチェックします。`DiceInletConditionSO`の`bool CanAccept(DiceData diceData)`メソッドと`CurrentUsageCount`元に現在インレットにダイス投入が可能かチェックします。
-
----
-
-## DiceInletFactory
-
-`DiceInlet`インスタンスの生成ロジックに特化したFactoryクラス。
-
-### 1. 責務
-
-- `InletAbilityProfile` や必要な依存関係（`DiceInletManager` など）を受け取り、`DiceInlet` インスタンスを生成する。
-- 生成ロジックを抽象化し、呼び出し元が `DiceInlet` の具体的なコンストラクタを知る必要がないようにする。
-
-### 2. 依存関係
-
-- `EffectManager`: 生成する `DiceInlet` インスタンスに注入するため。
-- `AbilityManager`: 生成する `DiceInlet` インスタンスに注入するため。
-
-### 3. 主なメソッド
-
-- `DiceInlet Create(CompositeObjectId Inletid, CompositeObjectId Cardid,InletAbilityProfile profile)`: 提供されたIDと能力プロファイルを用いて、新しい`DiceInlet`インスタンスを生成し、初期化して返します。
+1.  プレイヤーが `DiceView` のドラッグを開始すると `DiceBeginDragEvent` が発行されます。
+2.  各 `DiceInletPresenter` はこのイベントを受信し、自身の `DiceInletInstance.ChkFaceAllowed()` を呼び出して、ドラッグされているダイスを受け入れ可能か確認します。
+3.  受け入れ可能な場合、`Presenter` は `View` に指示を出し、見た目を「受け入れ可能」状態（例: ハイライト）に変更させます。
+4.  プレイヤーが `DiceInletView` 上でダイスをドロップすると `DiceDropInInletEvent` が発行されます。
+5.  ドロップ先の `DiceInletPresenter` がイベントを受信し、`DiceInletInstance.AcceptableDice()` を呼び出してカウントダウンを減らします。
+6.  `AcceptableDice()` が `true` を返した場合（カウントが0以下になった場合）、インレットが発動します。
+    - **アビリティ実行の場合 (`InletEffectType.AbilityExecutor`)**: `Presenter` は `ExecuteAbilityEffectEvent` を発行します。これを `AbilityManager` が購読し、このインレットに紐づくアビリティを実行します。
+    - **アビリティロックの場合 (`InletEffectType.AbilityLocker`)**: `Presenter` は `UpdateAbilityLockEvent` を発行し、敵クリーチャーの特定アビリティをロックさせます。同時に、自身の `DiceInletInstance` の `IsLock` フラグを `true` に設定します。
+7.  インレットが発動しなかった場合、または処理が完了した後、`CoolDownStartEvent` が発行され、戦闘のクールダウンフェーズに移行します。
 
 ---
 
-## ダイスインレットマネージャー (`DiceInletManager`)
+## 既存システムとの連携
 
-ゲーム内に存在するすべての `DiceInlet` インスタンスを一元的に管理するクラスです。
-
-### 1. 責務
-
--   `DiceInletFactory` を介して `DiceInlet` インスタンスを生成し、管理する。
--   ダイス投入イベントを受け取り、適切な `DiceInlet` インスタンスに処理を委譲する。
-
----
-
-## ダイスインレットプレゼンター (`DiceInletPresenter`)
-
-`DiceInlet` (Model) と `DiceInletView` (View) の間の仲介役です。
-
-### 4.1. 責務
-
--   `DiceInlet` インスタンスのステータスや値変更イベントを購読する。
--   購読したイベントに基づいて `DiceInletView` の表示を更新する。
--   Viewからのユーザー入力を `DiceInlet` インスタンスに伝達する（必要に応じて）。
-
-### 4.2. 依存関係
-
--   `DiceInlet`: 監視対象のクリーチャーインスタンス。
--   `DiceInletView`: 更新対象のView。
--   `SpriteCommandBus`: イベント購読のため。
-
----
-
-## 効果発動担当システム
-
-ダイスインレットの効果発動は、`BaseInletAbilitySO` を拡張し、イベント駆動の原則に沿ってコマンドを発行することで実現します。
-
-### 1. `BaseInletAbilitySO` の役割
-
--   インレットが発動する具体的な効果ロジックをカプセル化します。
--   `ExecuteAbility(ICreature targetCreature, int diceValue, SpriteCommandBus commandBus)` 抽象メソッドを実装し、内部で適切なコマンド（例: `BuffApplyCommand`, `ApplyDamageCommand`）を `SpriteCommandBus` を介して発行します。
-
----
-
-## 全体フロー (ダイス投入から効果発動まで)
-
-1.  **ダイス投入**: プレイヤーがダイスをインレットにドロップする。
-2.  **イベント発行**: `SpriteInputHandler` が `SpriteDropCommand` を発行し、`DiceInteractionOrchestrator` がこれを受け取る。
-3.  **インレット特定**: `DiceInteractionOrchestrator` は、ドロップされたインレットのIDから `DiceInletManager` を介して対応する `DiceInlet` インスタンスを取得する。
-4.  **能力発動トリガー**: `DiceInteractionOrchestrator` は、取得した `DiceInlet` インスタンスの `OnDiceDropped(diceValue, targetCreature)` メソッドを呼び出す。
-5.  **カウントダウン減少と効果実行**: `DiceInlet.OnDiceDropped()` 内で、投入された `diceValue` に応じて `CurrentCountdownValue` が減少します。この減少により `CurrentCountdownValue` が0以下になった場合、能力を発動し、カウントダウン値を初期値 (`InitialCountdownValue`) に戻します。
-6.  **コマンド発行**: `ExecuteAbility` メソッド内で、具体的な効果に応じたコマンド（例: `BuffApplyCommand`, `ApplyDamageCommand`）が `SpriteCommandBus` を介して発行される。
-7.  **コマンド処理**: 各コマンドの購読者（例: `EffectManager`、`CombatManager`）がコマンドを受け取り、それぞれの責務に応じた処理を実行する。
-
----
-
-## 全体フロー（ダイスインレット生成）
-
-1.  **ダイスインレットの生成**: `DiceInletManager` が `DiceInletFactory.Create()` を呼び出し、新しい `DiceInlet` インスタンスを生成します。
-2.  **Viewとの紐付け**: `DiceInletManager` は、対応する `DiceInletView` を `ViewRegistry` から取得し、`DiceInlet` インスタンスと `DiceInletView` を引数に `DiceInletPresenter` を生成します。
-3.  **ステータス変更**: `DiceInlet` インスタンスがカウントダウンするなどステータスや値が変更されると、`SpriteCommandBus` を介してイベントを発行します。
-4.  **Viewの更新**: `DiceInletPresenter` がこのイベントを購読し、`DiceInletView` の `UpdateCountdownDisplay()` などのメソッドを呼び出して表示を更新します。
-5.  **エフェクトの適用**: `DiceInlet` インスタンスにエフェクトが適用されると、`EffectManager` に登録され、`CurrentCountdownValue` などの動的なステータス計算に影響を与えます。
+- **Identifiable View システム**: `DiceInletView` は `IIdentifiableView` を実装しており、`CompositeObjectId` によって一意に識別されます。ユーザーのドラッグ＆ドロップ操作は、このIDを介して正確に特定のインレットに紐付けられます。
+- **イベントバスシステム**: 全てのコンポーネントは、`GameEventBus` を介して疎結合に連携します。インレットの生成からアビリティの実行まで、一連のプロセスはイベントの発行と購読によって駆動されます。
+- **クリーチャーカード管理システム**: クリーチャーカードが生成される際に、そのカードが持つべきインレットの情報（`InletPackageProfile`）が渡され、本システムの生成フローがトリガーされます。
+- **アビリティシステム**: インレットが発動すると、`ExecuteAbilityEffectEvent` または `UpdateAbilityLockEvent` を発行し、アビリティシステムに後続処理を依頼します。
 
 ---
 
 ## 関連ファイル
 
--   [gdd_combat_system.md](../gdd/gdd_combat_system.md)
--   [sys_effect_management.md](./sys_effect_management.md)
--   [sys_creature_management.md](./sys_creature_management.md)
--   [guide_design-principles.md](../guide/guide_design-principles.md)
--   [sys_creature_card_lifecycle_design.md](./sys_creature_card_lifecycle_design.md)
--   [InletAbilityProfile.cs](../../Scripts/Data/InletAbilityProfile.cs)
--   [DiceInletConditionSO.cs](../../Scripts/Data/DiceInletConditionSO.cs)
--   [BaseInletAbilitySO.cs](../../Scripts/Data/BaseInletAbilitySO.cs)
--   [DiceInletManager.cs](../../Scripts/Manager/DiceInletManager.cs)
--   [ICreature.cs](../../Scripts/Domain/ICreature.cs)
--   [SpriteCommandBus.cs](../../Scripts/UI/SpriteCommandBus.cs)
+- [gdd_combat_system.md](../../gdd/gdd_combat_system.md)
+- [sys_creature_card_management.md](../sys/sys_creature_card_management.md)
+- [sys_dice_management.md](../sys/sys_dice_management.md)
+- [sys_identifiable-views.md](../sys/sys_identifiable-views.md)
 
 ---
 
 ## 更新履歴
 
--   2025-08-17: 初版 (Nekodamasi)
+- 2025-10-14: 初版 (Gemini)

@@ -27,6 +27,7 @@ namespace CardsAndDices
 			_eventBus.On<BuffDebuffEffectEndActionEvent>(OnBuffDebuffEffectEndAction);
 			_eventBus.On<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 			_eventBus.On<CreatureAttackEndEvent>(OnCreatureAttackEnd);
+			_eventBus.On<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
 		}
 
         public void Dispose()
@@ -35,7 +36,22 @@ namespace CardsAndDices
 			_eventBus.Off<BuffDebuffEffectEndActionEvent>(OnBuffDebuffEffectEndAction);
 			_eventBus.Off<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 			_eventBus.Off<CreatureAttackEndEvent>(OnCreatureAttackEnd);
+			_eventBus.Off<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
         }
+
+		/// <summary>
+		/// ダイスオフスクリーンイベント
+		/// </summary>
+		private void OnCombatPhaseDiceOffScreenEnd(CombatPhaseDiceOffScreenEndEvent evt)
+		{
+			Debug.Log("CreatureTurnEndExecuteAbilityEvent:" + _currentCombatPhase);
+			switch (_currentCombatPhase)
+			{
+				case CombatPhase.TurnEndPhase:
+					_eventBus.Emit(new CreatureTurnEndExecuteAbilityEvent());
+					break;
+			}
+		}
 
 		/// <summary>
 		/// クリーチャー攻撃処理終了
@@ -103,6 +119,9 @@ namespace CardsAndDices
 		private void OnChangeCombatPhase(ChangeCombatPhaseEvent evt)
 		{
 			SetCurrentCombatPhase(evt.CombatPhase);
+			if (_currentCombatPhase == CombatPhase.PlayerInputPhase) return;
+            _eventBus.Emit(new DisableUIInteractionEvent());
+			
 		}
 	}
 }

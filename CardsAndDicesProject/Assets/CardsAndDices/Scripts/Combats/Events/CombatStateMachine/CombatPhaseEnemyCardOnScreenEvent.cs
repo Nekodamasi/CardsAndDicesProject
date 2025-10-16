@@ -4,7 +4,7 @@ using System;
 namespace CardsAndDices
 {
     /// <summary>
-    /// プレイヤークリーチャーカードを生成するイベント通知
+    /// エネミーカードの画面配置イベント
     /// </summary>
     public struct CombatPhaseEnemyCardOnScreenEvent : IEvent
     {

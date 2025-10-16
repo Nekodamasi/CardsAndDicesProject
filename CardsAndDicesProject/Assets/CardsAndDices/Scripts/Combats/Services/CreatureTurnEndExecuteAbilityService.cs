@@ -1,0 +1,70 @@
+using System.Collections.Generic;
+using System.Linq;
+using System;
+using UnityEngine;
+using Cysharp.Threading.Tasks;
+
+namespace CardsAndDices
+{
+    /// <summary>
+    /// ターンエンド時のアビリティ実行ロジックを担当するサービスクラスです。
+    /// </summary>
+    public class CreatureTurnEndExecuteAbilityService : IDisposable
+    {
+        private ITargetManager _iTargetManager;
+        private ICreatureStatusInstanceRepository _iCreatureStatusInstanceRepository;
+        private GameEventBus _eventBus;
+        private IAbilityCheck _iAbilityCheck;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public CreatureTurnEndExecuteAbilityService(ITargetManager iTargetManager, ICreatureStatusInstanceRepository iCreatureStatusInstanceRepository, GameEventBus gameEventBus, IAbilityCheck iAbilityCheck)
+        {
+            _iTargetManager = iTargetManager;
+            _iCreatureStatusInstanceRepository = iCreatureStatusInstanceRepository;
+            _eventBus = gameEventBus;
+            _iAbilityCheck = iAbilityCheck;
+            _eventBus.On<CreatureTurnEndExecuteAbilityEvent>(OnCreatureTurnEndExecuteAbility);
+
+        }
+
+        /// <summary>
+        /// TurnEndAbilityの実行
+        /// </summary>
+        private async void OnCreatureTurnEndExecuteAbility(CreatureTurnEndExecuteAbilityEvent evt)
+        {
+            var ids = _iTargetManager.GetActionOrderList();
+            foreach (var id in ids)
+            {
+                var instance = _iCreatureStatusInstanceRepository.GetInstance(id);
+                if (!instance.IsTurnEndAbilityBuffDebuff)
+                {
+                    instance.SetIsTurnEndAbilityBuffDebuff(true);
+                    bool flg = _iAbilityCheck.HasExecutableAbility(instance.CompositeObjectId, null, ActivationTiming.TurnEndBuffDebuff);
+                    if (flg)
+                    {
+                        _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.TurnEndBuffDebuff, null, instance.CompositeObjectId));
+                        await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+                    }
+
+                    flg = _iAbilityCheck.HasExecutableAbility(instance.CompositeObjectId, null, ActivationTiming.TurnEndAttack);
+                    if (flg)
+                    {
+                        _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.TurnEndAttack, null, instance.CompositeObjectId));
+                        return;
+                    }
+                }
+            }
+            _eventBus.Emit(new CreatureTurnEndExecuteAbilityEndEvent());
+            
+            Debug.Log("ここきてるといいなぁーーーー");
+        }
+
+        public void Dispose()
+        {
+            //            _gameEventBus.Off<CoolDownZeoAttackEvent>(OnCoolDownZeoAttack);
+        }
+
+    }
+}

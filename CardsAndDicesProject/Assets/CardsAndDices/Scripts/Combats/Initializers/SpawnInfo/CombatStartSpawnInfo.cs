@@ -3,10 +3,10 @@ using System;
 namespace CardsAndDices
 {
     /// <summary>
-    /// ダイスのスポーン情報を保持するデータクラス。
+    /// 戦闘開始ボタンスポーン用データクラス。
     /// </summary>
     [Serializable]
-    public class DiceSpawnInfo
+    public class CombatStartSpawnInfo
     {
         /// <summary>
         /// テスト用の名前。

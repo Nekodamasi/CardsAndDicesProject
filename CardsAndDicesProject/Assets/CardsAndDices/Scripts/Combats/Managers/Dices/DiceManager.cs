@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using VContainer;
 using System.Linq;
-using Unity.Burst.Intrinsics;
+using Cysharp.Threading.Tasks;
 
 namespace CardsAndDices
 {
@@ -12,7 +12,7 @@ namespace CardsAndDices
     /// ScriptableObjectとして、ダイスのデータ管理に特化します。
     /// </summary>
     [CreateAssetMenu(fileName = "DiceManager", menuName = "CardsAndDices/Combats/Managers/Dices/DiceManager")]
-    public class DiceManager : ScriptableObject, IDisposable, IIdentifiableManager
+    public class DiceManager : ScriptableObject, IDisposable, IIdentifiableManager, IDiceCase
     {
         private class AddDice
         {
@@ -49,7 +49,8 @@ namespace CardsAndDices
             _eventBus.On<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
             _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
-            
+            _eventBus.On<CombatPhaseDiceOffScreenEvent>(OnCombatPhaseDiceOffScreen);
+
 
         }
         /// <summary>
@@ -83,6 +84,28 @@ namespace CardsAndDices
             _eventBus.Off<SceneLoadedEvent>(OnSceneLoaded);
             _eventBus.Off<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
             _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+            _eventBus.Off<CombatPhaseDiceOffScreenEvent>(OnCombatPhaseDiceOffScreen);
+        }
+
+        /// <summary>
+        /// コンバットフェーズダイスオフスクリーンイベント
+        /// </summary>
+        private async void OnCombatPhaseDiceOffScreen(CombatPhaseDiceOffScreenEvent evt)
+        {
+            Debug.Log("だいすをしまうよ:" + _diceInstances.Count);
+            foreach (var instance in _diceInstances)
+            {
+                _eventBus.Emit(new DisplayOnScreenEvent(instance.CompositeObjectId));
+            }
+
+            // 待機
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+
+            // 既存Instanceの削除
+            DisposeInstances();
+            DisposePresenters();
+			_eventBus.Emit(new CombatPhaseDiceOffScreenEndEvent());
+
         }
 
         /// <summary>
@@ -189,5 +212,15 @@ namespace CardsAndDices
             presenter.Dispose();
             _dicePresenters.Remove(presenter);
         }
+
+        /// <summary>
+        /// 現在のダイス数
+        /// </summary>
+        public int CurrentDiceCount => _diceInstances.Count;
+
+        /// <summary>
+        /// ダイスの最大数
+        /// </summary>
+        public int MaxDice => 2;
     }
 }

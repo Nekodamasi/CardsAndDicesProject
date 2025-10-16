@@ -23,10 +23,12 @@ namespace CardsAndDices
         private ITargetManager _iTargetManager;
         private IdentifiableViewRegistry _viewRegistry;
         private IEffectValue _iEffectValue;
+        private IAbilityCheck _iAbilityCheck;
         private CreatureAttackService _creatureAttackService;
+        private CreatureTurnEndExecuteAbilityService _creatureTurnEndExecuteAbilityService;
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, ITargetManager iTargetManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue)
+        public void Initialize(GameEventBus eventBus, ITargetManager iTargetManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue, IAbilityCheck iAbilityCheck)
         {
             DisposeInstances();
             DisposePresenters();
@@ -34,13 +36,15 @@ namespace CardsAndDices
             _iTargetManager = iTargetManager;
             _viewRegistry = viewRegistry;
             _iEffectValue = iEffectValue;
+            _iAbilityCheck = iAbilityCheck;
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
             _eventBus.On<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
             _eventBus.On<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
             _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
             _eventBus.On<ResetCoolDownEvent>(OnResetCoolDown);
-            
+
             _creatureAttackService = new CreatureAttackService(_iTargetManager, this, _eventBus);
+            _creatureTurnEndExecuteAbilityService = new CreatureTurnEndExecuteAbilityService(_iTargetManager, this, _eventBus, _iAbilityCheck);
         }
 
         public void Dispose()
