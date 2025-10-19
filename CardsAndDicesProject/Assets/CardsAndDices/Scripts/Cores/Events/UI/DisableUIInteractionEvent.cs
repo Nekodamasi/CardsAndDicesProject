@@ -5,7 +5,5 @@ namespace CardsAndDices
     /// </summary>
     public class DisableUIInteractionEvent : IEvent
     {
-        public void Execute() { }
-        public void Undo() { }
     }
 }

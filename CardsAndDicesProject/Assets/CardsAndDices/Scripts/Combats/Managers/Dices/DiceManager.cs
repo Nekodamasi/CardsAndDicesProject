@@ -50,8 +50,7 @@ namespace CardsAndDices
             _eventBus.On<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
             _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
             _eventBus.On<CombatPhaseDiceOffScreenEvent>(OnCombatPhaseDiceOffScreen);
-
-
+            _eventBus.On<CombatPhaseSetUpUserDiceEvent>(OnCombatPhaseSetUpUserDice);
         }
         /// <summary>
         /// インスタンスをDisposeします
@@ -85,6 +84,20 @@ namespace CardsAndDices
             _eventBus.Off<CombatPhaseDiceRollEvent>(OnCombatPhaseDiceRoll);
             _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
             _eventBus.Off<CombatPhaseDiceOffScreenEvent>(OnCombatPhaseDiceOffScreen);
+            _eventBus.On<CombatPhaseSetUpUserDiceEvent>(OnCombatPhaseSetUpUserDice);
+        }
+
+        /// <summary>
+        /// ユーザーのダイスをセットアップするイベント
+        /// </summary>
+        private async void OnCombatPhaseSetUpUserDice(CombatPhaseSetUpUserDiceEvent evt)
+        {
+            SetUpAddDices();
+            DiceRoll();
+            // 待機
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            Debug.Log("だいすろーるおわり");
+            _eventBus.Emit(new CreatureTurnEndExecuteAbilityEndEvent());
         }
 
         /// <summary>
@@ -93,18 +106,25 @@ namespace CardsAndDices
         private async void OnCombatPhaseDiceOffScreen(CombatPhaseDiceOffScreenEvent evt)
         {
             Debug.Log("だいすをしまうよ:" + _diceInstances.Count);
+            List<CompositeObjectId> ids = new();
             foreach (var instance in _diceInstances)
             {
-                _eventBus.Emit(new DisplayOnScreenEvent(instance.CompositeObjectId));
+                _eventBus.Emit(new DisplayOffScreenEvent(instance.CompositeObjectId));
+                ids.Add(instance.CompositeObjectId);
             }
 
             // 待機
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
 
+            foreach (var id in ids)
+            {
+                _eventBus.Emit(new DisposeByCompositeObjectIdEvent(id));
+            }
+
             // 既存Instanceの削除
-            DisposeInstances();
-            DisposePresenters();
-			_eventBus.Emit(new CombatPhaseDiceOffScreenEndEvent());
+//            DisposeInstances();
+//            DisposePresenters();
+            _eventBus.Emit(new CombatPhaseDiceOffScreenEndEvent());
 
         }
 
@@ -117,7 +137,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// ダイススロットポジションエンティティからインスタンスを生成します。
+        /// ダイスロールを行います
         /// </summary>
         private void OnCombatPhaseDiceRoll(CombatPhaseDiceRollEvent evt)
         {

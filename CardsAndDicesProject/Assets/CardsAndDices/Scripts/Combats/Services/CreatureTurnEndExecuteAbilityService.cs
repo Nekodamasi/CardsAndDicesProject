@@ -56,9 +56,9 @@ namespace CardsAndDices
                     }
                 }
             }
-            _eventBus.Emit(new CreatureTurnEndExecuteAbilityEndEvent());
+            Debug.Log("ダイスロールよんでるよ");
+            _eventBus.Emit(new CombatPhaseSetUpUserDiceEvent());
             
-            Debug.Log("ここきてるといいなぁーーーー");
         }
 
         public void Dispose()

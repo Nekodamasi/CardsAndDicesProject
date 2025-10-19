@@ -28,6 +28,9 @@ namespace CardsAndDices
 			_eventBus.On<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 			_eventBus.On<CreatureAttackEndEvent>(OnCreatureAttackEnd);
 			_eventBus.On<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
+			
+			_eventBus.On<CreatureTurnEndExecuteAbilityEndEvent>(OnCreatureTurnEndExecuteAbilityEnd);
+			
 		}
 
         public void Dispose()
@@ -37,7 +40,24 @@ namespace CardsAndDices
 			_eventBus.Off<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 			_eventBus.Off<CreatureAttackEndEvent>(OnCreatureAttackEnd);
 			_eventBus.Off<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
+
+			_eventBus.Off<CreatureTurnEndExecuteAbilityEndEvent>(OnCreatureTurnEndExecuteAbilityEnd);
         }
+
+		/// <summary>
+		/// ターンエンドアビリティ実行終了イベント
+		/// </summary>
+		private void OnCreatureTurnEndExecuteAbilityEnd(CreatureTurnEndExecuteAbilityEndEvent evt)
+		{
+			switch (_currentCombatPhase)
+			{
+				case CombatPhase.TurnEndPhase:
+					Debug.Log("ここに来れたらOK");
+					_eventBus.Emit(new ResetTurnEndEvent());
+					_eventBus.Emit(new ResetUIStatusEvent());
+					break;
+			}
+		}
 
 		/// <summary>
 		/// ダイスオフスクリーンイベント
@@ -64,6 +84,9 @@ namespace CardsAndDices
 					// クールダウンフェーズに変更
 					SetCurrentCombatPhase(CombatPhase.CooldownPhase);
 					_eventBus.Emit(new CoolDownZeoAttackEvent());
+					break;
+				case CombatPhase.TurnEndPhase:
+					_eventBus.Emit(new CreatureTurnEndExecuteAbilityEvent());
 					break;
 			}
 		}

@@ -160,8 +160,13 @@ namespace CardsAndDices
         {
             IsCooldownFinished = true;
         }
+        public void ResetTurnEndStatus()
+        {
+            IsTurnEndAbilityBuffDebuff = false;
+            IsTurnEndAbilityAttack = false;
+        }
 
-        public void RecalculateStats()
+        public void ResetCoolDownStatus()
         {
             IsCooldownFinished = false;
             CurrentShield = System.Math.Max(CurrentShield, BaseShield);
