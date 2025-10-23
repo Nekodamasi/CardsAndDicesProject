@@ -10,5 +10,6 @@ namespace CardsAndDices
         TurnEndBuffDebuff, // ターンエンド
         TurnEndAttack, // ターンエンド
         CoolDownEnd, // クールダウンエンド
+        ResetTurnEnd, // リセットターンエンド
     }
 }

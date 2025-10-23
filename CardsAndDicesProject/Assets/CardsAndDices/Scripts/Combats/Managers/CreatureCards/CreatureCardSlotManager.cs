@@ -61,7 +61,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// クリーチャーカードのリフローを行うイベント
+        /// ドラッグした状態でのホバーイベント
         /// </summary>
         private void OnIdentifiableStateDragedHover(IdentifiableStateDragedHoverEvent evt)
         {
@@ -424,19 +424,17 @@ namespace CardsAndDices
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
-            var instance = _creatureCardSlotInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
-            if (instance is null)
+            foreach (var instance in _creatureCardSlotInstances)
             {
-                return;
+                if(instance.ReflowPlacedCardId == compositeObjectId)
+                {
+                    instance.ReflowPlacedCard(null);
+                }
+                if(instance.PlacedCardId == compositeObjectId)
+                {
+                    instance.PlacedCard(null);
+                }
             }
-            instance.Dispose();
-            _creatureCardSlotInstances.Remove(instance);
-            var presenter = _creatureCardSlotPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
-            presenter.Dispose();
-            _creatureCardSlotPresenters.Remove(presenter);
-            var controller = _creatureCardSlotControllers.Where(c => c.InstanceId == compositeObjectId).FirstOrDefault();
-            controller.Dispose();
-            _creatureCardSlotControllers.Remove(controller);
         }
     }
 }

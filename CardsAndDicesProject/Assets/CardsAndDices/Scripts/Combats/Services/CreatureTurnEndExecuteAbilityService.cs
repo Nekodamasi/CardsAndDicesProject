@@ -44,14 +44,15 @@ namespace CardsAndDices
                     bool flg = _iAbilityCheck.HasExecutableAbility(instance.CompositeObjectId, null, ActivationTiming.TurnEndBuffDebuff);
                     if (flg)
                     {
-                        _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.TurnEndBuffDebuff, null, instance.CompositeObjectId));
+                        _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.TurnEndBuffDebuff, instance.CompositeObjectId, null));
                         await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
                     }
 
                     flg = _iAbilityCheck.HasExecutableAbility(instance.CompositeObjectId, null, ActivationTiming.TurnEndAttack);
                     if (flg)
                     {
-                        _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.TurnEndAttack, null, instance.CompositeObjectId));
+                        Debug.Log("じゃあここはきどうしてるってこと？！");
+                        _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.TurnEndAttack, instance.CompositeObjectId, null));
                         return;
                     }
                 }

@@ -1,5 +1,7 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using DG.Tweening;
 namespace CardsAndDices
 {
     /// <summary>
@@ -50,7 +52,7 @@ namespace CardsAndDices
         /// <summary>
         /// リアクション
         /// </summary>
-        private void OnDisplayCreatureReaction(DisplayCreatureReactionEvent evt)
+        private async void OnDisplayCreatureReaction(DisplayCreatureReactionEvent evt)
         {
             if (evt.TargetId != _view.CompositeObjectId) return;
             if (_instance.IsDamage)
@@ -59,7 +61,9 @@ namespace CardsAndDices
             }
             else if (_instance.IsDeath)
             {
-                _view.DisplayDeath(null);
+                Sequence deathSequence = _view.DisplayDeath(null);
+                await deathSequence.AsyncWaitForCompletion();
+                _eventBus.Emit(new DisposeByCompositeObjectIdEvent(_instance.CompositeObjectId));
             }
         }
 

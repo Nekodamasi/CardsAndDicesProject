@@ -16,6 +16,7 @@ namespace CardsAndDices
         private CreatureStatusInstance _creatureStatusInstance;
         private int _remainingUsages;
         private bool _isLock;
+        private bool _isExecution;
         private readonly AbilityContext _abilityContext = new();
         private GameEventBus _gameEventBus;
         private ICreatureCardlocation _iCreatureCardlocation;
@@ -33,6 +34,8 @@ namespace CardsAndDices
             _iCreatureCardlocation = iCreatureCardlocation;
             _gameEventBus = gameEventBus;
             _iTargetManager = iTargetManager;
+            _isExecution = false;
+            _isLock = false;
 
             _abilityContext.CreatureStatusInstance = _creatureStatusInstance;
             _abilityContext.ICreatureCardlocation = _iCreatureCardlocation;
@@ -104,10 +107,22 @@ namespace CardsAndDices
         /// </summary>
         public ActivationTiming ActivationTiming => _baseAbilityDataSO.TriggerCondition.ActivationTiming;
 
+        public bool IsExecution => _isExecution;
+
         /// <summary>
         /// Triggerの条件を満たしているか取得します
         /// </summary>
-        public bool IsTrigger => _baseAbilityDataSO.TriggerCondition.CheckCondition(_abilityContext);
+        public bool IsTrigger => CheckCondition();
+        private bool CheckCondition()
+        {
+            if (_isExecution) return false;
+            return _baseAbilityDataSO.TriggerCondition.CheckCondition(_abilityContext);
+        }
+
+        public void ResetExecution()
+        {
+            _isExecution = false;
+        }
 
         /// <summary>
         /// アビリティの効果を実行します。実行に成功したかを返します。
@@ -118,6 +133,7 @@ namespace CardsAndDices
             if (!IsAvailable) return false;
             _abilityContext.TargetIds = _iTargetManager.GetTargetList(_baseAbilityDataSO.AreaOfEffect, CompositeObjectId);
             _baseAbilityDataSO.EffectDefinition.Execute(_abilityContext, _gameEventBus);
+            _isExecution = true;
             return true;
         }
     }

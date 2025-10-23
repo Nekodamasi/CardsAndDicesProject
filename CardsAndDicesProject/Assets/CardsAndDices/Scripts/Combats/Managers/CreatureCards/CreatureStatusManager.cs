@@ -66,6 +66,10 @@ namespace CardsAndDices
         /// </summary>
         private async void OnResetTurnEnd(ResetTurnEndEvent evt)
         {
+            foreach (var instance in _creatureStatusInstances)
+            {
+                instance.ResetTurnEndStatus();
+            }
         }
 
         /// <summary>

@@ -90,19 +90,43 @@ namespace CardsAndDices
         /// </summary>
         public bool HasExecutableAbility(CompositeObjectId ownerId, CompositeObjectId subOwnerId, ActivationTiming activationTiming)
         {
+            var instance = GetExecutableAbility(ownerId, subOwnerId, activationTiming);
+            if (instance is null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 指定された実行者とタイミングで実行可能なInstanceを返します
+        /// </summary>
+        private AbilityInstance GetExecutableAbility(CompositeObjectId ownerId, CompositeObjectId subOwnerId, ActivationTiming activationTiming)
+        {
             var list = _instances.Where(a => a.CompositeObjectId == ownerId && a.ActivationTiming == activationTiming && a.IsAvailable).ToList();
+            Debug.Log("Abilitycheckリスト:" + ownerId + "_ActivationTiming" + activationTiming + "_リスト：" + list.Count);
 
             foreach (var instance in list)
             {
+                Debug.Log("実行check:" + instance.BaseAbilityData.Id + "_Trigger：" + instance.IsTrigger + "_activationTiming:" + activationTiming);
                 if (instance.IsTrigger)
                 {
-                    if (instance.SubOwnerId == null || instance.SubOwnerId == subOwnerId)
+                    if (activationTiming == ActivationTiming.Inlet)
                     {
-                        return true;
+                        if (instance.SubOwnerId == subOwnerId)
+                        {
+                            return instance;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("ここにこれてない？:" + instance.BaseAbilityData.Id);
+                        return instance;
                     }
                 }
             }
-            return false;
+            Debug.Log("ぬるになってる？");
+            return null;
         }
 
         /// <summary>
@@ -129,17 +153,22 @@ namespace CardsAndDices
             // エフェクトの有効期限を更新
             _eventBus.Emit(new UpdateEffectExpiredEvent(evt.TriggerTiming, evt.SourceObjectId, evt.SubSourceObjectId));
 
-            var list = _instances.Where(a => a.CompositeObjectId == evt.SourceObjectId && a.ActivationTiming == evt.TriggerTiming && a.IsAvailable).ToList();
-
+            for (var i = 0; i < 99; i++)
+            {
+                Debug.Log("いんすたんすげっと");
+                var instance = GetExecutableAbility(evt.SourceObjectId, evt.SubSourceObjectId, evt.TriggerTiming);
+                Debug.Log("いんすたんすもどり");
+                if (instance is null)
+                {
+                    return;
+                }
+                Debug.Log("ここで実行してるはずだ：" + instance.BaseAbilityData.Id);
+                instance.Execute();
+            }
+            var list = _instances.Where(a => a.CompositeObjectId == evt.SourceObjectId && a.IsExecution).ToList();
             foreach (var instance in list)
             {
-                if (instance.IsTrigger)
-                {
-                    if (instance.SubOwnerId == null || instance.SubOwnerId == evt.SubSourceObjectId)
-                    {
-                        instance.Execute();
-                    }
-                }
+                instance.ResetExecution();
             }
         }
 
