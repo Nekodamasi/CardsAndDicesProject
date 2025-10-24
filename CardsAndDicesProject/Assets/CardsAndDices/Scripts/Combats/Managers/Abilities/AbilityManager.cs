@@ -104,11 +104,9 @@ namespace CardsAndDices
         private AbilityInstance GetExecutableAbility(CompositeObjectId ownerId, CompositeObjectId subOwnerId, ActivationTiming activationTiming)
         {
             var list = _instances.Where(a => a.CompositeObjectId == ownerId && a.ActivationTiming == activationTiming && a.IsAvailable).ToList();
-            Debug.Log("Abilitycheckリスト:" + ownerId + "_ActivationTiming" + activationTiming + "_リスト：" + list.Count);
 
             foreach (var instance in list)
             {
-                Debug.Log("実行check:" + instance.BaseAbilityData.Id + "_Trigger：" + instance.IsTrigger + "_activationTiming:" + activationTiming);
                 if (instance.IsTrigger)
                 {
                     if (activationTiming == ActivationTiming.Inlet)
@@ -120,12 +118,10 @@ namespace CardsAndDices
                     }
                     else
                     {
-                        Debug.Log("ここにこれてない？:" + instance.BaseAbilityData.Id);
                         return instance;
                     }
                 }
             }
-            Debug.Log("ぬるになってる？");
             return null;
         }
 
@@ -155,12 +151,10 @@ namespace CardsAndDices
 
             for (var i = 0; i < 99; i++)
             {
-                Debug.Log("いんすたんすげっと");
                 var instance = GetExecutableAbility(evt.SourceObjectId, evt.SubSourceObjectId, evt.TriggerTiming);
-                Debug.Log("いんすたんすもどり");
                 if (instance is null)
                 {
-                    return;
+                    break;
                 }
                 Debug.Log("ここで実行してるはずだ：" + instance.BaseAbilityData.Id);
                 instance.Execute();

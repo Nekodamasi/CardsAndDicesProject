@@ -22,6 +22,7 @@ namespace CardsAndDices
             public bool IsAvailable;
             public string ActivationTiming;
             public bool IsTrigger;
+            public bool IsExecution;
         }
 
         [Header("Dependencies")]
@@ -95,7 +96,8 @@ namespace CardsAndDices
                     IsLock = instance.IsLock,
                     IsAvailable = instance.IsAvailable,
                     ActivationTiming = instance.ActivationTiming.ToString(),
-                    IsTrigger = instance.IsTrigger
+                    IsTrigger = instance.IsTrigger,
+                    IsExecution = instance.IsExecution
                 });
             }
         }
