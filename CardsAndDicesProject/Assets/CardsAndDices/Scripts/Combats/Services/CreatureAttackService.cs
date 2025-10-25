@@ -14,15 +14,17 @@ namespace CardsAndDices
         private ITargetManager _iTargetManager;
         private ICreatureStatusInstanceRepository _iCreatureStatusInstanceRepository;
         private GameEventBus _gameEventBus;
+        private IWaveNumber _iWaveNumber;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CreatureAttackService(ITargetManager iTargetManager, ICreatureStatusInstanceRepository iCreatureStatusInstanceRepository, GameEventBus gameEventBus)
+        public CreatureAttackService(ITargetManager iTargetManager, ICreatureStatusInstanceRepository iCreatureStatusInstanceRepository, GameEventBus gameEventBus, IWaveNumber iWaveNumber)
         {
             _iTargetManager = iTargetManager;
             _iCreatureStatusInstanceRepository = iCreatureStatusInstanceRepository;
             _gameEventBus = gameEventBus;
+            _iWaveNumber = iWaveNumber;
             _gameEventBus.On<CoolDownZeoAttackEvent>(OnCoolDownZeoAttack);
             _gameEventBus.On<CoolDownStartEvent>(OnCoolDownStart);
             _gameEventBus.On<CreatureAttackEvent>(OnCreatureAttack);
@@ -42,7 +44,37 @@ namespace CardsAndDices
         {
             // １アクション攻撃処理を実行
             await CreateAttack(evt.CreateAttackContext);
-            _gameEventBus.Emit(new CreatureAttackEndEvent());
+
+            // 勝敗判定
+            if (DetermineWinner() == false)
+            {
+                _gameEventBus.Emit(new CreatureAttackEndEvent());
+            }
+        }
+
+        /// <summary>
+        /// 勝敗判定
+        /// </summary>
+        private bool DetermineWinner()
+        {
+            // プレイヤー敗北チェック
+            var list = _iTargetManager.GetEnemyList(Team.Player);
+            if (list.Count == 0)
+            {
+                // プレイヤーが敗北
+                _gameEventBus.Emit(new CombatPlayerWonEvent());
+                return true;
+            }
+
+            // エネミー敗北チェック
+            list = _iTargetManager.GetEnemyList(Team.Enemy);
+            if (list.Count == 0 && _iWaveNumber.IslastWave)
+            {
+                // エネミーが敗北
+                _gameEventBus.Emit(new CombatEnemyWonEvent());
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

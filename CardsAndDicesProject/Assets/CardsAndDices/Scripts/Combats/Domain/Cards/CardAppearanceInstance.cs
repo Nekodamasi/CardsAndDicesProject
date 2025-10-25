@@ -9,26 +9,16 @@ namespace CardsAndDices
     public class CardAppearanceInstance : IDisposable, IIdentifiableInstance
     {
         private CompositeObjectId _compositeObjectId;
-        private ICreatureCardSlotPosition _iCreatureCardSlotPosition;
+        private AppearanceProfile _appearanceProfile;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CardAppearanceInstance(CompositeObjectId compositeObjectId, ICreatureCardSlotPosition iCreatureCardSlotPosition)
+        public CardAppearanceInstance(CompositeObjectId compositeObjectId, AppearanceProfile appearanceProfile)
         {
             _compositeObjectId = compositeObjectId;
-            _iCreatureCardSlotPosition = iCreatureCardSlotPosition;
+            _appearanceProfile = appearanceProfile;
         }
-
-        /// <summary>
-        /// 画面に配置しているかどうか。
-        /// </summary>
-        public bool IsOnScreen;
-
-        /// <summary>
-        /// インスタンスが生きているか
-        /// </summary>
-        public bool IsAlive;
 
         /// <summary>
         /// クリーチャーカードを一意に識別するID。
@@ -36,10 +26,9 @@ namespace CardsAndDices
         public CompositeObjectId CompositeObjectId => _compositeObjectId;
 
         /// <summary>
-        /// スロットポジション
+        /// クリーチャーカードを一意に識別するID。
         /// </summary>
-        public Vector3 CreatureCardSlotPosition => _iCreatureCardSlotPosition.GetCreatureCardHomePosition(CompositeObjectId);
-
+        public AppearanceProfile AppearanceProfile => _appearanceProfile;
 
         /// <summary>
         /// Disposeします

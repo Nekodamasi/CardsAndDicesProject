@@ -29,6 +29,16 @@ namespace CardsAndDices
             _waveNumber = 0;
             _combatData = null;
             _eventBus.On<CombatPhaseWaveEnemySetUpEvent>(OnCombatPhaseWaveEnemySetUp);
+            _eventBus.On<CombatPhaseSetUpCombatDataEvent>(OnCombatPhaseSetUpCombatData);
+            
+        }
+
+        /// <summary>
+        /// コンバットデータのセットアップイベント
+        /// </summary>
+        private void OnCombatPhaseSetUpCombatData(CombatPhaseSetUpCombatDataEvent evt)
+        {
+            SetUpCombatData();
         }
 
         /// <summary>
@@ -36,9 +46,6 @@ namespace CardsAndDices
         /// </summary>
         private void OnCombatPhaseWaveEnemySetUp(CombatPhaseWaveEnemySetUpEvent evt)
         {
-            // いずれコンバットデータのセットは別の場所に移動
-            SetUpCombatData();
-
             // １ウェーブ分のクリーチャーを生成
             CreateWaveEnemyCreature();
         }
@@ -95,6 +102,11 @@ namespace CardsAndDices
         public int CurrentWaveNumber => _waveNumber;
 
         /// <summary>
+        /// 最終ウェーブに到着しているか
+        /// </summary>
+        public bool IslastWave => MaxWaveNumber == CurrentWaveNumber;
+
+        /// <summary>
         /// ウェーブナンバーを次の番号に変更します
         /// </summary>
         public void NextWaveNumber()
@@ -109,6 +121,7 @@ namespace CardsAndDices
         public void Dispose()
         {
             _eventBus.Off<CombatPhaseWaveEnemySetUpEvent>(OnCombatPhaseWaveEnemySetUp);
+            _eventBus.Off<CombatPhaseSetUpCombatDataEvent>(OnCombatPhaseSetUpCombatData);
         }
    }
 }

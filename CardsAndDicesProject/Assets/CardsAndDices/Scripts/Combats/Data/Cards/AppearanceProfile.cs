@@ -7,7 +7,7 @@ namespace CardsAndDices
     /// <summary>
     /// クリーチャーの「見た目」一式を定義するデータアセット。
     /// </summary>
-    [CreateAssetMenu(fileName = "AP_NewAppearance", menuName = "CardsAndDices/Combats/Data/Creatures/AppearanceProfile")]
+    [CreateAssetMenu(fileName = "AP_NewAppearance", menuName = "CardsAndDices/Combats/Data/Cards/AppearanceProfile")]
     public class AppearanceProfile : ScriptableObject
     {
         [SerializeField]

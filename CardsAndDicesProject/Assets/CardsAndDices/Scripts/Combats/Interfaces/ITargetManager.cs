@@ -24,5 +24,9 @@ namespace CardsAndDices
         /// アクション順にソートされたIdのリストを取得します
         /// </summary>
         List<CompositeObjectId> GetActionOrderList();
+        /// <summary>
+        /// アクション順にソートされたIdのリストを取得します
+        /// </summary>
+        List<CompositeObjectId> GetEnemyList(Team team);
     }
 }

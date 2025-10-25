@@ -59,6 +59,25 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定したチームのエネミーをリストとして取得する
+        /// </summary>
+        public List<CompositeObjectId> GetEnemyList(Team team)
+        {
+            var list = _creatureCardSlotManager.GetNonHandInstanceList();
+            var sortedSlots = list
+                .Where(slot => slot.IsOccupied && slot.Team != team)
+                .OrderBy(slot => slot.Team) // Enemy first
+                .ThenBy(slot => slot.Location);
+
+            List<CompositeObjectId> ids = new();
+            foreach (var slot in sortedSlots)
+            {
+                ids.Add(slot.ReflowPlacedCardId);
+            }
+            return ids;
+        }
+
+        /// <summary>
         /// 基本的な行動順序に則ってソートされた敵カードのうち、一番最初に出たカードを取得します
         /// </summary>
         public List<CompositeObjectId> GetHostileCreature(Team team)

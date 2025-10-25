@@ -40,7 +40,7 @@ namespace CardsAndDices
         [SerializeField] private VfxManager _vfxManager;
         [SerializeField] private CombatPhaseStateMachine _combatPhaseStateMachine;
         [SerializeField] private WaveManager _waveManager;
-
+        [SerializeField] private CardAppearanceManager _cardAppearanceManager;
 
         [Header("PrefabSpawnInfo Managers")]
         [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
@@ -100,6 +100,7 @@ namespace CardsAndDices
             builder.RegisterInstance(_vfxManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_combatPhaseStateMachine).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_waveManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_cardAppearanceManager).AsSelf().AsImplementedInterfaces();            
 
             // PrefabSpawnInfo Managers のバインド
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
@@ -131,7 +132,7 @@ namespace CardsAndDices
             _playerCardDataProvider.Initialize();
             _creatureCardManager.Initialize(_gameEventBus, _creatureCardSlotManager, _identifiableViewRegistry);
             _creatureCardSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
-            _creatureStatusManager.Initialize(_gameEventBus, _targetManager, _identifiableViewRegistry, _effectManager, _abilityManager);
+            _creatureStatusManager.Initialize(_gameEventBus, _targetManager, _identifiableViewRegistry, _effectManager, _abilityManager, _waveManager);
             _sharedIconElementManager.Initialize(_gameEventBus, _identifiableViewRegistry);
             _targetManager.Initialize(_creatureCardSlotManager, _creatureStatusManager);
             _abilityManager.Initialize(_gameEventBus, _creatureCardSlotManager, _targetManager);
@@ -141,6 +142,7 @@ namespace CardsAndDices
             _combatPhaseStateMachine.Initialize(_gameEventBus);
             _waveManager.Initialize(_gameEventBus, _combatScenarioRegistry, _identifiableViewRegistry);
             _combatScenarioRegistry.Initialize();
+            _cardAppearanceManager.Initialize(_gameEventBus, _identifiableViewRegistry);
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();

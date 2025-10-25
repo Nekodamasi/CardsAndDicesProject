@@ -26,9 +26,10 @@ namespace CardsAndDices
         private IAbilityCheck _iAbilityCheck;
         private CreatureAttackService _creatureAttackService;
         private CreatureTurnEndExecuteAbilityService _creatureTurnEndExecuteAbilityService;
+        private WaveManager _waveManager;
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, ITargetManager iTargetManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue, IAbilityCheck iAbilityCheck)
+        public void Initialize(GameEventBus eventBus, ITargetManager iTargetManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue, IAbilityCheck iAbilityCheck, WaveManager waveManager)
         {
             DisposeInstances();
             DisposePresenters();
@@ -37,6 +38,7 @@ namespace CardsAndDices
             _viewRegistry = viewRegistry;
             _iEffectValue = iEffectValue;
             _iAbilityCheck = iAbilityCheck;
+            _waveManager = waveManager;
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
             _eventBus.On<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
             _eventBus.On<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
@@ -44,7 +46,7 @@ namespace CardsAndDices
             _eventBus.On<ResetCoolDownEvent>(OnResetCoolDown);
             _eventBus.On<ResetTurnEndEvent>(OnResetTurnEnd);
             
-            _creatureAttackService = new CreatureAttackService(_iTargetManager, this, _eventBus);
+            _creatureAttackService = new CreatureAttackService(_iTargetManager, this, _eventBus, _waveManager);
             _creatureTurnEndExecuteAbilityService = new CreatureTurnEndExecuteAbilityService(_iTargetManager, this, _eventBus, _iAbilityCheck);
         }
 

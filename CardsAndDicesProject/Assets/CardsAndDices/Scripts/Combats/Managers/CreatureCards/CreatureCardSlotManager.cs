@@ -120,9 +120,16 @@ namespace CardsAndDices
         /// <summary>
         /// クリーチャーカードの前詰め処理を行います
         /// </summary>
-        private void OnCombatPhaseCardFrontLoadMovement(CombatPhaseCardFrontLoadMovementEvent evt)
+        private async void OnCombatPhaseCardFrontLoadMovement(CombatPhaseCardFrontLoadMovementEvent evt)
         {
             _reflowService.CalculateFrontLoadMovements();
+            _eventBus.Emit(new MoveToAnimationReflowCreatureCardSlotEvent(null));
+
+            // ウェイト
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+
+            // 前詰め処理終了
+            _eventBus.Emit(new CombatPhaseCardFrontLoadMovementEndEvent());
         }
 
         /// <summary>

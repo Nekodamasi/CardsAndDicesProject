@@ -9,23 +9,21 @@ namespace CardsAndDices
     /// <summary>
     /// 全てのクリーチャーカードの状態管理などを担当するマネージャークラス。
     /// </summary>
-    [CreateAssetMenu(fileName = "CardAppearanceManager", menuName = "CardsAndDices/Combats/Managers/CreatureCards/CardAppearanceManager")]
+    [CreateAssetMenu(fileName = "CardAppearanceManager", menuName = "CardsAndDices/Combats/Managers/Cards/CardAppearanceManager")]
     public class CardAppearanceManager : ScriptableObject, IDisposable, IIdentifiableManager
     {
         [Header("Components")]
-        private readonly List<CreatureCardInstance> _creatureCardInstances = new();
-        private readonly List<CreatureCardPresenter> _creatureCardPresenters = new();
+        private readonly List<CardAppearanceInstance> _instances = new();
+        private readonly List<CardAppearancePresenter> _presenters = new();
         private GameEventBus _eventBus;
-        private CreatureCardSlotManager _creatureCardSlotManager;
         private IdentifiableViewRegistry _viewRegistry;
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, CreatureCardSlotManager creatureCardSlotManager, IdentifiableViewRegistry viewRegistry)
+        public void Initialize(GameEventBus eventBus, IdentifiableViewRegistry viewRegistry)
         {
             DisposeInstances();
             DisposePresenters();
             _eventBus = eventBus;
-            _creatureCardSlotManager = creatureCardSlotManager;
             _viewRegistry = viewRegistry;
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
             _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
@@ -53,12 +51,17 @@ namespace CardsAndDices
         /// </summary>
         private void OnCreateCreature(CreateCreatureEvent evt)
         {
-            var instance = new CreatureCardInstance(evt.CreatureCardId, _creatureCardSlotManager);
-            _creatureCardInstances.Add(instance);
-            var view = _viewRegistry.GetView<CreatureCardView>(evt.CreatureCardId);
+            var instance = new CardAppearanceInstance(evt.CreatureCardId, evt.CardInitializationData.Appearance);
+            _instances.Add(instance);
+            var view = _viewRegistry.GetView<CardAppearanceView>(evt.CreatureCardId);
+            if(view is null)
+            {
+                Debug.LogWarning("ビューが取得できない");
+                return;
+            }
             view.SetBoundState(true);
-            var presenter = new CreatureCardPresenter(instance, view, _eventBus);
-            _creatureCardPresenters.Add(presenter);
+            var presenter = new CardAppearancePresenter(instance, view, _eventBus);
+            _presenters.Add(presenter);
         }
 
         /// <summary>
@@ -66,22 +69,22 @@ namespace CardsAndDices
         /// </summary>
         private void DisposeInstances()
         {
-            foreach (var instance in _creatureCardInstances)
+            foreach (var instance in _instances)
             {
                 instance.Dispose();
             }
-            _creatureCardInstances.Clear();
+            _instances.Clear();
         }
         /// <summary>
         /// コントローラーをDisposeします
         /// </summary>
         private void DisposePresenters()
         {
-            foreach (var presenter in _creatureCardPresenters)
+            foreach (var presenter in _presenters)
             {
                 presenter.Dispose();
             }
-            _creatureCardPresenters.Clear();
+            _presenters.Clear();
         }
 
         /// <summary>
@@ -89,16 +92,16 @@ namespace CardsAndDices
         /// </summary>
         public void DisposeByCompositeObjectId(CompositeObjectId compositeObjectId)
         {
-            var instance = _creatureCardInstances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            var instance = _instances.Where(i => i.CompositeObjectId == compositeObjectId).FirstOrDefault();
             if (instance is null)
             {
                 return;
             }
             instance.Dispose();
-            _creatureCardInstances.Remove(instance);
-            var presenter = _creatureCardPresenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
+            _instances.Remove(instance);
+            var presenter = _presenters.Where(p => p.CompositeObjectId == compositeObjectId).FirstOrDefault();
             presenter.Dispose();
-            _creatureCardPresenters.Remove(presenter);
+            _presenters.Remove(presenter);
         }
    }
 }

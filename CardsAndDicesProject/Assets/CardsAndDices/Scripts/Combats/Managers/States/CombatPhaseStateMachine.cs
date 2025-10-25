@@ -28,9 +28,8 @@ namespace CardsAndDices
 			_eventBus.On<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 			_eventBus.On<CreatureAttackEndEvent>(OnCreatureAttackEnd);
 			_eventBus.On<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
-			
 			_eventBus.On<CreatureTurnEndExecuteAbilityEndEvent>(OnCreatureTurnEndExecuteAbilityEnd);
-			
+			_eventBus.On<CombatPhaseCardFrontLoadMovementEndEvent>(OnCombatPhaseCardFrontLoadMovementEnd);
 		}
 
         public void Dispose()
@@ -40,9 +39,23 @@ namespace CardsAndDices
 			_eventBus.Off<CoolDownZeoAttackEndEvent>(OnCoolDownZeoAttackEnd);
 			_eventBus.Off<CreatureAttackEndEvent>(OnCreatureAttackEnd);
 			_eventBus.Off<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
-
 			_eventBus.Off<CreatureTurnEndExecuteAbilityEndEvent>(OnCreatureTurnEndExecuteAbilityEnd);
+			_eventBus.Off<CombatPhaseCardFrontLoadMovementEndEvent>(OnCombatPhaseCardFrontLoadMovementEnd);
         }
+
+		/// <summary>
+		/// 前詰め処理完了イベント
+		/// </summary>
+		private void OnCombatPhaseCardFrontLoadMovementEnd(CombatPhaseCardFrontLoadMovementEndEvent evt)
+		{
+			switch (_currentCombatPhase)
+			{
+				case CombatPhase.TurnEndPhase:
+					Debug.Log("ここに来れたらOK");
+					_eventBus.Emit(new ResetUIStatusEvent());
+					break;
+			}
+		}
 
 		/// <summary>
 		/// ターンエンドアビリティ実行終了イベント
@@ -52,9 +65,8 @@ namespace CardsAndDices
 			switch (_currentCombatPhase)
 			{
 				case CombatPhase.TurnEndPhase:
-					Debug.Log("ここに来れたらOK");
+					_eventBus.Emit(new CombatPhaseCardFrontLoadMovementEvent());
 					_eventBus.Emit(new ResetTurnEndEvent());
-					_eventBus.Emit(new ResetUIStatusEvent());
 					break;
 			}
 		}
