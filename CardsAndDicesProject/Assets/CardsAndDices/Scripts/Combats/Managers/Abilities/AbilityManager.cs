@@ -156,7 +156,6 @@ namespace CardsAndDices
                 {
                     break;
                 }
-                Debug.Log("ここで実行してるはずだ：" + instance.BaseAbilityData.Id);
                 instance.Execute();
             }
             var list = _instances.Where(a => a.CompositeObjectId == evt.SourceObjectId && a.IsExecution).ToList();

@@ -85,9 +85,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnIdentifiableStateClick(IdentifiableStateClickEvent evt)
         {
-            Debug.Log("ここが最初にぼたんをおしたとき");
             if (evt.ExecutedObjectId != _view.CompositeObjectId) return;
-            Debug.Log("ここが最初にぼたんをおしたとき２");
             _eventBus.Emit(new ChangeCombatPhaseEvent(CombatPhase.TurnEndPhase));
             _eventBus.Emit(new CombatPhaseDiceOffScreenEvent());
         }

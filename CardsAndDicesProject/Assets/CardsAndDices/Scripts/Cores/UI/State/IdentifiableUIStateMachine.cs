@@ -54,7 +54,6 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnResetUIStatus(ResetUIStatusEvent evt)
 		{
-			Debug.Log("りせっとします");
 			SetCurrentState(IdentifiableUIState.Idle, null, null);
 		}
 
@@ -63,7 +62,6 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnDisableUIInteraction(DisableUIInteractionEvent evt)
 		{
-			Debug.Log("のんれすぽんす");
 			SetCurrentState(IdentifiableUIState.NonResponse, null, null);
 		}
 
@@ -72,7 +70,6 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnEnableUIInteraction(EnableUIInteractionEvent evt)
 		{
-			Debug.Log("のんれすぽんすかいじょ");
 			SetCurrentState(IdentifiableUIState.Idle, null, null);
 		}
 

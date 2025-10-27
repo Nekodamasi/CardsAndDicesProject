@@ -43,7 +43,9 @@ namespace CardsAndDices
         private async void OnCreatureAttack(CreatureAttackEvent evt)
         {
             // １アクション攻撃処理を実行
+            Debug.Log("くりーちゃーのこうげきかいし");
             await CreateAttack(evt.CreateAttackContext);
+            Debug.Log("くりーちゃーのこうげきしゅうりょう");
 
             // 勝敗判定
             if (DetermineWinner() == false)
@@ -58,19 +60,22 @@ namespace CardsAndDices
         private bool DetermineWinner()
         {
             // プレイヤー敗北チェック
-            var list = _iTargetManager.GetEnemyList(Team.Player);
+
+            var list = _iCreatureStatusInstanceRepository.GetNonHandAliveInstanceList(Team.Player);
             if (list.Count == 0)
             {
                 // プレイヤーが敗北
+                Debug.LogWarning("ぷれいやーはいぼく");
                 _gameEventBus.Emit(new CombatPlayerWonEvent());
                 return true;
             }
 
             // エネミー敗北チェック
-            list = _iTargetManager.GetEnemyList(Team.Enemy);
+            list = _iCreatureStatusInstanceRepository.GetNonHandAliveInstanceList(Team.Enemy);
             if (list.Count == 0 && _iWaveNumber.IslastWave)
             {
                 // エネミーが敗北
+                Debug.LogWarning("えねみーはいぼく");
                 _gameEventBus.Emit(new CombatEnemyWonEvent());
                 return true;
             }
@@ -167,6 +172,7 @@ namespace CardsAndDices
             {
                 var target = _iCreatureStatusInstanceRepository.GetInstance(id);
                 target.TakeDamage(attackValue);
+                Debug.Log("だめーじうけたよ:" + target.CompositeObjectId + "_IsDaamge->" + target.IsDamage + "_Isです->" + target.IsDeath);
             }
 
             // 攻撃の演出

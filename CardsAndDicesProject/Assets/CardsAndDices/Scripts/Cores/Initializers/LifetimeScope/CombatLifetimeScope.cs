@@ -132,7 +132,7 @@ namespace CardsAndDices
             _playerCardDataProvider.Initialize();
             _creatureCardManager.Initialize(_gameEventBus, _creatureCardSlotManager, _identifiableViewRegistry);
             _creatureCardSlotManager.Initialize(_gameEventBus, _compositeObjectIdManager, _identifiableViewRegistry);
-            _creatureStatusManager.Initialize(_gameEventBus, _targetManager, _identifiableViewRegistry, _effectManager, _abilityManager, _waveManager);
+            _creatureStatusManager.Initialize(_gameEventBus, _targetManager, _identifiableViewRegistry, _effectManager, _abilityManager, _waveManager, _creatureCardSlotManager);
             _sharedIconElementManager.Initialize(_gameEventBus, _identifiableViewRegistry);
             _targetManager.Initialize(_creatureCardSlotManager, _creatureStatusManager);
             _abilityManager.Initialize(_gameEventBus, _creatureCardSlotManager, _targetManager);
@@ -140,7 +140,7 @@ namespace CardsAndDices
             _diceInletManager.Initialize(_gameEventBus, _identifiableViewRegistry);
             _vfxManager.Initialize(_soundManager, _gameEventBus);
             _combatPhaseStateMachine.Initialize(_gameEventBus);
-            _waveManager.Initialize(_gameEventBus, _combatScenarioRegistry, _identifiableViewRegistry);
+            _waveManager.Initialize(_gameEventBus, _combatScenarioRegistry, _identifiableViewRegistry, _targetManager);
             _combatScenarioRegistry.Initialize();
             _cardAppearanceManager.Initialize(_gameEventBus, _identifiableViewRegistry);
 

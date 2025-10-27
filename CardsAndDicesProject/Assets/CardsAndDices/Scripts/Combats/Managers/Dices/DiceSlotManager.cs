@@ -112,7 +112,6 @@ namespace CardsAndDices
         {
             var sortedSlots = _diceSlotInstances.OrderBy(s => s.DiceSlotLocation).ToList();
             var occupiedSlots = sortedSlots.Where(s => s.IsOccupied == false).ToList();
-            Debug.Log("ダイススロット配置ー＞" + sortedSlots.Count + "/" + occupiedSlots.Count);
             _eventBus.Emit(new PlacedDiceEvent(occupiedSlots[0].CompositeObjectId, DiceId));
 //            _eventBus.Emit(new ReturnHomePositionEvent(DiceId));
         }

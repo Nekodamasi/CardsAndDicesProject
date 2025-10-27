@@ -27,9 +27,10 @@ namespace CardsAndDices
         private CreatureAttackService _creatureAttackService;
         private CreatureTurnEndExecuteAbilityService _creatureTurnEndExecuteAbilityService;
         private WaveManager _waveManager;
+        private ICreatureCardlocation _iCreatureCardlocation;
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, ITargetManager iTargetManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue, IAbilityCheck iAbilityCheck, WaveManager waveManager)
+        public void Initialize(GameEventBus eventBus, ITargetManager iTargetManager, IdentifiableViewRegistry viewRegistry, IEffectValue iEffectValue, IAbilityCheck iAbilityCheck, WaveManager waveManager, ICreatureCardlocation iCreatureCardlocation)
         {
             DisposeInstances();
             DisposePresenters();
@@ -39,6 +40,7 @@ namespace CardsAndDices
             _iEffectValue = iEffectValue;
             _iAbilityCheck = iAbilityCheck;
             _waveManager = waveManager;
+            _iCreatureCardlocation = iCreatureCardlocation;
             _eventBus.On<CreateCreatureEvent>(OnCreateCreature);
             _eventBus.On<CombatPhasePlayerCardOnScreenEvent>(OnCombatPhasePlayerCardOnScreen);
             _eventBus.On<CombatPhaseEnemyCardOnScreenEvent>(OnCombatPhaseEnemyCardOnScreen);
@@ -130,7 +132,7 @@ namespace CardsAndDices
         /// </summary>
         private void OnCreateCreature(CreateCreatureEvent evt)
         {
-            var instance = new CreatureStatusInstance(evt.CreatureCardId, evt.CardInitializationData.CreatureData, _iEffectValue, evt.CardInitializationData.CreatureDataTeam);
+            var instance = new CreatureStatusInstance(evt.CreatureCardId, evt.CardInitializationData.CreatureData, _iEffectValue, evt.CardInitializationData.CreatureDataTeam, _iCreatureCardlocation);
             _creatureStatusInstances.Add(instance);
             var controller = new CreatureCardStatusIconController(instance, _eventBus, _reatureStatusIconDataList);
             _creatureCardStatusIconControllers.Add(controller);
@@ -208,10 +210,21 @@ namespace CardsAndDices
         }
 
         /// <summary>
+        /// 指定されたチームの生きているInstanceを返します
+        /// </summary>
+        public List<CreatureStatusInstance> GetNonHandAliveInstanceList(Team team)
+        {
+            var instancelist = _creatureStatusInstances
+                .Where(c => c.CreatureDataTeam == team && c.IsDeath == false && c.CreatureLinePosition != LinePosition.Hand)
+                .ToList();
+
+            return instancelist;
+        }
+
+        /// <summary>
         /// 全てのインスタンスを返します
         /// </summary>
-        public 
-        List<CreatureStatusInstance> GetInstanceList()
+        public List<CreatureStatusInstance> GetInstanceList()
         {
             return _creatureStatusInstances;
         }

@@ -72,7 +72,11 @@ namespace CardsAndDices
             List<CompositeObjectId> ids = new();
             foreach (var slot in sortedSlots)
             {
-                ids.Add(slot.ReflowPlacedCardId);
+                var instance = _iCreatureStatusInstanceRepository.GetInstance(slot.ReflowPlacedCardId);
+                if(instance.IsDeath == false)
+                {
+                    ids.Add(instance.CompositeObjectId);
+                }
             }
             return ids;
         }
@@ -91,8 +95,12 @@ namespace CardsAndDices
             List<CompositeObjectId> ids = new();
             foreach (var slot in sortedSlots)
             {
-                ids.Add(slot.ReflowPlacedCardId);
-                break;
+                var instance = _iCreatureStatusInstanceRepository.GetInstance(slot.ReflowPlacedCardId);
+                if(instance.IsDeath == false)
+                {
+                    ids.Add(instance.CompositeObjectId);
+                    break;
+                }
             }
             return ids;
         }

@@ -51,13 +51,11 @@ namespace CardsAndDices
                     flg = _iAbilityCheck.HasExecutableAbility(instance.CompositeObjectId, null, ActivationTiming.TurnEndAttack);
                     if (flg)
                     {
-                        Debug.Log("じゃあここはきどうしてるってこと？！");
                         _eventBus.Emit(new ExecuteAbilityEffectEvent(ActivationTiming.TurnEndAttack, instance.CompositeObjectId, null));
                         return;
                     }
                 }
             }
-            Debug.Log("ダイスロールよんでるよ");
             _eventBus.Emit(new CombatPhaseSetUpUserDiceEvent());
             
         }

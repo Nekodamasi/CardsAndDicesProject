@@ -20,10 +20,5 @@ namespace CardsAndDices
         /// 最終ウェーブに到着しているか
         /// </summary>
         bool IslastWave { get; }
-
-        /// <summary>
-        /// ウェーブナンバーを次の番号に変更します
-        /// </summary>
-        void NextWaveNumber();
     }
 }

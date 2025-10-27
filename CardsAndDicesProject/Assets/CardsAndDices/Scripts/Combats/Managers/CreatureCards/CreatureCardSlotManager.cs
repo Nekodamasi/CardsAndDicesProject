@@ -319,6 +319,7 @@ namespace CardsAndDices
             return placedSlots[0].CreatureCardSlotPosition;
         }
 
+
         /// <summary>
         /// 手札の空いているハンドスロットのうち、最も若い番号のスロットIDを取得します。
         /// </summary>

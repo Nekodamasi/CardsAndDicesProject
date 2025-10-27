@@ -12,16 +12,18 @@ namespace CardsAndDices
         private IEffectValue _iEffectValue;
         private CreatureData _creatureData;
         private Team _creatureDataTeam;
+        private ICreatureCardlocation _iCreatureCardlocation;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CreatureStatusInstance(CompositeObjectId compositeObjectId, CreatureData data, IEffectValue iEffectValue, Team creatureDataTeam)
+        public CreatureStatusInstance(CompositeObjectId compositeObjectId, CreatureData data, IEffectValue iEffectValue, Team creatureDataTeam, ICreatureCardlocation iCreatureCardlocation)
         {
             _compositeObjectId = compositeObjectId;
             _creatureData = data;
             _iEffectValue = iEffectValue;
             _creatureDataTeam = creatureDataTeam;
+            _iCreatureCardlocation = iCreatureCardlocation;
 
             CurrentHealth = data.Health;
             CurrentShield = data.Shield;
@@ -37,6 +39,16 @@ namespace CardsAndDices
         /// クリーチャーステータスを一意に識別するID。
         /// </summary>
         public CompositeObjectId CompositeObjectId => _compositeObjectId;
+
+        /// <summary>
+        /// 現在のlocation
+        /// </summary>
+        public SlotLocation CreatureLocation => _iCreatureCardlocation.GetSlotLocation(CompositeObjectId);
+
+        /// <summary>
+        /// 現在のlocation
+        /// </summary>
+        public LinePosition CreatureLinePosition => _iCreatureCardlocation.GetLinePosition(CompositeObjectId);
 
         /// <summary>
         /// クリーチャーが所属するチーム
@@ -118,7 +130,6 @@ namespace CardsAndDices
         public void ResetAttackFlgs()
         {
             IsDamage = false;
-            IsDeath = false;
             IsAttacker = false;
         }
 

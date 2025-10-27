@@ -30,6 +30,7 @@ namespace CardsAndDices
 			_eventBus.On<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
 			_eventBus.On<CreatureTurnEndExecuteAbilityEndEvent>(OnCreatureTurnEndExecuteAbilityEnd);
 			_eventBus.On<CombatPhaseCardFrontLoadMovementEndEvent>(OnCombatPhaseCardFrontLoadMovementEnd);
+			_eventBus.On<CombatPhaseWaveEnemySetUpEndEvent>(OnCombatPhaseWaveEnemySetUpEnd);
 		}
 
         public void Dispose()
@@ -41,7 +42,22 @@ namespace CardsAndDices
 			_eventBus.Off<CombatPhaseDiceOffScreenEndEvent>(OnCombatPhaseDiceOffScreenEnd);
 			_eventBus.Off<CreatureTurnEndExecuteAbilityEndEvent>(OnCreatureTurnEndExecuteAbilityEnd);
 			_eventBus.Off<CombatPhaseCardFrontLoadMovementEndEvent>(OnCombatPhaseCardFrontLoadMovementEnd);
+			_eventBus.Off<CombatPhaseWaveEnemySetUpEndEvent>(OnCombatPhaseWaveEnemySetUpEnd);
         }
+
+		/// <summary>
+		/// 前詰め処理完了イベント
+		/// </summary>
+		private void OnCombatPhaseWaveEnemySetUpEnd(CombatPhaseWaveEnemySetUpEndEvent evt)
+		{
+			switch (_currentCombatPhase)
+			{
+				case CombatPhase.TurnEndPhase:
+					Debug.Log("ここに来れたらOK");
+					_eventBus.Emit(new ResetUIStatusEvent());
+					break;
+			}
+		}
 
 		/// <summary>
 		/// 前詰め処理完了イベント
@@ -51,8 +67,7 @@ namespace CardsAndDices
 			switch (_currentCombatPhase)
 			{
 				case CombatPhase.TurnEndPhase:
-					Debug.Log("ここに来れたらOK");
-					_eventBus.Emit(new ResetUIStatusEvent());
+					_eventBus.Emit(new CombatPhaseWaveEnemySetUpEvent());
 					break;
 			}
 		}
@@ -76,7 +91,6 @@ namespace CardsAndDices
 		/// </summary>
 		private void OnCombatPhaseDiceOffScreenEnd(CombatPhaseDiceOffScreenEndEvent evt)
 		{
-			Debug.Log("CreatureTurnEndExecuteAbilityEvent:" + _currentCombatPhase);
 			switch (_currentCombatPhase)
 			{
 				case CombatPhase.TurnEndPhase:

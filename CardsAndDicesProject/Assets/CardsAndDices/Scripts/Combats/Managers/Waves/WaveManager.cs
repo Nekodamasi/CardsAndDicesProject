@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using System.Linq;
 using UnityEngine;
 using VContainer;
@@ -19,14 +19,16 @@ namespace CardsAndDices
         private IdentifiableViewRegistry _viewRegistry;
         private CombatData _combatData;
         private int _waveNumber;
+        private ITargetManager _itargetManager;
 
         [Inject]
-        public void Initialize(GameEventBus eventBus, CombatScenarioRegistry combatScenarioRegistry, IdentifiableViewRegistry viewRegistry)
+        public void Initialize(GameEventBus eventBus, CombatScenarioRegistry combatScenarioRegistry, IdentifiableViewRegistry viewRegistry, ITargetManager itargetManager)
         {
             _eventBus = eventBus;
             _combatScenarioRegistry = combatScenarioRegistry;
             _viewRegistry = viewRegistry;
-            _waveNumber = 0;
+            _itargetManager = itargetManager;
+            _waveNumber = -1;
             _combatData = null;
             _eventBus.On<CombatPhaseWaveEnemySetUpEvent>(OnCombatPhaseWaveEnemySetUp);
             _eventBus.On<CombatPhaseSetUpCombatDataEvent>(OnCombatPhaseSetUpCombatData);
@@ -44,10 +46,21 @@ namespace CardsAndDices
         /// <summary>
         /// ウェーブからエネミークリーチャーカードを配置
         /// </summary>
-        private void OnCombatPhaseWaveEnemySetUp(CombatPhaseWaveEnemySetUpEvent evt)
+        private async void OnCombatPhaseWaveEnemySetUp(CombatPhaseWaveEnemySetUpEvent evt)
         {
-            // １ウェーブ分のクリーチャーを生成
-            CreateWaveEnemyCreature();
+            // ウェーブを更新
+            var flg = NextWaveNumber();
+
+            if(flg)
+            {
+                // １ウェーブ分のクリーチャーを生成
+                CreateWaveEnemyCreature();
+
+                // 待機
+                await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+            }
+
+            _eventBus.Emit(new CombatPhaseWaveEnemySetUpEndEvent());
         }
 
         /// <summary>
@@ -60,6 +73,7 @@ namespace CardsAndDices
             {
                 Debug.LogWarning("コンバットデータが取得できない");
             }
+            _waveNumber = -1;
         }
 
         /// <summary>
@@ -109,13 +123,17 @@ namespace CardsAndDices
         /// <summary>
         /// ウェーブナンバーを次の番号に変更します
         /// </summary>
-        public void NextWaveNumber()
+        private bool NextWaveNumber()
         {
+            var list = _itargetManager.GetEnemyList(Team.Player);
+            if (list.Count > 0) return false;
             _waveNumber++;
             if (MaxWaveNumber < _waveNumber)
             {
                 Debug.LogWarning("WaveNumberが最大値を超えています");
+                return false;
             }
+            return true;
         }
 
         public void Dispose()
