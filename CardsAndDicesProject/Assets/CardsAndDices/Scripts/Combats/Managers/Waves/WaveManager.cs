@@ -62,7 +62,7 @@ namespace CardsAndDices
 
             //
             var wave = _combatData.GetWaveData(_waveNumber);
-            _eventBus.Emit(new PlayBGMEvent(wave.BGMDataEntity.AudioClip, 5.0f));
+            _eventBus.Emit(new PlayBGMEvent(wave.BGMDataEntity, 5.0f));
             _eventBus.Emit(new CombatPhaseWaveEnemySetUpEndEvent());
         }
 

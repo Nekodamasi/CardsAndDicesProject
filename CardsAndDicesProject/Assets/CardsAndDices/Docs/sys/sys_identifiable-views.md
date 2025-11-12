@@ -2,7 +2,7 @@
 
 ---
 
-## 1. 概要
+## 概要
 
 本ドキュメントは、`CompositeObjectId` を利用してUI要素やゲームオブジェクトを個別に識別し、それらを操作するための「識別可能Viewシステム」の設計を定義する。
 
@@ -12,25 +12,25 @@
 
 ---
 
-## 2. 主要な概念
+## 主要な概念
 
 本システムは、`IIdentifiableView`, `BaseIdentifiableView`, `Presenter`, `Controller` の4つの主要な概念で構成される。
 
-### 2.1. IIdentifiableView
+### 1. IIdentifiableView
 
 -   **役割:** `CompositeObjectId` を通じて識別可能であることを示すインターフェース。
 -   **責務:**
     -   `CompositeObjectId` プロパティを公開する。
     -   このインターフェースを実装するクラスは、必ず `CompositeObjectId` コンポーネントをアタッチする必要がある。
 
-### 2.2. BaseIdentifiableView
+### 2. BaseIdentifiableView
 
 -   **役割:** `IIdentifiableView` を実装した抽象基底クラス。具体的なView（例: `HealthView`, `AnimationView`）は、このクラスを継承して作成する。
 -   **責務:**
     -   Viewの振る舞いを定義するメソッドを提供する。これらのメソッドは、外部の `Presenter` や `Controller` から呼び出されることを前提とする。
     -   自身のイベント購読は行わない。状態の変更やイベントの受信は `Presenter` または `Controller` に委任する。
 
-### 2.3. Presenter
+### 3. Presenter
 
 -   **役割:** **特定のデータモデル（Model）**と、それに対応する **`IIdentifiableView`（View）** を仲介する。
 -   **責務:**
@@ -38,7 +38,7 @@
     -   Modelから受け取った情報に基づき、担当するViewの表示を更新するためのメソッドを呼び出す。
     -   一つのPresenterは、原則として一つのViewと一つのModelの関心事に集中する。
 
-### 2.4. Controller
+### 4. Controller
 
 -   **役割:** **特定のデータモデルに直接紐付かない**イベント（例: ユーザー入力、アニメーション完了通知）を処理し、`IIdentifiableView` の振る舞いを制御する。
 -   **責務:**
@@ -47,7 +47,7 @@
 
 ---
 
-## 3. アーキテクチャパターン
+## アーキテクチャパターン
 
 本システムは、MVP (Model-View-Presenter) パターンとイベント駆動アーキテクチャを組み合わせた設計を採用する。
 
@@ -61,13 +61,13 @@
 
 ---
 
-## 4. 実装例: クリーチャーへのダメージ適用
+## 実装例: クリーチャーへのダメージ適用
 
-### 4.1. シナリオ
+### 1. シナリオ
 
 プレイヤーがクリーチャーカードにダメージを与える。対象のクリーチャーはHPが減少し、ダメージエフェクトが再生される。
 
-### 4.2. 登場コンポーネント
+### 2. 登場コンポーネント
 
 -   **GameObject:**
     -   `CreatureCard_Prefab`: `CompositeObjectId` を持つルートオブジェクト。
@@ -83,7 +83,7 @@
 -   **Controller:**
     -   `CreatureEffectController`: Event Busから `DamageAppliedEvent` を購読。イベント受信時、`CompositeObjectId` をキーにして対象の `DamageEffectView` を特定し、`PlayDamageEffect` メソッドを呼び出す。
 
-### 4.3. 処理フロー
+### 3. 処理フロー
 
 1.  何らかのアクションにより、特定の `CreatureModel` のHPが減少する。
 2.  `CreatureModel` が `OnHpChanged` イベントを発行する。
@@ -93,13 +93,52 @@
 
 ---
 
-## 5. 関連ファイル
+## 拡張ユーティリティコンポーネント
+
+`BaseIdentifiableView` を継承したクラスや、その他のViewコンポーネントの機能を補助するための汎用的なユーティリティコンポーネント群。
+
+### 1. MultiRendererVisualController
+
+-   **役割:** 複数のレンダラーコンポーネント（`SpriteRenderer`, `TextMeshProUGUI`）の視覚的なプロパティ（色、アルファ値）を一括で制御する。
+-   **継承**: `MonoBehaviour`
+-   **プロパティ**:
+    -   `_spriteRenderers`: 制御対象の `SpriteRenderer` の配列。
+    -   `_textMeshPros`: 制御対象の `TextMeshProUGUI` の配列。
+    -   `_childControllers`: 階層的に制御するための、子階層にある `MultiRendererVisualController` の配列。
+-   **責務**:
+    -   登録された全てのレンダラーに対し、色や透明度を即時、またはアニメーション付き（DOTween）で適用する。
+    -   複雑な構造を持つGameObject全体のフェードイン・アウトやハイライト効果を単一のインターフェースで提供する。
+-   **メソッド**:
+    -   `FadeToAlpha(float alpha, float duration)`: 全ての対象の透明度を指定時間でアニメーションさせる。
+    -   `SetAlpha(float alpha)`: 全ての対象の透明度を即座に設定する。
+    -   `ColorTo(Color targetColor, float duration)`: 全ての対象の色を指定時間でアニメーションさせる。
+    -   `SetColor(Color targetColor)`: 全ての対象の色を即座に設定する。
+    -   `GetColor()`: 主要なレンダラーの現在の色を取得する。
+
+### 2. SortingController
+
+-   **役割:** 複数の描画順序決定コンポーネント（`SortingGroup`, `Canvas`）の描画順（`sortingOrder`）を一括で制御する。
+-   **継承**: `MonoBehaviour`
+-   **プロパティ**:
+    -   `_sortingGroups`: 制御対象の `SortingGroup` の配列。
+    -   `_canvases`: 制御対象の `Canvas` の配列。
+    -   `_childControllers`: 階層的に制御するための、子階層にある `SortingController` の配列。
+-   **責務**:
+    -   登録された全てのコンポーネントの `sortingOrder` を単一のメソッド呼び出しで統一する。
+    -   カードのドラッグ開始時に最前面に表示するなど、複合オブジェクト全体の描画順序を動的に管理する。
+-   **メソッド**:
+    -   `SetOrder(int order)`: 全ての対象の `sortingOrder` を指定された値に設定する。
+
+---
+
+## 関連ファイル
 
 -   [sys_domain-model.md](../sys/sys_domain-model.md)
 -   [gdd_combat_system.md](../gdd/gdd_combat_system.md)
 
 ---
 
-## 6. 更新履歴
+## 更新履歴
 
+-   2025-11-09: 拡張ユーティリティコンポーネントとして `MultiRendererVisualController` と `SortingController` を追加 (Gemini)
 -   2025-09-12: 初版 (Gemini)

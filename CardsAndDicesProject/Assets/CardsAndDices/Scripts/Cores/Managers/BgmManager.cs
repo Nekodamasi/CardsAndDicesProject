@@ -25,6 +25,7 @@ namespace CardsAndDices
         private GameEventBus _eventBus;
         private AudioSource _audioSource;
         private CancellationTokenSource _cancellationTokenSource;
+        private BGMDataEntity _currentBGMDataEntity;
 
         [Inject]
         public void Initialize(GameEventBus eventBus, AudioSource audioSource)
@@ -39,6 +40,7 @@ namespace CardsAndDices
 
         private void ClearCollections()
         {
+            _currentBGMDataEntity = null;
             LoadVolume();
         }
 
@@ -51,7 +53,9 @@ namespace CardsAndDices
 
         private void PlayBGMStart(PlayBGMEvent evt)
         {
-            PlayBGM(evt.AudioClip);
+            if (_currentBGMDataEntity != null && _currentBGMDataEntity == evt.BGMDataEntity) return;
+            _currentBGMDataEntity = evt.BGMDataEntity;
+            PlayBGM(evt.BGMDataEntity.AudioClip);
         }
 
         public void PlayBGM(AudioClip clip, float fadeDuration = 1.0f)
