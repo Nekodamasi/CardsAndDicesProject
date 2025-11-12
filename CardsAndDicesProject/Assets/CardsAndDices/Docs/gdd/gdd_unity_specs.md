@@ -90,6 +90,36 @@
 
 ---
 
+### 3. AudioMixerの設定
+
+#### 3.1 Snapshot
+- Start Snapshot : fadeInMixerSnapshot
+- fadeOutMixerSnapshot
+    - Master
+        - dB:0.0dB
+    - SEGroup
+        - dB:0.0dB
+    - BGMGroup
+        - dB:-80.0dB
+- fadeInMixerSnapshot
+    - Master
+        - dB:0.0dB
+    - SEGroup
+        - dB:0.0dB
+    - BGMGroup
+        - dB:0.0dB
+
+#### 3.2 groups
+- Master
+    - SEGroup
+        - Pitch:100.00%
+        - Volume:0.00dB
+    - BGMGroup
+        - Pitch:100.00%
+        - Volume:0.00dB
+
+---
+
 ## 関連ファイル
 
 - [guide_rules.md](../guide/guide_rules.md): ドキュメント作成・記述ルール
