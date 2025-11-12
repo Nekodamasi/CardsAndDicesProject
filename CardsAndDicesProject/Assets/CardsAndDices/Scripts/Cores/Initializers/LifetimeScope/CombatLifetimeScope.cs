@@ -41,6 +41,7 @@ namespace CardsAndDices
         [SerializeField] private CombatPhaseStateMachine _combatPhaseStateMachine;
         [SerializeField] private WaveManager _waveManager;
         [SerializeField] private CardAppearanceManager _cardAppearanceManager;
+        [SerializeField] private BgmManager _bgmManager;
 
         [Header("PrefabSpawnInfo Managers")]
         [SerializeField] private CreatureCardSpawnInfoManager _creatureCardSpawnInfoManager;
@@ -63,6 +64,8 @@ namespace CardsAndDices
         [SerializeField] private NextTurnSpawner _nextTurnSpawner;
         [SerializeField] private CombatStartSpawner _combatStartSpawner;
         
+        [Header("Component")]
+        [SerializeField] private AudioSource _audioSource;
 
         [Header("StateOperator")]
         [SerializeField] private CoreOperator _dragStateOperator;
@@ -100,7 +103,8 @@ namespace CardsAndDices
             builder.RegisterInstance(_vfxManager).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_combatPhaseStateMachine).AsSelf().AsImplementedInterfaces();
             builder.RegisterInstance(_waveManager).AsSelf().AsImplementedInterfaces();
-            builder.RegisterInstance(_cardAppearanceManager).AsSelf().AsImplementedInterfaces();            
+            builder.RegisterInstance(_cardAppearanceManager).AsSelf().AsImplementedInterfaces();
+            builder.RegisterInstance(_bgmManager).AsSelf().AsImplementedInterfaces();
 
             // PrefabSpawnInfo Managers のバインド
             builder.RegisterInstance(_creatureCardSpawnInfoManager).AsSelf();
@@ -117,6 +121,9 @@ namespace CardsAndDices
 
             // ScriptableObject StateOperator のバインド
             builder.RegisterInstance(_dragStateOperator).AsSelf().AsImplementedInterfaces();
+
+            // Component のバインド
+            builder.RegisterInstance(_audioSource).AsSelf();
 
             // ScriptableObject Managers の初期化
             _compositeObjectIdManager.Initialize(_compositeObjectRegistry);
@@ -143,6 +150,7 @@ namespace CardsAndDices
             _waveManager.Initialize(_gameEventBus, _combatScenarioRegistry, _identifiableViewRegistry, _targetManager);
             _combatScenarioRegistry.Initialize();
             _cardAppearanceManager.Initialize(_gameEventBus, _identifiableViewRegistry);
+            _bgmManager.Initialize(_gameEventBus, _audioSource);
 
             // ScriptableObject Managers の初期化
             _compositeObjectRegistry.Initialize();

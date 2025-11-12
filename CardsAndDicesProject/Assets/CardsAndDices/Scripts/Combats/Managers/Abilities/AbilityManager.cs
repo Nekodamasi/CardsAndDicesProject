@@ -28,7 +28,7 @@ namespace CardsAndDices
             _eventBus.On<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
             _eventBus.On<UpdateAbilityLockEvent>(OnUpdateAbilityLock);
             _eventBus.On<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
-
+            _eventBus.On<ResetTurnEndEvent>(OnResetTurnEnd);
             _iCreatureCardlocation = iCreatureCardlocation;
             _iTargetManager = iTargetManager;
         }
@@ -40,6 +40,7 @@ namespace CardsAndDices
             _eventBus.Off<ExecuteAbilityEffectEvent>(OnExecuteAbilityEffect);
             _eventBus.Off<UpdateAbilityLockEvent>(OnUpdateAbilityLock);
             _eventBus.Off<DisposeByCompositeObjectIdEvent>(OnDisposeByCompositeObjectId);
+            _eventBus.On<ResetTurnEndEvent>(OnResetTurnEnd);
         }
 
         /// <summary>
@@ -64,6 +65,13 @@ namespace CardsAndDices
                 controller.Dispose();
             }
             _controllers.Clear();
+        }
+
+        /// <summary>
+        /// リセットターンイベント
+        /// </summary>
+        private void OnResetTurnEnd(ResetTurnEndEvent evt)
+        {
         }
 
         /// <summary>

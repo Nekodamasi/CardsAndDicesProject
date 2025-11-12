@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 using VContainer;
 namespace CardsAndDices
@@ -84,23 +85,57 @@ namespace CardsAndDices
         /// <summary>
         /// 基本的な行動順序に則ってソートされた敵カードのうち、一番最初に出たカードを取得します
         /// </summary>
-        public List<CompositeObjectId> GetHostileCreature(Team team)
+        public List<CompositeObjectId> GetHostileCreature(Team team, LinePosition linePosition)
         {
             var list = _creatureCardSlotManager.GetNonHandInstanceList();
-            var sortedSlots = list
-                .Where(slot => slot.IsOccupied && slot.Team != team)
-                .OrderBy(slot => slot.Team) // Enemy first
-                .ThenBy(slot => slot.Location);
-
             List<CompositeObjectId> ids = new();
-            foreach (var slot in sortedSlots)
+            var sortedSlot = list
+                .Where(slot => slot.IsOccupied && slot.Team != team && slot.Location == SlotLocation.Vanguard && slot.LinePosition == linePosition).FirstOrDefault();
+            
+            if(sortedSlot != null)
             {
-                var instance = _iCreatureStatusInstanceRepository.GetInstance(slot.ReflowPlacedCardId);
-                if(instance.IsDeath == false)
-                {
-                    ids.Add(instance.CompositeObjectId);
-                    break;
-                }
+                ids.Add(sortedSlot.ReflowPlacedCardId);
+                return ids;
+            }
+
+            sortedSlot = list
+                .Where(slot => slot.IsOccupied && slot.Team != team && slot.Location == SlotLocation.Vanguard && slot.LinePosition != linePosition).FirstOrDefault();
+            if(sortedSlot != null)
+            {
+                ids.Add(sortedSlot.ReflowPlacedCardId);
+                return ids;
+            }
+
+            sortedSlot = list
+                .Where(slot => slot.IsOccupied && slot.Team != team && slot.Location == SlotLocation.Center && slot.LinePosition == linePosition).FirstOrDefault();
+            if(sortedSlot != null)
+            {
+                ids.Add(sortedSlot.ReflowPlacedCardId);
+                return ids;
+            }
+
+            sortedSlot = list
+                .Where(slot => slot.IsOccupied && slot.Team != team && slot.Location == SlotLocation.Center && slot.LinePosition != linePosition).FirstOrDefault();
+            if(sortedSlot != null)
+            {
+                ids.Add(sortedSlot.ReflowPlacedCardId);
+                return ids;
+            }
+
+            sortedSlot = list
+                .Where(slot => slot.IsOccupied && slot.Team != team && slot.Location == SlotLocation.Rear && slot.LinePosition == linePosition).FirstOrDefault();
+            if(sortedSlot != null)
+            {
+                ids.Add(sortedSlot.ReflowPlacedCardId);
+                return ids;
+            }
+
+            sortedSlot = list
+                .Where(slot => slot.IsOccupied && slot.Team != team && slot.Location == SlotLocation.Rear && slot.LinePosition != linePosition).FirstOrDefault();
+            if(sortedSlot != null)
+            {
+                ids.Add(sortedSlot.ReflowPlacedCardId);
+                return ids;
             }
             return ids;
         }
@@ -134,7 +169,7 @@ namespace CardsAndDices
                 case AreaOfEffect.Self:
                     return new List<CompositeObjectId> { executorId };
                 case AreaOfEffect.HostileCreature:
-                    return GetHostileCreature(executorSlot.Team);
+                    return GetHostileCreature(executorSlot.Team, executorSlot.LinePosition);
                 /*
                                 case AreaOfEffect.All:
                                     // 実装メモ: CreatureCardSlotManagerには、盤面上の全てのカードIDを取得する機能が必要です。

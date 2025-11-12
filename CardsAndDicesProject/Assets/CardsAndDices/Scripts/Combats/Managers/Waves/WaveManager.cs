@@ -51,7 +51,7 @@ namespace CardsAndDices
             // ウェーブを更新
             var flg = NextWaveNumber();
 
-            if(flg)
+            if (flg)
             {
                 // １ウェーブ分のクリーチャーを生成
                 CreateWaveEnemyCreature();
@@ -60,6 +60,9 @@ namespace CardsAndDices
                 await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             }
 
+            //
+            var wave = _combatData.GetWaveData(_waveNumber);
+            _eventBus.Emit(new PlayBGMEvent(wave.BGMDataEntity.AudioClip, 5.0f));
             _eventBus.Emit(new CombatPhaseWaveEnemySetUpEndEvent());
         }
 

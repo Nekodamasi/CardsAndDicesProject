@@ -192,7 +192,7 @@ namespace CardsAndDices
             foreach (var id in targetIds)
             {
                 _gameEventBus.Emit(new DisplayCreatureReactionEvent(id));
-                await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+                await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             }
         }
     }

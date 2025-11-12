@@ -66,7 +66,7 @@ namespace CardsAndDices
         }
 
         /// <summary>
-        /// プレイヤーカードの画面へ配置
+        /// リセットターンイベント
         /// </summary>
         private async void OnResetTurnEnd(ResetTurnEndEvent evt)
         {
